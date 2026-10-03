@@ -3,8 +3,9 @@
 }
 
 .head {
-  background: var(--sn-blush);
-  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 1.25rem 2.25rem;
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
+  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 1.25rem 3.5rem;
   border-radius: 0 0 2.25rem 2.25rem;
   display: grid;
   gap: 0.375rem;
@@ -12,11 +13,14 @@
 
   .back {
     margin-left: -0.25rem;
+    color: var(--sn-on-brand);
+
+    &:focus-visible { outline-color: var(--sn-apricot); }
   }
 
   .you {
     margin-top: 0.75rem;
-    color: var(--sn-muted);
+    color: var(--sn-on-brand-muted);
     font-size: 0.9375rem;
   }
 
@@ -30,34 +34,40 @@
 }
 
 .draft-tag {
-  border-color: var(--sn-draft);
-  color: var(--sn-draft);
+  background: transparent;
+  border-color: var(--sn-apricot);
+  color: var(--sn-apricot);
 }
 
 /* The answer is the focal point: the strongest brand surface on the screen. */
 .answer {
-  margin: -1.25rem 1rem 0;
+  margin: -2.25rem 1rem 0;
   position: relative;
-  background: var(--sn-brand);
-  color: var(--sn-on-brand);
+  background: var(--sn-surface);
+  color: var(--sn-ink);
   border-radius: 1.5rem;
   padding: 1.25rem 1.25rem 1.375rem;
   display: grid;
   gap: 0.5rem;
-  box-shadow: 0 8px 24px rgba(86, 21, 48, 0.25);
+  box-shadow: 0 1px 2px rgba(42, 26, 32, 0.08), 0 8px 24px rgba(42, 26, 32, 0.1);
 
   .answer-label {
+    justify-self: start;
     font-weight: 800;
-    font-size: 0.875rem;
-    color: var(--sn-apricot);
+    font-size: 0.8125rem;
+    color: var(--sn-ink);
+    background: var(--sn-apricot);
+    border-radius: 999px;
+    padding: 0.25rem 0.625rem;
   }
 
   .answer-headline {
     font: 600 1.375rem/1.25 var(--sn-display);
+    color: var(--sn-brand);
   }
 
   .answer-detail {
-    color: var(--sn-on-brand-muted);
+    color: var(--sn-muted);
   }
 }
 
@@ -318,8 +328,6 @@
 }
 
 .sources {
-  padding-bottom: 2.5rem;
-
   > .row {
     background: var(--sn-surface);
     border-radius: 1rem;
@@ -335,7 +343,7 @@
   }
 
   a {
-    color: var(--sn-brand);
+    color: var(--sn-on-brand);
     overflow-wrap: anywhere;
   }
 }
@@ -348,4 +356,54 @@
 
   h1 { font-size: 1.625rem; }
   p { color: var(--sn-muted); }
+}
+
+/* The lower half of the screen is a berry band, carried on by the tab bar. */
+.sn-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.band {
+  flex: 1 0 auto;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
+  border-radius: 2.25rem 2.25rem 0 0;
+
+  .block {
+    padding-top: 1.75rem;
+  }
+
+  h2 {
+    color: var(--sn-on-brand);
+  }
+
+  .hint {
+    color: var(--sn-on-brand-muted);
+  }
+
+  .empty {
+    background: var(--sn-brand-deep);
+    color: var(--sn-on-brand-muted);
+
+    .sn-btn--brand {
+      background: var(--sn-apricot);
+      color: var(--sn-ink);
+    }
+  }
+
+  /* White surfaces inside the band keep dark text. */
+  .meal,
+  .sources > .row {
+    color: var(--sn-ink);
+  }
+
+  .meal:focus-visible,
+  .topic:focus-visible,
+  .row:focus-visible {
+    outline-color: var(--sn-apricot);
+  }
 }

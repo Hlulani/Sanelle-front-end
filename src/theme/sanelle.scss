@@ -204,15 +204,15 @@
 
 /* Tab bar in the brand system. */
 ion-tab-bar {
-  --background: var(--sn-surface);
-  --border: 1px solid var(--sn-line);
-  --color: var(--sn-muted);
-  --color-selected: var(--sn-brand);
-  padding-top: 0.25rem;
+  --background: var(--sn-brand);
+  --border: 0;
+  --color: var(--sn-on-brand-muted);
+  --color-selected: var(--sn-apricot);
+  padding-top: 0.375rem;
 }
 
 ion-tab-button {
   font-family: var(--sn-body);
   font-weight: 700;
-  --ripple-color: var(--sn-blush);
+  --ripple-color: var(--sn-brand-deep);
 }

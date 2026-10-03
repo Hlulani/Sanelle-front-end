@@ -228,9 +228,6 @@
   color: var(--sn-muted);
 }
 
-.food {
-  padding-bottom: 2rem;
-}
 
 .topic {
   display: flex;
@@ -274,4 +271,54 @@
   font-size: 1.5rem;
   line-height: 1;
   color: var(--sn-brand);
+}
+
+/* The lower half of the screen is a berry band, carried on by the tab bar. */
+.sn-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.band {
+  flex: 1 0 auto;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
+  border-radius: 2.25rem 2.25rem 0 0;
+
+  .block {
+    padding-top: 1.75rem;
+  }
+
+  h2 {
+    color: var(--sn-on-brand);
+  }
+
+  .hint {
+    color: var(--sn-on-brand-muted);
+  }
+
+  .empty {
+    background: var(--sn-brand-deep);
+    color: var(--sn-on-brand-muted);
+
+    .sn-btn--brand {
+      background: var(--sn-apricot);
+      color: var(--sn-ink);
+    }
+  }
+
+  /* White surfaces inside the band keep dark text. */
+  .meal,
+  .sources > .row {
+    color: var(--sn-ink);
+  }
+
+  .meal:focus-visible,
+  .topic:focus-visible,
+  .row:focus-visible {
+    outline-color: var(--sn-apricot);
+  }
 }
