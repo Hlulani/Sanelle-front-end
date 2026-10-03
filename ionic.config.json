@@ -1,0 +1,7 @@
+{
+  "name": "sanelle-front-end",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

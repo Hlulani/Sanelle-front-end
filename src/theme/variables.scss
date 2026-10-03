@@ -1,0 +1,24 @@
+:root {
+  --ion-color-primary: #314a38;        /* Deep Green */
+  --ion-color-primary-rgb: 49,74,56;
+  --ion-color-secondary: #e4efe6;      /* Soft Sage */
+  --ion-color-tertiary: #f4976c;       /* Muted Orange for highlights/hearts */
+  --ion-background-color: #fdfaf4;     /* Warm Off-white */
+
+  /* Shared design tokens for the custom-styled tab/auth pages. These were
+     previously hardcoded (and slightly drifted) in each page's own :host
+     block — centralized here as the single source of truth. */
+  --app-ink: #203225;
+  --app-muted: #6f7c72;
+  --app-paper: #f7f4ef;
+  --app-card: #ffffff;
+  --app-accent: #92d075;
+  --app-accent-2: #59ad9b;
+  --app-accent-gradient: linear-gradient(135deg, var(--app-accent) 0%, var(--app-accent-2) 100%);
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+}

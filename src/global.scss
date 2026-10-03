@@ -1,0 +1,132 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Global styles for the entire Ionic app.
+ */
+
+/* Core CSS required for Ionic components */
+@import "@ionic/angular/css/core.css";
+
+/* Basic Ionic CSS */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional Ionic utilities */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Dark mode palette */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/* ─────────────────────────────────────────────
+   App-specific UI styles (SAFE)
+   ───────────────────────────────────────────── */
+
+.app-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+}
+
+.app-chip {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: var(--app-muted);
+}
+
+/* ─────────────────────────────────────────────
+   Ionic layout sanity defaults (DO NOT TOUCH)
+   ───────────────────────────────────────────── */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+:root {
+  --app-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --app-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* iOS: use the system SF Pro font (Ionic sets the "ios" mode class on <html>) */
+html.ios {
+  --app-font-body: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --app-font-heading: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Android: use the system Roboto font (Ionic sets the "md" mode class on <html>) */
+html.md {
+  --app-font-body: Roboto, "Noto Sans", "Segoe UI", Arial, sans-serif;
+  --app-font-heading: Roboto, "Noto Sans", "Segoe UI", Arial, sans-serif;
+}
+
+body,
+ion-content,
+ion-label,
+ion-text,
+ion-input,
+ion-textarea,
+ion-button,
+ion-item {
+  font-family: var(--app-font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ion-title,
+.main-title,
+.section-title {
+  font-family: var(--app-font-heading);
+}
+
+/* Let Ionic manage scrolling correctly */
+ion-content::part(scroll) {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+
+.custom-input {
+  --background: #f1f3f5;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  border: 1px solid transparent;
+  transition: 0.3s;
+
+  &.item-has-focus {
+    border: 1px solid var(--ion-color-primary);
+    --background: #ffffff;
+  }
+
+  ion-icon {
+    font-size: 18px;
+    color: #636e72;
+  }
+}
+
+.main-submit-btn {
+  --background: var(--app-accent-gradient);
+  --border-radius: var(--radius-lg);
+  --box-shadow: 0 10px 25px rgba(89, 173, 155, 0.3);
+  height: 60px;
+  margin-top: 32px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: none;
+}
