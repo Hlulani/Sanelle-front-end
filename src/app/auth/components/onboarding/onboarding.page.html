@@ -35,6 +35,10 @@
 
     <div class="actions">
       <button type="button" class="sn-btn sn-btn--outline-on-brand" (click)="skip()">Skip for now</button>
+      <p class="signed-in">
+        Signed in as {{ email }}
+        <button type="button" class="sn-btn sn-btn--quiet log-out" (click)="logOut()">Log out</button>
+      </p>
     </div>
   </main>
 </ion-content>

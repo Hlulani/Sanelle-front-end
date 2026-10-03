@@ -37,6 +37,7 @@ export class OnboardingPage {
   private auth = inject(AuthService);
   private focusPreferences = inject(FocusPreferencesService);
 
+  readonly email = this.auth.getUserEmail();
   readonly totalSteps = 2;
   readonly currentStep = signal(1);
   readonly helpFirst = signal<HelpFirst | null>(null);
@@ -64,6 +65,11 @@ export class OnboardingPage {
   chooseDiet(value: ProteinPreference) {
     this.diet.set(value);
     void this.finish();
+  }
+
+  logOut() {
+    this.auth.logout();
+    this.router.navigateByUrl('/auth?mode=login', { replaceUrl: true });
   }
 
   back() {
