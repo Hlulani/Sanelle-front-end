@@ -20,6 +20,19 @@ export interface GenerateMealPlanRequest {
   proteinPreference: ProteinPreference;
   /** Optional upper limit on preparation time, in minutes. */
   maxPrepMinutes: number | null;
+  /** Allergen codes; the server leaves out meals that contain or may contain them. */
+  allergies: string[];
+  /** Foods to leave out by name. */
+  dislikes: string[];
+}
+
+export interface SwapOptionsRequest {
+  mealType: MealPlanItem['mealType'];
+  currentMealId: string;
+  proteinPreference: ProteinPreference;
+  maxPrepMinutes: number | null;
+  allergies: string[];
+  dislikes: string[];
 }
 
 export interface MealPlanItem {
@@ -41,6 +54,8 @@ export interface DayPlan {
 export interface GenerateMealPlanResponse {
   days: number;
   daysPlan: DayPlan[];
+  /** Restrictions the plan was made with (added on the device, not by the server). */
+  madeWith?: { allergies: string[]; dislikes: string[] };
   /** Meal types no recipe could fill without breaking a preference, e.g. "BREAKFAST". */
   unfilled?: string[];
 }
@@ -52,5 +67,10 @@ export class MealPlansService {
 
   generate(req: GenerateMealPlanRequest): Observable<GenerateMealPlanResponse> {
     return this.http.post<GenerateMealPlanResponse>(`${this.baseUrl}/meal-plans/generate`, req);
+  }
+
+  /** Alternatives for one slot, filtered on the server by the same rules as the plan. */
+  swapOptions(req: SwapOptionsRequest): Observable<MealPlanItem[]> {
+    return this.http.post<MealPlanItem[]>(`${this.baseUrl}/meal-plans/swap-options`, req);
   }
 }

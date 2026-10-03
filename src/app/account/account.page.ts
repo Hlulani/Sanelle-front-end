@@ -17,6 +17,7 @@ import { NotificationService } from '../core/services/notification.service';
 
 import { HealthRepository } from '../my-health/health-repository';
 
+import { FoodRestrictionsService } from '../core/services/food-restrictions.service';
 @Component({
   selector: 'app-account',
   standalone: true,
@@ -36,6 +37,7 @@ import { HealthRepository } from '../my-health/health-repository';
 })
 export class AccountPage implements OnInit {
   private health = inject(HealthRepository);
+  private food = inject(FoodRestrictionsService);
   private auth = inject(AuthService);
   private router = inject(Router);
   private alertController = inject(AlertController);
@@ -107,7 +109,10 @@ export class AccountPage implements OnInit {
 
     this.auth.deleteAccount().subscribe({
       next: () => {
-        if (email) void this.health.clearFor(email);
+        if (email) {
+          void this.health.clearFor(email);
+          void this.food.clearFor(email);
+        }
         this.isDeleting.set(false);
         this.router.navigateByUrl('/auth');
       },

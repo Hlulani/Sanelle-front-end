@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
@@ -16,6 +16,7 @@ import {
 import { containsDairy } from '../food-matchers';
 import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
 import { photoFor } from '../../shared/meal-photos';
+import { FoodRestrictionsService } from '../../core/services/food-restrictions.service';
 
 const VERDICT_LABELS: Record<OutcomeVerdict, string> = {
   mixed: 'Mixed',
@@ -38,6 +39,10 @@ export class FoodClarityPage implements OnInit {
   private router = inject(Router);
   private topics = inject(EvidenceTopicsService);
   private mealService = inject(MealService);
+  private foodRestrictions = inject(FoodRestrictionsService);
+
+  /** Someone who listed milk as an allergy isn't shown dairy meals to try. */
+  readonly milkAllergy = computed(() => this.foodRestrictions.restrictions().allergies.includes('MILK'));
 
   readonly outcomeLabels = OUTCOME_LABELS;
   readonly verdictLabels = VERDICT_LABELS;
@@ -51,6 +56,7 @@ export class FoodClarityPage implements OnInit {
 
   ngOnInit() {
     this.topic = this.topics.get(this.route.snapshot.paramMap.get('id') ?? '');
+    void this.foodRestrictions.load();
     if (this.topic?.relatedFood) this.loadMeals();
   }
 

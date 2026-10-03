@@ -43,8 +43,7 @@ import { FocusPreferencesService } from '../core/services/focus-preferences.serv
 import { NotificationService } from '../core/services/notification.service';
 import { Router } from '@angular/router';
 import { PlanStoreService } from '../core/services/plan-store.service';
-import { MealService } from '../core/services/meal.service';
-import { MealResponse } from '../core/models/meal.model';
+import { ALLERGENS, AllergenCode, FoodRestrictionsService, sameRestrictions } from '../core/services/food-restrictions.service';
 import { MealProgressService } from '../core/services/meal-progress.service';
 import { ChallengesService, ChallengeDefinition, ChallengeProgress } from '../core/services/challenges.service';
 import { CustomChallengesService } from '../core/services/custom-challenges.service';
@@ -65,6 +64,7 @@ type SwapOption = {
   meta?: string;
   tags: string[];
   prepTimeMinutes?: number | null;
+  reasons: string[];
 };
 
 import { mealImageSrc } from '../shared/meal-photos';
@@ -106,7 +106,7 @@ import { mealImageSrc } from '../shared/meal-photos';
 })
 export class Tab2Page implements OnInit {
   private mealPlansService = inject(MealPlansService);
-  private mealService = inject(MealService);
+  private foodRestrictions = inject(FoodRestrictionsService);
   private authService = inject(AuthService);
   private router = inject(Router);
   private planStore = inject(PlanStoreService);
@@ -142,6 +142,8 @@ export class Tab2Page implements OnInit {
     void this.mealProgress.init();
     void this.challengesService.init();
     this.challengesService.refreshCounts();
+
+    void this.foodRestrictions.load();
 
     void this.focusPreferences.loadDiet().then((diet) => {
       if (diet) this.proteinPreference.set(diet);
@@ -203,32 +205,39 @@ export class Tab2Page implements OnInit {
     this.swapModalOpen.set(true);
     this.swapLoading.set(true);
 
-    this.mealService.getMeals().subscribe({
-      next: (meals) => {
-        const options = meals
-          .filter((m) => m.mealType === meal.mealType && m.id !== meal.mealId)
-          .filter((m) => this.matchesProteinPreference(m))
-          .filter((m) => this.withinPrepLimit(m.prepTimeMinutes))
-          .map((m): SwapOption => ({
-            id: m.id,
-            name: m.name,
-            imageUrl: m.imageUrl ?? null,
-            meta: this.swapMetaLabel(m),
-            tags: m.tags ?? [],
-            prepTimeMinutes: m.prepTimeMinutes ?? null,
-          }));
-
-        this.swapOptions.set(options);
-        this.swapLoading.set(false);
-      },
-      error: () => {
-        this.swapOptions.set([]);
-        this.swapLoading.set(false);
-      },
-    });
+    const r = this.foodRestrictions.restrictions();
+    this.mealPlansService
+      .swapOptions({
+        mealType: meal.mealType,
+        currentMealId: meal.mealId,
+        proteinPreference: this.proteinPreference(),
+        maxPrepMinutes: this.maxPrepMinutes(),
+        allergies: r.allergies,
+        dislikes: r.dislikes,
+      })
+      .subscribe({
+        next: (items) => {
+          this.swapOptions.set(
+            items.map((m): SwapOption => ({
+              id: m.mealId,
+              name: m.name,
+              imageUrl: m.imageUrl ?? null,
+              meta: this.swapMetaLabel(m),
+              tags: m.tags ?? [],
+              prepTimeMinutes: m.prepTimeMinutes ?? null,
+              reasons: m.reasons ?? [],
+            })),
+          );
+          this.swapLoading.set(false);
+        },
+        error: () => {
+          this.swapOptions.set([]);
+          this.swapLoading.set(false);
+        },
+      });
   }
 
-  private swapMetaLabel(meal: MealResponse): string {
+  private swapMetaLabel(meal: MealPlanItem): string {
     const tag = meal.tags?.[0];
     const parts: string[] = [];
     if (tag) parts.push(tag.charAt(0).toUpperCase() + tag.slice(1));
@@ -236,30 +245,7 @@ export class Tab2Page implements OnInit {
     return parts.join(' · ') || 'Alternative option';
   }
 
-  private classifyProtein(meal: MealResponse): 'MEATY' | 'VEGETARIAN' | 'VEGAN' {
-    const meatKeywords = [
-      'chicken', 'beef', 'turkey', 'pork', 'ham', 'bacon', 'salmon',
-      'tuna', 'shrimp', 'cod', 'halibut', 'mackerel', 'sardine', 'trout', 'fish',
-    ];
-    const dairyEggHoneyKeywords = ['egg', 'cheese', 'yogurt', 'yoghurt', 'milk', 'butter', 'cream', 'honey'];
-    const names = meal.ingredients.map((i) => i.name.toLowerCase());
 
-    if (names.some((n) => meatKeywords.some((k) => n.includes(k)))) return 'MEATY';
-
-    const taggedVegan = meal.tags?.some((t) => t.toLowerCase() === 'vegan');
-    const noDairyEggHoney = !names.some((n) => dairyEggHoneyKeywords.some((k) => n.includes(k)));
-    return taggedVegan || noDairyEggHoney ? 'VEGAN' : 'VEGETARIAN';
-  }
-
-  private matchesProteinPreference(meal: MealResponse): boolean {
-    const pref = this.proteinPreference();
-    if (pref === 'ANY') return true;
-
-    const proteinClass = this.classifyProtein(meal);
-    if (pref === 'MEATY') return proteinClass === 'MEATY';
-    if (pref === 'VEGETARIAN') return proteinClass !== 'MEATY';
-    return proteinClass === 'VEGAN';
-  }
 
   closeSwap() {
     this.swapModalOpen.set(false);
@@ -301,7 +287,7 @@ export class Tab2Page implements OnInit {
             imageUrl: option.imageUrl ?? meal.imageUrl ?? null,
             tags: option.tags,
             prepTimeMinutes: option.prepTimeMinutes ?? null,
-            reasons: this.swapReasons(option),
+            reasons: option.reasons,
           };
         }),
       })),
@@ -346,24 +332,39 @@ export class Tab2Page implements OnInit {
     { label: '45 min', value: 45 },
   ];
 
-  withinPrepLimit(prep: number | null | undefined): boolean {
-    const limit = this.maxPrepMinutes();
-    return limit === null || (prep != null && prep <= limit);
+  readonly allergens = ALLERGENS;
+  readonly restrictions = computed(() => this.foodRestrictions.restrictions());
+  newDislike = '';
+
+  hasAllergy(code: AllergenCode): boolean {
+    return this.restrictions().allergies.includes(code);
   }
 
-  /** Same wording the backend uses, so swapped meals explain themselves too. */
-  private swapReasons(option: SwapOption): string[] {
-    const reasons: string[] = [];
-    const pref = this.proteinPreference();
-    if (pref === 'VEGAN') reasons.push('Vegan, as you chose');
-    else if (pref === 'VEGETARIAN') reasons.push('Vegetarian, as you chose');
-    else if (pref === 'MEATY') reasons.push('Includes meat or fish, as you chose');
-    const limit = this.maxPrepMinutes();
-    if (option.prepTimeMinutes != null) {
-      reasons.push(limit !== null ? `Ready in ${option.prepTimeMinutes} min (your limit is ${limit})` : `Ready in ${option.prepTimeMinutes} min`);
-    }
-    return reasons;
+  toggleAllergy(code: AllergenCode) {
+    void this.foodRestrictions.toggleAllergy(code);
   }
+
+  addDislike() {
+    void this.foodRestrictions.addDislike(this.newDislike);
+    this.newDislike = '';
+  }
+
+  removeDislike(food: string) {
+    void this.foodRestrictions.removeDislike(food);
+  }
+
+  /** True when allergies or dislikes changed after the current plan was made. */
+  readonly restrictionsChanged = computed(() => {
+    const plan = this.plan();
+    if (!plan) return false;
+    return !sameRestrictions(
+      plan.madeWith ? { allergies: plan.madeWith.allergies as AllergenCode[], dislikes: plan.madeWith.dislikes } : null,
+      this.restrictions(),
+    );
+  });
+
+
+
 
   readonly unfilledLabel = computed(() => {
     const unfilled = this.plan()?.unfilled ?? [];
@@ -597,11 +598,13 @@ export class Tab2Page implements OnInit {
       fastingStyle: this.fastingStyle(),
       proteinPreference: this.proteinPreference(),
       maxPrepMinutes: this.maxPrepMinutes(),
+      allergies: this.restrictions().allergies,
+      dislikes: this.restrictions().dislikes,
     };
 
     this.mealPlansService.generate(payload).subscribe({
       next: (res) => {
-        this.planStore.setPlan(res);
+        this.planStore.setPlan({ ...res, madeWith: { allergies: payload.allergies, dislikes: payload.dislikes } });
         this.preferencesOpen.set(false);
         this.isLoading.set(false);
         void this.notifications.reschedule();

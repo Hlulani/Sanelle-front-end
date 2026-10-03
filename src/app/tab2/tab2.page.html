@@ -55,6 +55,10 @@
         </button>
       </div>
 
+      <p class="unfilled-note" *ngIf="restrictionsChanged()" role="note">
+        You changed your allergies or foods you don’t eat after making this plan. Make a new plan so every meal follows them.
+      </p>
+
       <p class="unfilled-note" *ngIf="unfilledLabel() as u" role="note">
         No {{ u.toLowerCase() }} recipes match your choices, so those slots are empty. Try “Any” for prep time or what you eat.
       </p>
@@ -335,6 +339,48 @@
             <span>{{ o.value === null ? 'Any' : 'Up to ' + o.label }}</span>
           </button>
         </div>
+
+        <h2 class="section-title">Allergies</h2>
+        <div class="chip-row">
+          <button
+            *ngFor="let a of allergens"
+            type="button"
+            class="pref-chip"
+            [class.active]="hasAllergy(a.code)"
+            [attr.aria-pressed]="hasAllergy(a.code)"
+            (click)="toggleAllergy(a.code)"
+          >
+            <span>{{ a.label }}</span>
+          </button>
+        </div>
+
+        <h2 class="section-title">Foods you don’t eat</h2>
+        <form class="dislike-form" (submit)="$event.preventDefault(); addDislike()">
+          <input
+            class="dislike-input"
+            type="text"
+            name="newDislike"
+            [(ngModel)]="newDislike"
+            placeholder="e.g. mushrooms"
+            aria-label="Add a food you don’t eat"
+          />
+          <button type="submit" class="pref-chip">Add</button>
+        </form>
+        <div class="chip-row" *ngIf="restrictions().dislikes.length">
+          <button
+            *ngFor="let d of restrictions().dislikes"
+            type="button"
+            class="pref-chip active"
+            (click)="removeDislike(d)"
+            [attr.aria-label]="'Remove ' + d"
+          >
+            <span>{{ d }} ✕</span>
+          </button>
+        </div>
+
+        <p class="allergy-note" *ngIf="restrictions().allergies.length">
+          We leave out meals with these allergens, including ingredients that may contain them, like stock or granola. Always check labels and packaging.
+        </p>
 
         <h2 class="section-title">Plan duration</h2>
 

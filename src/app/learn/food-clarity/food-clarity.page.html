@@ -71,6 +71,9 @@
     <div class="band">
     <section class="block" *ngIf="t.relatedFood" aria-labelledby="meals-title">
       <h2 id="meals-title">Meals with dairy</h2>
+      @if (milkAllergy()) {
+        <p class="hint">You’ve listed milk as an allergy, so meals with dairy aren’t shown.</p>
+      } @else {
       <ng-container [ngSwitch]="meals().state">
         <p *ngSwitchCase="'loading'" class="hint" role="status">Loading meals…</p>
 
@@ -92,6 +95,7 @@
           <ng-template #noMeals><p class="hint">No meals with dairy right now.</p></ng-template>
         </ng-container>
       </ng-container>
+      }
     </section>
 
     <section class="block sources">
