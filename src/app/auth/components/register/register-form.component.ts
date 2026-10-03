@@ -74,7 +74,8 @@ export class RegisterFormComponent {
     ).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigateByUrl('/onboarding');
+        // Replace the form in history, so going back can't land on it while signed in.
+        this.router.navigateByUrl('/onboarding', { replaceUrl: true });
       },
       error: (err) => {
         this.isLoading.set(false);

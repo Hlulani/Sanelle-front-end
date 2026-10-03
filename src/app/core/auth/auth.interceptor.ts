@@ -23,7 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return from(auth.restoreSession()).pipe(
           switchMap((restored) => {
             if (!restored) {
-              router.navigateByUrl('/auth');
+              router.navigateByUrl('/auth?mode=login');
               return throwError(() => err);
             }
 

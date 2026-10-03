@@ -86,7 +86,7 @@ export class AccountPage implements OnInit {
 
   logout(): void {
     this.auth.logout();
-    this.router.navigateByUrl('/auth');
+    this.router.navigateByUrl('/auth?mode=login');
   }
 
   async confirmDeleteAccount(): Promise<void> {

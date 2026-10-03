@@ -570,7 +570,7 @@ export class Tab2Page implements OnInit {
 
   generatePlan() {
     if (!this.authService.hasValidToken()) {
-      this.router.navigateByUrl('/auth');
+      this.router.navigateByUrl('/auth?mode=login');
       return;
     }
 

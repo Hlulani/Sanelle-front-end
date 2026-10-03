@@ -5,7 +5,7 @@ import { PlanStoreService } from '../services/plan-store.service';
 import { MealProgressService } from '../services/meal-progress.service';
 import { ChallengesService } from '../services/challenges.service';
 import { CustomChallengesService } from '../services/custom-challenges.service';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, from, map, switchMap, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,7 +17,9 @@ export class AuthService {
 
   private readonly TOKEN_KEY = 'access_token';
   private readonly REFRESH_KEY = 'refresh_token';
-  private readonly ONBOARDING_KEY = 'onboarding_completed';
+  /** Device-wide flag from before onboarding was tracked per account; only cleaned up now. */
+  private readonly LEGACY_ONBOARDING_KEY = 'onboarding_completed';
+  private readonly ONBOARDING_KEY_PREFIX = 'onboarding_completed.';
   private readonly LAST_USER_KEY = 'last_active_user_email';
 
   // In-memory cache so token reads stay synchronous (guards/interceptor rely on
@@ -36,14 +38,13 @@ export class AuthService {
   init(): Promise<void> {
     if (!this.hydrated) {
       this.hydrated = (async () => {
-        const [access, refresh, onboarding] = await Promise.all([
+        const [access, refresh] = await Promise.all([
           Preferences.get({ key: this.TOKEN_KEY }),
           Preferences.get({ key: this.REFRESH_KEY }),
-          Preferences.get({ key: this.ONBOARDING_KEY }),
         ]);
         this.accessToken = this.isJwtFormat(access.value) ? access.value : null;
         this.refreshToken = this.isJwtFormat(refresh.value) ? refresh.value : null;
-        this.onboardingCompleted = onboarding.value === 'true';
+        await this.loadOnboardingState();
       })();
     }
     return this.hydrated;
@@ -54,7 +55,9 @@ export class AuthService {
       tap((res: LoginResponse) => {
         this.storeTokens(res.accessToken, res.refreshToken);
         void this.clearLocalDataIfDifferentUser();
-      })
+      }),
+      // Guards read the onboarding state synchronously, so it must be loaded before anyone navigates.
+      switchMap((res) => from(this.loadOnboardingState()).pipe(map(() => res)))
     );
   }
 
@@ -71,7 +74,14 @@ export class AuthService {
         if (res?.accessToken && res?.refreshToken) {
           this.storeTokens(res.accessToken, res.refreshToken);
         }
-      })
+      }),
+      // A new account always starts at onboarding, whoever used this device before.
+      switchMap((res) =>
+        from(Preferences.set({ key: this.onboardingKey(email), value: 'false' })).pipe(
+          tap(() => (this.onboardingCompleted = false)),
+          map(() => res)
+        )
+      )
     );
   }
 
@@ -85,7 +95,7 @@ export class AuthService {
     this.onboardingCompleted = false;
     void Preferences.remove({ key: this.TOKEN_KEY });
     void Preferences.remove({ key: this.REFRESH_KEY });
-    void Preferences.remove({ key: this.ONBOARDING_KEY });
+    void Preferences.remove({ key: this.LEGACY_ONBOARDING_KEY });
     // Deliberately NOT clearing plan/progress/challenge data here — logging
     // out (including an automatic one after a failed token refresh, e.g. the
     // backend being briefly unreachable) isn't the same thing as switching
@@ -192,7 +202,26 @@ export class AuthService {
 
   setOnboardingCompleted(completed = true): void {
     this.onboardingCompleted = completed;
-    void Preferences.set({ key: this.ONBOARDING_KEY, value: completed ? 'true' : 'false' });
+    const email = this.getUserEmail();
+    if (email) void Preferences.set({ key: this.onboardingKey(email), value: completed ? 'true' : 'false' });
+  }
+
+  private onboardingKey(email: string): string {
+    return this.ONBOARDING_KEY_PREFIX + email.toLowerCase();
+  }
+
+  /**
+   * Onboarding is tracked per account. Only a new account is marked as not done, so an
+   * account that signed up before this was tracked isn't sent back through it.
+   */
+  private async loadOnboardingState(): Promise<void> {
+    const email = this.getUserEmail();
+    if (!email) {
+      this.onboardingCompleted = false;
+      return;
+    }
+    const { value } = await Preferences.get({ key: this.onboardingKey(email) });
+    this.onboardingCompleted = value !== 'false';
   }
 
   /** The `sub` claim the backend embeds in the access token — this is the user's email. */
