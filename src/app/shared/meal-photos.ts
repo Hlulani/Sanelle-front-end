@@ -4,6 +4,8 @@
  * nothing prominent that the recipe doesn't contain). Everything else uses the
  * designed fallback. Sources and licences: docs/design/image-credits.md.
  */
+import { environment } from '../../environments/environment';
+
 export interface MealPhoto {
   src: string;
   alt: string;
@@ -25,4 +27,13 @@ export const MEAL_PHOTOS: Record<string, MealPhoto> = {
 
 export function photoFor(name: string | undefined | null): MealPhoto | null {
   return (name && MEAL_PHOTOS[name]) || null;
+}
+
+/**
+ * The image to show for a meal: a photo stored with the recipe on the backend if
+ * there is one, otherwise a matched placeholder photo, otherwise null (designed tile).
+ */
+export function mealImageSrc(name: string | undefined | null, imageUrl?: string | null): string | null {
+  if (imageUrl) return imageUrl.startsWith('http') ? imageUrl : environment.hostBaseUrl + imageUrl;
+  return photoFor(name)?.src ?? null;
 }

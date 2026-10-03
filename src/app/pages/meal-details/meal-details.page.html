@@ -9,8 +9,8 @@
 
 <ion-content class="recipe-page">
   <ng-container *ngIf="meal; else notReady">
-    <section class="hero" [class.has-image]="meal.imageUrl">
-      <ion-img *ngIf="meal.imageUrl" [src]="imageUrl(meal.imageUrl)" class="hero-image"></ion-img>
+    <section class="hero" [class.has-image]="heroImage(meal)">
+      <ion-img *ngIf="heroImage(meal) as src" [src]="src" class="hero-image"></ion-img>
       <div class="hero-body">
         <h1>{{ meal.name }}</h1>
         <div class="meta-row">
@@ -20,11 +20,6 @@
       </div>
     </section>
 
-    <div class="stats-row">
-      <span class="app-chip">Anti-inf {{ meal.antiInflammatoryScore }}/5</span>
-      <span class="app-chip">Iron {{ meal.ironSupport }}/5</span>
-      <span class="app-chip">Fiber {{ meal.fiberScore }}/5</span>
-    </div>
 
     <section class="content-card" *ngIf="meal.colorPalette">
       <h2>On the plate</h2>

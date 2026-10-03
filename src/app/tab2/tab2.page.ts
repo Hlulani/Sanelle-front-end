@@ -69,6 +69,8 @@ type SwapOption = {
   fiberScore: number;
 };
 
+import { mealImageSrc } from '../shared/meal-photos';
+
 @Component({
   selector: 'app-tab2',
   standalone: true,
@@ -466,23 +468,19 @@ export class Tab2Page implements OnInit {
     }
   }
 
+  /** Factual tags only. Score-based labels ("anti-inflammatory", "iron-rich") aren't shown. */
   mealHighlights(meal: MealPlanItem): string[] {
-    const highlights: string[] = [];
+    const factual = ['vegan', 'vegetarian', 'gluten-free', 'dairy-free', 'quick', 'meal-prep', 'no-cook'];
+    return (meal.tags ?? [])
+      .map((t) => t.toLowerCase())
+      .filter((t) => factual.includes(t))
+      .slice(0, 2)
+      .map((t) => t.replace(/-/g, ' '))
+      .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+  }
 
-    if (meal.antiInflammatoryScore >= 4) highlights.push('Anti-inflammatory');
-    if (meal.ironSupport >= 4) highlights.push('Iron-rich');
-    if (meal.fiberScore >= 4) highlights.push('High in fiber');
-
-    if (highlights.length < 2) {
-      const extraTags = (meal.tags ?? [])
-        .filter((t) => !['vegan', 'vegetarian'].includes(t.toLowerCase()))
-        .slice(0, 2 - highlights.length)
-        .map((t) => t.replace(/-/g, ' '))
-        .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
-      highlights.push(...extraTags);
-    }
-
-    return highlights.length ? highlights : ['Balanced choice'];
+  mealImage(meal: { name?: string | null; imageUrl?: string | null }): string | null {
+    return mealImageSrc(meal.name, meal.imageUrl);
   }
 
   challenges(): ChallengeDefinition[] {
@@ -531,7 +529,8 @@ export class Tab2Page implements OnInit {
 
     for (const day of plan.daysPlan) {
       for (const meal of day.meals) {
-        if (meal.imageUrl) return meal.imageUrl;
+        const src = mealImageSrc(meal.name, meal.imageUrl);
+        if (src) return src;
       }
     }
     return null;

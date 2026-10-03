@@ -6,7 +6,6 @@ import {
   IonTitle, IonContent, IonImg, IonButton, IonIcon, IonModal
 } from '@ionic/angular/standalone';
 import { MealService } from '../../core/services/meal.service';
-import { environment } from '../../../environments/environment';
 import { Ingredient, MealResponse } from '../../core/models/meal.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { MealProgressService } from '../../core/services/meal-progress.service';
@@ -15,6 +14,8 @@ import { scaleIngredientAmount } from '../../core/services/ingredient-scaling.ut
 const MIN_SERVINGS = 1;
 const MAX_SERVINGS = 12;
 
+
+import { mealImageSrc } from '../../shared/meal-photos';
 
 @Component({
   selector: 'app-meal-details',
@@ -40,7 +41,6 @@ export class MealDetailsPage implements OnInit {
   private mealService = inject(MealService);
   private authService = inject(AuthService);
   mealProgress = inject(MealProgressService);
-  hostBaseUrl = environment.hostBaseUrl;
 
   meal: MealResponse | null = null;
   isLoading = true;
@@ -54,9 +54,8 @@ export class MealDetailsPage implements OnInit {
   cookModeOpen = signal(false);
   currentStep = signal(0);
 
-  imageUrl(path: string) {
-    if (!path) return '';
-    return path.startsWith('http') ? path : this.hostBaseUrl + path;
+  heroImage(meal: { name?: string | null; imageUrl?: string | null }): string | null {
+    return mealImageSrc(meal.name, meal.imageUrl);
   }
 
   ngOnInit() {

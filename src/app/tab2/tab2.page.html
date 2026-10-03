@@ -57,7 +57,7 @@
 
       <div class="meal-cards" *ngIf="selectedDay() as day">
         <div class="meal-card" *ngFor="let meal of day.meals">
-          <div class="meal-card-media" [class.no-photo]="!meal.imageUrl" [style.backgroundImage]="meal.imageUrl ? 'url(' + meal.imageUrl + ')' : ''">
+          <div class="meal-card-media" [class.no-photo]="!mealImage(meal)" [style.backgroundImage]="mealImage(meal) ? 'url(' + mealImage(meal) + ')' : ''">
             <span [class]="mealTypeClass(meal.mealType)">{{ mealTypeLabel(meal.mealType) }}</span>
             <button
               type="button"
@@ -433,7 +433,7 @@
             <ion-avatar
               slot="start"
               class="swap-avatar"
-              [style.backgroundImage]="option.imageUrl ? 'url(' + option.imageUrl + ')' : ''"
+              [style.backgroundImage]="mealImage(option) ? 'url(' + mealImage(option) + ')' : ''"
             ></ion-avatar>
             <ion-label>
               <h3>{{ option.name }}</h3>
