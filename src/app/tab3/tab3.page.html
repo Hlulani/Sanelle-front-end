@@ -1,19 +1,11 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/tab2" text="Back"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Groceries</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <div class="page-wrap">
     <div class="hero">
+      <button type="button" class="sn-back hero-back" (click)="goToPlan()">Nourish</button>
       <div class="hero-top">
         <div>
           <h1>Shopping list</h1>
-          <p class="sub">Everything for your current plan</p>
+          <p class="sub">{{ subtitle() }}</p>
         </div>
         <div class="progress-wrap" *ngIf="totalItems() > 0">
           <div
@@ -33,6 +25,18 @@
       </div>
     </div>
 
+    <div class="controls" *ngIf="plan()">
+      <p class="control-label" id="window-label">Shop for</p>
+      <div class="sn-segment" role="group" aria-labelledby="window-label">
+        <button type="button" *ngFor="let w of windows" [attr.aria-pressed]="window() === w" (click)="setWindow(w)">{{ windowLabels[w] }}</button>
+      </div>
+      <p class="control-label" id="view-label">Show</p>
+      <div class="sn-segment view-toggle" role="group" aria-labelledby="view-label">
+        <button type="button" [attr.aria-pressed]="view() === 'aisle'" (click)="view.set('aisle')">By aisle</button>
+        <button type="button" [attr.aria-pressed]="view() === 'meal'" (click)="view.set('meal')">By meal</button>
+      </div>
+    </div>
+
     <div class="state" *ngIf="!plan()">
       <p>No plan yet. Generate a plan to build your grocery list.</p>
       <ion-button expand="block" (click)="goToPlan()">Go to My Plan</ion-button>
@@ -48,7 +52,7 @@
 
     <div class="complete-state" *ngIf="plan() && allChecked()">
       <div class="complete-badge">✓</div>
-      <h2>All set for the week</h2>
+      <h2>All set</h2>
       <p>Your list is complete. You can regenerate or check your plan anytime.</p>
       <div class="complete-actions">
         <ion-button expand="block" (click)="goToPlan()">Back to My Plan</ion-button>
@@ -56,7 +60,7 @@
       </div>
     </div>
 
-    <div class="group-stack" *ngIf="plan() && !isLoading() && !error() && !allChecked()">
+    <div class="group-stack" *ngIf="plan() && view() === 'aisle' && !isLoading() && !error() && !allChecked()">
       <section class="group-card" *ngFor="let group of groupedItems()">
         <div class="group-header">
           <span class="group-pill">{{ group.group }}</span>
@@ -67,12 +71,37 @@
           <div class="item-card" *ngFor="let item of group.items">
             <ion-checkbox
               class="item-check"
+              [checked]="isChecked(item.name)"
+              [attr.aria-label]="'Got ' + item.name"
               (ionChange)="toggleChecked(item.name, $event.detail.checked)"
             ></ion-checkbox>
             <div class="item-body">
               <div class="item-name">{{ item.name }}</div>
-              <div class="item-amount" *ngIf="item.amounts.length">{{ item.amounts.join(', ') }}</div>
-              <div class="item-amount" *ngIf="!item.amounts.length">Quantity varies</div>
+              <div class="item-amount">{{ amountLine(item) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- By meal: what each planned meal needs. Ticks are shared with the aisle view. -->
+    <div class="group-stack" *ngIf="plan() && view() === 'meal' && !isLoading() && !error()">
+      <section class="group-card" *ngFor="let m of mealGroups(); trackBy: trackSlot">
+        <div class="group-header">
+          <span class="group-pill">{{ dayLabel(m.slot.date) }} · {{ mealTypeLabels[m.slot.mealType] }}</span>
+          <span class="group-count">{{ mealDone(m.ingredients) ? 'All set' : m.ingredients.length + ' items' }}</span>
+        </div>
+        <h3 class="meal-title">{{ m.slot.name }}</h3>
+        <div class="item-grid">
+          <div class="item-card" *ngFor="let ing of m.ingredients" [class.got]="isChecked(ing.name)">
+            <ion-checkbox
+              class="item-check"
+              [checked]="isChecked(ing.name)"
+              [attr.aria-label]="'Got ' + ing.name"
+              (ionChange)="toggleChecked(ing.name, $event.detail.checked)"
+            ></ion-checkbox>
+            <div class="item-body">
+              <div class="item-name">{{ ing.name }}</div>
+              <div class="item-amount">{{ ing.amount || 'Quantity varies' }}</div>
             </div>
           </div>
         </div>

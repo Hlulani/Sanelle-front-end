@@ -12,14 +12,16 @@ ion-content {
 }
 
 .page-wrap {
-  padding: 22px 16px 96px;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px 96px;
 }
 
+/* A full-width berry header, like the other screens, so the back button sits in the same place. */
 .hero {
   background: var(--sn-brand);
   color: var(--sn-on-brand);
-  border-radius: 26px;
-  padding: 22px 20px;
+  border-radius: 0 0 2.25rem 2.25rem;
+  margin: calc(-1 * (env(safe-area-inset-top, 0px) + 16px)) -16px 20px;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 24px;
 
   h1, .sub, .meta-pill { color: var(--sn-on-brand); }
   .sub { color: var(--sn-on-brand-muted); }
@@ -228,4 +230,45 @@ ion-content {
 .complete-actions ion-button {
   --border-radius: 14px;
   margin-top: 8px;
+}
+
+.controls {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.view-toggle {
+  justify-content: flex-start;
+}
+
+.control-label {
+  margin: 4px 0 -2px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--grocery-muted);
+}
+
+/* Small phones: a tighter header so the list starts sooner. */
+@media (max-width: 360px) {
+  .hero { padding: calc(env(safe-area-inset-top, 0px) + 20px) 16px 18px; }
+  .hero h1 { font-size: 1.625rem; }
+  .progress-ring { width: 96px; height: 96px; }
+  .progress-center { width: 74px; height: 74px; padding: 4px; }
+}
+
+.meal-title {
+  margin: 0 0 10px;
+  font: 800 1.0625rem/1.3 var(--sn-body);
+  color: var(--grocery-ink);
+}
+
+/* In the meal view, items she has stay visible but read as done. */
+.item-card.got .item-name {
+  text-decoration: line-through;
+  color: var(--grocery-muted);
+}
+
+.hero-back {
+  margin-bottom: 14px;
 }

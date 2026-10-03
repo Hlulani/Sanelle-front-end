@@ -1,26 +1,46 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonCheckbox } from '@ionic/angular/standalone';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealService } from '../core/services/meal.service';
 import { AuthService } from '../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { GenerateMealPlanResponse } from '../core/services/meal-plans.service';
+import { GenerateMealPlanResponse, MealPlanItem } from '../core/services/meal-plans.service';
 import { MealResponse } from '../core/models/meal.model';
+import {
+  AisleItem,
+  ShoppingWindow,
+  WINDOW_LABELS,
+  WINDOW_SUBTITLES,
+  byAisle,
+  byMeal,
+  haveKey,
+  slotsInWindow,
+} from './grocery-list';
 
-type GroceryItem = {
-  name: string;
-  amounts: string[];
-  group: string;
+type View = 'aisle' | 'meal';
+
+const MEAL_TYPE_LABELS: Record<MealPlanItem['mealType'], string> = {
+  BREAKFAST: 'Breakfast',
+  LUNCH: 'Lunch',
+  DINNER: 'Dinner',
+  SNACK: 'Snack',
 };
+
+const GROUP_ORDER = ['Produce', 'Meat', 'Seafood', 'Eggs', 'Dairy', 'Grains', 'Legumes', 'Nuts & Seeds', 'Condiments', 'Spices & Herbs', 'Sweeteners', 'Other'];
+
+function localIsoDate(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox, IonButtons, IonBackButton],
+  imports: [CommonModule, IonContent, IonButton, IonCheckbox],
 })
 export class Tab3Page implements OnInit {
   private planStore = inject(PlanStoreService);
@@ -28,59 +48,59 @@ export class Tab3Page implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  readonly windows: ShoppingWindow[] = ['three', 'week', 'all'];
+  readonly windowLabels = WINDOW_LABELS;
+  readonly mealTypeLabels = MEAL_TYPE_LABELS;
+
   plan = signal<GenerateMealPlanResponse | null>(null);
-  items = signal<GroceryItem[]>([]);
+  readonly window = signal<ShoppingWindow>('week');
+  readonly view = signal<View>('aisle');
+  /** Ingredient keys she already has. Shared by both views: ticking chickpeas in one meal ticks them everywhere. */
   checkedItems = signal<Set<string>>(new Set());
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  private readonly meals = signal<Map<string, MealResponse>>(new Map());
+  private readonly today = localIsoDate(new Date());
+
+  readonly slots = computed(() => {
+    const plan = this.plan();
+    return plan ? slotsInWindow(plan, this.window(), this.today) : [];
+  });
+  readonly items = computed<AisleItem[]>(() => byAisle(this.slots(), this.meals()));
+  readonly mealGroups = computed(() => byMeal(this.slots(), this.meals()));
+  readonly subtitle = computed(() => WINDOW_SUBTITLES[this.window()]);
+
   ngOnInit() {
     this.planStore.plan$.subscribe((plan) => {
       this.plan.set(plan);
-      if (!plan) {
-        this.items.set([]);
-        this.checkedItems.set(new Set());
-        return;
-      }
-      this.loadGroceryList(plan);
+      this.checkedItems.set(new Set());
+      if (plan) this.loadMissingMeals();
     });
   }
 
-  private loadGroceryList(plan: GenerateMealPlanResponse) {
+  setWindow(w: ShoppingWindow) {
+    this.window.set(w);
+    this.loadMissingMeals();
+  }
+
+  /** Fetches only meals in the window that haven't been loaded yet. */
+  private loadMissingMeals() {
     if (!this.authService.hasValidToken()) {
       this.error.set('Login required to build your grocery list.');
-      this.items.set([]);
       return;
     }
-
-    const mealIds = Array.from(new Set(
-      plan.daysPlan.reduce<string[]>((acc, day) => {
-        day.meals.forEach((meal) => {
-          if (meal.mealId) acc.push(meal.mealId);
-        });
-        return acc;
-      }, [])
-    ));
-
-    if (mealIds.length === 0) {
-      this.items.set([]);
-      return;
-    }
+    const known = this.meals();
+    const missing = [...new Set(this.slots().map((s) => s.mealId))].filter((id) => !known.has(id));
+    if (!missing.length) return;
 
     this.isLoading.set(true);
     this.error.set(null);
-
-    forkJoin(
-      mealIds.map((id: string) =>
-        this.mealService.getMealById(id).pipe(
-          catchError(() => of(null))
-        )
-      )
-    ).subscribe({
-      next: (meals) => {
-        const validMeals = meals.filter(Boolean) as MealResponse[];
-        this.items.set(this.buildGroceryList(validMeals));
-        this.checkedItems.set(new Set());
+    forkJoin(missing.map((id) => this.mealService.getMealById(id).pipe(catchError(() => of(null))))).subscribe({
+      next: (loaded) => {
+        const next = new Map(this.meals());
+        loaded.filter((m): m is MealResponse => !!m).forEach((m) => next.set(m.id, m));
+        this.meals.set(next);
         this.isLoading.set(false);
       },
       error: () => {
@@ -90,62 +110,19 @@ export class Tab3Page implements OnInit {
     });
   }
 
-  private buildGroceryList(meals: MealResponse[]): GroceryItem[] {
-    const map = new Map<string, { name: string; amounts: Set<string>; group: string }>();
-    meals.forEach((meal) => {
-      (meal.ingredients || []).forEach((ing) => {
-        const rawName = (ing.name || '').trim();
-        if (!rawName) return;
-        const key = rawName.toLowerCase();
-        if (!map.has(key)) {
-          const group = this.groupForIngredient(rawName);
-          map.set(key, { name: rawName, amounts: new Set<string>(), group });
-        }
-        if (ing.amount) map.get(key)?.amounts.add(ing.amount);
-      });
-    });
-
-    return Array.from(map.values())
-      .map((entry) => ({
-        name: entry.name,
-        amounts: Array.from(entry.amounts),
-        group: entry.group,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  private groupForIngredient(name: string): string {
-    const n = name.toLowerCase();
-    const has = (words: string[]) => words.some((w) => n.includes(w));
-
-    if (has(['milk', 'yogurt', 'cheese', 'butter', 'cream', 'ghee'])) return 'Dairy';
-    if (has(['chicken', 'beef', 'pork', 'turkey', 'lamb', 'bacon', 'sausage'])) return 'Meat';
-    if (has(['salmon', 'tuna', 'shrimp', 'prawn', 'fish', 'cod', 'tilapia'])) return 'Seafood';
-    if (has(['egg'])) return 'Eggs';
-    if (has(['apple', 'banana', 'berry', 'berries', 'orange', 'lemon', 'lime', 'grape', 'pear', 'mango', 'pineapple', 'avocado'])) return 'Produce';
-    if (has(['spinach', 'kale', 'lettuce', 'cabbage', 'broccoli', 'carrot', 'tomato', 'pepper', 'onion', 'garlic', 'zucchini', 'mushroom', 'cucumber', 'potato', 'sweet potato'])) return 'Produce';
-    if (has(['rice', 'pasta', 'bread', 'oats', 'quinoa', 'flour', 'tortilla'])) return 'Grains';
-    if (has(['bean', 'lentil', 'chickpea', 'peas'])) return 'Legumes';
-    if (has(['almond', 'cashew', 'walnut', 'peanut', 'pecan', 'nut', 'seed', 'chia', 'flax', 'pumpkin seed', 'sunflower'])) return 'Nuts & Seeds';
-    if (has(['oil', 'olive', 'coconut oil', 'vinegar', 'soy sauce', 'tamari', 'mustard', 'ketchup', 'mayo'])) return 'Condiments';
-    if (has(['salt', 'pepper', 'cumin', 'paprika', 'turmeric', 'ginger', 'cinnamon', 'spice', 'herb'])) return 'Spices & Herbs';
-    if (has(['sugar', 'honey', 'maple'])) return 'Sweeteners';
-    return 'Other';
+  isChecked(name: string): boolean {
+    return this.checkedItems().has(haveKey(name));
   }
 
   toggleChecked(name: string, checked: boolean) {
     const set = new Set(this.checkedItems());
-    if (checked) {
-      set.add(name);
-    } else {
-      set.delete(name);
-    }
+    if (checked) set.add(haveKey(name));
+    else set.delete(haveKey(name));
     this.checkedItems.set(set);
   }
 
-  visibleItems(): GroceryItem[] {
-    const checked = this.checkedItems();
-    return this.items().filter((item) => !checked.has(item.name));
+  visibleItems(): AisleItem[] {
+    return this.items().filter((item) => !this.isChecked(item.name));
   }
 
   allChecked(): boolean {
@@ -156,34 +133,33 @@ export class Tab3Page implements OnInit {
     this.checkedItems.set(new Set());
   }
 
-  groupedItems(): { group: string; items: GroceryItem[] }[] {
-    const groups = new Map<string, GroceryItem[]>();
+  amountLine(item: AisleItem): string {
+    const amounts = item.amounts.length ? item.amounts.join(', ') : 'Quantity varies';
+    return item.mealCount > 1 ? `${amounts} · for ${item.mealCount} meals` : amounts;
+  }
+
+  /** "Today", "Tomorrow" or "Mon 5". */
+  dayLabel(iso: string): string {
+    if (iso === this.today) return 'Today';
+    const tomorrow = new Date(this.today + 'T00:00:00');
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (iso === localIsoDate(tomorrow)) return 'Tomorrow';
+    return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric' }).format(new Date(iso + 'T00:00:00'));
+  }
+
+  mealDone(ingredients: { name: string }[]): boolean {
+    return ingredients.length > 0 && ingredients.every((i) => this.isChecked(i.name));
+  }
+
+  groupedItems(): { group: string; items: AisleItem[] }[] {
+    const groups = new Map<string, AisleItem[]>();
     this.visibleItems().forEach((item) => {
       if (!groups.has(item.group)) groups.set(item.group, []);
       groups.get(item.group)?.push(item);
     });
-
-    const order = [
-      'Produce',
-      'Meat',
-      'Seafood',
-      'Eggs',
-      'Dairy',
-      'Grains',
-      'Legumes',
-      'Nuts & Seeds',
-      'Condiments',
-      'Spices & Herbs',
-      'Sweeteners',
-      'Other',
-    ];
-
     return Array.from(groups.entries())
-      .map(([group, items]) => ({
-        group,
-        items: items.sort((a, b) => a.name.localeCompare(b.name)),
-      }))
-      .sort((a, b) => order.indexOf(a.group) - order.indexOf(b.group));
+      .map(([group, items]) => ({ group, items: items.sort((a, b) => a.name.localeCompare(b.name)) }))
+      .sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group));
   }
 
   totalItems(): number {
@@ -191,7 +167,7 @@ export class Tab3Page implements OnInit {
   }
 
   checkedCount(): number {
-    return this.checkedItems().size;
+    return this.items().filter((i) => this.isChecked(i.name)).length;
   }
 
   groupCount(): number {
@@ -200,8 +176,11 @@ export class Tab3Page implements OnInit {
 
   progressPercent(): number {
     const total = this.totalItems();
-    if (!total) return 0;
-    return Math.round((this.checkedCount() / total) * 100);
+    return total ? Math.round((this.checkedCount() / total) * 100) : 0;
+  }
+
+  trackSlot(_: number, m: { slot: { key: string } }): string {
+    return m.slot.key;
   }
 
   goToPlan() {
