@@ -16,7 +16,7 @@ interface Choice<T> {
 /** Where each "help me first with" choice lands after onboarding. */
 export const LANDING: Record<HelpFirst, { url: string; queryParams?: Record<string, string> }> = {
   diagnosis: { url: '/health/record/count', queryParams: { flow: '1' } },
-  food: { url: '/learn/dairy' },
+  food: { url: '/tabs/learn' },
   meals: { url: '/tabs/tab2' },
   appointment: { url: '/tabs/health' },
 };
