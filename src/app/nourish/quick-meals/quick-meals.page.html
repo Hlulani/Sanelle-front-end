@@ -1,0 +1,44 @@
+<ion-content [fullscreen]="true" class="quick">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ Back</button>
+      <h1>Easy meals for today</h1>
+      <p class="sn-head-note">Ready in {{ minutes }} minutes or less, and matching your saved preferences.</p>
+    </header>
+
+    <section class="sn-card intro">
+      @if (hasAllergies()) {
+        <p>We leave out meals with ingredients you’ve listed. Always check labels.</p>
+      } @else {
+        <p>Set your diet, allergies and foods you don’t eat in <a routerLink="/tabs/tab2">plan settings</a>.</p>
+      }
+    </section>
+
+    @if (error()) {
+      <p class="state" role="alert">Couldn’t load meals. Check your connection and try again.</p>
+    } @else if (sections() === null) {
+      <p class="state" role="status">Finding meals…</p>
+    } @else if (!sections()!.length) {
+      <p class="state">No meals match all your settings in {{ minutes }} minutes. Try changing them in <a routerLink="/tabs/tab2">plan settings</a>.</p>
+    } @else {
+      @for (s of sections(); track s.label) {
+        <section class="sn-section" [attr.aria-labelledby]="'q-' + s.label">
+          <h2 [id]="'q-' + s.label">{{ s.label }}</h2>
+          <ul class="meals">
+            @for (m of s.meals; track m.mealId) {
+              <li>
+                <a class="meal" [routerLink]="['/meal-details', m.mealId]">
+                  <app-meal-image class="meal-img" [name]="m.name" [mealType]="m.mealType"></app-meal-image>
+                  <span class="meal-text">
+                    <span class="meal-name">{{ m.name }}</span>
+                    <span class="meal-why">{{ why(m) }}</span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  </main>
+</ion-content>

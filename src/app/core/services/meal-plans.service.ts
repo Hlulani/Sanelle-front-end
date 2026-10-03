@@ -29,7 +29,8 @@ export interface GenerateMealPlanRequest {
 
 export interface SwapOptionsRequest {
   mealType: MealPlanItem['mealType'];
-  currentMealId: string;
+  /** Null when not swapping out a meal, e.g. when just finding quick meals. */
+  currentMealId: string | null;
   proteinPreference: ProteinPreference;
   maxPrepMinutes: number | null;
   allergies: string[];

@@ -13,6 +13,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'nourish/quick',
+    loadComponent: () => import('./nourish/quick-meals/quick-meals.page').then(m => m.QuickMealsPage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'health/recorded',
     loadComponent: () => import('./my-health/recorded/recorded.page').then(m => m.RecordedPage),
     canActivate: [authGuard],

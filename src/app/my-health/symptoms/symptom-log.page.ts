@@ -46,6 +46,9 @@ export class SymptomLogPage implements OnInit {
   notes = '';
   treatmentChange = '';
   readonly maxDate = isoToday();
+  /** Where she came from: saving today's check-in returns to Today; editing from history returns there. */
+  readonly from = signal<'today' | 'health' | 'history'>('today');
+  readonly backLabel = computed(() => ({ today: '‹ Today', health: '‹ My health', history: '‹ Symptoms' })[this.from()]);
 
   readonly dateLabel = computed(() => {
     if (this.date() === isoToday()) return 'Today';
@@ -57,6 +60,8 @@ export class SymptomLogPage implements OnInit {
   async ngOnInit() {
     const d = this.route.snapshot.paramMap.get('date');
     if (d && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= isoToday()) this.date.set(d);
+    const from = this.route.snapshot.queryParamMap.get('from');
+    if (from === 'health' || from === 'history') this.from.set(from);
     await this.repo.load();
     this.fill(this.repo.symptomsOn(this.date()));
   }
@@ -102,10 +107,15 @@ export class SymptomLogPage implements OnInit {
       notes: this.notes.trim() || undefined,
       treatmentChange: this.treatmentChange.trim() || undefined,
     });
-    this.router.navigateByUrl('/health/symptoms');
+    // Back to where she started, with a short confirmation on Today. Never into another questionnaire.
+    if (this.from() === 'history') {
+      this.router.navigateByUrl('/health/symptoms', { replaceUrl: true });
+    } else {
+      this.router.navigate(['/tabs/today'], { queryParams: { checkin: this.date() }, replaceUrl: true });
+    }
   }
 
   close() {
-    this.router.navigateByUrl('/health/symptoms');
+    this.router.navigateByUrl({ today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()]);
   }
 }

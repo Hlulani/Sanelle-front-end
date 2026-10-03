@@ -74,14 +74,45 @@
     </section>
 
     @if (started()) {
-      <section class="block">
-        <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]">
-          <span class="card-text">
-            <span class="card-title">{{ loggedToday() ? 'Today is logged' : 'How was today?' }}</span>
-            <span class="card-sub">{{ loggedToday() ? 'Tap to edit' : 'Bleeding, pain, tiredness, in a few taps' }}</span>
-          </span>
-          <span class="chev" aria-hidden="true">›</span>
-        </a>
+      <section class="block" aria-labelledby="checkin-title">
+        @if (todayEntry(); as e) {
+          <!-- A compact confirmation, then at most two useful next steps. Doing nothing else is fine. -->
+          <div class="checkin-card" [attr.role]="justCheckedIn() ? 'status' : null">
+            <div class="checkin-head">
+              <h2 id="checkin-title">{{ justCheckedIn() ? 'Today’s check-in saved' : 'Today’s check-in' }}</h2>
+              <a class="edit-link" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">Edit</a>
+            </div>
+            @if (impactOf(e); as impact) {
+              <p class="checkin-impact">{{ impact }}</p>
+            }
+            @if (partsOf(e).length) {
+              <p class="checkin-parts">{{ partsOf(e).join(' · ') }}</p>
+            }
+            @if (e.treatmentChange) {
+              <p class="checkin-parts">Treatment change: {{ e.treatmentChange }}</p>
+            }
+          </div>
+          @if (support().length) {
+            <h2 class="support-title" id="support-title">What would help right now?</h2>
+            @for (a of support(); track a.id) {
+              <a class="card-row" [routerLink]="a.route" [queryParams]="a.queryParams" (click)="useSupport(a.id)">
+                <span class="card-text">
+                  <span class="card-title">{{ a.title }}</span>
+                  <span class="card-sub">{{ a.body }}</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            }
+          }
+        } @else {
+          <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">
+            <span class="card-text">
+              <span class="card-title" id="checkin-title">How was today?</span>
+              <span class="card-sub">Optional. Bleeding, pain, tiredness and what it got in the way of.</span>
+            </span>
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
+        }
       </section>
     }
 

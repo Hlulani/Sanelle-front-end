@@ -3,37 +3,68 @@
     <header class="sn-head">
       <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ My health</button>
       <h1>Symptoms</h1>
-      <p class="sn-head-note">Logged {{ loggedCount() }} of the last {{ span() }} days.</p>
+      <p class="sn-head-note">{{ coverage() }}</p>
     </header>
 
-    <section class="sn-card log-card">
-      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', days()[0].date]">
-        {{ days()[0].entry ? 'Edit today' : 'Log today' }}
-      </a>
-    </section>
+    @if (entries().length) {
+      @if (observations().length) {
+        <section class="sn-card obs" aria-labelledby="obs-title">
+          <h2 id="obs-title">What your check-ins show</h2>
+          <ul>
+            @for (o of observations(); track o) {
+              <li>{{ o }}</li>
+            }
+          </ul>
+          <p class="unknown">Days without a check-in are unknown. They aren’t counted as symptom-free.</p>
+        </section>
+      } @else {
+        <section class="sn-card obs">
+          <p class="unknown">Counts appear once you have two or more check-ins. Days without a check-in are unknown, not symptom-free.</p>
+        </section>
+      }
 
-    <section class="sn-section" aria-labelledby="days-title">
-      <h2 id="days-title">Last {{ span() }} days</h2>
-      <ol class="days">
-        @for (d of days(); track d.date) {
-          <li>
-            <a class="day" [routerLink]="['/health/symptoms/log', d.date]" [attr.aria-label]="d.label + (d.entry ? ': ' + d.parts.join(', ') : ': not logged')">
-              <span class="day-label">{{ d.label }}</span>
-              @if (d.entry) {
-                <span class="day-parts">
-                  @for (p of d.parts; track p) {
-                    <span class="part">{{ p }}</span>
-                  }
-                </span>
-              } @else {
-                <span class="sn-status sn-status--unknown">Not logged</span>
+      <section class="sn-section" aria-labelledby="list-title">
+        <div class="list-head">
+          <h2 id="list-title">Your check-ins</h2>
+          <button type="button" class="span" (click)="toggleSpan()">{{ span() === 14 ? 'Show 30 days' : 'Show 14 days' }}</button>
+        </div>
+        <ol class="entries">
+          @for (e of entries(); track e.date) {
+            <li class="entry">
+              <div class="entry-head">
+                <span class="entry-date">{{ label(e) }}</span>
+                <a class="edit" [routerLink]="['/health/symptoms/log', e.date]" [queryParams]="{ from: 'history' }" [attr.aria-label]="'Edit ' + label(e)">Edit</a>
+              </div>
+              @if (impact(e); as i) {
+                <p class="entry-impact">{{ i }}</p>
               }
-            </a>
-          </li>
+              @if (parts(e).length) {
+                <p class="entry-parts">{{ parts(e).join(' · ') }}</p>
+              }
+              @if (e.treatmentChange) {
+                <p class="entry-treatment">Treatment change: {{ e.treatmentChange }}</p>
+              }
+              @if (e.notes) {
+                <p class="entry-note">“{{ e.notes }}”</p>
+              }
+            </li>
+          }
+        </ol>
+      </section>
+    } @else {
+      <section class="sn-card empty">
+        <p>No check-ins in the last {{ span() }} days.</p>
+        <p class="unknown">Check-ins are optional. If you add some, Sanelle counts what you recorded for your appointment summary.</p>
+        @if (span() === 14) {
+          <button type="button" class="span" (click)="toggleSpan()">Look at 30 days</button>
         }
-      </ol>
-      <button type="button" class="more" (click)="showMore()">{{ span() === 14 ? 'Show 30 days' : 'Show 14 days' }}</button>
-      <p class="hint">Days you didn’t log are left blank, not counted as symptom-free.</p>
+      </section>
+    }
+
+    <section class="actions">
+      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'history' }">
+        {{ loggedToday() ? 'Edit today’s check-in' : 'Check in today' }}
+      </a>
     </section>
   </main>
 </ion-content>

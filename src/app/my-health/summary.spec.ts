@@ -85,10 +85,10 @@ describe('summariseSymptoms', () => {
       ],
       today,
     )!;
-    expect(s.coverage).toBe('Logged 3 days of the last 30. Days without an entry aren’t counted.'.replace('’', "'"));
-    expect(s.lines).toContain('Bleeding: recorded on 3 days; bleeding on 2 days, heavy or very heavy on 2 days (very heavy on 1 day).');
-    expect(s.lines).toContain('Pain (0 to 10): recorded on 3 days, ranging 2 to 8; 7 or more on 1 day.');
-    expect(s.lines).toContain('Affected: sleep on 1 day, work or study on 1 day.');
+    expect(s.coverage).toBe("3 check-ins in the last 30 days. Days without a check-in are unknown and aren't counted.");
+    expect(s.lines).toContain('Bleeding: on 2 of 3 check-ins, heavy or very heavy on 2 (very heavy on 1).');
+    expect(s.lines).toContain('Pain (0 to 10): recorded on 3 of 3 check-ins, ranging 2 to 8; 7 or more on 1.');
+    expect(s.lines).toContain('Affected: sleep on 1 of 3 check-ins, work or study on 1 of 3 check-ins.');
   });
 
   it('leaves out fields that were never recorded instead of reporting them as none', () => {
@@ -102,5 +102,19 @@ describe('summariseSymptoms', () => {
     for (const word of ['because', 'caused', 'due to', 'improv', 'worse', 'better', 'dairy', 'inflam']) {
       expect(text).not.toContain(word);
     }
+  });
+});
+
+describe('check-ins in the summary', () => {
+  it('leaves them out when she switches them off, and keeps everything else', () => {
+    const today = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const date = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    const record = { ...emptyHealthRecord(), symptoms: [{ date, fatigue: 'severe' as const, affected: ['work' as const] }], questions: [{ id: '1', text: 'Q?', origin: 'custom' as const, createdAt: '' }] };
+    expect(buildSummary(record).symptoms).not.toBeNull();
+    const off = buildSummary({ ...record, summaryIncludesCheckins: false });
+    expect(off.symptoms).toBeNull();
+    expect(off.questions).toEqual(['Q?']);
+    expect(summaryAsText(off)).not.toContain('Symptoms I logged');
   });
 });

@@ -140,6 +140,10 @@ export class HealthRepository {
     return this.update((r) => ({ ...r, summaryNotes: notes }));
   }
 
+  setSummaryIncludesCheckins(include: boolean): Promise<void> {
+    return this.update((r) => ({ ...r, summaryIncludesCheckins: include }));
+  }
+
   /** Removes this person's records from the device (used when deleting the account). */
   async clearCurrentUser(): Promise<void> {
     const email = this.auth.getUserEmail();

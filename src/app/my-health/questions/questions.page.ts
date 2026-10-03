@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
@@ -15,7 +15,7 @@ export const STARTER_QUESTIONS = [
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [FormsModule, IonContent],
+  imports: [FormsModule, IonContent, RouterLink],
   templateUrl: './questions.page.html',
   styleUrls: ['./questions.page.scss'],
 })
@@ -27,6 +27,8 @@ export class QuestionsPage {
   readonly questions = this.repo.questions;
   readonly editing = signal<string | null>(null);
   readonly answering = signal<string | null>(null);
+  readonly fromCheckin = signal(false);
+  readonly added = signal<string | null>(null);
   draft = '';
   newQuestion = '';
 
@@ -53,6 +55,12 @@ export class QuestionsPage {
 
   ionViewWillEnter() {
     this.from.set(this.route.snapshot.queryParamMap.get('from') === 'today' ? 'today' : 'health');
+    // A question drafted from a check-in arrives here to be edited, not saved for her.
+    const draft = this.route.snapshot.queryParamMap.get('draft');
+    if (draft) {
+      this.newQuestion = draft;
+      this.fromCheckin.set(true);
+    }
     void this.repo.load();
   }
 
@@ -73,6 +81,8 @@ export class QuestionsPage {
     if (!text) return;
     void this.repo.addQuestion(text);
     this.newQuestion = '';
+    this.added.set(text);
+    this.fromCheckin.set(false);
   }
 
   move(q: AppointmentQuestion, delta: -1 | 1) {

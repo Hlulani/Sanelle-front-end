@@ -160,3 +160,13 @@
 .none {
   color: var(--sn-on-brand-muted);
 }
+
+.draft-note,
+.added-note {
+  font-size: 0.9375rem;
+  color: var(--sn-muted);
+
+  a { color: var(--sn-brand); font-weight: 800; }
+}
+
+.added-note { color: var(--sn-present); font-weight: 700; }

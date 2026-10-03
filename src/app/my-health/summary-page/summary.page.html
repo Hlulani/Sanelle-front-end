@@ -49,6 +49,7 @@
       @if (summary().symptoms; as sym) {
         <section class="doc-section">
           <h3>Symptoms I logged <span class="period">{{ sym.periodLabel }}</span></h3>
+          <p class="source-note">Counted by Sanelle from my check-ins.</p>
           <p class="unknown">{{ sym.coverage }}</p>
           <ul class="sym">
             @for (l of sym.lines; track l) {
@@ -64,6 +65,13 @@
             </ul>
           }
         </section>
+      }
+
+      @if (hasCheckins()) {
+        <label class="include sn-no-print">
+          <input type="checkbox" [checked]="includeCheckins()" (change)="setIncludeCheckins($any($event.target).checked)" />
+          <span>Include my check-ins</span>
+        </label>
       }
 
       <section class="doc-section">
@@ -84,6 +92,7 @@
 
       <section class="doc-section">
         <h3>Notes</h3>
+        <p class="source-note sn-no-print">In my own words: what matters most to me, and anything else to mention.</p>
         <label class="sn-field sn-no-print">
           <span class="visually-hidden">Notes for the appointment</span>
           <textarea [(ngModel)]="notes" (blur)="saveNotes()" placeholder="Symptoms, how things affect daily life, what matters most to you"></textarea>

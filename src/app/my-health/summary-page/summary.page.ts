@@ -19,6 +19,8 @@ export class SummaryPage {
 
   readonly summary = computed(() => buildSummary(this.repo.record()));
   readonly status = signal<string | null>(null);
+  readonly hasCheckins = computed(() => (this.repo.record().symptoms ?? []).length > 0);
+  readonly includeCheckins = computed(() => this.repo.record().summaryIncludesCheckins !== false);
   notes = '';
 
   async ionViewWillEnter() {
@@ -28,6 +30,10 @@ export class SummaryPage {
 
   back() {
     this.router.navigateByUrl('/tabs/health');
+  }
+
+  setIncludeCheckins(include: boolean) {
+    void this.repo.setSummaryIncludesCheckins(include);
   }
 
   saveNotes() {

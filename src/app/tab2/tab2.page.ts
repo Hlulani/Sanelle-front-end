@@ -396,6 +396,7 @@ export class Tab2Page implements OnInit {
   setProteinPreference(value: string | undefined | null) {
     if (PROTEIN_PREFERENCES.includes(value as ProteinPreference)) {
       this.proteinPreference.set(value as ProteinPreference);
+      void this.focusPreferences.saveDiet(value as ProteinPreference);
     }
   }
 

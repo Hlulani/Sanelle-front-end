@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../core/auth/auth.service';
@@ -10,6 +10,10 @@ import { HealthRepository } from '../my-health/health-repository';
 import { FINDINGS, FINDING_KEYS, FindingKey, findingOrUnknown } from '../my-health/diagnosis.model';
 import { FocusPreferencesService } from '../core/services/focus-preferences.service';
 import { contextLine, diagnosisStep, leadArea, nextStep, supportingAreas } from './next-step';
+import { SupportId, supportActions } from './checkin-support';
+import { SupportUsedService } from './support-used.service';
+import { impactLine, symptomParts } from '../my-health/checkins';
+import { SymptomEntry } from '../my-health/diagnosis.model';
 import { FindingStatusComponent } from '../my-health/finding-status.component';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
 import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
@@ -40,6 +44,8 @@ export class TodayPage implements OnInit {
   private topics = inject(EvidenceTopicsService);
   private health = inject(HealthRepository);
   private focusPreferences = inject(FocusPreferencesService);
+  private route = inject(ActivatedRoute);
+  private supportUsed = inject(SupportUsedService);
 
   private readonly plan = toSignal(this.planStore.plan$, { initialValue: null });
 
@@ -88,7 +94,19 @@ export class TodayPage implements OnInit {
 
   readonly questionCount = computed(() => this.health.record().questions.length);
   readonly todayIso = localIsoDate(new Date());
-  readonly loggedToday = computed(() => (this.health.record().symptoms ?? []).some((s) => s.date === this.todayIso));
+  readonly todayEntry = computed(() => (this.health.record().symptoms ?? []).find((s) => s.date === this.todayIso) ?? null);
+  /** True right after saving today's check-in, for the "saved" confirmation. */
+  readonly justCheckedIn = signal(false);
+  readonly support = computed(() => {
+    const entry = this.todayEntry();
+    if (!entry) return [];
+    return supportActions({
+      entry,
+      questions: this.health.record().questions,
+      focus: this.focusPreferences.focus(),
+      usedToday: this.supportUsed.used(),
+    });
+  });
 
   readonly todaysMeals = computed<MealPlanItem[]>(() => {
     const plan = this.plan();
@@ -112,6 +130,20 @@ export class TodayPage implements OnInit {
   ionViewWillEnter() {
     void this.health.load();
     void this.focusPreferences.loadFocus();
+    void this.supportUsed.load(this.todayIso);
+    this.justCheckedIn.set(this.route.snapshot.queryParamMap.get('checkin') === this.todayIso);
+  }
+
+  impactOf(e: SymptomEntry): string | null {
+    return impactLine(e);
+  }
+
+  partsOf(e: SymptomEntry): string[] {
+    return symptomParts(e);
+  }
+
+  useSupport(id: SupportId) {
+    void this.supportUsed.markUsed(id, this.todayIso);
   }
 
   name(): string {

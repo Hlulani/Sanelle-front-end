@@ -190,6 +190,8 @@ export interface HealthRecord {
   questions: AppointmentQuestion[];
   appointment: Appointment;
   summaryNotes: string;
+  /** Whether check-ins go into the appointment summary. Missing means yes. */
+  summaryIncludesCheckins?: boolean;
   symptoms: SymptomEntry[];
 }
 

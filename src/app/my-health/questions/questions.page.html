@@ -61,6 +61,12 @@
 
     <section class="sn-section" aria-labelledby="own-title">
       <h2 id="own-title">Add your own</h2>
+      @if (fromCheckin()) {
+        <p class="draft-note">Written from today’s check-in. Change it to say what you want to ask, then tap Add.</p>
+      }
+      @if (added(); as a) {
+        <p class="added-note" role="status">Added “{{ a }}”. It’s in your <a routerLink="/health/summary">appointment summary</a>.</p>
+      }
       <form class="own" (submit)="$event.preventDefault(); addOwn()">
         <label class="sn-field">
           <span class="visually-hidden">Your question</span>

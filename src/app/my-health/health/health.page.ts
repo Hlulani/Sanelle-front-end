@@ -5,7 +5,8 @@ import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { FINDINGS, FINDING_KEYS, diagnosisProgress, findingOrUnknown } from '../diagnosis.model';
 import { FindingStatusComponent } from '../finding-status.component';
-import { buildTimeline } from '../symptoms/symptom-timeline.page';
+import { checkinsInWindow, coverageLine, impactLine, isoDay, symptomParts } from '../checkins';
+import { dayLabel } from '../symptoms/symptom-timeline.page';
 
 @Component({
   selector: 'app-health',
@@ -27,14 +28,15 @@ export class HealthPage {
   });
   readonly questions = this.repo.questions;
   readonly appointment = computed(() => this.repo.record().appointment);
-  /** Last 7 days, oldest first, for the small strip. */
-  readonly week = computed(() => buildTimeline(this.repo.record().symptoms ?? [], 7).reverse());
-  readonly today = computed(() => this.week()[this.week().length - 1]);
-
-  shortDay(d: { date: string; label: string }): string {
-    if (d.label === 'Today') return 'Today';
-    return new Intl.DateTimeFormat('en-GB', { weekday: 'short' }).format(new Date(d.date + 'T00:00:00'));
-  }
+  /** The latest check-in and coverage, instead of a strip of empty days. */
+  readonly todayIso = isoDay(new Date());
+  private readonly recent = computed(() => checkinsInWindow(this.repo.record().symptoms ?? [], 14));
+  readonly coverage = computed(() => coverageLine(this.recent().length, 14));
+  readonly latest = computed(() => this.recent()[0] ?? null);
+  readonly loggedToday = computed(() => this.latest()?.date === this.todayIso);
+  readonly latestLabel = computed(() => (this.latest() ? dayLabel(this.latest()!.date) : ''));
+  readonly latestImpact = computed(() => (this.latest() ? impactLine(this.latest()!) : null));
+  readonly latestParts = computed(() => (this.latest() ? symptomParts(this.latest()!) : []));
 
   ionViewWillEnter() {
     void this.repo.load();

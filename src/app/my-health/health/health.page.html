@@ -47,16 +47,19 @@
         <h2 id="sym-title">Symptoms</h2>
         <a class="see-all" routerLink="/health/symptoms">See all</a>
       </div>
-      <div class="week" role="list" aria-label="Last 7 days">
-        @for (d of week(); track d.date) {
-          <a class="dot" role="listitem" [class.logged]="!!d.entry" [routerLink]="['/health/symptoms/log', d.date]"
-             [attr.aria-label]="d.label + (d.entry ? ': logged' : ': not logged')">
-            <span class="dot-day">{{ shortDay(d) }}</span>
-            <span class="dot-mark" aria-hidden="true"></span>
-          </a>
-        }
-      </div>
-      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', today().date]">{{ today().entry ? 'Edit today' : 'Log today' }}</a>
+      <p class="coverage">{{ coverage() }}</p>
+      @if (latest(); as e) {
+        <a class="latest" routerLink="/health/symptoms">
+          <span class="latest-date">{{ latestLabel() }}</span>
+          @if (latestImpact(); as i) {
+            <span class="latest-impact">{{ i }}</span>
+          }
+          @if (latestParts().length) {
+            <span class="latest-parts">{{ latestParts().join(' · ') }}</span>
+          }
+        </a>
+      }
+      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'health' }">{{ loggedToday() ? 'Edit today’s check-in' : 'Check in today' }}</a>
     </section>
 
     <div class="sn-band">

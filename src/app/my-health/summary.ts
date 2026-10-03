@@ -33,7 +33,7 @@ export interface AppointmentSummary {
 
 export interface SymptomSummary {
   periodLabel: string;
-  /** e.g. "Logged 12 of the last 30 days. Days without an entry aren't counted." */
+  /** e.g. "12 check-ins in the last 30 days. Days without a check-in are unknown and aren't counted." */
   coverage: string;
   lines: string[];
   treatmentChanges: string[];
@@ -44,10 +44,6 @@ export const SYMPTOM_PERIOD_DAYS = 30;
 function isoDay(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
-function days(n: number): string {
-  return `${n} ${n === 1 ? 'day' : 'days'}`;
 }
 
 /**
@@ -62,14 +58,17 @@ export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), p
   const inPeriod = entries.filter((e) => e.date >= from && e.date <= to);
   if (!inPeriod.length) return null;
 
+  // The denominator is always the check-ins recorded in the period, never the days in it.
+  const n = inPeriod.length;
+  const of = (count: number) => `${count} of ${n} ${n === 1 ? 'check-in' : 'check-ins'}`;
   const lines: string[] = [];
   const bleedingDays = inPeriod.filter((e) => e.bleeding !== undefined);
   if (bleedingDays.length) {
     const heavy = bleedingDays.filter((e) => e.bleeding === 'heavy' || e.bleeding === 'very-heavy').length;
     const veryHeavy = bleedingDays.filter((e) => e.bleeding === 'very-heavy').length;
     const any = bleedingDays.filter((e) => e.bleeding !== 'none').length;
-    let text = `Bleeding: recorded on ${days(bleedingDays.length)}; bleeding on ${days(any)}, heavy or very heavy on ${days(heavy)}`;
-    if (veryHeavy) text += ` (${BLEEDING_LABELS['very-heavy'].toLowerCase()} on ${days(veryHeavy)})`;
+    let text = `Bleeding: on ${of(any)}, heavy or very heavy on ${heavy}`;
+    if (veryHeavy) text += ` (${BLEEDING_LABELS['very-heavy'].toLowerCase()} on ${veryHeavy})`;
     lines.push(text + '.');
   }
   const painDays = inPeriod.filter((e) => e.pain !== undefined).map((e) => e.pain as number);
@@ -77,32 +76,29 @@ export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), p
     const max = Math.max(...painDays);
     const min = Math.min(...painDays);
     const sevenPlus = painDays.filter((p) => p >= 7).length;
-    lines.push(
-      `Pain (0 to 10): recorded on ${days(painDays.length)}, ranging ${min} to ${max}` +
-        (sevenPlus ? `; 7 or more on ${days(sevenPlus)}.` : '.'),
-    );
+    lines.push(`Pain (0 to 10): recorded on ${of(painDays.length)}, ${min === max ? `at ${min}` : `ranging ${min} to ${max}`}` + (sevenPlus ? `; 7 or more on ${sevenPlus}.` : '.'));
   }
   for (const [field, label] of [['bloating', 'Pressure or bloating'], ['fatigue', 'Tiredness']] as const) {
     const recorded = inPeriod.filter((e) => e[field] !== undefined);
     if (!recorded.length) continue;
     const severe = recorded.filter((e) => e[field] === 'severe').length;
     const present = recorded.filter((e) => e[field] !== 'none').length;
-    lines.push(`${label}: present on ${days(present)} of ${days(recorded.length)} recorded` + (severe ? `, severe on ${days(severe)}.` : '.'));
+    lines.push(`${label}: on ${of(present)}` + (severe ? `, severe on ${severe}.` : '.'));
   }
   const impactRecorded = inPeriod.filter((e) => e.affected !== undefined);
   if (impactRecorded.length) {
     const parts = (Object.keys(IMPACT_LABELS) as ImpactArea[])
       .map((a) => [IMPACT_LABELS[a].toLowerCase(), impactRecorded.filter((e) => e.affected!.includes(a)).length] as const)
-      .filter(([, n]) => n > 0)
-      .map(([label, n]) => `${label} on ${days(n)}`);
-    lines.push(parts.length ? `Affected: ${parts.join(', ')}.` : `Affected: nothing on the ${days(impactRecorded.length)} recorded.`);
+      .filter(([, c]) => c > 0)
+      .map(([label, c]) => `${label} on ${of(c)}`);
+    lines.push(parts.length ? `Affected: ${parts.join(', ')}.` : `Affected: nothing, on the ${impactRecorded.length === 1 ? 'check-in' : 'check-ins'} where this was recorded.`);
   }
 
   const fmt = (iso: string) =>
     new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' }).format(new Date(iso + 'T00:00:00'));
   return {
     periodLabel: `${fmt(from)} to ${fmt(to)}`,
-    coverage: `Logged ${days(inPeriod.length)} of the last ${periodDays}. Days without an entry aren't counted.`,
+    coverage: `${n} ${n === 1 ? 'check-in' : 'check-ins'} in the last ${periodDays} days. Days without a check-in are unknown and aren't counted.`,
     lines,
     treatmentChanges: inPeriod
       .filter((e) => e.treatmentChange?.trim())
@@ -159,7 +155,8 @@ export function buildSummary(record: HealthRecord): AppointmentSummary {
     personallyReported,
     notRecorded,
     questions: record.questions.map((q) => q.text),
-    symptoms: summariseSymptoms(record.symptoms ?? []),
+    // She decides whether check-ins go into what she shares.
+    symptoms: record.summaryIncludesCheckins === false ? null : summariseSymptoms(record.symptoms ?? []),
     notes: record.summaryNotes.trim(),
     disclaimer: SUMMARY_DISCLAIMER,
   };
