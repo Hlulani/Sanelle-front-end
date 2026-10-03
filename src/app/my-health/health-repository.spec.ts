@@ -43,6 +43,18 @@ describe('HealthRepository', () => {
     expect(repo.record().questions.map((q) => q.text)).toEqual(['Where are my fibroids?']);
   });
 
+  it('saves records encrypted, never as readable text', async () => {
+    const repo = freshRepo();
+    await repo.saveFinding({
+      key: 'count', completeness: { state: 'present', value: '2' }, source: 'entered-from-report',
+      originalWording: 'Two intramural fibroids are noted.',
+    });
+    const { value } = await Preferences.get({ key: storageKeyFor('first@example.test') });
+    expect(value).toMatch(/^enc:v1:/);
+    expect(value).not.toContain('intramural');
+    expect(value).not.toContain('count');
+  });
+
   it('stores an unknown finding without a source', async () => {
     const repo = freshRepo();
     await repo.saveFinding({ key: 'cavity', completeness: { state: 'unknown' }, source: 'entered-from-report', originalWording: 'x' });

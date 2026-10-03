@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
+import { EncryptedStore } from '../core/storage/encrypted-store.service';
 import { AuthService } from '../core/auth/auth.service';
 import {
   AppointmentQuestion,
@@ -15,8 +15,7 @@ import {
  * signing in on the same phone never sees them. Optional sync can be added later
  * behind this same interface without changing the screens.
  *
- * Note: Capacitor Preferences is not encrypted at rest. Move to encrypted storage
- * before this holds real records on a shared or unmanaged device.
+ * Records are encrypted before they're saved (see EncryptedStore).
  */
 const KEY_PREFIX = 'sanelle.health.v1.';
 
@@ -31,6 +30,7 @@ function newId(): string {
 @Injectable({ providedIn: 'root' })
 export class HealthRepository {
   private auth = inject(AuthService);
+  private store = inject(EncryptedStore);
 
   private readonly state = signal<HealthRecord>(emptyHealthRecord());
   private loadedFor: string | null = null;
@@ -52,7 +52,7 @@ export class HealthRepository {
     if (this.loadedFor === key && this.loading) return this.loading;
     this.loadedFor = key;
     this.loading = (async () => {
-      const { value } = await Preferences.get({ key });
+      const value = await this.store.get(key);
       let record = emptyHealthRecord();
       if (value) {
         try {
@@ -130,7 +130,7 @@ export class HealthRepository {
   }
 
   async clearFor(email: string): Promise<void> {
-    await Preferences.remove({ key: storageKeyFor(email) });
+    await this.store.remove(storageKeyFor(email));
     if (this.loadedFor === storageKeyFor(email)) {
       this.state.set(emptyHealthRecord());
       this.loadedFor = null;
@@ -145,6 +145,6 @@ export class HealthRepository {
     const next = change(this.state());
     if (next === this.state()) return;
     this.state.set(next);
-    await Preferences.set({ key: storageKeyFor(email), value: JSON.stringify(next) });
+    await this.store.set(storageKeyFor(email), JSON.stringify(next));
   }
 }

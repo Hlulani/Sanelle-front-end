@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
+import { EncryptedStore } from '../storage/encrypted-store.service';
 import { AuthService } from '../auth/auth.service';
 
 /** Must match the backend's Allergen enum; the server rejects unknown codes. */
@@ -36,12 +36,13 @@ export function sameRestrictions(a: FoodRestrictions | null, b: FoodRestrictions
 }
 
 /**
- * Allergies and foods someone doesn't eat, kept on this device per account.
+ * Allergies and foods someone doesn't eat, kept encrypted on this device per account.
  * They're sent with each plan or swap request and enforced by the server.
  */
 @Injectable({ providedIn: 'root' })
 export class FoodRestrictionsService {
   private auth = inject(AuthService);
+  private store = inject(EncryptedStore);
   private readonly state = signal<FoodRestrictions>({ allergies: [], dislikes: [] });
   private loadedFor: string | null = null;
 
@@ -57,7 +58,7 @@ export class FoodRestrictionsService {
     const key = KEY_PREFIX + email.toLowerCase();
     if (this.loadedFor === key) return;
     this.loadedFor = key;
-    const { value } = await Preferences.get({ key });
+    const value = await this.store.get(key);
     try {
       const parsed = value ? (JSON.parse(value) as FoodRestrictions) : null;
       this.state.set({ allergies: parsed?.allergies ?? [], dislikes: parsed?.dislikes ?? [] });
@@ -84,7 +85,7 @@ export class FoodRestrictionsService {
 
   /** Removes one account's restrictions from this device (used when deleting the account). */
   async clearFor(email: string): Promise<void> {
-    await Preferences.remove({ key: KEY_PREFIX + email.toLowerCase() });
+    await this.store.remove(KEY_PREFIX + email.toLowerCase());
     if (this.loadedFor === KEY_PREFIX + email.toLowerCase()) {
       this.loadedFor = null;
       this.state.set({ allergies: [], dislikes: [] });
@@ -94,6 +95,6 @@ export class FoodRestrictionsService {
   private async save(next: FoodRestrictions): Promise<void> {
     this.state.set(next);
     const email = this.auth.getUserEmail();
-    if (email) await Preferences.set({ key: KEY_PREFIX + email.toLowerCase(), value: JSON.stringify(next) });
+    if (email) await this.store.set(KEY_PREFIX + email.toLowerCase(), JSON.stringify(next));
   }
 }
