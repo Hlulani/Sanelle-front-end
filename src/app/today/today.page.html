@@ -1,0 +1,95 @@
+<ion-content [fullscreen]="true" class="today">
+  <main class="sn-page">
+    <header class="head">
+      <p class="date">{{ dateLabel }}</p>
+      <h1>{{ name() ? 'Hi ' + name() : 'Today' }}</h1>
+    </header>
+
+    <!-- Next action. With demo records off, this becomes the first-use prompt. -->
+    <section class="next" *ngIf="showDemo(); else firstUse" aria-labelledby="next-title">
+      <span class="sn-demo-label">Demo record</span>
+      <p class="when">Appointment with {{ appointment.with }} in {{ appointment.inDays }} days</p>
+      <h2 id="next-title">Prepare for your appointment</h2>
+      <p class="note">This detail isn’t recorded. You can add it to your appointment questions.</p>
+
+      <div class="question" *ngFor="let f of unknownFindings()">
+        <p class="q">“{{ questionFor(f) }}”</p>
+        <button
+          type="button"
+          class="sn-btn"
+          [class.sn-btn--brand]="!isSaved(f)"
+          [class.saved]="isSaved(f)"
+          [attr.aria-pressed]="isSaved(f)"
+          (click)="toggleSaved(f)"
+        >
+          {{ isSaved(f) ? 'Saved to your questions' : 'Save this question' }}
+        </button>
+      </div>
+    </section>
+
+    <ng-template #firstUse>
+      <section class="next" aria-labelledby="first-title">
+        <h2 id="first-title">Start with what you know</h2>
+        <p class="note">
+          Add the details from your report or appointment. Anything you don’t know can stay blank, and we’ll suggest a question to ask instead.
+        </p>
+        <p class="soon">Recording your diagnosis is the next part being built.</p>
+      </section>
+    </ng-template>
+
+    <section class="block" *ngIf="showDemo()" aria-labelledby="dx-title">
+      <div class="block-head">
+        <h2 id="dx-title">Your diagnosis</h2>
+        <span class="sn-demo-label">Demo record</span>
+      </div>
+      <dl class="facts">
+        <div class="fact" *ngFor="let f of findings">
+          <dt>{{ f.label }}</dt>
+          <dd>
+            <ng-container [ngSwitch]="f.completeness.state">
+              <span *ngSwitchCase="'present'" class="value">{{ $any(f.completeness).value }}</span>
+              <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Your report says no</span>
+              <span *ngSwitchCase="'unknown'" class="sn-status sn-status--unknown">Not recorded</span>
+            </ng-container>
+            <span class="source" *ngIf="f.source">{{ sourceLabels[f.source] }}</span>
+            <span class="wording" *ngIf="f.originalWording">Report wording: “{{ f.originalWording }}”</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="block" *ngIf="foodTopic as topic" aria-labelledby="food-title">
+      <h2 id="food-title">A food question</h2>
+      <a class="topic" [routerLink]="['/learn', topic.id]">
+        <span class="topic-claim">You might have read: “{{ topic.claim }}”</span>
+        <span class="topic-q">{{ topic.question }}</span>
+        <span class="topic-draft" *ngIf="topic.review.state === 'draft'">Draft, not clinically reviewed</span>
+      </a>
+    </section>
+
+    <section class="block meals" aria-labelledby="meals-title">
+      <h2 id="meals-title">Today’s meals</h2>
+
+      <ul class="meal-list" *ngIf="todaysMeals().length; else noMeals">
+        <li *ngFor="let meal of todaysMeals()">
+          <button type="button" class="meal" (click)="openMeal(meal)">
+            <span class="sn-meal-tile" [ngClass]="'is-' + meal.mealType.toLowerCase()" aria-hidden="true"></span>
+            <span class="meal-text">
+              <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
+              <span class="meal-name">{{ meal.name }}</span>
+            </span>
+          </button>
+        </li>
+      </ul>
+
+      <ng-template #noMeals>
+        <div class="empty">
+          <p>{{ hasPlan() ? 'Your plan has no meals for today.' : 'No meals planned yet.' }}</p>
+          <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">
+            {{ hasPlan() ? 'Make a new plan' : 'Plan your meals' }}
+          </button>
+        </div>
+      </ng-template>
+    </section>
+  </main>
+</ion-content>

@@ -10,7 +10,7 @@ import {
 
 import { RegisterFormComponent } from './components/register/register-form.component';
 import { LoginFormComponent } from './components/login/login-form.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
 import { environment } from '../../environments/environment';
 
@@ -34,12 +34,16 @@ export class AuthShellPage {
   private router = inject(Router);
   private auth = inject(AuthService);
 
-  mode = signal<'register' | 'login'>('register');
+  private route = inject(ActivatedRoute);
+
+  mode = signal<'register' | 'login'>(
+    this.route.snapshot.queryParamMap.get('mode') === 'login' ? 'login' : 'register'
+  );
 
   constructor() {
     effect(() => {
       if (this.auth.hasValidToken() && !environment.forceAuthOnStart) {
-        this.router.navigateByUrl('/tabs/tab2');
+        this.router.navigateByUrl('/tabs/today');
       }
     });
   }

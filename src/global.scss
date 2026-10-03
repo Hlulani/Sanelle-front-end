@@ -1,3 +1,6 @@
+/* Sanelle brand tokens, fonts and shared components */
+@use "./theme/sanelle";
+
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -22,6 +25,7 @@
 
 /* Dark mode palette */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
 
 /* ─────────────────────────────────────────────
    App-specific UI styles (SAFE)

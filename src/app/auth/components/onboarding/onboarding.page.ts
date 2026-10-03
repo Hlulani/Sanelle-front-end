@@ -133,7 +133,7 @@ export class OnboardingPage {
       await this.focusPreferences.saveDiet(this.preferences.diet);
     }
     this.auth.setOnboardingCompleted(true);
-    this.router.navigateByUrl('/tabs/tab2');
+    this.router.navigateByUrl('/tabs/today');
   }
 
 

@@ -1,0 +1,55 @@
+.welcome {
+  --background: var(--sn-brand);
+}
+
+.welcome-layout {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--sn-on-brand);
+}
+
+.intro {
+  padding: calc(env(safe-area-inset-top, 0px) + 3rem) 1.5rem 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.wordmark {
+  font: 600 3.5rem/1 var(--sn-display);
+  letter-spacing: -0.01em;
+  margin-bottom: 3.5rem;
+}
+
+h1 {
+  font-size: 2rem;
+  max-width: 17ch;
+}
+
+.support {
+  font-size: 1.0625rem;
+  color: var(--sn-on-brand-muted);
+  max-width: 32ch;
+}
+
+/* The actions sit on a deeper panel so the decision point reads as one place. */
+.actions {
+  background: var(--sn-brand-deep);
+  border-radius: 2rem 2rem 0 0;
+  padding: 1.75rem 1.5rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.fine {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--sn-on-brand-muted);
+  text-align: center;
+}
+
+@media (max-height: 640px) {
+  .intro { padding-top: calc(env(safe-area-inset-top, 0px) + 1.5rem); }
+  .wordmark { margin-bottom: 1.5rem; font-size: 2.75rem; }
+}

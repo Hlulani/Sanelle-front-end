@@ -8,6 +8,7 @@ import {
   calendarOutline,
   cartOutline,
   checkmarkCircle,
+  todayOutline,
   checkmarkCircleOutline,
   chevronBackOutline,
   chevronDownOutline,
@@ -45,6 +46,7 @@ export function registerAppIcons(): void {
   addIcons({
     add,
     'add-outline': addOutline,
+    'today-outline': todayOutline,
     'apps-outline': appsOutline,
     'arrow-back-outline': arrowBackOutline,
     'basket-outline': basketOutline,

@@ -46,7 +46,7 @@ export class LoginFormComponent {
     this.auth.login(this.email.trim(), this.password).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigateByUrl('/tabs/tab2');
+        this.router.navigateByUrl('/tabs/today');
       },
       error: () => {
         this.loading.set(false);

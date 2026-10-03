@@ -1,0 +1,203 @@
+/*
+ * Sanelle brand tokens (berry direction, typography treatment A).
+ * Prefixed with --sn- so the new screens can use them while the rest of the
+ * app keeps its current styles until the reskin is approved.
+ * Contrast ratios for every text/background pair used are listed in
+ * docs/design/contrast.md.
+ */
+@import "@fontsource/fredoka/500.css";
+@import "@fontsource/fredoka/600.css";
+@import "@fontsource/nunito-sans/400.css";
+@import "@fontsource/nunito-sans/600.css";
+@import "@fontsource/nunito-sans/700.css";
+@import "@fontsource/nunito-sans/800.css";
+
+:root {
+  --sn-brand: #74203f;
+  --sn-brand-deep: #561530;
+  --sn-on-brand: #fff6f0;
+  --sn-on-brand-muted: #f0d6dd;
+  --sn-canvas: #fbf5ef;
+  --sn-surface: #ffffff;
+  --sn-blush: #f6e1e3;
+  --sn-apricot: #f2b37e;
+  --sn-apricot-pressed: #e89c5f;
+  --sn-ink: #2a1a20;
+  --sn-muted: #6b5560;
+  --sn-line: #e6d8d4;
+  --sn-error: #a1262b;
+
+  /* Finding status. Always paired with a marker shape and a text label. */
+  --sn-present: #1e5f63;
+  --sn-absent: #34497a;
+  --sn-unknown: #6b5560;
+  --sn-reported: #8a5a12;
+  --sn-draft: #8a5a12;
+
+  /* Short headings only. Everything people read at length uses the body face. */
+  --sn-display: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+  --sn-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --sn-radius: 1rem;
+  --sn-radius-lg: 1.5rem;
+  --sn-tap: 2.75rem; /* 44px minimum touch target */
+}
+
+.sn-page {
+  font-family: var(--sn-body);
+  color: var(--sn-ink);
+  font-size: 1rem;
+  line-height: 1.55;
+
+  h1, h2, h3 {
+    font-family: var(--sn-display);
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+/* Buttons: berry on light surfaces, apricot when sitting on berry. */
+.sn-btn {
+  appearance: none;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--sn-radius);
+  font: 700 1.0625rem/1.2 var(--sn-body);
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    opacity: 1;
+    background: var(--sn-line);
+    color: var(--sn-muted);
+    cursor: default;
+  }
+}
+
+.sn-btn--brand {
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
+
+  &:active { background: var(--sn-brand-deep); }
+}
+
+.sn-btn--apricot {
+  background: var(--sn-apricot);
+  color: var(--sn-ink);
+
+  &:active { background: var(--sn-apricot-pressed); }
+  &:focus-visible { outline-color: var(--sn-on-brand); }
+}
+
+.sn-btn--outline-on-brand {
+  background: transparent;
+  color: var(--sn-on-brand);
+  box-shadow: inset 0 0 0 2px var(--sn-on-brand-muted);
+
+  &:focus-visible { outline-color: var(--sn-apricot); }
+}
+
+.sn-btn--quiet {
+  background: transparent;
+  color: var(--sn-brand);
+  width: auto;
+  padding-inline: 0.25rem;
+  min-height: var(--sn-tap);
+}
+
+/* Status label: shape + text, so meaning never depends on colour alone. */
+.sn-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.3;
+
+  &::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 0.625rem;
+    height: 0.625rem;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+  }
+}
+
+.sn-status--present { color: var(--sn-present); &::before { background: currentColor; } }
+.sn-status--absent { color: var(--sn-absent); &::before { border-radius: 2px; } }
+.sn-status--unknown { color: var(--sn-unknown); &::before { border-style: dashed; } }
+.sn-status--reported { color: var(--sn-reported); &::before { background: currentColor; border-radius: 2px; } }
+
+/* Demo and draft markers are deliberately plain and unmissable. */
+.sn-demo-label {
+  display: inline-block;
+  font: 800 0.75rem/1 var(--sn-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sn-ink);
+  background: var(--sn-surface);
+  border: 1.5px dashed var(--sn-ink);
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.5rem;
+}
+
+.sn-draft-banner {
+  border: 2px dashed var(--sn-draft);
+  color: var(--sn-draft);
+  background: var(--sn-surface);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+/* Recipe tile used until real photography exists: a plate on a meal-type ground. */
+.sn-meal-tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 0.875rem;
+  background: var(--sn-blush);
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--sn-surface);
+    box-shadow: inset 0 0 0 0.375rem var(--sn-canvas);
+  }
+
+  &.is-breakfast { background: #f9dcc4; }
+  &.is-lunch { background: var(--sn-blush); }
+  &.is-dinner { background: #e9cfd6; }
+  &.is-snack { background: #f3e6cf; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sn-btn { transition: background-color 120ms ease; }
+}
