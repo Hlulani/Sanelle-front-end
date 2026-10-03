@@ -11,7 +11,6 @@ export const environment = {
   // not the Mac) — that needs the Mac's LAN IP instead, found via `ipconfig getifaddr en0`.
   apiBaseUrl: 'http://localhost:8080/api/v1',
   hostBaseUrl: 'http://localhost:8080',
-  forceAuthOnStart: true
 };
 
 

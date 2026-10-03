@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../core/auth/auth.service';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-welcome',
@@ -15,10 +14,9 @@ export class WelcomePage {
   private router = inject(Router);
   private auth = inject(AuthService);
 
-  ionViewWillEnter() {
-    if (this.auth.hasValidToken() && !environment.forceAuthOnStart) {
-      this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
-    }
+  /** Someone already signed in skips Welcome; the guard sends them on to onboarding if it isn't done. */
+  async ionViewWillEnter() {
+    if (await this.auth.restoreSession()) this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
   }
 
   start() {

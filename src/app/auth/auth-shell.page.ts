@@ -1,4 +1,4 @@
-import { Component, signal, effect, inject } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonContent,
@@ -12,7 +12,6 @@ import { LoginFormComponent } from './components/login/login-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../core/auth/auth.service';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-auth-shell',
@@ -44,11 +43,11 @@ export class AuthShellPage {
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       if (params.get('mode') === 'login' || params.get('mode') === 'register') this.setMode(params.get('mode'));
     });
-    effect(() => {
-      if (this.auth.hasValidToken() && !environment.forceAuthOnStart) {
-        this.router.navigateByUrl('/tabs/today');
-      }
-    });
+  }
+
+  /** Someone already signed in never sees the forms; the guard sends them on to onboarding if it isn't done. */
+  async ionViewWillEnter() {
+    if (await this.auth.restoreSession()) this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
   }
 
   setMode(value: string | null | undefined) {
