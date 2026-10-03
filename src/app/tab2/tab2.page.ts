@@ -563,18 +563,6 @@ export class Tab2Page implements OnInit {
     return photo ? `${overlay}, url(${photo})` : overlay;
   }
 
-  displayName(): string {
-    const username = this.authService.getUsername();
-    if (username) return username;
-
-    const email = this.authService.getUserEmail();
-    if (!email) return 'there';
-
-    const localPart = email.split('@')[0];
-    const firstSegment = localPart.split(/[._+]/)[0];
-    return firstSegment.charAt(0).toUpperCase() + firstSegment.slice(1);
-  }
-
   goToGroceryList(): void {
     this.router.navigateByUrl('/tabs/tab3');
   }
@@ -625,8 +613,8 @@ export class Tab2Page implements OnInit {
     await this.notifications.markPrompted();
 
     const alert = await this.alertController.create({
-      header: 'Stay on track?',
-      message: 'Get a daily nudge to cook and keep your streak going.',
+      header: 'Meal reminders?',
+      message: 'A reminder of today’s meals, and one in the evening to tick off what you cooked. You can turn them off in Account.',
       buttons: [
         { text: 'Not now', role: 'cancel' },
         { text: 'Enable', handler: () => void this.notifications.enable() },

@@ -61,22 +61,22 @@ export class NotificationService {
 
     const notifications = [];
 
+    // Both reminders are about the plan, so without one there's nothing to remind about.
     if (this.planStore.getPlanSnapshot()) {
       notifications.push({
         id: COOK_REMINDER_ID,
-        title: 'Time to cook 🍳',
-        body: "Your meals for today are planned. Time to cook?",
+        title: 'Today’s meals',
+        body: 'Your meals for today are in your plan.',
         schedule: { on: { hour: COOK_REMINDER_HOUR, minute: 0 }, allowWhileIdle: true },
+      });
+      notifications.push({
+        id: STREAK_REMINDER_ID,
+        title: 'Cooked something today?',
+        body: 'Tick off the meals you made.',
+        schedule: { on: { hour: STREAK_REMINDER_HOUR, minute: 0 }, allowWhileIdle: true },
       });
     }
 
-    notifications.push({
-      id: STREAK_REMINDER_ID,
-      title: 'Keep your streak going 🔥',
-      body: "Log today's meals before the day ends.",
-      schedule: { on: { hour: STREAK_REMINDER_HOUR, minute: 0 }, allowWhileIdle: true },
-    });
-
-    await LocalNotifications.schedule({ notifications });
+    if (notifications.length) await LocalNotifications.schedule({ notifications });
   }
 }
