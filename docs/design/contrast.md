@@ -30,7 +30,7 @@ Measured with the WCAG 2.x relative-luminance formula for every colour pairing u
 | Control | Outline button on deep berry | `#fff6f0` | `#561530` | 12.74:1 | 4.5:1 | Pass |
 | Control | Saved state | `#74203f` | `#f6e1e3` | 8.31:1 | 4.5:1 | Pass |
 | Control | Disabled button text | `#6b5560` | `#e6d8d4` | 4.89:1 | 4.5:1 | Pass |
-| Control | Tab bar label, unselected | `#f0d6dd` | `#74203f` | 7.79:1 | 4.5:1 | Pass |
+| Control | Tab bar label, unselected | `#f0d6dd` | `#74203f` | 7.60:1 | 4.5:1 | Pass |
 | Control | Tab bar label, selected | `#f2b37e` | `#74203f` | 5.70:1 | 4.5:1 | Pass |
 | Text | Draft tag on berry header | `#f2b37e` | `#74203f` | 5.70:1 | 4.5:1 | Pass |
 | Text | "Short answer" label on apricot | `#2a1a20` | `#f2b37e` | 9.10:1 | 4.5:1 | Pass |
