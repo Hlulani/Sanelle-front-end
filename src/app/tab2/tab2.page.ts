@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -64,9 +64,7 @@ type SwapOption = {
   imageUrl?: string | null;
   meta?: string;
   tags: string[];
-  antiInflammatoryScore: number;
-  ironSupport: number;
-  fiberScore: number;
+  prepTimeMinutes?: number | null;
 };
 
 import { mealImageSrc } from '../shared/meal-photos';
@@ -145,13 +143,6 @@ export class Tab2Page implements OnInit {
     void this.challengesService.init();
     this.challengesService.refreshCounts();
 
-    void this.focusPreferences.load().then((focuses) => {
-      if (!focuses) return;
-      this.fibroidFocus.set(focuses.includes('anti_inflammatory'));
-      this.ironSupport.set(focuses.includes('iron_support'));
-      this.fiberFocus.set(focuses.includes('high_fiber'));
-    });
-
     void this.focusPreferences.loadDiet().then((diet) => {
       if (diet) this.proteinPreference.set(diet);
     });
@@ -217,15 +208,14 @@ export class Tab2Page implements OnInit {
         const options = meals
           .filter((m) => m.mealType === meal.mealType && m.id !== meal.mealId)
           .filter((m) => this.matchesProteinPreference(m))
+          .filter((m) => this.withinPrepLimit(m.prepTimeMinutes))
           .map((m): SwapOption => ({
             id: m.id,
             name: m.name,
             imageUrl: m.imageUrl ?? null,
             meta: this.swapMetaLabel(m),
             tags: m.tags ?? [],
-            antiInflammatoryScore: m.antiInflammatoryScore,
-            ironSupport: m.ironSupport,
-            fiberScore: m.fiberScore,
+            prepTimeMinutes: m.prepTimeMinutes ?? null,
           }));
 
         this.swapOptions.set(options);
@@ -242,7 +232,7 @@ export class Tab2Page implements OnInit {
     const tag = meal.tags?.[0];
     const parts: string[] = [];
     if (tag) parts.push(tag.charAt(0).toUpperCase() + tag.slice(1));
-    if (meal.antiInflammatoryScore >= 4) parts.push('Anti-inflammatory');
+    if (meal.prepTimeMinutes) parts.push(`${meal.prepTimeMinutes} min`);
     return parts.join(' · ') || 'Alternative option';
   }
 
@@ -310,9 +300,8 @@ export class Tab2Page implements OnInit {
             name: option.name,
             imageUrl: option.imageUrl ?? meal.imageUrl ?? null,
             tags: option.tags,
-            antiInflammatoryScore: option.antiInflammatoryScore,
-            ironSupport: option.ironSupport,
-            fiberScore: option.fiberScore,
+            prepTimeMinutes: option.prepTimeMinutes ?? null,
+            reasons: this.swapReasons(option),
           };
         }),
       })),
@@ -348,9 +337,40 @@ export class Tab2Page implements OnInit {
   fastingStyle = signal<'NO_FASTING_3_MEALS' | 'FASTING_16_8'>('NO_FASTING_3_MEALS');
 
   // Focus areas
-  fibroidFocus = signal<boolean>(true);
-  ironSupport = signal<boolean>(true);
-  fiberFocus = signal<boolean>(true);
+  /** Optional prep-time limit in minutes; null means no limit. */
+  maxPrepMinutes = signal<number | null>(null);
+  readonly prepOptions: { label: string; value: number | null }[] = [
+    { label: 'Any', value: null },
+    { label: '15 min', value: 15 },
+    { label: '30 min', value: 30 },
+    { label: '45 min', value: 45 },
+  ];
+
+  withinPrepLimit(prep: number | null | undefined): boolean {
+    const limit = this.maxPrepMinutes();
+    return limit === null || (prep != null && prep <= limit);
+  }
+
+  /** Same wording the backend uses, so swapped meals explain themselves too. */
+  private swapReasons(option: SwapOption): string[] {
+    const reasons: string[] = [];
+    const pref = this.proteinPreference();
+    if (pref === 'VEGAN') reasons.push('Vegan, as you chose');
+    else if (pref === 'VEGETARIAN') reasons.push('Vegetarian, as you chose');
+    else if (pref === 'MEATY') reasons.push('Includes meat or fish, as you chose');
+    const limit = this.maxPrepMinutes();
+    if (option.prepTimeMinutes != null) {
+      reasons.push(limit !== null ? `Ready in ${option.prepTimeMinutes} min (your limit is ${limit})` : `Ready in ${option.prepTimeMinutes} min`);
+    }
+    return reasons;
+  }
+
+  readonly unfilledLabel = computed(() => {
+    const unfilled = this.plan()?.unfilled ?? [];
+    if (!unfilled.length) return null;
+    const names = unfilled.map((t) => t.charAt(0) + t.slice(1).toLowerCase());
+    return names.join(' and ');
+  });
 
   // Protein preference
   proteinPreference = signal<ProteinPreference>('ANY');
@@ -575,14 +595,8 @@ export class Tab2Page implements OnInit {
         : 'DAYS_30') as Duration,
 
       fastingStyle: this.fastingStyle(),
-      // The backend's generate endpoint doesn't currently read this field — there's no
-      // UI for it since it has no effect yet. Sent as a fixed value to satisfy the
-      // existing request shape until it's actually wired up server-side.
-      firstMealHour: 8,
-      fibroidFocus: this.fibroidFocus(),
-      ironSupport: this.ironSupport(),
-      fiberFocus: this.fiberFocus(),
       proteinPreference: this.proteinPreference(),
+      maxPrepMinutes: this.maxPrepMinutes(),
     };
 
     this.mealPlansService.generate(payload).subscribe({

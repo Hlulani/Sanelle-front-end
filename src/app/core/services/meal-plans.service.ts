@@ -12,14 +12,14 @@ export type FastingStyle =
 // "ANY" means no filtering — matches the backend's default/unrecognized-value behavior.
 export type ProteinPreference = 'ANY' | 'MEATY' | 'VEGETARIAN' | 'VEGAN';
 
+/** Everything a plan is built from: the person's own choices, nothing else. */
 export interface GenerateMealPlanRequest {
   duration: Duration;
+  /** Meal schedule (3 or 2 meals a day). A preference, not a health recommendation. */
   fastingStyle: FastingStyle;
-  firstMealHour: number;
-  fibroidFocus: boolean;
-  ironSupport: boolean;
-  fiberFocus: boolean;
   proteinPreference: ProteinPreference;
+  /** Optional upper limit on preparation time, in minutes. */
+  maxPrepMinutes: number | null;
 }
 
 export interface MealPlanItem {
@@ -28,9 +28,9 @@ export interface MealPlanItem {
   name: string;
   imageUrl: string | null;
   tags: string[];
-  antiInflammatoryScore: number;
-  ironSupport: number;
-  fiberScore: number;
+  prepTimeMinutes?: number | null;
+  /** The person's own criteria this meal meets ("why this meal"). */
+  reasons?: string[];
 }
 
 export interface DayPlan {
@@ -41,6 +41,8 @@ export interface DayPlan {
 export interface GenerateMealPlanResponse {
   days: number;
   daysPlan: DayPlan[];
+  /** Meal types no recipe could fill without breaking a preference, e.g. "BREAKFAST". */
+  unfilled?: string[];
 }
 
 @Injectable({ providedIn: 'root' })

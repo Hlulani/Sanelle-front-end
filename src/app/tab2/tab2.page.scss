@@ -812,3 +812,23 @@
   color: var(--plan-muted);
   text-align: center;
 }
+
+.meal-why {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+
+  .why-label {
+    font-weight: 700;
+    color: var(--sn-ink);
+  }
+}
+
+.unfilled-note {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  background: var(--sn-blush);
+  color: var(--sn-ink);
+  font-size: 0.9375rem;
+}

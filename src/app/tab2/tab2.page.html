@@ -55,6 +55,10 @@
         </button>
       </div>
 
+      <p class="unfilled-note" *ngIf="unfilledLabel() as u" role="note">
+        No {{ u.toLowerCase() }} recipes match your choices, so those slots are empty. Try “Any” for prep time or what you eat.
+      </p>
+
       <div class="meal-cards" *ngIf="selectedDay() as day">
         <div class="meal-card" *ngFor="let meal of day.meals">
           <div class="meal-card-media" [class.no-photo]="!mealImage(meal)" [style.backgroundImage]="mealImage(meal) ? 'url(' + mealImage(meal) + ')' : ''">
@@ -76,6 +80,10 @@
             <div class="meal-highlights">
               <span class="highlight-chip" *ngFor="let highlight of mealHighlights(meal)">{{ highlight }}</span>
             </div>
+
+            <p class="meal-why" *ngIf="meal.reasons?.length">
+              <span class="why-label">Why this meal:</span> {{ meal.reasons!.join(' · ') }}
+            </p>
 
             <div class="meal-card-actions">
               <ion-button class="meal-swap" size="small" fill="outline" (click)="openSwap(meal)">
@@ -243,7 +251,7 @@
           </p>
         </ion-text>
 
-        <h2 class="section-title">Eating style</h2>
+        <h2 class="section-title">Meals a day</h2>
 
         <div class="chip-row">
           <button
@@ -268,7 +276,7 @@
           </button>
         </div>
 
-        <h2 class="section-title">Protein preference</h2>
+        <h2 class="section-title">What you eat</h2>
 
         <div class="chip-row">
           <button
@@ -313,38 +321,18 @@
           </button>
         </div>
 
-        <h2 class="section-title">Focus areas</h2>
+        <h2 class="section-title">Prep time</h2>
 
         <div class="chip-row">
           <button
+            *ngFor="let o of prepOptions"
             type="button"
             class="pref-chip"
-            [class.active]="fibroidFocus()"
-            [attr.aria-pressed]="fibroidFocus()"
-            (click)="fibroidFocus.set(!fibroidFocus())"
+            [class.active]="maxPrepMinutes() === o.value"
+            [attr.aria-pressed]="maxPrepMinutes() === o.value"
+            (click)="maxPrepMinutes.set(o.value)"
           >
-            <ion-icon name="heart-outline"></ion-icon>
-            <span>Anti-inflammatory focus</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="ironSupport()"
-            [attr.aria-pressed]="ironSupport()"
-            (click)="ironSupport.set(!ironSupport())"
-          >
-            <ion-icon name="flash-outline"></ion-icon>
-            <span>Iron support</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="fiberFocus()"
-            [attr.aria-pressed]="fiberFocus()"
-            (click)="fiberFocus.set(!fiberFocus())"
-          >
-            <ion-icon name="leaf-outline"></ion-icon>
-            <span>Fiber support</span>
+            <span>{{ o.value === null ? 'Any' : 'Up to ' + o.label }}</span>
           </button>
         </div>
 
