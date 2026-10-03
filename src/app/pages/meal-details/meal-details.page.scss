@@ -248,3 +248,8 @@
   --background: var(--app-primary);
   --color: #ffffff;
 }
+
+.topbar {
+  padding: calc(env(safe-area-inset-top, 0px) + 1.25rem) 1.25rem 0.75rem;
+  background: var(--sn-brand);
+}

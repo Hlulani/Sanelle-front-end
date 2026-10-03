@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="fc">
   <main class="sn-page" *ngIf="topic as t; else unavailable">
     <header class="head">
-      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Learn</button>
+      <button type="button" class="sn-back" (click)="back()">Learn</button>
       <p class="you">You read online:</p>
       <h1>{{ t.title }}</h1>
       <span class="sn-demo-label draft-tag" *ngIf="t.review.state === 'draft'">Draft · not reviewed</span>
@@ -128,7 +128,7 @@
 
   <ng-template #unavailable>
     <main class="sn-page unavailable">
-      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Learn</button>
+      <button type="button" class="sn-back" (click)="back()">Learn</button>
       <h1>Not available yet</h1>
       <p>This topic is waiting for review.</p>
     </main>

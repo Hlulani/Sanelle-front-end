@@ -50,7 +50,7 @@ export class QuestionsPage {
     return STARTER_QUESTIONS.filter((text) => !have.has(text.toLowerCase()));
   });
 
-  readonly backLabel = computed(() => (this.from() === 'today' ? '‹ Today' : '‹ My health'));
+  readonly backLabel = computed(() => (this.from() === 'today' ? 'Today' : 'My health'));
   private readonly from = signal<'today' | 'health'>('health');
 
   ionViewWillEnter() {

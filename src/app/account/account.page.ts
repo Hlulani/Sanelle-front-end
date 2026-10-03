@@ -1,13 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonButton,
-  IonButtons,
-  IonBackButton,
   IonIcon,
   IonSpinner,
   IonToggle,
@@ -33,14 +28,9 @@ import {
   styleUrls: ['account.page.scss'],
   imports: [
     CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
+          IonContent,
     IonButton,
-    IonButtons,
-    IonBackButton,
-    IonIcon,
+        IonIcon,
     IonSpinner,
     IonToggle,
   ],
@@ -61,6 +51,10 @@ export class AccountPage implements OnInit {
   error = signal<string | null>(null);
   notificationsEnabled = signal(false);
   notificationError = signal<string | null>(null);
+
+  back(): void {
+    this.router.navigateByUrl('/tabs/today');
+  }
 
   async ngOnInit(): Promise<void> {
     void this.focusPreferences.loadFocus();

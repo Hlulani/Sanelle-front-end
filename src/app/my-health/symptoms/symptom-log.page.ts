@@ -48,7 +48,7 @@ export class SymptomLogPage implements OnInit {
   readonly maxDate = isoToday();
   /** Where she came from: saving today's check-in returns to Today; editing from history returns there. */
   readonly from = signal<'today' | 'health' | 'history'>('today');
-  readonly backLabel = computed(() => ({ today: '‹ Today', health: '‹ My health', history: '‹ Symptoms' })[this.from()]);
+  readonly backLabel = computed(() => ({ today: 'Today', health: 'My health', history: 'Symptoms' })[this.from()]);
 
   readonly dateLabel = computed(() => {
     if (this.date() === isoToday()) return 'Today';

@@ -50,8 +50,6 @@
   line-height: 1.55;
 
   h1, h2, h3 {
-    font-family: var(--sn-display);
-    font-weight: 600;
     line-height: 1.15;
     margin: 0;
     text-wrap: balance;
@@ -236,6 +234,42 @@ ion-tab-button {
   h1 { font-size: 2rem; }
   .sn-head-note { color: var(--sn-on-brand-muted); font-size: 0.9375rem; }
   .sn-btn--quiet { color: var(--sn-on-brand); justify-self: start; margin-left: -0.25rem; }
+}
+
+/*
+ * The one back button: top left, an outlined pill with a chevron, named after where it goes
+ * ("My health", "Learn"), or "Back" when that varies. Visible enough not to be missed.
+ */
+.sn-back {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-self: start;
+  align-self: start;
+  width: auto;
+  min-height: var(--sn-tap);
+  padding: 0 1rem 0 0.625rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px var(--sn-on-brand-muted);
+  color: var(--sn-on-brand);
+  font: 700 0.9375rem/1 var(--sn-body);
+  text-decoration: none;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    width: 1.125rem;
+    height: 1.125rem;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  &:active { background: rgba(255, 255, 255, 0.12); }
+  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; }
 }
 
 .sn-card {

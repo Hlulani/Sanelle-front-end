@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="log">
   <main class="sn-page wrap">
     <div class="top">
-      <button type="button" class="sn-btn sn-btn--quiet close" (click)="close()">{{ backLabel() }}</button>
+      <button type="button" class="sn-back" (click)="close()">{{ backLabel() }}</button>
       <label class="date-pick">
         <span class="visually-hidden">Date</span>
         <input type="date" [max]="maxDate" [ngModel]="date()" (ngModelChange)="changeDate($event)" />

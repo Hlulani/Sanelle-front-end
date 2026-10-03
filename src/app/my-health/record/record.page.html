@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="record">
   <main class="sn-page wrap">
     <div class="top">
-      <button type="button" class="sn-btn sn-btn--outline-on-brand close" (click)="inFlow ? finishLater() : cancel()">{{ inFlow ? 'Finish later' : 'Cancel' }}</button>
+      <button type="button" class="sn-back" (click)="inFlow ? finishLater() : cancel()">{{ inFlow ? 'Finish later' : 'Cancel' }}</button>
       @if (inFlow) {
         <p class="progress" aria-label="Step {{ step() }} of {{ total }}">{{ step() }} of {{ total }}</p>
       }

@@ -151,3 +151,9 @@
   color: var(--ion-color-danger);
   margin-top: 8px;
 }
+
+/* The profile card overlaps the berry header, as cards do on the other screens. */
+.account-head + .page-wrap {
+  margin-top: -3.5rem;
+  padding-top: 0;
+}

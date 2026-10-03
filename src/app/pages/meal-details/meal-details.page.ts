@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IonHeader, IonToolbar, IonButtons, IonBackButton,
+  IonHeader, IonToolbar, IonButtons,
   IonTitle, IonContent, IonImg, IonButton, IonIcon, IonModal
 } from '@ionic/angular/standalone';
 import { MealService } from '../../core/services/meal.service';
@@ -25,7 +25,6 @@ import { mealImageSrc } from '../../shared/meal-photos';
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
     IonTitle,
     IonContent,
     IonImg,
@@ -38,6 +37,8 @@ import { mealImageSrc } from '../../shared/meal-photos';
 })
 export class MealDetailsPage implements OnInit {
   private route = inject(ActivatedRoute);
+  private location = inject(Location);
+  private router = inject(Router);
   private mealService = inject(MealService);
   private authService = inject(AuthService);
   mealProgress = inject(MealProgressService);
@@ -53,6 +54,12 @@ export class MealDetailsPage implements OnInit {
 
   cookModeOpen = signal(false);
   currentStep = signal(0);
+
+  /** Back to wherever the recipe was opened from; Nourish if it was opened directly. */
+  back() {
+    if (window.history.length > 1) this.location.back();
+    else this.router.navigateByUrl('/tabs/tab2');
+  }
 
   heroImage(meal: { name?: string | null; imageUrl?: string | null }): string | null {
     return mealImageSrc(meal.name, meal.imageUrl);
