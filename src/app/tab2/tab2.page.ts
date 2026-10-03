@@ -545,25 +545,6 @@ export class Tab2Page implements OnInit {
     return { done, total };
   }
 
-  private heroImageUrl(): string | null {
-    const plan = this.plan();
-    if (!plan) return null;
-
-    for (const day of plan.daysPlan) {
-      for (const meal of day.meals) {
-        const src = mealImageSrc(meal.name, meal.imageUrl);
-        if (src) return src;
-      }
-    }
-    return null;
-  }
-
-  heroBackgroundImage(): string {
-    const overlay = 'linear-gradient(145deg, rgba(116, 32, 63, 0.92) 0%, rgba(86, 21, 48, 0.95) 100%)';
-    const photo = this.heroImageUrl();
-    return photo ? `${overlay}, url(${photo})` : overlay;
-  }
-
   goToGroceryList(): void {
     this.router.navigateByUrl('/tabs/tab3');
   }

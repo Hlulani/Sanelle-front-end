@@ -1,35 +1,20 @@
 <ion-content [fullscreen]="true">
   <div class="plan-page">
-    <section class="hero" [style.backgroundImage]="heroBackgroundImage()">
-      <div class="hero-greeting-row">
-        <div>
-          <h1>Nourish</h1>
-        </div>
-
-        <div class="hero-stat" *ngIf="plan()">
-          <ion-icon name="flame-outline"></ion-icon>
-          <div class="hero-stat-text">
-            <strong>{{ cookedProgress().done }}/{{ cookedProgress().total }}</strong>
-            <span>meals cooked</span>
-          </div>
-        </div>
+    <!-- Food leads here: a real plate from the recipes crosses from the berry header into the page. -->
+    <header class="nourish-head">
+      <div class="head-text">
+        <h1>Nourish</h1>
+        @if (plan()) {
+          <p class="head-note">Your plan: {{ planRangeLabel() }}</p>
+          <p class="head-note">{{ cookedProgress().done }} of {{ cookedProgress().total }} meals cooked</p>
+        } @else {
+          <p class="head-note">Meals that fit how you eat.</p>
+        }
       </div>
-
-      <p class="hero-copy">Pick a start date and how long to plan for.</p>
-
-      <div class="range-pill">{{ planRangeLabel() }}</div>
-
-      <div class="date-grid">
-        <div class="date-card date-card-clickable" (click)="openStartDatePicker()">
-          <div class="date-label">Start</div>
-          <div class="date-main">
-            <div class="date-value">{{ planStartDayLabel() }}</div>
-            <span class="date-chev">›</span>
-          </div>
-          <div class="date-sub">{{ planStartDateLabel() }}</div>
-        </div>
-      </div>
-    </section>
+      <figure class="plate" aria-hidden="true">
+        <img src="assets/meals/chickpea-salad-with-lemon-dressing.jpg" alt="" />
+      </figure>
+    </header>
 
     <section class="plan-preview" *ngIf="plan() as plan">
       <div class="section-row">
@@ -97,136 +82,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="challenges-section" *ngIf="plan()">
-      <div class="section-row">
-        <h2>Try a Challenge</h2>
-      </div>
-
-      <div class="challenge-row">
-        <div class="challenge-card" *ngFor="let challenge of challenges()">
-          <div class="challenge-icon">
-            <ion-icon [name]="challenge.icon"></ion-icon>
-          </div>
-
-          <div class="challenge-participants" *ngIf="challengeParticipants(challenge) as count">
-            <ion-icon name="people-outline"></ion-icon>
-            <strong>{{ count }}</strong>&nbsp;{{ count === 1 ? 'person' : 'people' }} doing this with you
-          </div>
-
-          <div class="challenge-title">{{ challenge.title }}</div>
-          <div class="challenge-desc">{{ challenge.description }}</div>
-
-          <ng-container *ngIf="challengesService.isJoined(challenge.id) as joined">
-            <ng-container *ngIf="challengeProgress(challenge) as progress">
-              <div class="challenge-progress">
-                <div class="challenge-progress-bar">
-                  <div
-                    class="challenge-progress-fill"
-                    [style.width.%]="(progress.current / progress.target) * 100"
-                  ></div>
-                </div>
-                <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
-              </div>
-
-              <div class="challenge-status" *ngIf="progress.completed">
-                <ion-icon name="checkmark-circle"></ion-icon>
-                Completed
-              </div>
-              <div class="challenge-status expired" *ngIf="progress.expired">
-                Challenge ended
-              </div>
-              <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
-                {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
-              </div>
-
-              <ion-button
-                expand="block"
-                size="small"
-                fill="outline"
-                (click)="progress.completed || progress.expired ? resetChallenge(challenge) : leaveChallenge(challenge)"
-              >
-                {{ progress.completed || progress.expired ? 'Reset' : 'Leave challenge' }}
-              </ion-button>
-            </ng-container>
-          </ng-container>
-
-          <ion-button
-            *ngIf="!challengesService.isJoined(challenge.id)"
-            expand="block"
-            size="small"
-            class="challenge-join-btn"
-            (click)="joinChallenge(challenge)"
-          >
-            Join
-          </ion-button>
-        </div>
-      </div>
-    </section>
-
-    <section class="custom-challenges-section">
-      <div class="section-row">
-        <h2>Your Challenges</h2>
-      </div>
-
-      <div class="custom-challenge-row" *ngIf="customChallenges().length">
-        <div class="custom-challenge-card" *ngFor="let challenge of customChallenges()">
-          <div class="custom-challenge-header">
-            <div class="custom-challenge-title">{{ challenge.name }}</div>
-            <span class="custom-challenge-owner-badge" *ngIf="challenge.isCreator">Yours</span>
-          </div>
-          <div class="custom-challenge-desc" *ngIf="challenge.description">{{ challenge.description }}</div>
-
-          <div class="member-strip" *ngIf="membersFor(challenge.id).length">
-            <app-initial-avatar
-              *ngFor="let member of membersFor(challenge.id).slice(0, 5)"
-              [name]="member.username"
-              [size]="28"
-              class="member-avatar"
-            ></app-initial-avatar>
-            <div class="member-overflow" *ngIf="extraMemberCount(challenge.id) > 0">
-              +{{ extraMemberCount(challenge.id) }}
-            </div>
-          </div>
-
-          <ng-container *ngIf="customChallengeProgress(challenge) as progress">
-            <div class="challenge-progress">
-              <div class="challenge-progress-bar">
-                <div
-                  class="challenge-progress-fill"
-                  [style.width.%]="(progress.current / progress.target) * 100"
-                ></div>
-              </div>
-              <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
-            </div>
-
-            <div class="challenge-status" *ngIf="progress.completed">
-              <ion-icon name="checkmark-circle"></ion-icon>
-              Completed
-            </div>
-            <div class="challenge-status expired" *ngIf="progress.expired">Challenge ended</div>
-            <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
-              {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
-            </div>
-          </ng-container>
-
-          <ion-button expand="block" size="small" fill="outline" (click)="shareChallenge(challenge)">
-            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
-            Share invite
-          </ion-button>
-        </div>
-      </div>
-
-      <div class="custom-challenge-actions">
-        <ion-button expand="block" fill="outline" size="small" (click)="openCreateModal()">
-          <ion-icon name="add" slot="start"></ion-icon>
-          Create a challenge
-        </ion-button>
-        <ion-button expand="block" fill="clear" size="small" (click)="openJoinModal()">
-          Have an invite code?
-        </ion-button>
       </div>
     </section>
 
@@ -399,6 +254,15 @@
           </ion-segment-button>
         </ion-segment>
 
+        <h2 class="section-title">Start</h2>
+        <button type="button" class="date-card" (click)="openStartDatePicker()">
+          <span class="date-main">
+            <span class="date-value">{{ planStartDayLabel() }}</span>
+            <span class="date-chev" aria-hidden="true">›</span>
+          </span>
+          <span class="date-sub">{{ planRangeLabel() }}</span>
+        </button>
+
         <div class="spacer"></div>
 
         <ion-button expand="block" class="primary-btn" (click)="generatePlan()" [disabled]="isLoading()">
@@ -417,6 +281,137 @@
         </ion-button>
       </ion-card-content>
     </ion-card>
+
+    <section class="challenges-section" *ngIf="plan()">
+      <div class="section-row">
+        <h2>Try a Challenge</h2>
+      </div>
+
+      <div class="challenge-row">
+        <div class="challenge-card" *ngFor="let challenge of challenges()">
+          <div class="challenge-icon">
+            <ion-icon [name]="challenge.icon"></ion-icon>
+          </div>
+
+          <div class="challenge-participants" *ngIf="challengeParticipants(challenge) as count">
+            <ion-icon name="people-outline"></ion-icon>
+            <strong>{{ count }}</strong>&nbsp;{{ count === 1 ? 'person' : 'people' }} doing this with you
+          </div>
+
+          <div class="challenge-title">{{ challenge.title }}</div>
+          <div class="challenge-desc">{{ challenge.description }}</div>
+
+          <ng-container *ngIf="challengesService.isJoined(challenge.id) as joined">
+            <ng-container *ngIf="challengeProgress(challenge) as progress">
+              <div class="challenge-progress">
+                <div class="challenge-progress-bar">
+                  <div
+                    class="challenge-progress-fill"
+                    [style.width.%]="(progress.current / progress.target) * 100"
+                  ></div>
+                </div>
+                <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+              </div>
+
+              <div class="challenge-status" *ngIf="progress.completed">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Completed
+              </div>
+              <div class="challenge-status expired" *ngIf="progress.expired">
+                Challenge ended
+              </div>
+              <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
+                {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+              </div>
+
+              <ion-button
+                expand="block"
+                size="small"
+                fill="outline"
+                (click)="progress.completed || progress.expired ? resetChallenge(challenge) : leaveChallenge(challenge)"
+              >
+                {{ progress.completed || progress.expired ? 'Reset' : 'Leave challenge' }}
+              </ion-button>
+            </ng-container>
+          </ng-container>
+
+          <ion-button
+            *ngIf="!challengesService.isJoined(challenge.id)"
+            expand="block"
+            size="small"
+            class="challenge-join-btn"
+            (click)="joinChallenge(challenge)"
+          >
+            Join
+          </ion-button>
+        </div>
+      </div>
+    </section>
+
+    <section class="custom-challenges-section" *ngIf="plan()">
+      <div class="section-row">
+        <h2>Your Challenges</h2>
+      </div>
+
+      <div class="custom-challenge-row" *ngIf="customChallenges().length">
+        <div class="custom-challenge-card" *ngFor="let challenge of customChallenges()">
+          <div class="custom-challenge-header">
+            <div class="custom-challenge-title">{{ challenge.name }}</div>
+            <span class="custom-challenge-owner-badge" *ngIf="challenge.isCreator">Yours</span>
+          </div>
+          <div class="custom-challenge-desc" *ngIf="challenge.description">{{ challenge.description }}</div>
+
+          <div class="member-strip" *ngIf="membersFor(challenge.id).length">
+            <app-initial-avatar
+              *ngFor="let member of membersFor(challenge.id).slice(0, 5)"
+              [name]="member.username"
+              [size]="28"
+              class="member-avatar"
+            ></app-initial-avatar>
+            <div class="member-overflow" *ngIf="extraMemberCount(challenge.id) > 0">
+              +{{ extraMemberCount(challenge.id) }}
+            </div>
+          </div>
+
+          <ng-container *ngIf="customChallengeProgress(challenge) as progress">
+            <div class="challenge-progress">
+              <div class="challenge-progress-bar">
+                <div
+                  class="challenge-progress-fill"
+                  [style.width.%]="(progress.current / progress.target) * 100"
+                ></div>
+              </div>
+              <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+            </div>
+
+            <div class="challenge-status" *ngIf="progress.completed">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              Completed
+            </div>
+            <div class="challenge-status expired" *ngIf="progress.expired">Challenge ended</div>
+            <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
+              {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+            </div>
+          </ng-container>
+
+          <ion-button expand="block" size="small" fill="outline" (click)="shareChallenge(challenge)">
+            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+            Share invite
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="custom-challenge-actions">
+        <ion-button expand="block" fill="outline" size="small" (click)="openCreateModal()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Create a challenge
+        </ion-button>
+        <ion-button expand="block" fill="clear" size="small" (click)="openJoinModal()">
+          Have an invite code?
+        </ion-button>
+      </div>
+    </section>
+
   </div>
 
   <ion-modal [isOpen]="startDatePickerOpen()" (didDismiss)="closeStartDatePicker()">

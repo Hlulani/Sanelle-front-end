@@ -16,99 +16,68 @@
   padding: calc(env(safe-area-inset-top, 0px) + 20px) 16px 96px;
 }
 
-.hero {
+.nourish-head {
   position: relative;
-  border-radius: 28px;
-  padding: 24px 22px 28px;
-  background-color: var(--plan-dark);
-  background-size: cover;
-  background-position: center;
-  box-shadow: var(--app-shadow-sm);
-  overflow: hidden;
-  text-align: left;
-}
-
-.hero-greeting-row {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-
-.hero h1 {
-  margin: 0;
-  font-size: 1.9rem;
-  line-height: 1.15;
+  margin: calc(-1 * (env(safe-area-inset-top, 0px) + 20px)) -16px 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 28px;
+  min-height: 11.5rem;
+  background: var(--sn-brand);
   color: var(--sn-on-brand);
+  border-radius: 0 0 2.25rem 2.25rem;
+
+  h1 { margin: 0; font-size: 2rem; color: var(--sn-on-brand); }
 }
 
-.hero-stat {
+.head-text {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(242, 179, 126, 0.45);
-  border-radius: 16px;
-  padding: 9px 14px;
-  flex-shrink: 0;
-
-  ion-icon {
-    font-size: 24px;
-    color: var(--sn-apricot);
-  }
-}
-
-.hero-stat-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-
-  strong {
-    color: #ffffff;
-    font-size: 1rem;
-  }
-
-  span {
-    color: var(--sn-on-brand-muted);
-    font-size: 0.75rem;
-  }
-}
-
-.range-pill {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 14px;
-  background: #ffffff;
-  border-radius: 999px;
-  box-shadow: var(--app-shadow-sm);
-  color: var(--plan-ink);
-  font-size: 0.9rem;
-  margin: 0 0 18px;
-}
-
-
-.hero-copy {
-  position: relative;
-  margin: 6px 0 18px;
-  color: var(--sn-on-brand-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.date-grid {
+  z-index: 1;
+  max-width: 58%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
+  gap: 4px;
+}
+
+.head-note {
+  margin: 0;
+  color: var(--sn-on-brand-muted);
+  font-size: 0.9375rem;
+}
+
+/* The plate overhangs the header, so the first section starts below it. */
+.nourish-head + * {
+  margin-top: 3.75rem;
+}
+
+/* Same plate-in-a-ring motif as Welcome, crossing the curve into the page. */
+.plate {
+  position: absolute;
+  right: -2.25rem;
+  bottom: -3.25rem;
+  margin: 0;
+  width: 11.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 0.875rem solid var(--sn-brand-deep);
+  overflow: hidden;
+  box-shadow: 0 1rem 2rem rgba(30, 6, 16, 0.3);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* The salad sits top-left in the photo; zoom in so the plate reads as food, not empty plate. */
+    transform: scale(1.6);
+    transform-origin: 42% 30%;
+  }
 }
 
 .date-card {
-  background: var(--sn-surface);
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: var(--sn-canvas);
   border: 0;
   border-radius: 18px;
   padding: 12px 14px;
@@ -118,15 +87,6 @@
 
 }
 
-.date-card-clickable {
-  cursor: pointer;
-}
-
-
-.date-label {
-  font-size: 0.8rem;
-  color: var(--plan-muted);
-}
 
 .date-main {
   display: flex;
@@ -414,10 +374,10 @@
 
 .cooked-toggle {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
   border: 2px solid var(--sn-line);
   border-radius: 50%;
   padding: 0;
@@ -430,7 +390,7 @@
   transition: background 0.15s ease, border-color 0.15s ease;
 
   ion-icon {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   &.cooked {
