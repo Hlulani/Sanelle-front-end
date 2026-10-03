@@ -1,0 +1,167 @@
+.gray-bg { --background: #f8f9fa; }
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  .progress-track {
+    flex: 1; height: 6px; background: #e9ecef; border-radius: 3px;
+    .progress-fill {
+      height: 100%; border-radius: 3px;
+      background: linear-gradient(90deg, var(--app-accent), var(--app-accent-2));
+      transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  }
+}
+
+.step-view {
+  padding: 0 24px;
+  .title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .subtitle { color: #636e72; margin-bottom: 32px; }
+}
+
+.goal-card {
+  position: relative; border-radius: 24px; overflow: hidden;
+  min-height: 128px; margin-bottom: 16px; padding: 20px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  color: white;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+
+  &--anti-inflammatory { background: linear-gradient(135deg, #92d075 0%, #59ad9b 100%); }
+  &--iron { background: linear-gradient(135deg, #f4976c 0%, #59ad9b 100%); }
+  &--fiber { background: linear-gradient(135deg, #59ad9b 0%, #314a38 100%); }
+
+  .goal-icon {
+    flex-shrink: 0;
+    font-size: 32px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 50%;
+    padding: 12px;
+  }
+
+  .goal-copy {
+    h3 { margin: 0; font-weight: 700; }
+    p { margin: 4px 0 0; font-size: 14px; opacity: 0.85; }
+  }
+
+  &.selected {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.85), 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .selected-badge {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 26px; color: var(--app-accent-2);
+    background: white; border-radius: 50%;
+  }
+}
+
+.diet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.diet-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 12px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #f1f3f5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  color: #2d3436;
+  transition: transform 0.15s ease-out, border-color 0.15s ease-out, background 0.15s ease-out;
+
+  ion-icon { font-size: 28px; color: var(--app-accent-2); }
+
+  &:active { transform: scale(0.96); }
+
+  &.selected {
+    transform: scale(0.96);
+    border-color: var(--app-accent-2);
+    background: rgba(89, 173, 155, 0.08);
+  }
+}
+
+.main-submit-btn {
+  --background: var(--app-accent-gradient);
+  --border-radius: var(--radius-md); height: 56px; margin-top: 24px; font-weight: 700;
+}
+
+
+.science-card {
+  background: #ffffff;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+
+  .card-media {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.goal-card--anti-inflammatory { background: linear-gradient(135deg, #92d075 0%, #59ad9b 100%); }
+    &.goal-card--iron { background: linear-gradient(135deg, #f4976c 0%, #59ad9b 100%); }
+    &.goal-card--fiber { background: linear-gradient(135deg, #59ad9b 0%, #314a38 100%); }
+
+    ion-icon {
+      font-size: 40px;
+      color: white;
+    }
+  }
+
+  .card-body {
+    padding: 20px;
+
+    .tag {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--app-accent-2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: #2d3436;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #636e72;
+      line-height: 1.6;
+    }
+  }
+}
+
+.pill-item {
+  --background: #ffffff;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  --inner-padding-end: 12px;
+  --padding-start: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  border: 1px solid #f1f3f5;
+}
+

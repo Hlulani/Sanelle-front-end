@@ -1,0 +1,156 @@
+<ion-content [fullscreen]="true" class="gray-bg">
+
+  <div class="progress-wrap ion-padding">
+    <div class="progress-track">
+      <div class="progress-fill" [style.width]="(currentStep() / totalSteps * 100) + '%'"></div>
+    </div>
+    <ion-button fill="clear" color="dark" aria-label="Previous step" (click)="prevStep()" [hidden]="currentStep() <= 1">
+      <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div [hidden]="currentStep() !== 1" class="step-view">
+    <h1 class="title">What are you trying to achieve?</h1>
+    <p class="subtitle">Pick your primary health focus.</p>
+
+   <div class="card-grid">
+  <div class="goal-card goal-card--anti-inflammatory" [class.selected]="selectedGoal() === 'anti_inflammatory'" (click)="onGoalTap('anti_inflammatory')">
+    <ion-icon name="heart-outline" class="goal-icon"></ion-icon>
+    <ion-icon name="checkmark-circle" class="selected-badge" *ngIf="selectedGoal() === 'anti_inflammatory'"></ion-icon>
+    <div class="goal-copy">
+      <h3>Anti-Inflammatory Focus</h3>
+      <p>Helpful for fibroids, PCOS, endometriosis &amp; everyday inflammation</p>
+    </div>
+  </div>
+
+  <div class="goal-card goal-card--iron" [class.selected]="selectedGoal() === 'iron_support'" (click)="onGoalTap('iron_support')">
+    <ion-icon name="flash-outline" class="goal-icon"></ion-icon>
+    <ion-icon name="checkmark-circle" class="selected-badge" *ngIf="selectedGoal() === 'iron_support'"></ion-icon>
+    <div class="goal-copy">
+      <h3>Iron & Energy</h3>
+      <p>Beat fatigue and anemia</p>
+    </div>
+  </div>
+
+  <div class="goal-card goal-card--fiber" [class.selected]="selectedGoal() === 'high_fiber'" (click)="onGoalTap('high_fiber')">
+    <ion-icon name="leaf-outline" class="goal-icon"></ion-icon>
+    <ion-icon name="checkmark-circle" class="selected-badge" *ngIf="selectedGoal() === 'high_fiber'"></ion-icon>
+    <div class="goal-copy">
+      <h3>Digestion & Balance</h3>
+      <p>Fiber-forward meals for gut comfort</p>
+    </div>
+  </div>
+</div>
+  </div>
+
+ <!-- STEP 2: Eating style (single-select) -->
+<div class="step-view" [hidden]="currentStep() !== 2">
+  <div class="title">What's your eating style?</div>
+  <p class="subtitle">Every meal in your plan will match this.</p>
+
+  <div class="diet-grid">
+    <button type="button" class="diet-option" [class.selected]="selectedDiet() === 'ANY'" (click)="onDietTap('ANY')">
+      <ion-icon name="apps-outline"></ion-icon>
+      <span>Any</span>
+    </button>
+    <button type="button" class="diet-option" [class.selected]="selectedDiet() === 'MEATY'" (click)="onDietTap('MEATY')">
+      <ion-icon name="flame-outline"></ion-icon>
+      <span>Meaty</span>
+    </button>
+    <button type="button" class="diet-option" [class.selected]="selectedDiet() === 'VEGETARIAN'" (click)="onDietTap('VEGETARIAN')">
+      <ion-icon name="leaf-outline"></ion-icon>
+      <span>Vegetarian</span>
+    </button>
+    <button type="button" class="diet-option" [class.selected]="selectedDiet() === 'VEGAN'" (click)="onDietTap('VEGAN')">
+      <ion-icon name="nutrition-outline"></ion-icon>
+      <span>Vegan</span>
+    </button>
+  </div>
+</div>
+
+ <!-- STEP 3: Additional focuses (multi-select, excludes the goal already picked) -->
+<div class="step-view" [hidden]="currentStep() !== 3">
+  <div class="title">Want to add anything else?</div>
+  <div class="subtitle">{{ primaryFocusLabel() }} is already covered by your goal. Add more if they apply too.</div>
+
+  <ion-list lines="none">
+    <ion-item button detail="false" class="pill-item" *ngFor="let option of secondaryFocusOptions()" (click)="toggleFocus(option.key)">
+      <ion-checkbox slot="start" [checked]="hasFocus(option.key)" (ionChange)="toggleFocus(option.key)" (click)="$event.stopPropagation()"></ion-checkbox>
+      <ion-label>{{ option.label }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-button
+    expand="block"
+    class="main-submit-btn"
+    (click)="nextStep()"
+  >
+    Continue
+  </ion-button>
+</div>
+
+
+<div [hidden]="currentStep() !== 4" class="step-view">
+  <div class="header-section">
+    <h1 class="title">How your meals are thoughtfully chosen</h1>
+    <p class="subtitle">How your personalized plan supports your body’s natural balance.</p>
+  </div>
+
+  <div class="science-card" *ngFor="let card of getScienceCards()">
+    <div class="card-media" [ngClass]="card.colorClass">
+      <ion-icon [name]="card.icon"></ion-icon>
+    </div>
+    <div class="card-body">
+      <div class="tag">{{ card.tag }}</div>
+      <h3>{{ card.title }}</h3>
+      <p>{{ card.body }}</p>
+    </div>
+  </div>
+
+  <div class="footer-btn">
+    <ion-button expand="block" class="main-submit-btn" (click)="nextStep()">
+      I understand the approach
+    </ion-button>
+  </div>
+</div>
+
+ <!-- STEP 5: Your approach summary -->
+<div class="step-view" [hidden]="currentStep() !== 5">
+  <div class="title">{{ getApproachTitle() }}</div>
+  <div class="subtitle">Here’s what we’ll prioritize for your first plan.</div>
+
+  <div class="science-card">
+    <div class="card-body">
+      <div class="tag">Your focus</div>
+
+      <div style="display:flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+        <ion-chip *ngFor="let chip of getSelectedFocusChips()">
+          <ion-label>{{ chip }}</ion-label>
+        </ion-chip>
+        <ion-chip *ngIf="getSelectedFocusChips().length === 0">
+          <ion-label>General</ion-label>
+        </ion-chip>
+        <ion-chip color="secondary" *ngIf="getDietLabel()">
+          <ion-label>{{ getDietLabel() }}</ion-label>
+        </ion-chip>
+      </div>
+
+      <ion-list lines="none">
+        <ion-item *ngFor="let b of getApproachBullets()" class="pill-item" detail="false">
+          <ion-label>{{ b }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+
+  <ion-button expand="block" class="main-submit-btn" (click)="finish()">
+    Start planning
+  </ion-button>
+
+  <ion-button expand="block" fill="clear" (click)="prevStep()">
+    Back
+  </ion-button>
+</div>
+
+
+</ion-content>

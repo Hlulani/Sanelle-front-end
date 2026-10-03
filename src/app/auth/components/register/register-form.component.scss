@@ -1,0 +1,66 @@
+.input-group {
+  margin-bottom: 20px; /* Space between the last input and the submit button */
+}
+
+.custom-input {
+
+  ion-icon[slot="start"] {
+    margin-right: 12px;
+    font-size: 20px;
+    color: #636e72;
+  }
+
+  ion-icon[slot="end"] {
+    cursor: pointer;
+    color: #b2bec3;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+
+
+.strength-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 24px 4px;
+  font-size: 13px;
+  color: #636e72;
+
+  .meter-bars {
+    display: flex;
+    gap: 4px;
+  }
+
+  .meter-bar {
+    width: 14px;
+    height: 4px;
+    background: #dfe6e9;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+
+    &.filled.strength-weak { background: #e74c3c; }
+    &.filled.strength-fair { background: #f0932b; }
+    &.filled.strength-good { background: var(--app-accent); }
+    &.filled.strength-strong { background: var(--app-accent-2); }
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.error-text {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.field-error-text {
+  margin: 4px 0 0 12px;
+  font-size: 13px;
+}
