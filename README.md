@@ -1,197 +1,145 @@
 # Sanelle
 
-A mobile-first meal planning app built with **Ionic + Angular + Capacitor**, focused on fibroid-friendly, anti-inflammatory nutrition. It generates personalised meal plans, builds grocery lists from them, and keeps you on track with challenges and meal reminders.
+Sanelle helps women understand their fibroid diagnosis, make informed food choices and feel prepared for appointments.
+
+It's a mobile-first app built with **Ionic + Angular + Capacitor**. The API lives in [sanelle-back-end](https://github.com/Hlulani/sanelle-back-end).
 
 > App ID: `com.hlulani.sanelle` · Angular 20 · Ionic 8 · Capacitor 8
 
-The backend API lives in [sanelle-back-end](https://github.com/Hlulani/sanelle-back-end).
+Sanelle doesn't diagnose or replace a doctor. It helps someone record what they know, see what's missing, check food claims against research, and bring clear questions to their appointment.
 
-## Features
+## What it does
 
-- **Onboarding** — pick nutrition focuses (anti-inflammatory, iron support, fibroid-friendly, fiber-forward, etc.), eating/fasting style, and plan duration.
-- **My Plan** — generate a multi-day meal plan, choose a start date, swap individual recipes, and track meals as you go.
-- **Challenges** — join built-in challenges, create your own, and invite friends with a join code.
-- **Groceries** — ingredients from the active plan aggregated into a checkable shopping list, grouped by category.
-- **Meal details** — full recipe view with ingredient scaling, instructions, and nutrition scores (anti-inflammatory, iron support, fiber).
-- **Account** — profile and meal reminder notifications.
-- **Auth** — email/username/password registration and login, JWT access + refresh tokens, silent refresh via an HTTP interceptor, and route guards for auth and onboarding.
+The app has four tabs: **Today**, **My health**, **Nourish** and **Learn**.
 
-## Tech Stack
+### Getting started
+- **Onboarding:** one optional question, "What would you like help with?", with three choices (diagnosis, food, appointment). Any number can be picked. The answer decides what Today shows first and can be changed in Account.
+- **Today:** one main action, led by that choice, with the other areas one tap away. Nothing empty or invented shows on a first visit.
 
-- **Framework:** Angular 20 (standalone components, no NgModules)
-- **UI Library:** Ionic 8 (`@ionic/angular/standalone`)
-- **Mobile Runtime:** Capacitor 8 (Android & iOS native shells; Preferences, Local Notifications, Haptics, Share)
-- **Language:** TypeScript 5.9
-- **State/Data:** RxJS, Angular signals, and small services (`PlanStoreService`, `MealProgressService`) shared across tabs
-- **HTTP:** Angular `HttpClient` with a functional interceptor for auth headers and silent token refresh
-- **Testing:** Karma + Jasmine
-- **Linting:** ESLint (`@angular-eslint`, `@typescript-eslint`)
+### Understand your diagnosis (My health)
+- **Recording:** five questions (number, largest size, location, uterine cavity, FIGO type), one at a time. "I don't know" is a real answer and becomes a suggested appointment question. **Finish later** keeps what's typed, and **Carry on** picks up where she stopped.
+- **Three states for every finding:** recorded, explicitly absent, or **Not recorded**. Unknown is never shown as "no".
+- **Sources:** every value keeps where it came from (report, appointment or own note), plus the report's own wording and date.
 
-## Project Structure
+### Navigate food advice (Learn and Nourish)
+- **Food questions:** each answer starts short, then shows evidence separately for getting fibroids, growth, bleeding, pain and fertility. Every study opens with its population and limitations. "No studies found" is never presented as "no effect".
+- **Read something else?:** any other claim becomes a question for the appointment.
+- **Meal plans:** built from meals per day, diet (anything, pescatarian, vegetarian, vegan), prep time, allergies and foods she doesn't eat. Allergy and diet rules are applied on the server, so swaps follow them too.
+- **Easy meals for today:** meals ready in 15 minutes or less that match her saved preferences.
+- **Groceries:** for the next 3 days, a week or the whole plan, shown by aisle or by meal. Ingredients used in several meals say "for N meals"; free-text amounts are listed, never added up.
+
+### Prepare for care
+- **Check-ins (optional):** bleeding, pain 0–10, pressure or bloating, tiredness, what it got in the way of, notes and treatment changes. After saving, Today confirms it and offers at most two useful next steps, chosen by explicit rules.
+- **Symptom history:** only recorded check-ins, with coverage stated once ("2 check-ins recorded in the last 14 days"). Observations need at least two check-ins and always use the check-in count as the denominator. Days without a check-in are unknown, never symptom-free.
+- **Questions:** her own, ones suggested from missing details, and starter questions. Each can be edited, reordered and answered afterwards.
+- **Appointment summary:** findings, unknowns, check-in counts, treatment changes, questions and notes, ready to share or print. Check-ins can be left out. It works without an appointment date.
+
+## How health information is handled
+
+- **Health records stay on the device.** Diagnosis details, questions, check-ins and allergies are encrypted (AES-256-GCM) and stored per account on the phone or in the browser, not on the server. The key is held in the iOS Keychain or Android Keystore, or as a non-extractable key in the browser. A different browser, or cleared site data, starts empty.
+- **Counts are plain code.** Coverage, frequencies and ranges are calculated by tested functions (`src/app/my-health/checkins.ts`, `summary.ts`). Nothing is generated by AI, and nothing suggests a cause.
+- **Health content is labelled until reviewed.** The diagnosis explanations and food topics (dairy, soy, red meat, green tea) were researched against published papers but haven't been reviewed by a clinician or dietitian. They're labelled "Draft · not reviewed" and left out of production builds (`topics.drafts.prod.ts` replaces the drafts). Some sources were checked from the abstract only, and each one says so.
+- **Symptom explanations appear only once reviewed.** The rule that matches check-ins to explanations exists (`symptom-topics.ts`), but no topic has been reviewed yet, so none is shown.
+- **No urgent-symptom advice.** That needs its own clinically reviewed approach.
+
+## Tech stack
+
+- **Framework:** Angular 20, standalone components and signals
+- **UI:** Ionic 8, with Sanelle's own theme (`src/theme/sanelle.scss`)
+- **Type:** Fredoka for page titles and the wordmark, Nunito Sans for everything else (bundled locally)
+- **Native:** Capacitor 8 (Preferences, Secure Storage, Local Notifications, Share, Haptics)
+- **Testing:** Karma and Jasmine. **Linting:** ESLint (`@angular-eslint`)
+
+## Project structure
 
 ```
-src/
-├── app/
-│   ├── app.component.ts        # Root component, restores session on boot
-│   ├── app.routes.ts           # Top-level routing (auth, tabs, meal-details, onboarding)
-│   ├── auth/
-│   │   ├── auth-shell.page.ts          # Shell hosting login/register
-│   │   └── components/
-│   │       ├── login/, register/       # Login/register form components
-│   │       └── onboarding/             # Post-signup preference onboarding
-│   ├── core/
-│   │   ├── auth/                       # Auth service, guard, and interceptor
-│   │   ├── models/                     # Meal & plan response models
-│   │   └── services/
-│   │       ├── api.service.ts               # Backend API calls
-│   │       ├── meal.service.ts              # Meal list/detail fetching
-│   │       ├── meal-plans.service.ts        # Meal plan generation
-│   │       ├── plan-store.service.ts        # Shares the active plan across tabs
-│   │       ├── meal-progress.service.ts     # Tracks eaten meals
-│   │       ├── challenges.service.ts        # Built-in challenges
-│   │       ├── custom-challenges.service.ts # User-created challenges + invite codes
-│   │       ├── focus-preferences.service.ts # Persisted onboarding focuses
-│   │       ├── notification.service.ts      # Local meal reminders
-│   │       └── *.util.ts                    # Challenge progress, ingredient scaling
-│   ├── pages/meal-details/     # Recipe detail page
-│   ├── shared/components/      # Reusable UI (initial-avatar)
-│   ├── tabs/                   # Tab bar shell
-│   ├── tab2/                   # My Plan
-│   ├── tab3/                   # Groceries
-│   └── account/                # Account
-├── environments/                # environment.ts / environment.prod.ts (API base URLs)
-├── theme/                       # Ionic theme variables
-└── global.scss                  # Global styles
+src/app/
+├── welcome/            # First screen for signed-out visitors
+├── auth/               # Log in, register, onboarding
+├── today/              # Today: lead action, check-in confirmation and next steps
+├── my-health/          # Diagnosis recording, questions, check-ins, summary
+│   ├── record/         #   The five diagnosis questions
+│   ├── symptoms/       #   Check-in form and history
+│   ├── summary-page/   #   Appointment summary
+│   ├── checkins.ts     #   Counts and observations (no generated text)
+│   └── summary.ts      #   Builds the summary from the record
+├── learn/              # Food questions and evidence topics
+├── tab2/               # Nourish: plan settings and the meal plan
+├── tab3/               # Groceries
+├── nourish/            # Easy meals for today
+├── pages/meal-details/ # Recipe view and cook mode
+├── account/            # Profile, help choices, reminders, log out
+└── core/               # Auth, API services, encrypted storage, preferences
 ```
 
-## Prerequisites
+## Running it locally
 
-- Node.js and npm
-- [Ionic CLI](https://ionicframework.com/docs/cli) (optional but recommended): `npm install -g @ionic/cli`
-- For native builds: Android Studio (Android) and/or Xcode (iOS)
-
-## Getting Started
-
-Install dependencies:
+**Requirements:** Node.js 22 LTS (Angular 20 needs 20.19+, 22.12+ or 24) with npm 10. You also need [sanelle-back-end](https://github.com/Hlulani/sanelle-back-end) running on port 8080; its README covers that, and it needs JDK 17+ and Docker.
 
 ```bash
-npm install
+npm ci
+npm start          # http://localhost:4200
 ```
 
-Run the app in the browser (dev server on `http://localhost:4200`):
+Open http://localhost:4200 in Chrome, set DevTools to an iPhone size, and create an account with any email address; there's no email verification.
+
+**Backend address:** `src/environments/environment.ts` points to `http://localhost:8080` (`apiBaseUrl` and `hostBaseUrl`). If the backend runs elsewhere, change both values, and add the app's address to the backend's `CORS_ALLOWED_ORIGINS`.
+
+### A quick walkthrough
+
+1. **Diagnosis:** choose "Understanding my diagnosis" in onboarding, then **Record my diagnosis** on Today. Enter `2` with the report's wording, `4.1 cm`, then **I don't know** for location. The question it suggests is added to your list.
+2. **Check-in:** My health → **Check in today**. Choose Severe tiredness and Work or study, then save. Try both suggestions on Today.
+3. **Food:** Learn → "Should I cut out dairy?". Open "Getting fibroids" and Sources, then type a claim into "Read something else?".
+4. **Meals:** Nourish → set a milk allergy → **Make my plan** → Swap and **Groceries** (try **By meal**). Back in Learn, the dairy topic's meals are now hidden.
+5. **Summary:** My health → **Prepare my summary**, then share or print.
+
+## Scripts
 
 ```bash
-npm start
-# or
-ionic serve
+npm start          # dev server on :4200
+npm run build      # production build to www/ (no draft content)
+npm run watch      # development build with file watching
+npm test           # unit tests (Karma/Jasmine)
+npm run lint       # ESLint
 ```
 
-By default the app talks to the [sanelle-back-end](https://github.com/Hlulani/sanelle-back-end) API at `http://localhost:8080/api/v1` (see `src/environments/environment.ts`). Update `apiBaseUrl` / `hostBaseUrl` to point at your backend as needed.
+Before a production build, set the real API domain in `src/environments/environment.prod.ts`; it still contains placeholders (`YOUR-PROD-DOMAIN`).
 
-## Building
+## Running on a phone (Capacitor)
 
-```bash
-npm run build            # production build, output to www/
-npm run watch            # development build with file watching
-```
-
-Before shipping a production build, update `src/environments/environment.prod.ts` with your real API domain — it currently contains placeholder values (`YOUR-PROD-DOMAIN`).
-
-## Testing & Linting
-
-```bash
-npm test                 # run unit tests (Karma/Jasmine)
-npm run lint             # run ESLint
-```
-
-## Running on Mobile (Capacitor)
-
-This repo includes `android/` and `ios/` native projects. After building the web assets:
+The repo includes `ios/` and `android/` projects. After any frontend change:
 
 ```bash
 npm run build
 npx cap sync
-npx cap open android      # opens Android Studio
-npx cap open ios          # opens Xcode (requires macOS + Xcode)
+npx cap open ios        # Xcode (macOS)
+npx cap open android    # Android Studio
 ```
 
-### App icon & splash screen
+- **iOS Simulator:** needs full Xcode (`xcodebuild -version`). Open `ios/App/App.xcodeproj` directly; plugins use Swift Package Manager, so there's no workspace or CocoaPods step. Pick a simulator and press ⌘R. Debug builds call `http://localhost:8080`, which the simulator can reach.
+- **Android Emulator:** create a device in Android Studio's Device Manager and press Run. The emulator can't reach your computer's `localhost`; use `http://10.0.2.2:8080` in `environment.ts` when testing against a local backend.
+- **Meal reminders** only work in the native builds, not in a browser.
 
-Source images live in `resources/icon.png` (1024×1024) and `resources/splash.png` (2732×2732). The current versions are placeholders — swap them for real branded assets, then regenerate the native icon sets:
+### App icon and splash screen
+
+The source images are `resources/icon.png` (1024×1024) and `resources/splash.png` (2732×2732). Both are placeholders. Replace them, then run:
 
 ```bash
 npx capacitor-assets generate --ios --android
 ```
 
-### Running on the iOS Simulator
+## Sign-in and onboarding
 
-Requires a Mac with Xcode installed (full Xcode, not just the Command Line Tools — check with `xcodebuild -version`).
+- **Tokens:** login and registration store access and refresh tokens with Capacitor Preferences. `authInterceptor` adds the bearer token and, on a `401`/`403`, refreshes it once before retrying.
+- **Guard:** `authGuard` protects the app's routes and sends anyone who hasn't finished onboarding there first.
+- **Per account:** onboarding, help choices and diet are tracked per account, so one person's choices never carry over to the next account on the same device.
+- **Signed-in users** skip Welcome and the sign-up forms. Onboarding shows who is signed in and offers Log out.
 
-1. Build the web app and sync it into the native project:
-   ```bash
-   npm run build
-   npx cap sync ios
-   ```
-2. Open the project in Xcode:
-   ```bash
-   npx cap open ios
-   # or: open ios/App/App.xcodeproj
-   ```
-   This project uses Swift Package Manager for its Capacitor plugins, so open `App.xcodeproj` directly — there is no `.xcworkspace` / CocoaPods step.
-3. In Xcode's toolbar, choose a simulator (e.g. "iPhone 17") next to the scheme selector, then press **⌘R** to build and launch.
+## Known limitations
 
-Re-run step 1 and then ⌘R again after any frontend change to pick up the latest web assets. Debug builds point at `environment.ts` (`http://localhost:8080` by default), so run your backend locally if you want to exercise login/register against real data.
-
-### Stopping the Simulator
-
-From Xcode: press the **⏹ Stop** button (or **⌘.**) to end the running app, then just quit the Simulator app (**⌘Q**) if you're done with it — closing it normally never corrupts state.
-
-From the command line, if the app or simulator was launched via `xcrun simctl` (e.g. by a script):
-
-```bash
-xcrun simctl terminate "iPhone 17" com.hlulani.sanelle   # stop the app
-xcrun simctl shutdown "iPhone 17"                         # shut down that simulator device
-osascript -e 'quit app "Simulator"'                       # quit the Simulator app itself
-```
-
-`xcrun simctl shutdown all` shuts down every booted simulator at once if you're not sure which device is running.
-
-### Running on the Android Emulator
-
-Requires Android Studio (bundles the SDK, an emulator, and the AVD manager) — install via `brew install --cask android-studio` or from [developer.android.com](https://developer.android.com/studio). On first launch, its setup wizard will prompt to install the SDK, platform, and a system image if you don't already have one.
-
-1. Build the web app and sync it into the native project:
-   ```bash
-   npm run build
-   npx cap sync android
-   ```
-2. Open the project in Android Studio:
-   ```bash
-   npx cap open android
-   ```
-3. Create a virtual device if you don't have one yet: **Device Manager** (right-hand sidebar) → **+** → pick a device definition (e.g. Pixel 8) and a system image → Finish.
-4. Choose that device in the toolbar dropdown, then press the ▶ **Run** button (or **⌃R**) to build and launch.
-
-Re-run step 1 and then ▶ Run again after any frontend change. Debug builds point at `environment.ts` (`http://localhost:8080` by default) — note the emulator can't reach your Mac's `localhost` directly; use `http://10.0.2.2:8080` instead when testing against a locally-run backend.
-
-### Stopping the Emulator
-
-From Android Studio: press the ⏹ **Stop** button next to Run to end the app, then close the emulator window (or **⌘Q** it) when you're done — this is safe and won't corrupt the virtual device.
-
-From the command line, if the emulator/app was launched via scripts (`emulator`/`adb`):
-
-```bash
-adb uninstall com.hlulani.sanelle   # optional: remove the installed app
-adb emu kill                        # shut down the running emulator
-```
-
-## Authentication Flow
-
-1. Unauthenticated users are redirected to `/auth` (login/register).
-2. On successful login/register, access + refresh tokens are stored via Capacitor Preferences.
-3. `authGuard` protects `tabs`, `meal-details`, and `onboarding` routes — it checks for a valid token and redirects new users to onboarding until it's completed.
-4. `authInterceptor` attaches the bearer token to outgoing requests and, on a `401`/`403`, transparently attempts a token refresh before retrying the original request; if refresh fails, the user is logged out and redirected to `/auth`.
-
-## Notes
-
-- API base URLs are environment-specific — see `src/environments/`.
+- **Unreviewed health content.** Everything listed under "How health information is handled" stays labelled as a draft until a named reviewer signs it off.
+- **Manual entry only.** Reading uploaded scan reports isn't built yet.
+- **Placeholder photos.** 33 of 166 recipes have one, from Unsplash and Pexels (see `docs/design/image-credits.md`). The rest show a designed tile.
+- **Carried-over recipe text.** Some recipe text from an earlier version (such as the "Why it helps" section) still needs reviewing against Sanelle's evidence rules.
+- **Challenges** come from an earlier meal-planning version of the app.
+- **Allergy filtering** works from ingredient names and isn't a guarantee of allergen safety. Always check labels.
