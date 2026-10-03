@@ -9,7 +9,7 @@ import { MealPlanItem } from '../core/services/meal-plans.service';
 import { HealthRepository } from '../my-health/health-repository';
 import { FINDINGS, FINDING_KEYS, FindingKey, findingOrUnknown } from '../my-health/diagnosis.model';
 import { FocusPreferencesService } from '../core/services/focus-preferences.service';
-import { nextStep } from './next-step';
+import { contextLine, diagnosisStep, leadArea, nextStep, supportingAreas } from './next-step';
 import { FindingStatusComponent } from '../my-health/finding-status.component';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
 import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
@@ -45,7 +45,11 @@ export class TodayPage implements OnInit {
 
   readonly defs = FINDINGS;
   readonly mealTypeLabels = MEAL_TYPE_LABELS;
-  readonly foodTopic = this.topics.get('dairy');
+  /** At most two neutral example questions, only for topics that exist in this build. */
+  readonly foodExamples = [
+    { id: 'dairy', text: 'Do I need to avoid dairy?' },
+    { id: 'soy', text: 'What does research say about soy?' },
+  ].filter((e) => !!this.topics.get(e.id));
   readonly justSaved = signal<string | null>(null);
 
   readonly dateLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
@@ -76,6 +80,12 @@ export class TodayPage implements OnInit {
     return n.kind === 'continue' ? n : null;
   });
 
+  readonly lead = computed(() => leadArea(this.focusPreferences.focus()));
+  readonly supporting = computed(() => supportingAreas(this.focusPreferences.focus()));
+  readonly contextLine = computed(() => contextLine(this.focusPreferences.focus()));
+  /** The diagnosis entry when it isn't the lead: start, carry on, or nothing (rows show instead). */
+  readonly diagnosisEntry = computed(() => diagnosisStep(this.health.record()));
+
   readonly questionCount = computed(() => this.health.record().questions.length);
   readonly todayIso = localIsoDate(new Date());
   readonly loggedToday = computed(() => (this.health.record().symptoms ?? []).some((s) => s.date === this.todayIso));
@@ -88,6 +98,12 @@ export class TodayPage implements OnInit {
   });
 
   readonly hasPlan = computed(() => !!this.plan());
+
+  /** Anything recorded, planned or logged. Until then Today only shows where to begin. */
+  readonly started = computed(() => {
+    const r = this.health.record();
+    return this.hasRecords() || r.questions.length > 0 || !!r.appointment.date || (r.symptoms ?? []).length > 0 || this.hasPlan();
+  });
 
   ngOnInit() {
     void this.planStore.init();

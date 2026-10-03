@@ -1,9 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { AppointmentQuestion, FINDINGS, FINDING_KEYS, findingOrUnknown } from '../diagnosis.model';
+
+export const STARTER_QUESTIONS = [
+  'What do the words in my report mean?',
+  'Which symptoms should I keep track of?',
+  'What are my treatment options, including waiting and watching?',
+  'Could my fibroids affect getting pregnant, now or later?',
+];
 
 @Component({
   selector: 'app-questions',
@@ -15,6 +22,7 @@ import { AppointmentQuestion, FINDINGS, FINDING_KEYS, findingOrUnknown } from '.
 export class QuestionsPage {
   private repo = inject(HealthRepository);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   readonly questions = this.repo.questions;
   readonly editing = signal<string | null>(null);
@@ -31,12 +39,29 @@ export class QuestionsPage {
       .filter((s) => !have.has(s.text.toLowerCase()));
   });
 
+  /**
+   * Questions anyone can bring, whatever is or isn't recorded: the words in the report, symptoms,
+   * treatment options and fertility. Questions only; Sanelle doesn't answer them.
+   */
+  readonly starters = computed(() => {
+    const have = new Set(this.repo.record().questions.map((q) => q.text.toLowerCase()));
+    return STARTER_QUESTIONS.filter((text) => !have.has(text.toLowerCase()));
+  });
+
+  readonly backLabel = computed(() => (this.from() === 'today' ? '‹ Today' : '‹ My health'));
+  private readonly from = signal<'today' | 'health'>('health');
+
   ionViewWillEnter() {
+    this.from.set(this.route.snapshot.queryParamMap.get('from') === 'today' ? 'today' : 'health');
     void this.repo.load();
   }
 
   back() {
-    this.router.navigateByUrl('/tabs/health');
+    this.router.navigateByUrl(this.from() === 'today' ? '/tabs/today' : '/tabs/health');
+  }
+
+  addStarter(text: string) {
+    void this.repo.addQuestion(text);
   }
 
   addSuggestion(s: { key: (typeof FINDING_KEYS)[number]; text: string }) {

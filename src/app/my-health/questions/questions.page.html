@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="questions">
   <main class="sn-page sn-screen">
     <header class="sn-head">
-      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ My health</button>
+      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">{{ backLabel() }}</button>
       <h1>Your questions</h1>
       <p class="sn-head-note">Most important first. You can record answers afterwards.</p>
     </header>
@@ -86,6 +86,20 @@
           <p class="none">Nothing to suggest right now.</p>
         }
       </section>
+
+      @if (starters().length) {
+        <section class="sn-section" aria-labelledby="starter-title">
+          <h2 id="starter-title">Other questions you might want to ask</h2>
+          <ul class="sugg">
+            @for (s of starters(); track s) {
+              <li>
+                <span>{{ s }}</span>
+                <button type="button" class="add" (click)="addStarter(s)" [attr.aria-label]="'Add: ' + s">+ Add</button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
     </div>
   </main>
 </ion-content>

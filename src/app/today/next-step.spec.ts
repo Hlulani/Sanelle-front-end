@@ -1,4 +1,4 @@
-import { nextStep } from './next-step';
+import { contextLine, nextStep, supportingAreas } from './next-step';
 import { HealthRecord, diagnosisProgress, emptyHealthRecord } from '../my-health/diagnosis.model';
 
 function withFindings(states: Record<string, 'present' | 'unknown'>): HealthRecord {
@@ -51,10 +51,31 @@ describe('nextStep (top of Today)', () => {
     expect(nextStep(emptyHealthRecord(), ['diagnosis', 'food'])).toEqual({ kind: 'start' });
   });
 
-  it('asks for the appointment date first for someone preparing for one', () => {
+  it('leads with appointment preparation, with or without a date', () => {
     expect(nextStep(emptyHealthRecord(), ['appointment'])).toEqual({ kind: 'appointment' });
     const dated = emptyHealthRecord();
     dated.appointment = { date: '2026-10-20' };
-    expect(nextStep(dated, ['appointment'])).toEqual({ kind: 'start' });
+    expect(nextStep(dated, ['appointment'])).toEqual({ kind: 'appointment' });
+  });
+});
+
+describe('contextLine', () => {
+  it('reflects a single choice', () => {
+    expect(contextLine(['diagnosis'])).toBe('You wanted help understanding your diagnosis.');
+    expect(contextLine(['food'])).toBe('You wanted help with food choices.');
+    expect(contextLine(['appointment'])).toBe('You wanted help preparing for an appointment.');
+  });
+
+  it('stays neutral when several (or none) were chosen, instead of inventing a main priority', () => {
+    expect(contextLine(['diagnosis', 'appointment'])).toBe('Here are a few places to start.');
+    expect(contextLine([])).toBe('Here are a few places to start.');
+  });
+});
+
+describe('supportingAreas', () => {
+  it('keeps every area reachable, chosen ones first', () => {
+    expect(supportingAreas(['appointment'])).toEqual(['diagnosis', 'food']);
+    expect(supportingAreas(['food', 'appointment'])).toEqual(['appointment', 'diagnosis']);
+    expect(supportingAreas([])).toEqual(['food', 'appointment']);
   });
 });
