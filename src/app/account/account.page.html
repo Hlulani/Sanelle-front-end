@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page-wrap">
+    <div class="profile-card">
+      <div class="avatar">{{ initial() }}</div>
+      <div class="profile-name">{{ username() }}</div>
+      <div class="profile-email" *ngIf="email()">{{ email() }}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Session</div>
+      <ion-button expand="block" fill="outline" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Log out
+      </ion-button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Notifications</div>
+      <div class="notification-row">
+        <div class="notification-copy">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <div>
+            <div class="notification-label">Daily reminders</div>
+            <div class="notification-hint">A nudge to cook and keep your streak going</div>
+          </div>
+        </div>
+        <ion-toggle
+          [checked]="notificationsEnabled()"
+          (ionChange)="toggleNotifications($event.detail.checked)"
+        ></ion-toggle>
+      </div>
+      <p class="error-text" *ngIf="notificationError()">{{ notificationError() }}</p>
+    </div>
+
+    <div class="section danger-zone">
+      <div class="section-title">Danger zone</div>
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="danger"
+        [disabled]="isDeleting()"
+        (click)="confirmDeleteAccount()"
+      >
+        <ion-spinner *ngIf="isDeleting()" name="crescent"></ion-spinner>
+        <span *ngIf="!isDeleting()">Delete account</span>
+      </ion-button>
+      <p class="danger-hint">This permanently deletes your account and cannot be undone.</p>
+      <p class="error-text" *ngIf="error()">{{ error() }}</p>
+    </div>
+  </div>
+</ion-content>
