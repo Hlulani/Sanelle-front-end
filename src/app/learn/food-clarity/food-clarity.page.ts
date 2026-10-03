@@ -14,6 +14,8 @@ import {
   Study,
 } from '../evidence.model';
 import { containsDairy } from '../food-matchers';
+import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
+import { photoFor } from '../../shared/meal-photos';
 
 const VERDICT_LABELS: Record<OutcomeVerdict, string> = {
   mixed: 'Mixed',
@@ -27,7 +29,7 @@ type MealsState = { state: 'loading' } | { state: 'error' } | { state: 'ready'; 
 @Component({
   selector: 'app-food-clarity',
   standalone: true,
-  imports: [CommonModule, IonContent],
+  imports: [CommonModule, IonContent, MealImageComponent],
   templateUrl: './food-clarity.page.html',
   styleUrls: ['./food-clarity.page.scss'],
 })
@@ -78,7 +80,13 @@ export class FoodClarityPage implements OnInit {
   loadMeals() {
     this.meals.set({ state: 'loading' });
     this.mealService.getMeals().subscribe({
-      next: (all) => this.meals.set({ state: 'ready', meals: all.filter((m) => containsDairy(m.ingredients)).slice(0, 6) }),
+      next: (all) => {
+        // Meals with a matched photo first; order is otherwise unchanged.
+        const dairy = all.filter((m) => containsDairy(m.ingredients));
+        const withPhoto = dairy.filter((m) => photoFor(m.name));
+        const rest = dairy.filter((m) => !photoFor(m.name));
+        this.meals.set({ state: 'ready', meals: [...withPhoto, ...rest].slice(0, 6) });
+      },
       error: () => this.meals.set({ state: 'error' }),
     });
   }

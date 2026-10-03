@@ -3,53 +3,81 @@
 }
 
 .welcome-layout {
+  position: relative;
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   color: var(--sn-on-brand);
-}
-
-.intro {
-  padding: calc(env(safe-area-inset-top, 0px) + 3rem) 1.5rem 2rem;
-  display: grid;
-  gap: 1rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 2rem) 1.5rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  overflow: hidden;
 }
 
 .wordmark {
-  font: 600 3.5rem/1 var(--sn-display);
+  position: relative;
+  z-index: 1;
+  font: 600 3.75rem/1 var(--sn-display);
   letter-spacing: -0.01em;
-  margin-bottom: 3.5rem;
+}
+
+/* The plate sits in a deep-berry ring and runs off the right edge. */
+.plate {
+  position: absolute;
+  top: 6.5rem;
+  right: -5.5rem;
+  margin: 0;
+  width: 17rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.25rem solid var(--sn-brand-deep);
+  overflow: hidden;
+  box-shadow: 0 1.25rem 2.5rem rgba(30, 6, 16, 0.35);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 62%;
+  }
+}
+
+.intro {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: 15rem;
+  display: grid;
+  gap: 0.875rem;
 }
 
 h1 {
-  font-size: 2rem;
-  max-width: 17ch;
+  font-size: 2.125rem;
+  max-width: 16ch;
 }
 
 .support {
   font-size: 1.0625rem;
   color: var(--sn-on-brand-muted);
-  max-width: 32ch;
+  max-width: 28ch;
 }
 
-/* The actions sit on a deeper panel so the decision point reads as one place. */
 .actions {
-  background: var(--sn-brand-deep);
-  border-radius: 2rem 2rem 0 0;
-  padding: 1.75rem 1.5rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
   display: grid;
   gap: 0.75rem;
 }
 
 .fine {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   font-size: 0.875rem;
   color: var(--sn-on-brand-muted);
   text-align: center;
 }
 
 @media (max-height: 640px) {
-  .intro { padding-top: calc(env(safe-area-inset-top, 0px) + 1.5rem); }
-  .wordmark { margin-bottom: 1.5rem; font-size: 2.75rem; }
+  .wordmark { font-size: 3rem; }
+  .plate { top: 4.5rem; width: 12rem; right: -4rem; border-width: 1rem; }
+  .intro { padding-top: 9rem; }
+  h1 { font-size: 1.75rem; }
 }

@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 import { DEMO_APPOINTMENT, DEMO_FINDINGS } from '../my-health/demo-records';
 import { Finding, QUESTION_FOR_UNKNOWN, SOURCE_LABELS, SOURCE_TAGS } from '../my-health/diagnosis.model';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
+import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
 
 const MEAL_TYPE_LABELS: Record<MealPlanItem['mealType'], string> = {
   BREAKFAST: 'Breakfast',
@@ -26,7 +27,7 @@ function localIsoDate(d: Date): string {
 @Component({
   selector: 'app-today',
   standalone: true,
-  imports: [CommonModule, RouterLink, IonContent],
+  imports: [CommonModule, RouterLink, IonContent, MealImageComponent],
   templateUrl: './today.page.html',
   styleUrls: ['./today.page.scss'],
 })

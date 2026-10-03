@@ -2,17 +2,19 @@
   <main class="sn-page" *ngIf="topic as t; else unavailable">
     <header class="head">
       <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Today</button>
+      <p class="you">You read online:</p>
       <h1>{{ t.title }}</h1>
       <span class="sn-demo-label draft-tag" *ngIf="t.review.state === 'draft'">Draft · not reviewed</span>
     </header>
 
     <section class="answer" aria-label="Short answer">
+      <p class="answer-label">Short answer</p>
       <p class="answer-headline">{{ t.answer.headline }}</p>
       <p class="answer-detail">{{ t.answer.detail }}</p>
     </section>
 
     <section class="block" aria-labelledby="outcomes-title">
-      <h2 id="outcomes-title">What studies looked at</h2>
+      <h2 id="outcomes-title">What it looked at</h2>
       <ul class="outcomes">
         <li *ngFor="let f of t.findings" [class.is-open]="open() === f.outcome">
           <button
@@ -60,7 +62,7 @@
     </section>
 
     <section class="block" aria-labelledby="practical-title">
-      <h2 id="practical-title">For you</h2>
+      <h2 id="practical-title">What you can do</h2>
       <ul class="practical">
         <li *ngFor="let p of t.practical">{{ p }}</li>
       </ul>
@@ -80,7 +82,7 @@
           <ul class="meal-strip" *ngIf="$any(meals()).meals.length; else noMeals">
             <li *ngFor="let m of $any(meals()).meals">
               <button type="button" class="meal" (click)="openMeal(m)">
-                <span class="sn-meal-tile" [ngClass]="'is-' + m.mealType.toLowerCase()" aria-hidden="true"></span>
+                <app-meal-image class="meal-img" [name]="m.name" [mealType]="m.mealType"></app-meal-image>
                 <span class="meal-name">{{ m.name }}</span>
                 <span class="meal-meta" *ngIf="m.prepTimeMinutes">{{ m.prepTimeMinutes }} min</span>
               </button>

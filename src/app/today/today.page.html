@@ -6,14 +6,14 @@
     </header>
 
     <!-- One next action. With demo records off, this becomes the first-use prompt. -->
-    <section class="next" *ngIf="showDemo(); else firstUse" aria-labelledby="next-title">
+    <section class="next" *ngIf="showDemo(); else firstUse" aria-labelledby="next-q">
       <div class="next-top">
-        <p class="when" id="next-title">Appointment in {{ appointment.inDays }} days</p>
+        <p class="when">Appointment in {{ appointment.inDays }} days</p>
         <span class="sn-demo-label">Demo</span>
       </div>
       <ng-container *ngFor="let f of unknownFindings()">
         <p class="prompt">Not recorded yet. Ask:</p>
-        <p class="q">{{ questionFor(f) }}</p>
+        <h2 class="q" id="next-q">{{ questionFor(f) }}</h2>
         <button
           type="button"
           class="sn-btn"
@@ -29,7 +29,7 @@
 
     <ng-template #firstUse>
       <section class="next" aria-labelledby="first-title">
-        <h2 id="first-title">Start with what you know</h2>
+        <h2 class="q" id="first-title">Start with what you know</h2>
         <p class="prompt">Blanks are fine. We’ll turn them into questions.</p>
         <p class="soon">Coming next in this build</p>
       </section>
@@ -43,13 +43,17 @@
       <ul class="rows">
         <li *ngFor="let f of findings" [class.is-open]="openFinding() === f.key">
           <ng-template #rowContent>
-            <span class="row-name">{{ f.label }}</span>
-            <ng-container [ngSwitch]="f.completeness.state">
-              <span *ngSwitchCase="'present'" class="row-value">{{ $any(f.completeness).value }}</span>
-              <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Report says no</span>
-              <span *ngSwitchCase="'unknown'" class="sn-status sn-status--unknown">Not recorded</span>
-            </ng-container>
-            <span class="tag" *ngIf="f.source">{{ sourceTags[f.source] }}</span>
+            <span class="row-text">
+              <span class="row-name">{{ f.label }}</span>
+              <ng-container [ngSwitch]="f.completeness.state">
+                <span *ngSwitchCase="'present'" class="sn-status sn-status--present">
+                  {{ $any(f.completeness).value }} · {{ f.source ? sourceTags[f.source] : '' }}
+                </span>
+                <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Report says no</span>
+                <span *ngSwitchCase="'unknown'" class="sn-status sn-status--unknown">Not recorded</span>
+              </ng-container>
+            </span>
+            <span class="chev" *ngIf="f.source" aria-hidden="true">{{ openFinding() === f.key ? '–' : '›' }}</span>
           </ng-template>
           <button
             *ngIf="f.source; else plainRow"
@@ -71,22 +75,13 @@
       </ul>
     </section>
 
-    <section class="block" *ngIf="foodTopic as topic" aria-labelledby="food-title">
-      <h2 id="food-title">Food question</h2>
-      <a class="topic" [routerLink]="['/learn', topic.id]">
-        <span class="topic-q">{{ topic.title }}</span>
-        <span class="topic-tag" *ngIf="topic.review.state === 'draft'">Draft</span>
-        <span class="topic-go" aria-hidden="true">›</span>
-      </a>
-    </section>
-
     <section class="block meals" aria-labelledby="meals-title">
       <h2 id="meals-title">Today’s meals</h2>
 
       <ul class="meal-strip" *ngIf="todaysMeals().length; else noMeals">
         <li *ngFor="let meal of todaysMeals()">
           <button type="button" class="meal" (click)="openMeal(meal)">
-            <span class="sn-meal-tile" [ngClass]="'is-' + meal.mealType.toLowerCase()" aria-hidden="true"></span>
+            <app-meal-image class="meal-img" [name]="meal.name" [mealType]="meal.mealType"></app-meal-image>
             <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
             <span class="meal-name">{{ meal.name }}</span>
           </button>
@@ -99,6 +94,18 @@
           <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">Plan meals</button>
         </div>
       </ng-template>
+    </section>
+
+    <section class="block food" *ngIf="foodTopic as topic" aria-labelledby="food-title">
+      <h2 id="food-title">Food question</h2>
+      <a class="topic" [routerLink]="['/learn', topic.id]">
+        <span class="topic-text">
+          <span class="topic-claim">You read online:</span>
+          <span class="topic-q">{{ topic.title }}</span>
+        </span>
+        <span class="topic-tag" *ngIf="topic.review.state === 'draft'">Draft</span>
+        <span class="topic-go" aria-hidden="true">›</span>
+      </a>
     </section>
   </main>
 </ion-content>

@@ -9,6 +9,7 @@ import { Ingredient } from '../core/models/meal.model';
 const DAIRY_TERMS = [
   'milk', 'yogurt', 'yoghurt', 'kefir', 'cheese', 'feta', 'parmesan', 'mozzarella', 'ricotta',
   'halloumi', 'paneer', 'cream', 'butter', 'ghee', 'buttermilk', 'whey', 'labneh', 'skyr', 'quark',
+  'brie', 'burrata', 'cheddar', 'mascarpone', 'gouda', 'camembert', 'crème fraîche', 'creme fraiche', 'casein',
 ];
 
 const NOT_DAIRY = [
@@ -18,10 +19,19 @@ const NOT_DAIRY = [
   'dairy-free', 'plant-based',
 ];
 
+function matchesDairy(text: string): boolean {
+  if (NOT_DAIRY.some((t) => text.includes(t))) return false;
+  return DAIRY_TERMS.some((t) => new RegExp(`\\b${t}\\b`).test(text));
+}
+
+/**
+ * Judges the main ingredient; a bracketed alternative such as "Milk (or oat milk)"
+ * is optional, so it can't make a dairy ingredient count as dairy-free.
+ */
 export function isDairyIngredient(name: string): boolean {
   const n = name.toLowerCase();
-  if (NOT_DAIRY.some((t) => n.includes(t))) return false;
-  return DAIRY_TERMS.some((t) => new RegExp(`\\b${t}\\b`).test(n));
+  const main = n.replace(/\(.*?\)/g, ' ').trim();
+  return matchesDairy(main || n);
 }
 
 export function containsDairy(ingredients: Ingredient[] | undefined): boolean {
