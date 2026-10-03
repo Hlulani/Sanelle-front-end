@@ -1,0 +1,128 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ meal?.name || 'Recipe' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="recipe-page">
+  <ng-container *ngIf="meal; else notReady">
+    <section class="hero" [class.has-image]="meal.imageUrl">
+      <ion-img *ngIf="meal.imageUrl" [src]="imageUrl(meal.imageUrl)" class="hero-image"></ion-img>
+      <div class="hero-body">
+        <h1>{{ meal.name }}</h1>
+        <div class="meta-row">
+          <span class="meta-chip" *ngIf="meal.prepTimeMinutes">{{ meal.prepTimeMinutes }} min</span>
+          <span class="meta-chip" *ngFor="let dt of meal.dietaryTags">{{ dt }}</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-row">
+      <span class="app-chip">Anti-inf {{ meal.antiInflammatoryScore }}/5</span>
+      <span class="app-chip">Iron {{ meal.ironSupport }}/5</span>
+      <span class="app-chip">Fiber {{ meal.fiberScore }}/5</span>
+    </div>
+
+    <section class="content-card" *ngIf="meal.colorPalette">
+      <h2>On the plate</h2>
+      <p class="muted-text">{{ meal.colorPalette }}</p>
+    </section>
+
+    <section class="content-card" *ngIf="meal.whyItHelps">
+      <h2>Why it helps</h2>
+      <p>{{ meal.whyItHelps }}</p>
+    </section>
+
+    <section class="content-card" *ngIf="meal.ingredients?.length">
+      <div class="ingredients-header">
+        <h2>Ingredients</h2>
+        <div class="servings-stepper">
+          <button type="button" (click)="decreaseServings()" [disabled]="servings() <= 1" aria-label="Fewer people">
+            <ion-icon name="remove-outline"></ion-icon>
+          </button>
+          <span class="servings-value">
+            <ion-icon name="people-outline"></ion-icon>
+            {{ servings() }} {{ servings() === 1 ? 'person' : 'people' }}
+          </span>
+          <button type="button" (click)="increaseServings()" [disabled]="servings() >= 12" aria-label="More people">
+            <ion-icon name="add-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <ul class="ingredient-list">
+        <li *ngFor="let ing of scaledIngredients()">
+          <span class="ing-amount">{{ ing.amount }}</span>
+          <span class="ing-name">{{ ing.name }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="content-card" *ngIf="hasSwapNotes()">
+      <h2>Swaps &amp; storage</h2>
+      <p *ngIf="meal.vegetableSubstitutes">{{ meal.vegetableSubstitutes }}</p>
+      <p *ngIf="meal.freshOrFrozen">{{ meal.freshOrFrozen }}</p>
+    </section>
+
+    <div class="cook-cta">
+      <ion-button
+        expand="block"
+        class="cook-btn"
+        [disabled]="!meal.instructions.length"
+        (click)="startCooking()"
+      >
+        <ion-icon name="restaurant-outline" slot="start"></ion-icon>
+        {{ isCooked() ? 'Cook it again' : 'Start cooking' }}
+      </ion-button>
+      <div class="cooked-badge" *ngIf="isCooked()">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        Marked as cooked
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notReady>
+    <div class="ion-text-center ion-padding" *ngIf="isLoading">
+      <p>Loading recipe...</p>
+    </div>
+    <div class="ion-text-center ion-padding" *ngIf="!isLoading && error">
+      <p>{{ error }}</p>
+    </div>
+  </ng-template>
+</ion-content>
+
+<ion-modal [isOpen]="cookModeOpen()" (didDismiss)="closeCookMode()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="closeCookMode()">
+            <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title>Step {{ currentStep() + 1 }} of {{ totalSteps() }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="cook-mode-content">
+      <div class="cook-progress-track">
+        <div class="cook-progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+
+      <div class="cook-step">
+        <div class="cook-step-number">{{ currentStep() + 1 }}</div>
+        <p class="cook-step-text">{{ currentInstruction() }}</p>
+      </div>
+
+      <div class="cook-nav">
+        <ion-button fill="outline" (click)="prevStep()" [disabled]="currentStep() === 0">
+          Back
+        </ion-button>
+        <ion-button class="cook-next-btn" (click)="nextStep()">
+          {{ isLastStep() ? 'Done cooking' : 'Next step' }}
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

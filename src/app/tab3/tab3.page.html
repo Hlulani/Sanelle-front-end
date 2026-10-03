@@ -1,0 +1,91 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goToPlan()" aria-label="Back to My Plan">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <span class="title-with-icon">
+        <ion-icon name="cart-outline"></ion-icon>
+        Grocery List
+      </span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page-wrap">
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">Grocery rituals</div>
+          <h1>Grocery List</h1>
+          <p class="sub">From your latest plan</p>
+        </div>
+        <div class="progress-wrap" *ngIf="totalItems() > 0">
+          <div
+            class="progress-ring"
+            [style.background]="'conic-gradient(#78c57a ' + progressPercent() + '%, #d9d3c9 0)'"
+          >
+            <div class="progress-center">
+              <div class="progress-value">{{ checkedCount() }} of {{ totalItems() }}</div>
+              <div class="progress-label">items collected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-meta" *ngIf="totalItems() > 0">
+        <div class="meta-pill">{{ totalItems() }} items • {{ groupCount() }} groups</div>
+      </div>
+    </div>
+
+    <div class="state" *ngIf="!plan()">
+      <p>No plan yet. Generate a plan to build your grocery list.</p>
+      <ion-button expand="block" (click)="goToPlan()">Go to My Plan</ion-button>
+    </div>
+
+    <div class="state" *ngIf="plan() && isLoading()">
+      <p>Building your list...</p>
+    </div>
+
+    <div class="state error" *ngIf="error()">
+      <p>{{ error() }}</p>
+    </div>
+
+    <div class="complete-state" *ngIf="plan() && allChecked()">
+      <div class="complete-badge">✓</div>
+      <h2>All set for the week</h2>
+      <p>Your list is complete. You can regenerate or check your plan anytime.</p>
+      <div class="complete-actions">
+        <ion-button expand="block" (click)="goToPlan()">Back to My Plan</ion-button>
+        <ion-button expand="block" fill="outline" (click)="resetChecked()">Restore checked items</ion-button>
+      </div>
+    </div>
+
+    <div class="group-stack" *ngIf="plan() && !isLoading() && !error() && !allChecked()">
+      <section class="group-card" *ngFor="let group of groupedItems()">
+        <div class="group-header">
+          <span class="group-pill">{{ group.group }}</span>
+          <span class="group-count">{{ group.items.length }} items</span>
+        </div>
+
+        <div class="item-grid">
+          <div class="item-card" *ngFor="let item of group.items">
+            <ion-checkbox
+              class="item-check"
+              (ionChange)="toggleChecked(item.name, $event.detail.checked)"
+            ></ion-checkbox>
+            <div class="item-body">
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-amount" *ngIf="item.amounts.length">{{ item.amounts.join(', ') }}</div>
+              <div class="item-amount" *ngIf="!item.amounts.length">Quantity varies</div>
+            </div>
+            <div class="item-icon"><ion-icon [name]="item.icon"></ion-icon></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</ion-content>
