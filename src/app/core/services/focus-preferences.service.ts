@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { ProteinPreference } from './meal-plans.service';
+import { PROTEIN_PREFERENCES, ProteinPreference } from './meal-plans.service';
 
 const FOCUSES_KEY = 'onboarding_selected_focuses';
 const DIET_KEY = 'onboarding_selected_diet';
@@ -25,6 +25,7 @@ export class FocusPreferencesService {
 
   async loadDiet(): Promise<ProteinPreference | null> {
     const { value } = await Preferences.get({ key: DIET_KEY });
-    return (value as ProteinPreference) || null;
+    // Older installs may hold 'MEATY', which is no longer offered.
+    return PROTEIN_PREFERENCES.includes(value as ProteinPreference) ? (value as ProteinPreference) : null;
   }
 }

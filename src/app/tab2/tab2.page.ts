@@ -36,6 +36,7 @@ import {
   GenerateMealPlanResponse,
   MealPlanItem,
   DayPlan,
+  PROTEIN_PREFERENCES,
   ProteinPreference,
 } from '../core/services/meal-plans.service';
 import { AuthService } from '../core/auth/auth.service';
@@ -393,8 +394,8 @@ export class Tab2Page implements OnInit {
   }
 
   setProteinPreference(value: string | undefined | null) {
-    if (value === 'ANY' || value === 'MEATY' || value === 'VEGETARIAN' || value === 'VEGAN') {
-      this.proteinPreference.set(value);
+    if (PROTEIN_PREFERENCES.includes(value as ProteinPreference)) {
+      this.proteinPreference.set(value as ProteinPreference);
     }
   }
 

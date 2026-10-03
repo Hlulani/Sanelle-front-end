@@ -294,12 +294,12 @@
           <button
             type="button"
             class="pref-chip"
-            [class.active]="proteinPreference() === 'MEATY'"
-            [attr.aria-pressed]="proteinPreference() === 'MEATY'"
-            (click)="setProteinPreference('MEATY')"
+            [class.active]="proteinPreference() === 'PESCATARIAN'"
+            [attr.aria-pressed]="proteinPreference() === 'PESCATARIAN'"
+            (click)="setProteinPreference('PESCATARIAN')"
           >
-            <ion-icon name="flame-outline"></ion-icon>
-            <span>Meaty</span>
+            <ion-icon name="fish-outline"></ion-icon>
+            <span>Pescatarian</span>
           </button>
           <button
             type="button"

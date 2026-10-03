@@ -10,7 +10,8 @@ export type FastingStyle =
   | 'FASTING_18_6';
 
 // "ANY" means no filtering — matches the backend's default/unrecognized-value behavior.
-export type ProteinPreference = 'ANY' | 'MEATY' | 'VEGETARIAN' | 'VEGAN';
+export type ProteinPreference = 'ANY' | 'PESCATARIAN' | 'VEGETARIAN' | 'VEGAN';
+export const PROTEIN_PREFERENCES: readonly ProteinPreference[] = ['ANY', 'PESCATARIAN', 'VEGETARIAN', 'VEGAN'];
 
 /** Everything a plan is built from: the person's own choices, nothing else. */
 export interface GenerateMealPlanRequest {

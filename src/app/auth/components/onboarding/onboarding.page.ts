@@ -51,9 +51,9 @@ export class OnboardingPage {
 
   readonly dietChoices: Choice<ProteinPreference>[] = [
     { value: 'ANY', label: 'Anything', hint: 'No restrictions' },
+    { value: 'PESCATARIAN', label: 'Pescatarian', hint: 'Fish, but no meat' },
     { value: 'VEGETARIAN', label: 'Vegetarian', hint: 'No meat or fish' },
     { value: 'VEGAN', label: 'Vegan', hint: 'No animal products' },
-    { value: 'MEATY', label: 'With meat or fish', hint: 'Meat or fish in every meal' },
   ];
 
   chooseHelp(value: HelpFirst) {
