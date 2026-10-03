@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="fc">
   <main class="sn-page" *ngIf="topic as t; else unavailable">
     <header class="head">
-      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Today</button>
+      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Learn</button>
       <p class="you">You read online:</p>
       <h1>{{ t.title }}</h1>
       <span class="sn-demo-label draft-tag" *ngIf="t.review.state === 'draft'">Draft · not reviewed</span>
@@ -25,7 +25,12 @@
             (click)="toggle(f)"
           >
             <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
-            <span class="sn-status sn-status--reported">{{ verdictLabels[f.verdict] }}</span>
+            <span
+              class="sn-status"
+              [class.sn-status--reported]="f.verdict !== 'none-found'"
+              [class.sn-status--unknown]="f.verdict === 'none-found'"
+              >{{ verdictLabels[f.verdict] }}</span
+            >
             <span class="chev" aria-hidden="true">{{ open() === f.outcome ? '–' : '+' }}</span>
           </button>
           <ng-template #plainRow>
@@ -70,9 +75,9 @@
 
     <div class="band">
     <section class="block" *ngIf="t.relatedFood" aria-labelledby="meals-title">
-      <h2 id="meals-title">Meals with dairy</h2>
-      @if (milkAllergy()) {
-        <p class="hint">You’ve listed milk as an allergy, so meals with dairy aren’t shown.</p>
+      <h2 id="meals-title">{{ relatedHeading() }}</h2>
+      @if (hiddenForAllergy()) {
+        <p class="hint">You’ve listed this as an allergy, so these meals aren’t shown.</p>
       } @else {
       <ng-container [ngSwitch]="meals().state">
         <p *ngSwitchCase="'loading'" class="hint" role="status">Loading meals…</p>
@@ -92,7 +97,7 @@
               </button>
             </li>
           </ul>
-          <ng-template #noMeals><p class="hint">No meals with dairy right now.</p></ng-template>
+          <ng-template #noMeals><p class="hint">No matching meals right now.</p></ng-template>
         </ng-container>
       </ng-container>
       }
@@ -105,13 +110,16 @@
         [attr.aria-expanded]="sourcesOpen()"
         (click)="sourcesOpen.set(!sourcesOpen())"
       >
-        <span class="row-name">Sources ({{ t.studies.length }})</span>
+        <span class="row-name">Sources ({{ t.studies.length + (t.otherSources?.length ?? 0) }})</span>
         <span class="row-meta">Researched {{ researchedLabel() }}</span>
         <span class="chev" aria-hidden="true">{{ sourcesOpen() ? '–' : '+' }}</span>
       </button>
       <ol *ngIf="sourcesOpen()">
         <li *ngFor="let s of t.studies">
           <a [href]="s.url" target="_blank" rel="noopener">{{ s.citation }}</a>
+        </li>
+        <li *ngFor="let o of t.otherSources">
+          {{ o.label }}: <a [href]="o.url" target="_blank" rel="noopener">{{ o.citation }}</a>
         </li>
       </ol>
     </section>
@@ -120,7 +128,7 @@
 
   <ng-template #unavailable>
     <main class="sn-page unavailable">
-      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Today</button>
+      <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Learn</button>
       <h1>Not available yet</h1>
       <p>This topic is waiting for review.</p>
     </main>

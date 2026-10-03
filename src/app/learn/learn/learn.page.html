@@ -1,0 +1,51 @@
+<ion-content [fullscreen]="true" class="learn">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <h1>Learn</h1>
+      <p class="sn-head-note">Food claims you might have read, checked against research.</p>
+    </header>
+
+    <section class="sn-card intro">
+      <p class="intro-text">Each answer separates getting fibroids, growth, bleeding, pain and fertility, because a study on one says nothing about the others.</p>
+    </section>
+
+    <section class="sn-section" aria-labelledby="topics-title">
+      <h2 id="topics-title">Food questions</h2>
+      @if (list.length) {
+        <ul class="topics">
+          @for (t of list; track t.id) {
+            <li>
+              <a class="topic" [routerLink]="['/learn', t.id]">
+                <span class="topic-text">
+                  <span class="topic-claim">“{{ t.claim }}”</span>
+                  <span class="topic-q">{{ t.title }}</span>
+                  <span class="topic-meta">{{ coverage(t.id) }}@if (t.review.state === 'draft') { · <span class="draft">Draft</span> }</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">No reviewed topics yet.</p>
+      }
+    </section>
+
+    <div class="sn-band">
+      <section class="sn-section" aria-labelledby="ask-title">
+        <h2 id="ask-title">Read something else?</h2>
+        <p class="band-text">We don’t answer health questions automatically. Save what you read and ask about it at your appointment.</p>
+        @if (saved()) {
+          <p class="saved" role="status">Added: {{ saved() }}</p>
+        }
+        <form class="ask" (submit)="$event.preventDefault(); saveClaim()">
+          <label class="sn-field">
+            <span class="visually-hidden">What did you read?</span>
+            <input type="text" name="claim" [(ngModel)]="claim" placeholder="e.g. sugar makes fibroids grow" />
+          </label>
+          <button type="submit" class="sn-btn sn-btn--apricot">Add to my questions</button>
+        </form>
+      </section>
+    </div>
+  </main>
+</ion-content>

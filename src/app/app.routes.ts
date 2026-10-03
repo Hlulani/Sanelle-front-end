@@ -54,6 +54,7 @@ export const routes: Routes = [
       { path: 'health', loadComponent: () => import('./my-health/health/health.page').then(m => m.HealthPage) },
       { path: 'tab2', loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page) },
       { path: 'tab3', loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page) },
+      { path: 'learn', loadComponent: () => import('./learn/learn/learn.page').then(m => m.LearnPage) },
       { path: 'account', loadComponent: () => import('./account/account.page').then(m => m.AccountPage) },
       { path: '', redirectTo: 'today', pathMatch: 'full' },
     ],

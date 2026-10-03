@@ -6,6 +6,8 @@ import {
   IonTitle,
   IonContent,
   IonButton,
+  IonButtons,
+  IonBackButton,
   IonIcon,
   IonSpinner,
   IonToggle,
@@ -16,8 +18,8 @@ import { AuthService } from '../core/auth/auth.service';
 import { NotificationService } from '../core/services/notification.service';
 
 import { HealthRepository } from '../my-health/health-repository';
-
 import { FoodRestrictionsService } from '../core/services/food-restrictions.service';
+
 @Component({
   selector: 'app-account',
   standalone: true,
@@ -30,6 +32,8 @@ import { FoodRestrictionsService } from '../core/services/food-restrictions.serv
     IonTitle,
     IonContent,
     IonButton,
+    IonButtons,
+    IonBackButton,
     IonIcon,
     IonSpinner,
     IonToggle,

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>My Plan</ion-title>
+    <ion-title>Nourish</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -40,6 +40,10 @@
     <section class="plan-preview" *ngIf="plan() as plan">
       <div class="section-row">
         <h2>Your meals</h2>
+        <button type="button" class="sn-btn sn-btn--apricot groceries-btn" (click)="goToGroceryList()">
+          <ion-icon name="cart-outline" aria-hidden="true"></ion-icon>
+          Groceries
+        </button>
       </div>
 
       <div class="day-pills">

@@ -13,7 +13,7 @@ import {
   STUDY_DESIGN_LABELS,
   Study,
 } from '../evidence.model';
-import { containsDairy } from '../food-matchers';
+import { RELATED_FOODS, containsFood } from '../food-matchers';
 import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
 import { photoFor } from '../../shared/meal-photos';
 import { FoodRestrictionsService } from '../../core/services/food-restrictions.service';
@@ -22,6 +22,7 @@ const VERDICT_LABELS: Record<OutcomeVerdict, string> = {
   mixed: 'Mixed',
   'association-lower': 'Linked with lower rates',
   'association-higher': 'Linked with higher rates',
+  indirect: 'Only indirect studies',
   'none-found': 'No studies found',
 };
 
@@ -41,8 +42,15 @@ export class FoodClarityPage implements OnInit {
   private mealService = inject(MealService);
   private foodRestrictions = inject(FoodRestrictionsService);
 
-  /** Someone who listed milk as an allergy isn't shown dairy meals to try. */
-  readonly milkAllergy = computed(() => this.foodRestrictions.restrictions().allergies.includes('MILK'));
+  /** Related meals aren't suggested to someone allergic to that food. */
+  readonly hiddenForAllergy = computed(() => {
+    const allergen = this.topic?.relatedFood ? RELATED_FOODS[this.topic.relatedFood].allergen : undefined;
+    return !!allergen && this.foodRestrictions.restrictions().allergies.includes(allergen as never);
+  });
+
+  relatedHeading(): string {
+    return this.topic?.relatedFood ? RELATED_FOODS[this.topic.relatedFood].heading : '';
+  }
 
   readonly outcomeLabels = OUTCOME_LABELS;
   readonly verdictLabels = VERDICT_LABELS;
@@ -61,7 +69,7 @@ export class FoodClarityPage implements OnInit {
   }
 
   back() {
-    this.router.navigateByUrl('/tabs/today');
+    this.router.navigateByUrl('/tabs/learn');
   }
 
   toggle(f: OutcomeFinding) {
@@ -88,9 +96,10 @@ export class FoodClarityPage implements OnInit {
     this.mealService.getMeals().subscribe({
       next: (all) => {
         // Meals with a matched photo first; order is otherwise unchanged.
-        const dairy = all.filter((m) => containsDairy(m.ingredients));
-        const withPhoto = dairy.filter((m) => photoFor(m.name));
-        const rest = dairy.filter((m) => !photoFor(m.name));
+        const food = this.topic!.relatedFood!;
+        const related = all.filter((m) => containsFood(food, m.ingredients));
+        const withPhoto = related.filter((m) => photoFor(m.name));
+        const rest = related.filter((m) => !photoFor(m.name));
         this.meals.set({ state: 'ready', meals: [...withPhoto, ...rest].slice(0, 6) });
       },
       error: () => this.meals.set({ state: 'error' }),

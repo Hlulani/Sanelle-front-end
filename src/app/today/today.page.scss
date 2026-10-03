@@ -3,6 +3,7 @@
 }
 
 .head {
+  position: relative;
   background: var(--sn-brand);
   color: var(--sn-on-brand);
   padding: calc(env(safe-area-inset-top, 0px) + 1.25rem) 1.25rem 5rem;
@@ -371,4 +372,21 @@ a.row { text-decoration: none; }
 .log-sub {
   font-size: 0.875rem;
   color: var(--sn-muted);
+}
+
+.profile {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  right: 1.25rem;
+  width: var(--sn-tap);
+  height: var(--sn-tap);
+  border-radius: 50%;
+  background: var(--sn-brand-deep);
+  color: var(--sn-on-brand);
+  display: grid;
+  place-items: center;
+  font: 600 1.125rem/1 var(--sn-display);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; }
 }

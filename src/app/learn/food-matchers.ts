@@ -37,3 +37,37 @@ export function isDairyIngredient(name: string): boolean {
 export function containsDairy(ingredients: Ingredient[] | undefined): boolean {
   return (ingredients ?? []).some((i) => isDairyIngredient(i.name ?? ''));
 }
+
+function anyWord(name: string, words: string[], notThese: string[] = []): boolean {
+  let n = name.toLowerCase();
+  for (const x of notThese) n = n.split(x).join(' ');
+  return words.some((w) => new RegExp(`\\b${w}\\b`).test(n));
+}
+
+export type RelatedFood = 'dairy' | 'soy' | 'red-meat' | 'green-tea';
+
+/** How each topic finds related meals, and which allergy hides them. */
+export const RELATED_FOODS: Record<
+  RelatedFood,
+  { heading: string; allergen?: string; matches: (ingredientName: string) => boolean }
+> = {
+  dairy: { heading: 'Meals with dairy', allergen: 'MILK', matches: isDairyIngredient },
+  soy: {
+    heading: 'Meals with soy foods',
+    allergen: 'SOY',
+    // The studies are about soy foods; a splash of soy sauce isn't what they measured.
+    matches: (n) => anyWord(n, ['soy', 'soya', 'tofu', 'tempeh', 'edamame', 'miso'], ['soy sauce', 'soya sauce']),
+  },
+  'red-meat': {
+    heading: 'Meals with red meat',
+    matches: (n) => anyWord(n, ['beef', 'lamb', 'pork', 'ham', 'bacon', 'veal', 'mutton', 'goat'], ['goat cheese']),
+  },
+  'green-tea': {
+    heading: 'Meals and snacks with green tea',
+    matches: (n) => anyWord(n, ['green tea', 'matcha']),
+  },
+};
+
+export function containsFood(food: RelatedFood, ingredients: Ingredient[] | undefined): boolean {
+  return (ingredients ?? []).some((i) => RELATED_FOODS[food].matches(i.name ?? ''));
+}

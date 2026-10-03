@@ -850,3 +850,11 @@
   border-radius: 0.875rem;
   padding: 0.75rem 1rem;
 }
+
+.groceries-btn {
+  width: auto;
+  min-height: var(--sn-tap);
+  padding: 0 1rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+}

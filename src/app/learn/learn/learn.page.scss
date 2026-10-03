@@ -1,0 +1,93 @@
+.learn {
+  --background: var(--sn-canvas);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.intro-text {
+  color: var(--sn-ink);
+}
+
+.topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.625rem;
+}
+
+.topic {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4.5rem;
+  padding: 1rem 1.125rem;
+  background: var(--sn-surface);
+  border-radius: 1.25rem;
+  color: var(--sn-ink);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 3px; }
+}
+
+.topic-text {
+  flex: 1 1 auto;
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.topic-claim {
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+}
+
+.topic-q {
+  font: 600 1.25rem/1.2 var(--sn-display);
+  color: var(--sn-brand);
+}
+
+.topic-meta {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--sn-muted);
+}
+
+.draft {
+  color: var(--sn-draft);
+}
+
+.chev {
+  color: var(--sn-brand);
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.empty {
+  color: var(--sn-muted);
+}
+
+.band-text {
+  color: var(--sn-on-brand-muted);
+}
+
+.ask {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.saved {
+  font-weight: 700;
+  color: var(--sn-on-brand);
+  background: var(--sn-brand-deep);
+  border-radius: 0.875rem;
+  padding: 0.75rem 1rem;
+}

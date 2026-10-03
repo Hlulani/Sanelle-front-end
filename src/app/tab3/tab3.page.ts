@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealService } from '../core/services/meal.service';
 import { AuthService } from '../core/auth/auth.service';
@@ -20,7 +20,7 @@ type GroceryItem = {
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox],
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox, IonButtons, IonBackButton],
 })
 export class Tab3Page implements OnInit {
   private planStore = inject(PlanStoreService);

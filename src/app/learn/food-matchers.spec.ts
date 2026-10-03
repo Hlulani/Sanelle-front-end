@@ -1,4 +1,4 @@
-import { containsDairy, isDairyIngredient } from './food-matchers';
+import { containsDairy, containsFood, isDairyIngredient } from './food-matchers';
 
 describe('isDairyIngredient', () => {
   it('matches dairy names and common aliases', () => {
@@ -32,5 +32,28 @@ describe('containsDairy', () => {
 
   it('is true when any ingredient is dairy', () => {
     expect(containsDairy([{ name: 'Spinach', amount: '1 cup' }, { name: 'Feta', amount: '30 g' }])).toBeTrue();
+  });
+});
+
+describe('RELATED_FOODS', () => {
+  it('finds soy foods by their usual names, but not soy sauce', () => {
+    for (const n of ['Firm tofu, cubed', 'Tempeh, sliced', 'Edamame, in pods', 'Miso paste', 'Unsweetened soy milk']) {
+      expect(containsFood('soy', [{ name: n, amount: '' }])).withContext(n).toBeTrue();
+    }
+    for (const n of ['Spinach', 'Low-sodium soy sauce', 'Tamari']) {
+      expect(containsFood('soy', [{ name: n, amount: '' }])).withContext(n).toBeFalse();
+    }
+  });
+
+  it('finds red meat but not poultry, fish or goat cheese', () => {
+    expect(containsFood('red-meat', [{ name: 'Lean beef strips', amount: '' }])).toBeTrue();
+    expect(containsFood('red-meat', [{ name: 'Lean deli ham, chopped', amount: '' }])).toBeTrue();
+    for (const n of ['Chicken breast', 'Ground turkey', 'Salmon fillet', 'Goat cheese, crumbled']) {
+      expect(containsFood('red-meat', [{ name: n, amount: '' }])).withContext(n).toBeFalse();
+    }
+  });
+
+  it('finds green tea', () => {
+    expect(containsFood('green-tea', [{ name: 'Green tea bag', amount: '' }])).toBeTrue();
   });
 });

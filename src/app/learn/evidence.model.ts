@@ -18,7 +18,13 @@ export const OUTCOME_LABELS: Record<FibroidOutcome, string> = {
  * What the reviewed research says for one outcome.
  * `none-found` means no study turned up in our search. It is not evidence of no effect.
  */
-export type OutcomeVerdict = 'mixed' | 'association-lower' | 'association-higher' | 'none-found';
+export type OutcomeVerdict =
+  | 'mixed'
+  | 'association-lower'
+  | 'association-higher'
+  /** Only lab, animal or closely related studies (e.g. supplements, other groups of women). */
+  | 'indirect'
+  | 'none-found';
 
 export type StudyDesign =
   | 'randomised-trial'
@@ -81,6 +87,8 @@ export interface EvidenceTopic {
   practical: string[];
   studies: Study[];
   review: ReviewStatus;
+  /** Sources that aren't studies of fibroids, e.g. a food-safety opinion. */
+  otherSources?: { label: string; citation: string; url: string }[];
   /** Ingredient matcher used to show related meals. */
-  relatedFood?: 'dairy';
+  relatedFood?: import('./food-matchers').RelatedFood;
 }

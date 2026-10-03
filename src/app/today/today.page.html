@@ -1,6 +1,9 @@
 <ion-content [fullscreen]="true" class="today">
   <main class="sn-page">
     <header class="head">
+      <a class="profile" routerLink="/tabs/account" aria-label="Account">
+        <span aria-hidden="true">{{ (name() || 'A').charAt(0).toUpperCase() }}</span>
+      </a>
       <p class="date">{{ dateLabel }}</p>
       <h1>{{ name() ? 'Hi ' + name() : 'Today' }}</h1>
     </header>
