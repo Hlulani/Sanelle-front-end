@@ -18,9 +18,13 @@
   justify-content: space-between;
 }
 
+/* A clear way out, shaped like a button so it isn't missed. */
 .close {
-  color: var(--sn-on-brand);
-  margin-left: -0.25rem;
+  width: auto;
+  min-height: var(--sn-tap);
+  padding: 0 1rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
 
   &:focus-visible { outline-color: var(--sn-apricot); }
 }

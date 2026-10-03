@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true" class="recorded">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <h1>Here’s what you have so far</h1>
+    </header>
+
+    <section class="sn-card" aria-label="Your diagnosis so far">
+      <div class="line">
+        <p class="num">{{ recorded().length }}</p>
+        <div>
+          <h2>Recorded</h2>
+          <p class="names">{{ recorded().length ? recorded().join(', ') : 'Nothing yet' }}</p>
+        </div>
+      </div>
+      <div class="line">
+        <p class="num muted">{{ notRecorded().length }}</p>
+        <div>
+          <h2>Not recorded</h2>
+          <p class="names">{{ notRecorded().length ? notRecorded().join(', ') : 'Nothing missing' }}</p>
+        </div>
+      </div>
+      <div class="line">
+        <p class="num">{{ questionCount() }}</p>
+        <div>
+          <h2>{{ questionCount() === 1 ? 'Question' : 'Questions' }} for your appointment</h2>
+          <p class="names">Blanks become questions, so nothing is lost.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="actions">
+      @if (questionCount()) {
+        <a class="sn-btn sn-btn--brand" routerLink="/health/questions" [replaceUrl]="true">See my questions</a>
+      } @else {
+        <a class="sn-btn sn-btn--brand" routerLink="/tabs/health" [replaceUrl]="true">See my health</a>
+      }
+      <button type="button" class="sn-btn sn-btn--outline" (click)="done()">Done</button>
+    </section>
+  </main>
+</ion-content>

@@ -13,6 +13,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'health/recorded',
+    loadComponent: () => import('./my-health/recorded/recorded.page').then(m => m.RecordedPage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'health/questions',
     loadComponent: () => import('./my-health/questions/questions.page').then(m => m.QuestionsPage),
     canActivate: [authGuard],

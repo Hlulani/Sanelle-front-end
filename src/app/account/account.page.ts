@@ -19,6 +19,12 @@ import { NotificationService } from '../core/services/notification.service';
 
 import { HealthRepository } from '../my-health/health-repository';
 import { FoodRestrictionsService } from '../core/services/food-restrictions.service';
+import {
+  FocusPreferencesService,
+  HELP_FOCUSES,
+  HELP_FOCUS_CHOICES,
+  HelpFocus,
+} from '../core/services/focus-preferences.service';
 
 @Component({
   selector: 'app-account',
@@ -46,6 +52,10 @@ export class AccountPage implements OnInit {
   private router = inject(Router);
   private alertController = inject(AlertController);
   private notifications = inject(NotificationService);
+  private focusPreferences = inject(FocusPreferencesService);
+
+  readonly helpChoices = HELP_FOCUSES.map((value) => ({ value, label: HELP_FOCUS_CHOICES[value].label }));
+  readonly focus = this.focusPreferences.focus;
 
   isDeleting = signal(false);
   error = signal<string | null>(null);
@@ -53,7 +63,14 @@ export class AccountPage implements OnInit {
   notificationError = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
+    void this.focusPreferences.loadFocus();
     this.notificationsEnabled.set(await this.notifications.isEnabled());
+  }
+
+  /** Changes what Today shows first. */
+  toggleFocus(value: HelpFocus): void {
+    const current = this.focus();
+    void this.focusPreferences.saveFocus(current.includes(value) ? current.filter((f) => f !== value) : [...current, value]);
   }
 
   async toggleNotifications(enabled: boolean): Promise<void> {

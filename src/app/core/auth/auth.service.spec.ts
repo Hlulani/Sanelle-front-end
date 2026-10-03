@@ -70,6 +70,19 @@ describe('AuthService onboarding and diet, per account', () => {
     expect(auth.hasCompletedOnboarding()).toBeFalse();
   });
 
+  it('keeps each account’s help choices separate', async () => {
+    const prefs = TestBed.inject(FocusPreferencesService);
+    await login('first@example.test');
+    await prefs.saveFocus(['food', 'diagnosis']);
+    expect(prefs.focus()).toEqual(['diagnosis', 'food']);
+
+    await login('second@example.test');
+    expect(await prefs.loadFocus()).toEqual([]);
+
+    await login('first@example.test');
+    expect(await prefs.loadFocus()).toEqual(['diagnosis', 'food']);
+  });
+
   it('keeps each account’s diet separate', async () => {
     const prefs = TestBed.inject(FocusPreferencesService);
     await login('fish@example.test');

@@ -214,3 +214,13 @@ export function hasContent(e: SymptomEntry): boolean {
 export function findingOrUnknown(record: HealthRecord, key: FindingKey): Finding {
   return record.findings[key] ?? { key, completeness: { state: 'unknown' } };
 }
+
+/** How far someone is through the five diagnosis questions. "I don't know" counts as answered. */
+export function diagnosisProgress(record: HealthRecord): { answered: number; total: number; nextKey: FindingKey | null } {
+  const answered = FINDING_KEYS.filter((k) => !!record.findings[k]);
+  return {
+    answered: answered.length,
+    total: FINDING_KEYS.length,
+    nextKey: FINDING_KEYS.find((k) => !record.findings[k]) ?? null,
+  };
+}

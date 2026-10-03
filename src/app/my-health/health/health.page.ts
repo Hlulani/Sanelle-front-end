@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
-import { FINDINGS, FINDING_KEYS, findingOrUnknown } from '../diagnosis.model';
+import { FINDINGS, FINDING_KEYS, diagnosisProgress, findingOrUnknown } from '../diagnosis.model';
 import { FindingStatusComponent } from '../finding-status.component';
 import { buildTimeline } from '../symptoms/symptom-timeline.page';
 
@@ -20,6 +20,11 @@ export class HealthPage {
   readonly defs = FINDINGS;
   readonly rows = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.repo.record(), k)));
   readonly unknownCount = computed(() => this.rows().filter((f) => f.completeness.state === 'unknown').length);
+  /** Part-way through the diagnosis questions: offer to pick up where she stopped. */
+  readonly partial = computed(() => {
+    const p = diagnosisProgress(this.repo.record());
+    return p.answered > 0 && p.nextKey ? p : null;
+  });
   readonly questions = this.repo.questions;
   readonly appointment = computed(() => this.repo.record().appointment);
   /** Last 7 days, oldest first, for the small strip. */

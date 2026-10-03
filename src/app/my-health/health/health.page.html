@@ -21,7 +21,11 @@
     <section class="sn-section" aria-labelledby="dx-title">
       <div class="sn-section-head">
         <h2 id="dx-title">Your diagnosis</h2>
-        <span class="count">{{ unknownCount() }} not recorded</span>
+        @if (partial(); as p) {
+          <a class="carry-on" [routerLink]="['/health/record', p.nextKey]" [queryParams]="{ flow: 1 }">{{ p.answered }} of {{ p.total }} answered · Carry on</a>
+        } @else {
+          <span class="count">{{ unknownCount() }} not recorded</span>
+        }
       </div>
       <ul class="sn-rows">
         @for (f of rows(); track f.key) {

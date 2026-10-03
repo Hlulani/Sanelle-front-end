@@ -42,6 +42,8 @@ export class RecordPage implements OnInit {
 
   /** Walking through every finding (from "Start with what you know") or editing one. */
   inFlow = false;
+  /** Where "Finish later" and the end of the flow return to. */
+  private from: 'today' | 'health' = 'health';
 
   readonly answer = signal<Answer | null>(null);
   value = '';
@@ -57,6 +59,7 @@ export class RecordPage implements OnInit {
       const k = params.get('key') as FindingKey;
       this.key.set(FINDING_KEYS.includes(k) ? k : 'count');
       this.inFlow = this.route.snapshot.queryParamMap.get('flow') === '1';
+      this.from = this.route.snapshot.queryParamMap.get('from') === 'today' ? 'today' : 'health';
       await this.repo.load();
       this.prefill();
     });
@@ -90,6 +93,27 @@ export class RecordPage implements OnInit {
       this.error.set('Add what your report or doctor said, or choose “I don’t know”.');
       return;
     }
+    await this.persist(a);
+    this.next();
+  }
+
+  /** Keeps whatever is complete on this question, then returns to where the flow started. */
+  async finishLater() {
+    const a = this.answer();
+    if (a && !(a === 'present' && !this.value.trim())) await this.persist(a);
+    this.router.navigateByUrl(this.returnUrl(), { replaceUrl: true });
+  }
+
+  /** Editing one answer: leave without changing it. */
+  cancel() {
+    this.router.navigateByUrl(this.returnUrl());
+  }
+
+  private returnUrl(): string {
+    return this.from === 'today' ? '/tabs/today' : '/tabs/health';
+  }
+
+  private async persist(a: Answer) {
     const key = this.key();
     if (a === 'unknown') {
       await this.repo.saveFinding({ key, completeness: { state: 'unknown' } });
@@ -103,7 +127,6 @@ export class RecordPage implements OnInit {
         reportDate: this.source === 'entered-from-report' ? this.reportDate || undefined : undefined,
       });
     }
-    this.next();
   }
 
   /** Leaves the finding as it is (unrecorded findings stay "Not recorded"). */
@@ -111,16 +134,15 @@ export class RecordPage implements OnInit {
     this.next();
   }
 
-  close() {
-    this.router.navigateByUrl('/tabs/health');
-  }
-
   private next() {
     const i = FINDING_KEYS.indexOf(this.key());
-    if (this.inFlow && i < FINDING_KEYS.length - 1) {
-      this.router.navigate(['/health/record', FINDING_KEYS[i + 1]], { queryParams: { flow: 1 }, replaceUrl: true });
+    if (!this.inFlow) {
+      this.router.navigateByUrl(this.returnUrl());
+    } else if (i < FINDING_KEYS.length - 1) {
+      this.router.navigate(['/health/record', FINDING_KEYS[i + 1]], { queryParams: { flow: 1, from: this.from }, replaceUrl: true });
     } else {
-      this.router.navigateByUrl('/tabs/health');
+      // The end of the flow shows what she has so far, instead of dropping her on a list.
+      this.router.navigate(['/health/recorded'], { queryParams: { from: this.from }, replaceUrl: true });
     }
   }
 }

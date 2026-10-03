@@ -1,39 +1,23 @@
 <ion-content [fullscreen]="true" class="onboarding">
   <main class="sn-page wrap">
     <div class="top">
-      @if (currentStep() > 1) {
-        <button type="button" class="sn-btn sn-btn--quiet back" (click)="back()">‹ Back</button>
-      } @else {
-        <p class="wordmark">Sanelle</p>
-      }
-      <p class="progress">{{ currentStep() }} of {{ totalSteps }}</p>
+      <p class="wordmark">Sanelle</p>
     </div>
 
-    @if (currentStep() === 1) {
-      <h1>What would you like help with first?</h1>
-      <p class="sub">You can do all of these later.</p>
-      <div class="choices">
-        @for (c of helpChoices; track c.value) {
-          <button type="button" class="choice" [attr.aria-pressed]="helpFirst() === c.value" (click)="chooseHelp(c.value)">
-            <span class="choice-label">{{ c.label }}</span>
-            <span class="choice-hint">{{ c.hint }}</span>
-          </button>
-        }
-      </div>
-    } @else {
-      <h1>What do you eat?</h1>
-      <p class="sub">Every meal in your plan will match this. You can change it any time.</p>
-      <div class="choices">
-        @for (c of dietChoices; track c.value) {
-          <button type="button" class="choice diet-option" [attr.aria-pressed]="diet() === c.value" (click)="chooseDiet(c.value)">
-            <span class="choice-label">{{ c.label }}</span>
-            <span class="choice-hint">{{ c.hint }}</span>
-          </button>
-        }
-      </div>
-    }
+    <h1>What would you like help with?</h1>
+    <p class="sub">Choose any. We’ll show these first, and you can change them in Account.</p>
+    <div class="choices">
+      @for (c of choices; track c.value) {
+        <button type="button" class="choice" [attr.aria-pressed]="isSelected(c.value)" (click)="toggle(c.value)">
+          <span class="choice-label">{{ c.label }}</span>
+          <span class="choice-hint">{{ c.hint }}</span>
+          <span class="tick" aria-hidden="true">{{ isSelected(c.value) ? '✓' : '' }}</span>
+        </button>
+      }
+    </div>
 
     <div class="actions">
+      <button type="button" class="sn-btn sn-btn--apricot" [disabled]="!selected().length" (click)="continue()">Continue</button>
       <button type="button" class="sn-btn sn-btn--outline-on-brand" (click)="skip()">Skip for now</button>
       <p class="signed-in">
         Signed in as {{ email }}

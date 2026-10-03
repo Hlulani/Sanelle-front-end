@@ -7,7 +7,9 @@ import { AuthService } from '../core/auth/auth.service';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealPlanItem } from '../core/services/meal-plans.service';
 import { HealthRepository } from '../my-health/health-repository';
-import { FINDINGS, FINDING_KEYS, Finding, findingOrUnknown } from '../my-health/diagnosis.model';
+import { FINDINGS, FINDING_KEYS, FindingKey, findingOrUnknown } from '../my-health/diagnosis.model';
+import { FocusPreferencesService } from '../core/services/focus-preferences.service';
+import { nextStep } from './next-step';
 import { FindingStatusComponent } from '../my-health/finding-status.component';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
 import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
@@ -24,11 +26,6 @@ function localIsoDate(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-type NextStep =
-  | { kind: 'start' }
-  | { kind: 'ask'; finding: Finding; question: string }
-  | { kind: 'summary' };
-
 @Component({
   selector: 'app-today',
   standalone: true,
@@ -42,6 +39,7 @@ export class TodayPage implements OnInit {
   private router = inject(Router);
   private topics = inject(EvidenceTopicsService);
   private health = inject(HealthRepository);
+  private focusPreferences = inject(FocusPreferencesService);
 
   private readonly plan = toSignal(this.planStore.plan$, { initialValue: null });
 
@@ -65,19 +63,17 @@ export class TodayPage implements OnInit {
     return days >= 0 ? days : null;
   });
 
-  /** The single next action shown at the top of Today. */
-  readonly next = computed<NextStep>(() => {
-    if (!this.hasRecords()) return { kind: 'start' };
-    const asked = new Set(this.health.record().questions.map((q) => q.text.toLowerCase()));
-    const missing = this.findings().find(
-      (f) => f.completeness.state === 'unknown' && !asked.has(FINDINGS[f.key].questionIfUnknown.toLowerCase()),
-    );
-    return missing ? { kind: 'ask', finding: missing, question: FINDINGS[missing.key].questionIfUnknown } : { kind: 'summary' };
-  });
+  /** The single next action at the top of Today, led by what someone wants help with. */
+  readonly next = computed(() => nextStep(this.health.record(), this.focusPreferences.focus()));
 
   readonly ask = computed(() => {
     const n = this.next();
     return n.kind === 'ask' ? n : null;
+  });
+
+  readonly progress = computed(() => {
+    const n = this.next();
+    return n.kind === 'continue' ? n : null;
   });
 
   readonly questionCount = computed(() => this.health.record().questions.length);
@@ -99,18 +95,20 @@ export class TodayPage implements OnInit {
 
   ionViewWillEnter() {
     void this.health.load();
+    void this.focusPreferences.loadFocus();
   }
 
   name(): string {
     return this.auth.getUsername() || '';
   }
 
-  start() {
-    this.router.navigate(['/health/record', 'count'], { queryParams: { flow: 1 } });
+  /** Starts, or picks up, the diagnosis questions; "Finish later" brings her back here. */
+  record(key: FindingKey = 'count') {
+    this.router.navigate(['/health/record', key], { queryParams: { flow: 1, from: 'today' } });
   }
 
-  async saveQuestion(step: { finding: Finding; question: string }) {
-    await this.health.addQuestion(step.question, step.finding.key);
+  async saveQuestion(step: { key: FindingKey; question: string }) {
+    await this.health.addQuestion(step.question, step.key);
     this.justSaved.set(step.question);
   }
 

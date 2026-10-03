@@ -23,18 +23,6 @@
   font: 600 1.75rem/1 var(--sn-display);
 }
 
-.back {
-  color: var(--sn-on-brand);
-  margin-left: -0.25rem;
-
-  &:focus-visible { outline-color: var(--sn-apricot); }
-}
-
-.progress {
-  font-weight: 800;
-  color: var(--sn-apricot);
-}
-
 h1 {
   margin-top: 1rem;
   font-size: 2rem;
@@ -64,6 +52,9 @@ h1 {
   cursor: pointer;
   font: inherit;
 
+  position: relative;
+  padding-right: 3.25rem;
+
   &[aria-pressed="true"] {
     box-shadow: 0 0 0 3px var(--sn-apricot);
   }
@@ -74,6 +65,32 @@ h1 {
 .choice-label {
   font: 600 1.25rem/1.2 var(--sn-display);
   color: var(--sn-brand);
+}
+
+/* Shape plus colour, so the selected state doesn't rely on colour alone. */
+.tick {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--sn-muted);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--sn-ink);
+}
+
+.choice[aria-pressed="true"] .tick {
+  background: var(--sn-apricot);
+  border-color: var(--sn-apricot);
+}
+
+.sn-btn[disabled] {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .choice-hint {

@@ -18,6 +18,18 @@
   color: var(--sn-muted);
 }
 
+.carry-on {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sn-tap);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--sn-brand);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.375rem; }
+}
+
 .band-link {
   display: inline-flex;
   align-items: center;

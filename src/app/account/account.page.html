@@ -16,6 +16,23 @@
     </div>
 
     <div class="section">
+      <div class="section-title" id="help-title">What you’d like help with</div>
+      <div class="focus-chips" role="group" aria-labelledby="help-title">
+        <button
+          *ngFor="let c of helpChoices"
+          type="button"
+          class="focus-chip"
+          [attr.aria-pressed]="focus().includes(c.value)"
+          (click)="toggleFocus(c.value)"
+        >
+          <span class="focus-tick" aria-hidden="true">{{ focus().includes(c.value) ? '✓' : '' }}</span>
+          {{ c.label }}
+        </button>
+      </div>
+      <p class="focus-hint">Today shows these first.</p>
+    </div>
+
+    <div class="section">
       <div class="section-title">Session</div>
       <ion-button expand="block" fill="outline" (click)="logout()">
         <ion-icon name="log-out-outline" slot="start"></ion-icon>
