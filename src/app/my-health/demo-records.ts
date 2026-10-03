@@ -13,7 +13,7 @@ export const DEMO_APPOINTMENT = {
 export const DEMO_FINDINGS: Finding[] = [
   {
     key: 'count',
-    label: 'Number of fibroids',
+    label: 'Fibroids',
     completeness: { state: 'present', value: '2' },
     source: 'entered-from-report',
     originalWording: 'Two intramural fibroids are noted.',
@@ -21,7 +21,7 @@ export const DEMO_FINDINGS: Finding[] = [
   },
   {
     key: 'largestSize',
-    label: 'Largest fibroid',
+    label: 'Largest',
     completeness: { state: 'present', value: '4.1 cm' },
     source: 'entered-from-report',
     originalWording: 'The larger measures 41 x 36 mm.',
@@ -29,7 +29,7 @@ export const DEMO_FINDINGS: Finding[] = [
   },
   {
     key: 'cavity',
-    label: 'Uterine cavity affected?',
+    label: 'Uterine cavity',
     completeness: { state: 'unknown' },
   },
 ];

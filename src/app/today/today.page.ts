@@ -8,7 +8,7 @@ import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealPlanItem } from '../core/services/meal-plans.service';
 import { environment } from '../../environments/environment';
 import { DEMO_APPOINTMENT, DEMO_FINDINGS } from '../my-health/demo-records';
-import { Finding, QUESTION_FOR_UNKNOWN, SOURCE_LABELS } from '../my-health/diagnosis.model';
+import { Finding, QUESTION_FOR_UNKNOWN, SOURCE_LABELS, SOURCE_TAGS } from '../my-health/diagnosis.model';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
 
 const MEAL_TYPE_LABELS: Record<MealPlanItem['mealType'], string> = {
@@ -44,6 +44,8 @@ export class TodayPage implements OnInit {
   readonly appointment = DEMO_APPOINTMENT;
   readonly findings: Finding[] = DEMO_FINDINGS;
   readonly sourceLabels = SOURCE_LABELS;
+  readonly sourceTags = SOURCE_TAGS;
+  readonly openFinding = signal<string | null>(null);
   readonly mealTypeLabels = MEAL_TYPE_LABELS;
 
   /** Demo only: the saved state isn't stored yet. */
@@ -77,6 +79,10 @@ export class TodayPage implements OnInit {
 
   questionFor(f: Finding): string {
     return QUESTION_FOR_UNKNOWN[f.key];
+  }
+
+  toggleFinding(f: Finding) {
+    this.openFinding.set(this.openFinding() === f.key ? null : f.key);
   }
 
   isSaved(f: Finding): boolean {

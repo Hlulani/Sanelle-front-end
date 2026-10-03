@@ -5,15 +5,15 @@
       <h1>{{ name() ? 'Hi ' + name() : 'Today' }}</h1>
     </header>
 
-    <!-- Next action. With demo records off, this becomes the first-use prompt. -->
+    <!-- One next action. With demo records off, this becomes the first-use prompt. -->
     <section class="next" *ngIf="showDemo(); else firstUse" aria-labelledby="next-title">
-      <span class="sn-demo-label">Demo record</span>
-      <p class="when">Appointment with {{ appointment.with }} in {{ appointment.inDays }} days</p>
-      <h2 id="next-title">Prepare for your appointment</h2>
-      <p class="note">This detail isn’t recorded. You can add it to your appointment questions.</p>
-
-      <div class="question" *ngFor="let f of unknownFindings()">
-        <p class="q">“{{ questionFor(f) }}”</p>
+      <div class="next-top">
+        <p class="when" id="next-title">Appointment in {{ appointment.inDays }} days</p>
+        <span class="sn-demo-label">Demo</span>
+      </div>
+      <ng-container *ngFor="let f of unknownFindings()">
+        <p class="prompt">Not recorded yet. Ask:</p>
+        <p class="q">{{ questionFor(f) }}</p>
         <button
           type="button"
           class="sn-btn"
@@ -22,72 +22,81 @@
           [attr.aria-pressed]="isSaved(f)"
           (click)="toggleSaved(f)"
         >
-          {{ isSaved(f) ? 'Saved to your questions' : 'Save this question' }}
+          {{ isSaved(f) ? 'Saved ✓' : 'Save question' }}
         </button>
-      </div>
+      </ng-container>
     </section>
 
     <ng-template #firstUse>
       <section class="next" aria-labelledby="first-title">
         <h2 id="first-title">Start with what you know</h2>
-        <p class="note">
-          Add the details from your report or appointment. Anything you don’t know can stay blank, and we’ll suggest a question to ask instead.
-        </p>
-        <p class="soon">Recording your diagnosis is the next part being built.</p>
+        <p class="prompt">Blanks are fine. We’ll turn them into questions.</p>
+        <p class="soon">Coming next in this build</p>
       </section>
     </ng-template>
 
     <section class="block" *ngIf="showDemo()" aria-labelledby="dx-title">
       <div class="block-head">
         <h2 id="dx-title">Your diagnosis</h2>
-        <span class="sn-demo-label">Demo record</span>
+        <span class="sn-demo-label">Demo</span>
       </div>
-      <dl class="facts">
-        <div class="fact" *ngFor="let f of findings">
-          <dt>{{ f.label }}</dt>
-          <dd>
+      <ul class="rows">
+        <li *ngFor="let f of findings" [class.is-open]="openFinding() === f.key">
+          <ng-template #rowContent>
+            <span class="row-name">{{ f.label }}</span>
             <ng-container [ngSwitch]="f.completeness.state">
-              <span *ngSwitchCase="'present'" class="value">{{ $any(f.completeness).value }}</span>
-              <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Your report says no</span>
+              <span *ngSwitchCase="'present'" class="row-value">{{ $any(f.completeness).value }}</span>
+              <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Report says no</span>
               <span *ngSwitchCase="'unknown'" class="sn-status sn-status--unknown">Not recorded</span>
             </ng-container>
-            <span class="source" *ngIf="f.source">{{ sourceLabels[f.source] }}</span>
-            <span class="wording" *ngIf="f.originalWording">Report wording: “{{ f.originalWording }}”</span>
-          </dd>
-        </div>
-      </dl>
+            <span class="tag" *ngIf="f.source">{{ sourceTags[f.source] }}</span>
+          </ng-template>
+          <button
+            *ngIf="f.source; else plainRow"
+            type="button"
+            class="row expandable"
+            [attr.aria-expanded]="openFinding() === f.key"
+            (click)="toggleFinding(f)"
+          >
+            <ng-container *ngTemplateOutlet="rowContent"></ng-container>
+          </button>
+          <ng-template #plainRow>
+            <div class="row"><ng-container *ngTemplateOutlet="rowContent"></ng-container></div>
+          </ng-template>
+          <div class="row-more" *ngIf="openFinding() === f.key && f.source">
+            <p>{{ sourceLabels[f.source] }}</p>
+            <p class="wording" *ngIf="f.originalWording">“{{ f.originalWording }}”</p>
+          </div>
+        </li>
+      </ul>
     </section>
 
     <section class="block" *ngIf="foodTopic as topic" aria-labelledby="food-title">
-      <h2 id="food-title">A food question</h2>
+      <h2 id="food-title">Food question</h2>
       <a class="topic" [routerLink]="['/learn', topic.id]">
-        <span class="topic-claim">You might have read: “{{ topic.claim }}”</span>
-        <span class="topic-q">{{ topic.question }}</span>
-        <span class="topic-draft" *ngIf="topic.review.state === 'draft'">Draft, not clinically reviewed</span>
+        <span class="topic-q">{{ topic.title }}</span>
+        <span class="topic-tag" *ngIf="topic.review.state === 'draft'">Draft</span>
+        <span class="topic-go" aria-hidden="true">›</span>
       </a>
     </section>
 
     <section class="block meals" aria-labelledby="meals-title">
       <h2 id="meals-title">Today’s meals</h2>
 
-      <ul class="meal-list" *ngIf="todaysMeals().length; else noMeals">
+      <ul class="meal-strip" *ngIf="todaysMeals().length; else noMeals">
         <li *ngFor="let meal of todaysMeals()">
           <button type="button" class="meal" (click)="openMeal(meal)">
             <span class="sn-meal-tile" [ngClass]="'is-' + meal.mealType.toLowerCase()" aria-hidden="true"></span>
-            <span class="meal-text">
-              <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
-              <span class="meal-name">{{ meal.name }}</span>
-            </span>
+            <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
+            <span class="meal-name">{{ meal.name }}</span>
           </button>
         </li>
       </ul>
 
       <ng-template #noMeals>
         <div class="empty">
-          <p>{{ hasPlan() ? 'Your plan has no meals for today.' : 'No meals planned yet.' }}</p>
-          <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">
-            {{ hasPlan() ? 'Make a new plan' : 'Plan your meals' }}
-          </button>
+          <p>{{ hasPlan() ? 'Nothing planned today.' : 'No meals planned yet.' }}</p>
+          <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">Plan meals</button>
         </div>
       </ng-template>
     </section>

@@ -7,8 +7,8 @@
 export type FibroidOutcome = 'incidence' | 'growth' | 'bleeding' | 'pain' | 'fertility';
 
 export const OUTCOME_LABELS: Record<FibroidOutcome, string> = {
-  incidence: 'Developing fibroids',
-  growth: 'Growth of existing fibroids',
+  incidence: 'Getting fibroids',
+  growth: 'Fibroid growth',
   bleeding: 'Heavy bleeding',
   pain: 'Pain',
   fertility: 'Fertility',
@@ -45,6 +45,8 @@ export interface Study {
   id: string;
   /** Short label used in lists, e.g. "Black Women's Health Study, US". */
   label: string;
+  /** One line shown before the details are opened. */
+  keyFinding: string;
   citation: string;
   url: string;
   design: StudyDesign;
@@ -70,8 +72,11 @@ export interface EvidenceTopic {
   id: string;
   /** The claim as people meet it online. */
   claim: string;
+  /** Short question used as the screen title and in lists. */
+  title: string;
   question: string;
-  shortAnswer: string;
+  /** Read first: one sentence, then one line of context. */
+  answer: { headline: string; detail: string };
   findings: OutcomeFinding[];
   practical: string[];
   studies: Study[];

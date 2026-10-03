@@ -16,7 +16,7 @@ import {
 import { containsDairy } from '../food-matchers';
 
 const VERDICT_LABELS: Record<OutcomeVerdict, string> = {
-  mixed: 'Mixed results',
+  mixed: 'Mixed',
   'association-lower': 'Linked with lower rates',
   'association-higher': 'Linked with higher rates',
   'none-found': 'No studies found',
@@ -42,7 +42,9 @@ export class FoodClarityPage implements OnInit {
   readonly designLabels = STUDY_DESIGN_LABELS;
 
   topic: EvidenceTopic | null = null;
-  readonly open = signal<string | null>('incidence');
+  readonly open = signal<string | null>(null);
+  readonly openStudy = signal<string | null>(null);
+  readonly sourcesOpen = signal(false);
   readonly meals = signal<MealsState>({ state: 'loading' });
 
   ngOnInit() {
@@ -59,6 +61,10 @@ export class FoodClarityPage implements OnInit {
     this.open.set(this.open() === f.outcome ? null : f.outcome);
   }
 
+  toggleStudy(s: Study) {
+    this.openStudy.set(this.openStudy() === s.id ? null : s.id);
+  }
+
   studiesFor(f: OutcomeFinding): Study[] {
     return (this.topic?.studies ?? []).filter((s) => f.studyIds.includes(s.id));
   }
@@ -66,13 +72,13 @@ export class FoodClarityPage implements OnInit {
   researchedLabel(): string {
     const iso = this.topic?.review.researchedOn;
     if (!iso) return '';
-    return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
+    return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso));
   }
 
   loadMeals() {
     this.meals.set({ state: 'loading' });
     this.mealService.getMeals().subscribe({
-      next: (all) => this.meals.set({ state: 'ready', meals: all.filter((m) => containsDairy(m.ingredients)).slice(0, 3) }),
+      next: (all) => this.meals.set({ state: 'ready', meals: all.filter((m) => containsDairy(m.ingredients)).slice(0, 6) }),
       error: () => this.meals.set({ state: 'error' }),
     });
   }

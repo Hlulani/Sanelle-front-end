@@ -26,6 +26,14 @@ export const SOURCE_LABELS: Record<FindingSource, string> = {
   'extracted-and-confirmed': 'Read from your report, checked by you',
 };
 
+/** One-word source tag shown on collapsed rows. */
+export const SOURCE_TAGS: Record<FindingSource, string> = {
+  'entered-from-report': 'Report',
+  'told-by-clinician': 'Appointment',
+  'self-reported': 'Your note',
+  'extracted-and-confirmed': 'Report',
+};
+
 export type FindingKey = 'count' | 'location' | 'cavity' | 'largestSize';
 
 export interface Finding {
@@ -42,7 +50,7 @@ export interface Finding {
 /** Question suggested when a finding is unknown. */
 export const QUESTION_FOR_UNKNOWN: Record<FindingKey, string> = {
   count: 'How many fibroids do I have?',
-  location: 'Where are my fibroids located?',
-  cavity: 'Does my report say whether the uterine cavity is affected?',
+  location: 'Where are my fibroids?',
+  cavity: 'Is my uterine cavity affected?',
   largestSize: 'How big is my largest fibroid?',
 };

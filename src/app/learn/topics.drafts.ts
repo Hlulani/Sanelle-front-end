@@ -9,15 +9,18 @@ export const DRAFT_TOPICS: EvidenceTopic[] = [
   {
     id: 'dairy',
     claim: 'If you have fibroids, cut out dairy.',
+    title: 'Should I cut out dairy?',
     question: 'Should I cut out dairy because I have fibroids?',
-    shortAnswer:
-      'We didn’t find research showing that dairy makes fibroids worse. The studies we found only looked at whether dairy is linked to being diagnosed with fibroids, and their results disagree. None of them looked at growth, bleeding, pain or fertility.',
+    answer: {
+      headline: 'We found no research showing dairy makes fibroids worse.',
+      detail: 'The few studies only looked at getting fibroids, and they disagree.',
+    },
     findings: [
       {
         outcome: 'incidence',
         verdict: 'mixed',
         summary:
-          'Of two large US studies, one linked higher dairy intake with fewer new diagnoses. The other found no consistent link for dairy overall, only a small one for yogurt and calcium from food. A smaller study from China, which counted milk and soy together, linked frequent intake with more diagnoses. All three are observational, so none can show that dairy causes or prevents fibroids.',
+          'Three observational studies point different ways. None can show that dairy causes or prevents fibroids.',
         studyIds: ['wise-2010', 'orta-2020', 'gao-2018'],
       },
       {
@@ -46,14 +49,14 @@ export const DRAFT_TOPICS: EvidenceTopic[] = [
       },
     ],
     practical: [
-      'These studies don’t give a reason to remove dairy because of fibroids. They also don’t show that eating more of it helps.',
-      'Lactose intolerance, a milk allergy or instructions from your clinician are separate reasons to avoid dairy. You can record them in your food preferences.',
-      'If you’re worried about your symptoms, they’re worth raising at your appointment rather than handling through diet alone.',
+      'These studies give no reason to cut dairy because of fibroids, or to eat more.',
+      'Lactose intolerance, an allergy or your doctor’s advice are separate reasons to avoid it.',
     ],
     studies: [
       {
         id: 'wise-2010',
         label: 'Black Women’s Health Study, US',
+        keyFinding: '22,120 women. More dairy, fewer diagnoses.',
         citation:
           'Wise LA, et al. A prospective study of dairy intake and risk of uterine leiomyomata. Am J Epidemiol. 2010;171(2):221-232.',
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2800240/',
@@ -71,6 +74,7 @@ export const DRAFT_TOPICS: EvidenceTopic[] = [
       {
         id: 'orta-2020',
         label: 'Nurses’ Health Study II, US',
+        keyFinding: '81,590 women. No clear link for dairy overall.',
         citation:
           'Orta OR, Terry KL, Missmer SA, Harris HR. Dairy and related nutrient intake and risk of uterine leiomyoma: a prospective cohort study. Hum Reprod. 2020;35(2):453-463.',
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8489562',
@@ -88,6 +92,7 @@ export const DRAFT_TOPICS: EvidenceTopic[] = [
       {
         id: 'gao-2018',
         label: 'Single hospital, China',
+        keyFinding: '1,273 women. Milk and soy counted together, more diagnoses.',
         citation:
           'Gao M, Wang H. Frequent milk and soybean consumption are high risks for uterine leiomyoma: a prospective cohort study. Medicine (Baltimore). 2018;97(41):e12009.',
         url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6203589',
