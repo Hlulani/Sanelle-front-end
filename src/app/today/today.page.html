@@ -5,75 +5,56 @@
       <h1>{{ name() ? 'Hi ' + name() : 'Today' }}</h1>
     </header>
 
-    <!-- One next action. With demo records off, this becomes the first-use prompt. -->
-    <section class="next" *ngIf="showDemo(); else firstUse" aria-labelledby="next-q">
-      <div class="next-top">
-        <p class="when">Appointment in {{ appointment.inDays }} days</p>
-        <span class="sn-demo-label">Demo</span>
-      </div>
-      <ng-container *ngFor="let f of unknownFindings()">
-        <p class="prompt">Not recorded yet. Ask:</p>
-        <h2 class="q" id="next-q">{{ questionFor(f) }}</h2>
-        <button
-          type="button"
-          class="sn-btn"
-          [class.sn-btn--brand]="!isSaved(f)"
-          [class.saved]="isSaved(f)"
-          [attr.aria-pressed]="isSaved(f)"
-          (click)="toggleSaved(f)"
-        >
-          {{ isSaved(f) ? 'Saved ✓' : 'Save question' }}
-        </button>
-      </ng-container>
+    <!-- One next action, from what has (and hasn't) been recorded. -->
+    <section class="next" aria-labelledby="next-q">
+      @if (daysToAppointment() !== null) {
+        <p class="when">{{ daysToAppointment() === 0 ? 'Appointment today' : 'Appointment in ' + daysToAppointment() + (daysToAppointment() === 1 ? ' day' : ' days') }}</p>
+      }
+      @switch (next().kind) {
+        @case ('start') {
+          <h2 class="q" id="next-q">Start with what you know</h2>
+          <p class="prompt">Blanks are fine. We’ll turn them into questions.</p>
+          <button type="button" class="sn-btn sn-btn--brand" (click)="start()">Record my diagnosis</button>
+        }
+        @case ('ask') {
+          @if (ask(); as a) {
+            <p class="prompt">{{ defs[a.finding.key].label }} isn’t recorded. Ask:</p>
+            <h2 class="q" id="next-q">{{ a.question }}</h2>
+            <button type="button" class="sn-btn sn-btn--brand" (click)="saveQuestion(a)">Save question</button>
+          }
+        }
+        @default {
+          <h2 class="q" id="next-q">{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} ready</h2>
+          <p class="prompt">Check your summary before the appointment.</p>
+          <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Open my summary</a>
+        }
+      }
+      @if (justSaved()) {
+        <p class="saved-note" role="status">Saved: “{{ justSaved() }}”</p>
+      }
     </section>
 
-    <ng-template #firstUse>
-      <section class="next" aria-labelledby="first-title">
-        <h2 class="q" id="first-title">Start with what you know</h2>
-        <p class="prompt">Blanks are fine. We’ll turn them into questions.</p>
-        <p class="soon">Coming next in this build</p>
-      </section>
-    </ng-template>
-
-    <section class="block" *ngIf="showDemo()" aria-labelledby="dx-title">
-      <div class="block-head">
-        <h2 id="dx-title">Your diagnosis</h2>
-        <span class="sn-demo-label">Demo</span>
-      </div>
-      <ul class="rows">
-        <li *ngFor="let f of findings" [class.is-open]="openFinding() === f.key">
-          <ng-template #rowContent>
-            <span class="row-text">
-              <span class="row-name">{{ f.label }}</span>
-              <ng-container [ngSwitch]="f.completeness.state">
-                <span *ngSwitchCase="'present'" class="sn-status sn-status--present">
-                  {{ $any(f.completeness).value }} · {{ f.source ? sourceTags[f.source] : '' }}
+    @if (hasRecords()) {
+      <section class="block" aria-labelledby="dx-title">
+        <div class="block-head">
+          <h2 id="dx-title">Your diagnosis</h2>
+          <a class="see-all" routerLink="/tabs/health">See all</a>
+        </div>
+        <ul class="rows">
+          @for (f of findings().slice(0, 3); track f.key) {
+            <li>
+              <a class="row expandable" [routerLink]="['/health/record', f.key]">
+                <span class="row-text">
+                  <span class="row-name">{{ defs[f.key].label }}</span>
+                  <app-finding-status [finding]="f"></app-finding-status>
                 </span>
-                <span *ngSwitchCase="'absent'" class="sn-status sn-status--absent">Report says no</span>
-                <span *ngSwitchCase="'unknown'" class="sn-status sn-status--unknown">Not recorded</span>
-              </ng-container>
-            </span>
-            <span class="chev" *ngIf="f.source" aria-hidden="true">{{ openFinding() === f.key ? '–' : '›' }}</span>
-          </ng-template>
-          <button
-            *ngIf="f.source; else plainRow"
-            type="button"
-            class="row expandable"
-            [attr.aria-expanded]="openFinding() === f.key"
-            (click)="toggleFinding(f)"
-          >
-            <ng-container *ngTemplateOutlet="rowContent"></ng-container>
-          </button>
-          <ng-template #plainRow>
-            <div class="row"><ng-container *ngTemplateOutlet="rowContent"></ng-container></div>
-          </ng-template>
-          <div class="row-more" *ngIf="openFinding() === f.key && f.source">
-            <p>{{ sourceLabels[f.source] }}</p>
-            <p class="wording" *ngIf="f.originalWording">“{{ f.originalWording }}”</p>
-          </div>
-        </li>
-      </ul>
-    </section>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
 
     <div class="band">
     <section class="block meals" aria-labelledby="meals-title">

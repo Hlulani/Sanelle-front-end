@@ -1,0 +1,72 @@
+.health {
+  --background: var(--sn-canvas);
+}
+
+.appt-title {
+  font-size: 1.125rem;
+  color: var(--sn-brand);
+}
+
+.appt-fields {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.count {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--sn-muted);
+}
+
+.band-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sn-tap);
+  padding-inline: 0.5rem;
+  color: var(--sn-apricot);
+  font-weight: 800;
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; border-radius: 0.375rem; }
+}
+
+.q-preview {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: q;
+  display: grid;
+  gap: 0.5rem;
+
+  li {
+    counter-increment: q;
+    background: var(--sn-surface);
+    color: var(--sn-ink);
+    border-radius: 1rem;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    position: relative;
+    font-weight: 700;
+
+    &::before {
+      content: counter(q);
+      position: absolute;
+      left: 1rem;
+      top: 0.8rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: var(--sn-apricot);
+      color: var(--sn-ink);
+      display: grid;
+      place-items: center;
+      font-size: 0.8125rem;
+      font-weight: 800;
+    }
+  }
+}
+
+.more,
+.empty {
+  color: var(--sn-on-brand-muted);
+  font-size: 0.9375rem;
+}

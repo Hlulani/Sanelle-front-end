@@ -322,3 +322,24 @@
     outline-color: var(--sn-apricot);
   }
 }
+
+.saved-note {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--sn-present);
+}
+
+.see-all {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sn-tap);
+  padding-inline: 0.5rem;
+  font-weight: 800;
+  color: var(--sn-brand);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.375rem; }
+}
+
+a.row { text-decoration: none; }

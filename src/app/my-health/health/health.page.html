@@ -1,0 +1,67 @@
+<ion-content [fullscreen]="true" class="health">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <h1>My health</h1>
+      <p class="sn-head-note">Stored on this phone only.</p>
+    </header>
+
+    <section class="sn-card" aria-labelledby="appt-title">
+      <h2 id="appt-title" class="appt-title">Next appointment</h2>
+      <div class="appt-fields">
+        <label class="sn-field">
+          <span>Date</span>
+          <input type="date" [ngModel]="appointment().date ?? ''" (ngModelChange)="setDate($event)" />
+        </label>
+        <label class="sn-field">
+          <span>With</span>
+          <input type="text" placeholder="e.g. my gynaecologist" [ngModel]="appointment().with ?? ''" (change)="setWith($any($event.target).value)" />
+        </label>
+      </div>
+    </section>
+
+    <section class="sn-section" aria-labelledby="dx-title">
+      <div class="sn-section-head">
+        <h2 id="dx-title">Your diagnosis</h2>
+        <span class="count">{{ unknownCount() }} not recorded</span>
+      </div>
+      <ul class="sn-rows">
+        @for (f of rows(); track f.key) {
+          <li>
+            <a class="sn-row" [routerLink]="['/health/record', f.key]">
+              <span class="sn-row-text">
+                <span class="sn-row-name">{{ defs[f.key].label }}</span>
+                <app-finding-status [finding]="f"></app-finding-status>
+              </span>
+              <span class="sn-chev" aria-hidden="true">›</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <div class="sn-band">
+      <section class="sn-section" aria-labelledby="q-title">
+        <div class="sn-section-head">
+          <h2 id="q-title">Questions</h2>
+          <a class="band-link" routerLink="/health/questions">{{ questions().length ? 'Edit' : 'Add' }}</a>
+        </div>
+        @if (questions().length) {
+          <ol class="q-preview">
+            @for (q of questions().slice(0, 3); track q.id) {
+              <li>{{ q.text }}</li>
+            }
+          </ol>
+          @if (questions().length > 3) {
+            <p class="more">+ {{ questions().length - 3 }} more</p>
+          }
+        } @else {
+          <p class="empty">No questions yet. Missing details become suggestions.</p>
+        }
+      </section>
+
+      <section class="sn-section">
+        <a class="sn-btn sn-btn--apricot" routerLink="/health/summary">Prepare my summary</a>
+      </section>
+    </div>
+  </main>
+</ion-content>

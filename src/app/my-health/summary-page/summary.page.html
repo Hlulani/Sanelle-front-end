@@ -1,0 +1,85 @@
+<ion-content [fullscreen]="true" class="summary">
+  <main class="sn-page">
+    <header class="sn-head sn-no-print">
+      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ My health</button>
+      <h1>Your summary</h1>
+      <p class="sn-head-note">Check it, add notes, then share or print.</p>
+    </header>
+
+    <article class="doc" aria-labelledby="doc-title">
+      <h2 id="doc-title" class="doc-title">My appointment summary</h2>
+      @if (summary().appointmentLine) {
+        <p class="doc-sub">{{ summary().appointmentLine }}</p>
+      }
+
+      <section class="doc-section">
+        <h3>From my report</h3>
+        @if (summary().fromReport.length) {
+          <dl>
+            @for (l of summary().fromReport; track l.label) {
+              <div>
+                <dt>{{ l.label }}</dt>
+                <dd>{{ l.text }}@if (l.wording) {<span class="wording">“{{ l.wording }}”</span>}</dd>
+              </div>
+            }
+          </dl>
+        } @else {
+          <p class="none">Nothing entered from a report yet.</p>
+        }
+      </section>
+
+      @if (summary().personallyReported.length) {
+        <section class="doc-section">
+          <h3>What I was told or noted</h3>
+          <dl>
+            @for (l of summary().personallyReported; track l.label) {
+              <div><dt>{{ l.label }}</dt><dd>{{ l.text }}</dd></div>
+            }
+          </dl>
+        </section>
+      }
+
+      @if (summary().notRecorded.length) {
+        <section class="doc-section">
+          <h3>Not recorded yet</h3>
+          <p class="unknown">{{ summary().notRecorded.join(', ') }}</p>
+        </section>
+      }
+
+      <section class="doc-section">
+        <div class="doc-head">
+          <h3>My questions</h3>
+          <a class="edit sn-no-print" routerLink="/health/questions">Edit</a>
+        </div>
+        @if (summary().questions.length) {
+          <ol class="qs">
+            @for (q of summary().questions; track $index) {
+              <li>{{ q }}</li>
+            }
+          </ol>
+        } @else {
+          <p class="none">No questions yet.</p>
+        }
+      </section>
+
+      <section class="doc-section">
+        <h3>Notes</h3>
+        <label class="sn-field sn-no-print">
+          <span class="visually-hidden">Notes for the appointment</span>
+          <textarea [(ngModel)]="notes" (blur)="saveNotes()" placeholder="Symptoms, how things affect daily life, what matters most to you"></textarea>
+        </label>
+        <p class="print-only notes-print">{{ notes || 'None.' }}</p>
+      </section>
+
+      <p class="disclaimer">{{ summary().disclaimer }}</p>
+    </article>
+
+    <section class="actions sn-no-print">
+      <button type="button" class="sn-btn sn-btn--brand" (click)="share()">Share</button>
+      <button type="button" class="sn-btn sn-btn--outline" (click)="print()">Print</button>
+      @if (status()) {
+        <p class="status" role="status">{{ status() }}</p>
+      }
+    </section>
+  </main>
+</ion-content>

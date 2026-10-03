@@ -3,8 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  // Show records marked as demo data, and evidence topics that haven't been clinically reviewed.
-  showDemoRecords: true,
+  // Show evidence topics that haven't been clinically reviewed.
   showDraftContent: true,
   production: false,
   // localhost works here because the iOS Simulator shares the Mac's network stack directly.

@@ -1,6 +1,5 @@
 export const environment = {
-  // Released builds never show demo records or unreviewed health content.
-  showDemoRecords: false,
+  // Released builds never show unreviewed health content.
   showDraftContent: false,
   production: true,
   forceAuthOnStart: false,

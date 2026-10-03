@@ -8,6 +8,21 @@ export const routes: Routes = [
   { path: 'welcome', loadComponent: () => import('./welcome/welcome.page').then(m => m.WelcomePage) },
   { path: 'auth', component: AuthShellPage },
   {
+    path: 'health/record/:key',
+    loadComponent: () => import('./my-health/record/record.page').then(m => m.RecordPage),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'health/questions',
+    loadComponent: () => import('./my-health/questions/questions.page').then(m => m.QuestionsPage),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'health/summary',
+    loadComponent: () => import('./my-health/summary-page/summary.page').then(m => m.SummaryPage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'learn/:id',
     loadComponent: () => import('./learn/food-clarity/food-clarity.page').then(m => m.FoodClarityPage),
     canActivate: [authGuard],
@@ -26,6 +41,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'today', loadComponent: () => import('./today/today.page').then(m => m.TodayPage) },
+      { path: 'health', loadComponent: () => import('./my-health/health/health.page').then(m => m.HealthPage) },
       { path: 'tab2', loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page) },
       { path: 'tab3', loadComponent: () => import('./tab3/tab3.page').then(m => m.Tab3Page) },
       { path: 'account', loadComponent: () => import('./account/account.page').then(m => m.AccountPage) },

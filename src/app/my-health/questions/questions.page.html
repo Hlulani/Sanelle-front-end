@@ -1,0 +1,91 @@
+<ion-content [fullscreen]="true" class="questions">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ My health</button>
+      <h1>Your questions</h1>
+      <p class="sn-head-note">Most important first. You can record answers afterwards.</p>
+    </header>
+
+    <section class="sn-card" aria-labelledby="list-title">
+      <h2 id="list-title" class="visually-hidden">Saved questions</h2>
+      @if (questions().length) {
+        <ol class="list">
+          @for (q of questions(); track q.id; let i = $index; let last = $last) {
+            <li>
+              @if (editing() === q.id) {
+                <label class="sn-field">
+                  <span>Edit question</span>
+                  <textarea [(ngModel)]="draft"></textarea>
+                </label>
+                <div class="row-actions">
+                  <button type="button" class="sn-btn sn-btn--brand" (click)="saveEdit(q)">Save</button>
+                  <button type="button" class="sn-btn sn-btn--quiet" (click)="editing.set(null)">Cancel</button>
+                </div>
+              } @else {
+                <div class="q-line">
+                  <span class="num" aria-hidden="true">{{ i + 1 }}</span>
+                  <p class="q-text">{{ q.text }}</p>
+                  <div class="order">
+                    <button type="button" class="icon-btn" [disabled]="i === 0" (click)="move(q, -1)" [attr.aria-label]="'Move up: ' + q.text">↑</button>
+                    <button type="button" class="icon-btn" [disabled]="last" (click)="move(q, 1)" [attr.aria-label]="'Move down: ' + q.text">↓</button>
+                  </div>
+                </div>
+
+                @if (answering() === q.id) {
+                  <label class="sn-field">
+                    <span>Answer</span>
+                    <textarea [(ngModel)]="draft" placeholder="What did they say?"></textarea>
+                  </label>
+                  <div class="row-actions">
+                    <button type="button" class="sn-btn sn-btn--brand" (click)="saveAnswer(q)">Save answer</button>
+                    <button type="button" class="sn-btn sn-btn--quiet" (click)="answering.set(null)">Cancel</button>
+                  </div>
+                } @else {
+                  @if (q.answer) {
+                    <p class="answer"><strong>Answer:</strong> {{ q.answer }}</p>
+                  }
+                  <div class="row-links">
+                    <button type="button" class="link" (click)="startAnswer(q)">{{ q.answer ? 'Edit answer' : 'Add answer' }}</button>
+                    <button type="button" class="link" (click)="startEdit(q)">Edit</button>
+                    <button type="button" class="link danger" (click)="remove(q)">Remove</button>
+                  </div>
+                }
+              }
+            </li>
+          }
+        </ol>
+      } @else {
+        <p class="empty">No questions yet. Add a suggestion below or write your own.</p>
+      }
+    </section>
+
+    <section class="sn-section" aria-labelledby="own-title">
+      <h2 id="own-title">Add your own</h2>
+      <form class="own" (submit)="$event.preventDefault(); addOwn()">
+        <label class="sn-field">
+          <span class="visually-hidden">Your question</span>
+          <input type="text" [(ngModel)]="newQuestion" name="newQuestion" placeholder="e.g. What should we monitor for my bleeding?" />
+        </label>
+        <button type="submit" class="sn-btn sn-btn--brand">Add</button>
+      </form>
+    </section>
+
+    <div class="sn-band">
+      <section class="sn-section" aria-labelledby="sugg-title">
+        <h2 id="sugg-title">Suggested from missing details</h2>
+        @if (suggestions().length) {
+          <ul class="sugg">
+            @for (s of suggestions(); track s.key) {
+              <li>
+                <span>{{ s.text }}</span>
+                <button type="button" class="add" (click)="addSuggestion(s)" [attr.aria-label]="'Add: ' + s.text">+ Add</button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="none">Nothing to suggest right now.</p>
+        }
+      </section>
+    </div>
+  </main>
+</ion-content>

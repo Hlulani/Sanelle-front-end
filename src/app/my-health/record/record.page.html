@@ -1,0 +1,87 @@
+<ion-content [fullscreen]="true" class="record">
+  <main class="sn-page wrap">
+    <div class="top">
+      <button type="button" class="sn-btn sn-btn--quiet close" (click)="close()">‹ My health</button>
+      @if (inFlow) {
+        <p class="progress" aria-label="Step {{ step() }} of {{ total }}">{{ step() }} of {{ total }}</p>
+      }
+    </div>
+
+    <h1>{{ def().question }}</h1>
+
+    <button type="button" class="why" [attr.aria-expanded]="showWhy()" (click)="showWhy.set(!showWhy())">
+      {{ showWhy() ? '– ' : '+ ' }}What does this mean?
+    </button>
+    @if (showWhy()) {
+      <div class="why-text">
+        <p>{{ def().explanation }}</p>
+        <p class="draft">Draft explanation, not clinically reviewed.</p>
+      </div>
+    }
+
+    <div class="choices" role="radiogroup" [attr.aria-label]="def().question">
+      <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'present'" (click)="choose('present')">
+        I know this
+      </button>
+      @if (def().canBeAbsent) {
+        <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'absent'" (click)="choose('absent')">
+          {{ def().absentLabel }}
+        </button>
+      }
+      <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'unknown'" (click)="choose('unknown')">
+        I don’t know
+      </button>
+    </div>
+
+    @if (answer() === 'present' || answer() === 'absent') {
+      <section class="panel">
+        @if (answer() === 'present') {
+          <label class="sn-field">
+            <span>{{ def().label }}</span>
+            <input type="text" [(ngModel)]="value" [placeholder]="def().example" />
+          </label>
+        }
+        <div class="sn-field">
+          <span>Where is this from?</span>
+          <div class="sn-segment">
+            @for (s of sources; track s) {
+              <button type="button" [attr.aria-pressed]="source === s" (click)="source = s">{{ sourceChoices[s] }}</button>
+            }
+          </div>
+        </div>
+        @if (source === 'entered-from-report') {
+          <label class="sn-field">
+            <span>Report wording <em>(optional)</em></span>
+            <textarea [(ngModel)]="wording" placeholder="Copy the sentence from your report"></textarea>
+          </label>
+          <label class="sn-field">
+            <span>Report date <em>(optional)</em></span>
+            <input type="date" [(ngModel)]="reportDate" />
+          </label>
+        }
+      </section>
+    }
+
+    @if (answer() === 'unknown') {
+      <section class="panel">
+        <p class="unknown-note">That’s fine. It stays “Not recorded”, and you can ask about it:</p>
+        <p class="suggested">“{{ def().questionIfUnknown }}”</p>
+        <label class="toggle">
+          <input type="checkbox" [checked]="addQuestion()" (change)="addQuestion.set($any($event.target).checked)" />
+          <span>Add to my questions</span>
+        </label>
+      </section>
+    }
+
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    }
+
+    <div class="actions">
+      <button type="button" class="sn-btn sn-btn--apricot" (click)="save()">
+        {{ inFlow && step() < total ? 'Save and continue' : 'Save' }}
+      </button>
+      <button type="button" class="sn-btn sn-btn--outline-on-brand" (click)="skip()">Skip for now</button>
+    </div>
+  </main>
+</ion-content>

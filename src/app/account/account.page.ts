@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
 import { NotificationService } from '../core/services/notification.service';
 
+import { HealthRepository } from '../my-health/health-repository';
+
 @Component({
   selector: 'app-account',
   standalone: true,
@@ -33,6 +35,7 @@ import { NotificationService } from '../core/services/notification.service';
   ],
 })
 export class AccountPage implements OnInit {
+  private health = inject(HealthRepository);
   private auth = inject(AuthService);
   private router = inject(Router);
   private alertController = inject(AlertController);
@@ -99,9 +102,12 @@ export class AccountPage implements OnInit {
   private deleteAccount(): void {
     this.isDeleting.set(true);
     this.error.set(null);
+    // Captured first: deleting the account signs out, which forgets the email.
+    const email = this.auth.getUserEmail();
 
     this.auth.deleteAccount().subscribe({
       next: () => {
+        if (email) void this.health.clearFor(email);
         this.isDeleting.set(false);
         this.router.navigateByUrl('/auth');
       },
