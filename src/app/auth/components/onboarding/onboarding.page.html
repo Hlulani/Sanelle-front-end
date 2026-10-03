@@ -92,8 +92,8 @@
 
 <div [hidden]="currentStep() !== 4" class="step-view">
   <div class="header-section">
-    <h1 class="title">How your meals are thoughtfully chosen</h1>
-    <p class="subtitle">How your personalized plan supports your body’s natural balance.</p>
+    <h1 class="title">How we pick your meals</h1>
+    <p class="subtitle">Based on what you chose, your plan focuses on:</p>
   </div>
 
   <div class="science-card" *ngFor="let card of getScienceCards()">
@@ -109,7 +109,7 @@
 
   <div class="footer-btn">
     <ion-button expand="block" class="main-submit-btn" (click)="nextStep()">
-      I understand the approach
+      Continue
     </ion-button>
   </div>
 </div>

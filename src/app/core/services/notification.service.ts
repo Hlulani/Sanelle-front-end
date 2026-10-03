@@ -65,7 +65,7 @@ export class NotificationService {
       notifications.push({
         id: COOK_REMINDER_ID,
         title: 'Time to cook 🍳',
-        body: "Today's meals from your healing plan are ready when you are.",
+        body: "Your meals for today are planned. Time to cook?",
         schedule: { on: { hour: COOK_REMINDER_HOUR, minute: 0 }, allowWhileIdle: true },
       });
     }

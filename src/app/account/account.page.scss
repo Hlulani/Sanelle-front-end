@@ -19,7 +19,7 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: var(--app-accent-gradient);
+  background: var(--app-primary);
   color: #ffffff;
   font-size: 28px;
   font-weight: 700;
@@ -71,7 +71,7 @@
 
   ion-icon {
     font-size: 22px;
-    color: var(--app-accent-2);
+    color: var(--app-accent);
   }
 }
 

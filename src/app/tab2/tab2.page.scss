@@ -4,14 +4,14 @@
   --plan-ink: var(--app-ink);
   --plan-muted: var(--app-muted);
   --plan-card: var(--app-card);
-  --plan-shadow: 0 18px 40px rgba(25, 42, 27, 0.08);
+  --plan-shadow: var(--app-shadow-sm);
   --plan-sand: var(--app-paper);
   --plan-dark: #16261c;
   --plan-dark-2: #22392a;
 }
 
 .plan-page {
-  background: radial-gradient(circle at top, #f5f3ee 0%, #fdfcf9 45%, #ffffff 100%);
+  background: var(--app-paper);
   min-height: 100%;
   padding: 20px 16px 96px;
 }
@@ -23,30 +23,9 @@
   background-color: var(--plan-dark);
   background-size: cover;
   background-position: center;
-  box-shadow: 0 30px 60px rgba(10, 20, 14, 0.35);
+  box-shadow: var(--app-shadow-sm);
   overflow: hidden;
   text-align: left;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  right: -40px;
-  top: -60px;
-  width: 160px;
-  height: 160px;
-  background: radial-gradient(circle, rgba(134, 211, 108, 0.35), transparent 70%);
-  pointer-events: none;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 22px 22px;
-  opacity: 0.3;
-  pointer-events: none;
 }
 
 .hero-greeting-row {
@@ -57,16 +36,11 @@
   gap: 12px;
 }
 
-.greeting {
-  margin: 0 0 4px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
 
 .hero h1 {
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 1.9rem;
+  line-height: 1.15;
   color: #f5f8f3;
 }
 
@@ -101,9 +75,7 @@
 
   span {
     color: rgba(255, 255, 255, 0.65);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-size: 0.75rem;
   }
 }
 
@@ -115,24 +87,17 @@
   padding: 6px 14px;
   background: #ffffff;
   border-radius: 999px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--app-shadow-sm);
   color: var(--plan-ink);
   font-size: 0.9rem;
   margin: 0 0 18px;
 }
 
-.hero-sub {
-  position: relative;
-  margin: 14px 0 22px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 1rem;
-  letter-spacing: 0.02em;
-}
 
 .hero-copy {
   position: relative;
-  margin: -10px 0 18px;
-  color: rgba(255, 255, 255, 0.5);
+  margin: 6px 0 18px;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -203,11 +168,16 @@
 .planner-card {
   margin-top: 18px;
   border-radius: 20px;
-  box-shadow: 0 12px 28px rgba(30, 40, 30, 0.08);
+  box-shadow: var(--app-shadow-sm);
   background: #fbfaf6;
 }
 
 .planner-card-header {
+  ion-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -264,10 +234,10 @@
   }
 
   &.active {
-    background: var(--app-accent-gradient);
+    background: var(--app-primary);
     border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 6px 14px rgba(89, 173, 155, 0.3);
+    box-shadow: none;
   }
 }
 
@@ -287,18 +257,18 @@
 }
 
 .plan-page ion-segment-button.segment-button-checked {
-  background: linear-gradient(to right, var(--app-accent), var(--app-accent-2));
+  background: var(--app-primary);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(89, 173, 155, 0.2);
+  box-shadow: none;
 }
 
 .primary-btn {
-  --background: var(--app-accent-gradient);
+  --background: var(--app-primary);
   --border-radius: 16px;
   height: 56px;
   margin-top: 14px;
   font-weight: 700;
-  box-shadow: 0 10px 20px rgba(89, 173, 155, 0.25);
+  box-shadow: none;
 }
 
 .spacer {
@@ -354,10 +324,10 @@
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 
   &.active {
-    background: var(--app-accent-gradient);
+    background: var(--app-primary);
     border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 6px 14px rgba(89, 173, 155, 0.3);
+    box-shadow: none;
   }
 }
 
@@ -385,7 +355,7 @@
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid rgba(32, 50, 37, 0.06);
-  box-shadow: 0 14px 30px rgba(25, 42, 27, 0.07);
+  box-shadow: var(--app-shadow-sm);
 }
 
 .meal-card-media {
@@ -399,7 +369,18 @@
   padding: 12px;
 
   span[class^='chip'] {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--app-shadow-sm);
+  }
+
+  // Without a photo, don't reserve a big empty block - just the meal type and the check.
+  &.no-photo {
+    height: auto;
+    background-color: transparent;
+    padding: 16px 16px 0;
+
+    span[class^='chip'] {
+      box-shadow: none;
+    }
   }
 }
 
@@ -443,8 +424,8 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  color: var(--app-accent-2);
-  box-shadow: 0 2px 8px rgba(25, 42, 27, 0.22);
+  color: var(--app-accent);
+  box-shadow: var(--app-shadow-sm);
   transition: background 0.15s ease, border-color 0.15s ease;
 
   ion-icon {
@@ -452,8 +433,8 @@
   }
 
   &.cooked {
-    background: var(--app-accent-2);
-    border-color: var(--app-accent-2);
+    background: var(--app-accent);
+    border-color: var(--app-accent);
     color: #ffffff;
   }
 }
@@ -570,7 +551,7 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: var(--app-accent-gradient);
+  background: var(--app-primary);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -631,7 +612,7 @@
 
 .challenge-progress-fill {
   height: 100%;
-  background: var(--app-accent-gradient);
+  background: var(--app-primary);
   border-radius: 999px;
 }
 
@@ -659,7 +640,7 @@
 }
 
 .challenge-join-btn {
-  --background: var(--app-accent-gradient);
+  --background: var(--app-primary);
   --color: #ffffff;
 }
 
@@ -708,7 +689,7 @@
 
 .custom-challenge-owner-badge {
   flex-shrink: 0;
-  background: var(--app-accent-gradient);
+  background: var(--app-primary);
   color: #ffffff;
   font-size: 0.65rem;
   font-weight: 700;

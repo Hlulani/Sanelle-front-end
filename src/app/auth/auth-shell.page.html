@@ -2,12 +2,8 @@
   <div class="auth-wrap">
     <div class="auth-card">
       <div class="brand-header ion-text-center">
-        <div class="logo-container">
-          <ion-icon name="leaf-outline" style="color: #92d075; font-size: 48px;"></ion-icon>
-          <ion-icon name="restaurant-outline" style="color: #59ad9b; font-size: 48px; margin-left: -10px;"></ion-icon>
-        </div>
-        <h1 class="title">Join Sanelle</h1>
-        <p class="subtitle">Start your journey to better health</p>
+        <h1 class="wordmark">Sanelle</h1>
+        <p class="subtitle">Meal plans and grocery lists, sorted.</p>
       </div>
 
       <ion-segment [value]="mode()" (ionChange)="setMode(($event.detail.value ?? '') + '')" mode="ios">

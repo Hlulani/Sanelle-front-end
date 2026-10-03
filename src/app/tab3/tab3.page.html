@@ -1,16 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goToPlan()" aria-label="Back to My Plan">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>
-      <span class="title-with-icon">
-        <ion-icon name="cart-outline"></ion-icon>
-        Grocery List
-      </span>
-    </ion-title>
+    <ion-title>Groceries</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,14 +9,13 @@
     <div class="hero">
       <div class="hero-top">
         <div>
-          <div class="eyebrow">Grocery rituals</div>
-          <h1>Grocery List</h1>
-          <p class="sub">From your latest plan</p>
+          <h1>Shopping list</h1>
+          <p class="sub">Everything for your current plan</p>
         </div>
         <div class="progress-wrap" *ngIf="totalItems() > 0">
           <div
             class="progress-ring"
-            [style.background]="'conic-gradient(#78c57a ' + progressPercent() + '%, #d9d3c9 0)'"
+            [style.background]="'conic-gradient(#314a38 ' + progressPercent() + '%, #d9d3c9 0)'"
           >
             <div class="progress-center">
               <div class="progress-value">{{ checkedCount() }} of {{ totalItems() }}</div>
@@ -82,7 +71,6 @@
               <div class="item-amount" *ngIf="item.amounts.length">{{ item.amounts.join(', ') }}</div>
               <div class="item-amount" *ngIf="!item.amounts.length">Quantity varies</div>
             </div>
-            <div class="item-icon"><ion-icon [name]="item.icon"></ion-icon></div>
           </div>
         </div>
       </section>

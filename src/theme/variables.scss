@@ -12,9 +12,12 @@
   --app-muted: #6f7c72;
   --app-paper: #f7f4ef;
   --app-card: #ffffff;
-  --app-accent: #92d075;
-  --app-accent-2: #59ad9b;
-  --app-accent-gradient: linear-gradient(135deg, var(--app-accent) 0%, var(--app-accent-2) 100%);
+  --app-primary: #314a38;
+  --app-primary-contrast: #ffffff;
+  --app-primary-soft: #e4efe6;
+  --app-accent: #3f8a78;
+  --app-line: #e7e2d8;
+  --app-shadow-sm: 0 1px 2px rgba(25, 42, 27, 0.06), 0 1px 3px rgba(25, 42, 27, 0.04);
 
   --radius-sm: 12px;
   --radius-md: 16px;

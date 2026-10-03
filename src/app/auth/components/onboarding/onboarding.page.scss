@@ -8,7 +8,7 @@
     flex: 1; height: 6px; background: #e9ecef; border-radius: 3px;
     .progress-fill {
       height: 100%; border-radius: 3px;
-      background: linear-gradient(90deg, var(--app-accent), var(--app-accent-2));
+      background: var(--app-primary);
       transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
   }
@@ -24,7 +24,7 @@
   position: relative; border-radius: 24px; overflow: hidden;
   min-height: 128px; margin-bottom: 16px; padding: 20px;
   display: flex; align-items: center; gap: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  box-shadow: var(--app-shadow-sm);
   color: white;
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   cursor: pointer;
@@ -33,9 +33,9 @@
   user-select: none;
   -webkit-user-select: none;
 
-  &--anti-inflammatory { background: linear-gradient(135deg, #92d075 0%, #59ad9b 100%); }
-  &--iron { background: linear-gradient(135deg, #f4976c 0%, #59ad9b 100%); }
-  &--fiber { background: linear-gradient(135deg, #59ad9b 0%, #314a38 100%); }
+  &--anti-inflammatory { background: #314a38; }
+  &--iron { background: #a95a3c; }
+  &--fiber { background: #3f6f63; }
 
   .goal-icon {
     flex-shrink: 0;
@@ -52,12 +52,12 @@
 
   &.selected {
     transform: scale(0.97);
-    box-shadow: 0 0 0 4px rgba(255,255,255,0.85), 0 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 0 0 3px var(--app-paper), 0 0 0 5px var(--app-ink);
   }
 
   .selected-badge {
     position: absolute; top: 14px; right: 14px;
-    font-size: 26px; color: var(--app-accent-2);
+    font-size: 26px; color: var(--app-accent);
     background: white; border-radius: 50%;
   }
 }
@@ -77,7 +77,7 @@
   border-radius: 20px;
   background: #ffffff;
   border: 1px solid #f1f3f5;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--app-shadow-sm);
   font-weight: 700;
   cursor: pointer;
   touch-action: manipulation;
@@ -85,19 +85,19 @@
   color: #2d3436;
   transition: transform 0.15s ease-out, border-color 0.15s ease-out, background 0.15s ease-out;
 
-  ion-icon { font-size: 28px; color: var(--app-accent-2); }
+  ion-icon { font-size: 28px; color: var(--app-accent); }
 
   &:active { transform: scale(0.96); }
 
   &.selected {
     transform: scale(0.96);
-    border-color: var(--app-accent-2);
+    border-color: var(--app-accent);
     background: rgba(89, 173, 155, 0.08);
   }
 }
 
 .main-submit-btn {
-  --background: var(--app-accent-gradient);
+  --background: var(--app-primary);
   --border-radius: var(--radius-md); height: 56px; margin-top: 24px; font-weight: 700;
 }
 
@@ -107,7 +107,7 @@
   border-radius: 24px;
   overflow: hidden;
   margin-bottom: 24px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--app-shadow-sm);
   border: 1px solid rgba(0, 0, 0, 0.02);
 
   .card-media {
@@ -117,9 +117,9 @@
     align-items: center;
     justify-content: center;
 
-    &.goal-card--anti-inflammatory { background: linear-gradient(135deg, #92d075 0%, #59ad9b 100%); }
-    &.goal-card--iron { background: linear-gradient(135deg, #f4976c 0%, #59ad9b 100%); }
-    &.goal-card--fiber { background: linear-gradient(135deg, #59ad9b 0%, #314a38 100%); }
+    &.goal-card--anti-inflammatory { background: #314a38; }
+    &.goal-card--iron { background: #a95a3c; }
+    &.goal-card--fiber { background: #3f6f63; }
 
     ion-icon {
       font-size: 40px;
@@ -133,9 +133,7 @@
     .tag {
       font-size: 11px;
       font-weight: 800;
-      color: var(--app-accent-2);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      color: var(--app-accent);
       margin-bottom: 8px;
     }
 
@@ -161,7 +159,7 @@
   border-radius: 16px;
   --inner-padding-end: 12px;
   --padding-start: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  box-shadow: var(--app-shadow-sm);
   border: 1px solid #f1f3f5;
 }
 

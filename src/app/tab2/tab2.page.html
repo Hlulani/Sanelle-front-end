@@ -9,8 +9,7 @@
     <section class="hero" [style.backgroundImage]="heroBackgroundImage()">
       <div class="hero-greeting-row">
         <div>
-          <p class="greeting">Hi, {{ displayName() }} 👋</p>
-          <h1>Your Healing Plan</h1>
+          <h1>Hi, {{ displayName() }}</h1>
         </div>
 
         <div class="hero-stat" *ngIf="plan()">
@@ -22,10 +21,7 @@
         </div>
       </div>
 
-      <p class="hero-sub">Gentle, anti-inflammatory meals for everyday balance.</p>
-      <p class="hero-copy">
-        Choose a plan length below and pick a start date. We’ll set the end date for you.
-      </p>
+      <p class="hero-copy">Pick a start date and how long to plan for.</p>
 
       <div class="range-pill">{{ planRangeLabel() }}</div>
 
@@ -61,7 +57,7 @@
 
       <div class="meal-cards" *ngIf="selectedDay() as day">
         <div class="meal-card" *ngFor="let meal of day.meals">
-          <div class="meal-card-media" [style.backgroundImage]="meal.imageUrl ? 'url(' + meal.imageUrl + ')' : ''">
+          <div class="meal-card-media" [class.no-photo]="!meal.imageUrl" [style.backgroundImage]="meal.imageUrl ? 'url(' + meal.imageUrl + ')' : ''">
             <span [class]="mealTypeClass(meal.mealType)">{{ mealTypeLabel(meal.mealType) }}</span>
             <button
               type="button"
@@ -231,7 +227,7 @@
         (click)="plan() && preferencesOpen.set(!preferencesOpen())"
       >
         <ion-card-header>
-          <ion-card-title>{{ plan() ? 'Adjust preferences' : 'Your healing plan' }}</ion-card-title>
+          <ion-card-title>{{ plan() ? 'Adjust preferences' : 'Plan settings' }}</ion-card-title>
         </ion-card-header>
         <ion-icon
           *ngIf="plan()"
@@ -243,7 +239,7 @@
       <ion-card-content *ngIf="preferencesOpen()">
         <ion-text color="medium">
           <p>
-            Answer these quickly so I can create meals that support your hormones, digestion and inflammation
+            Every meal in your plan will match these.
           </p>
         </ion-text>
 
@@ -355,7 +351,7 @@
         <h2 class="section-title">Plan duration</h2>
 
         <ion-segment
-          [value]="duration()"
+          [value]="duration() + ''"
           (ionChange)="setDuration($event.detail.value ?? duration())"
         >
           <ion-segment-button value="7">
@@ -374,7 +370,7 @@
         <div class="spacer"></div>
 
         <ion-button expand="block" class="primary-btn" (click)="generatePlan()" [disabled]="isLoading()">
-          Generate My Healing Plan
+          Make my plan
         </ion-button>
 
         <ion-button

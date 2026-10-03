@@ -25,27 +25,12 @@
   --background: #f8f9faee;
 }
 
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 16px;
-
-  /* Leaf Icon */
-  ion-icon[name="leaf-outline"] {
-    font-size: 56px;
-    color: var(--app-accent);
-    z-index: 2;
-  }
-
-  ion-icon[name="restaurant-outline"] {
-    font-size: 50px;
-    color: var(--app-accent-2);
-    margin-left: -15px;
-    transform: rotate(15deg);
-    z-index: 1;
-    opacity: 0.9;
-  }
+.wordmark {
+  margin: 0 0 8px;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--app-primary);
 }
 
 .title {
@@ -80,9 +65,9 @@ ion-segment-button {
 
 
   &.segment-button-checked {
-    background: linear-gradient(to right, var(--app-accent), var(--app-accent-2));
+    background: var(--app-primary);
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(89, 173, 155, 0.2);
+    box-shadow: none;
   }
 }
 
@@ -123,9 +108,8 @@ app-login-form {
 }
 
 .footer-link-btn {
-  /* This creates the blue outline box seen in your screenshot */
-  --color: #3880ff;
-  --border-color: #3880ff;
+  --color: var(--app-primary);
+  --border-color: var(--app-primary);
   --border-width: 1px;
   --border-style: solid;
   --border-radius: 8px;

@@ -6,12 +6,12 @@
   margin-bottom: 16px;
 
   /* Very soft shadow instead of a hard border */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--app-shadow-sm);
   border: 1px solid rgba(0, 0, 0, 0.05);
 
   &.item-has-focus {
-    border: 1px solid var(--app-accent-2);
-    box-shadow: 0 4px 20px rgba(89, 173, 155, 0.15);
+    border: 1px solid var(--app-accent);
+    box-shadow: none;
   }
 
   ion-icon {

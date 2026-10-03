@@ -121,9 +121,9 @@ ion-content::part(scroll) {
 }
 
 .main-submit-btn {
-  --background: var(--app-accent-gradient);
+  --background: var(--app-primary);
   --border-radius: var(--radius-lg);
-  --box-shadow: 0 10px 25px rgba(89, 173, 155, 0.3);
+  --box-shadow: none;
   height: 60px;
   margin-top: 32px;
   font-size: 18px;

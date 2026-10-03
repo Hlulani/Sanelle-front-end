@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonCheckbox, IonIcon } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox } from '@ionic/angular/standalone';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealService } from '../core/services/meal.service';
 import { AuthService } from '../core/auth/auth.service';
@@ -14,14 +14,13 @@ type GroceryItem = {
   name: string;
   amounts: string[];
   group: string;
-  icon: string;
 };
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonCheckbox, IonIcon],
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCheckbox],
 })
 export class Tab3Page implements OnInit {
   private planStore = inject(PlanStoreService);
@@ -92,7 +91,7 @@ export class Tab3Page implements OnInit {
   }
 
   private buildGroceryList(meals: MealResponse[]): GroceryItem[] {
-    const map = new Map<string, { name: string; amounts: Set<string>; group: string; icon: string }>();
+    const map = new Map<string, { name: string; amounts: Set<string>; group: string }>();
     meals.forEach((meal) => {
       (meal.ingredients || []).forEach((ing) => {
         const rawName = (ing.name || '').trim();
@@ -100,7 +99,7 @@ export class Tab3Page implements OnInit {
         const key = rawName.toLowerCase();
         if (!map.has(key)) {
           const group = this.groupForIngredient(rawName);
-          map.set(key, { name: rawName, amounts: new Set<string>(), group, icon: this.iconForGroup(group) });
+          map.set(key, { name: rawName, amounts: new Set<string>(), group });
         }
         if (ing.amount) map.get(key)?.amounts.add(ing.amount);
       });
@@ -111,39 +110,10 @@ export class Tab3Page implements OnInit {
         name: entry.name,
         amounts: Array.from(entry.amounts),
         group: entry.group,
-        icon: entry.icon,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  private iconForGroup(group: string): string {
-    switch (group) {
-      case 'Produce':
-        return 'nutrition-outline';
-      case 'Meat':
-        return 'restaurant-outline';
-      case 'Seafood':
-        return 'fish-outline';
-      case 'Eggs':
-        return 'egg-outline';
-      case 'Dairy':
-        return 'water-outline';
-      case 'Grains':
-        return 'basket-outline';
-      case 'Legumes':
-        return 'basket-outline';
-      case 'Nuts & Seeds':
-        return 'nutrition-outline';
-      case 'Condiments':
-        return 'flask-outline';
-      case 'Spices & Herbs':
-        return 'leaf-outline';
-      case 'Sweeteners':
-        return 'ice-cream-outline';
-      default:
-        return 'basket-outline';
-    }
-  }
   private groupForIngredient(name: string): string {
     const n = name.toLowerCase();
     const has = (words: string[]) => words.some((w) => n.includes(w));

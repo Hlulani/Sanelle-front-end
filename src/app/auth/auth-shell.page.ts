@@ -5,7 +5,6 @@ import {
   IonSegment,
   IonSegmentButton,
   IonLabel,
-  IonIcon,
   IonButton
 } from '@ionic/angular/standalone';
 
@@ -24,7 +23,6 @@ import { environment } from '../../environments/environment';
     IonSegment,
     IonSegmentButton,
     IonLabel,
-    IonIcon,
     IonButton,
     RegisterFormComponent,
     LoginFormComponent,
