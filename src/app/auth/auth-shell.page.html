@@ -1,17 +1,18 @@
 <ion-content [fullscreen]="true" class="auth-page">
-  <div class="auth-wrap">
-    <div class="auth-card">
-      <div class="brand-header ion-text-center">
-        <h1 class="wordmark">Sanelle</h1>
-        <p class="subtitle">Meal plans and grocery lists, sorted.</p>
-      </div>
+  <main class="sn-page auth-layout">
+    <header class="auth-head">
+      <p class="wordmark">Sanelle</p>
+      <h1>{{ mode() === 'register' ? 'Create your account' : 'Welcome back' }}</h1>
+      <p class="sub">Your records stay on this phone.</p>
+    </header>
 
+    <section class="auth-card">
       <ion-segment [value]="mode()" (ionChange)="setMode(($event.detail.value ?? '') + '')" mode="ios">
         <ion-segment-button value="register">
           <ion-label>Register</ion-label>
         </ion-segment-button>
         <ion-segment-button value="login">
-          <ion-label>Login</ion-label>
+          <ion-label>Log in</ion-label>
         </ion-segment-button>
       </ion-segment>
 
@@ -19,22 +20,6 @@
         <app-register-form *ngIf="mode() === 'register'"></app-register-form>
         <app-login-form *ngIf="mode() === 'login'"></app-login-form>
       </div>
-
-      <div class="auth-footer ion-margin-top ion-text-center">
-        <p *ngIf="mode() === 'register'">
-          Already have an account?
-          <ion-button fill="outline" (click)="setMode('login')" class="footer-link-btn">
-            Login
-          </ion-button>
-        </p>
-
-        <p *ngIf="mode() === 'login'">
-          New to Sanelle?
-          <ion-button fill="outline" (click)="setMode('register')" class="footer-link-btn">
-            Register
-          </ion-button>
-        </p>
-      </div>
-    </div>
-  </div>
+    </section>
+  </main>
 </ion-content>

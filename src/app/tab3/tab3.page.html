@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>Groceries</ion-title>
   </ion-toolbar>
@@ -15,7 +15,7 @@
         <div class="progress-wrap" *ngIf="totalItems() > 0">
           <div
             class="progress-ring"
-            [style.background]="'conic-gradient(#314a38 ' + progressPercent() + '%, #d9d3c9 0)'"
+            [style.background]="'conic-gradient(#f2b37e ' + progressPercent() + '%, #561530 0)'"
           >
             <div class="progress-center">
               <div class="progress-value">{{ checkedCount() }} of {{ totalItems() }}</div>

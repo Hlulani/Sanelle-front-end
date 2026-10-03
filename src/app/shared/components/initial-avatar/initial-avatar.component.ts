@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 // A small fixed palette, picked deterministically per name (via a hash) so
 // the same person always renders the same color across the app, without
 // needing any real avatar/photo data — this app has no photo uploads at all.
-const PALETTE = ['#314a38', '#a95a3c', '#3f6f63', '#6b5b8a', '#8a6d2f', '#3d6a8a'];
+const PALETTE = ['#74203f', '#561530', '#8a5a12', '#1e5f63', '#34497a', '#6b5560'];
 
 @Component({
   selector: 'app-initial-avatar',

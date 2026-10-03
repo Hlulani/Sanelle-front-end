@@ -2,9 +2,9 @@
   --grocery-ink: var(--app-ink);
   --grocery-muted: var(--app-muted);
   --grocery-paper: var(--app-paper);
-  --grocery-card: #f8f4ec;
-  --grocery-green: #78c57a;
-  --grocery-soft: #eaf4e2;
+  --grocery-card: var(--sn-surface);
+  --grocery-green: var(--sn-brand);
+  --grocery-soft: var(--sn-blush);
 }
 
 ion-content {
@@ -16,10 +16,14 @@ ion-content {
 }
 
 .hero {
-  background: var(--app-card);
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
   border-radius: 26px;
   padding: 22px 20px;
-  box-shadow: var(--app-shadow-sm);
+
+  h1, .sub, .meta-pill { color: var(--sn-on-brand); }
+  .sub { color: var(--sn-on-brand-muted); }
+  .meta-pill { background: var(--sn-brand-deep); }
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
@@ -38,7 +42,7 @@ ion-content {
 .hero h1 {
   margin: 0 0 6px 0;
   font-size: 2rem;
-  color: var(--grocery-ink);
+  color: var(--sn-on-brand);
 }
 
 .sub {
@@ -74,14 +78,13 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: conic-gradient(var(--grocery-green) 0%, #d9d3c9 0);
-  box-shadow: inset 0 0 0 8px #f6f2ea;
+  background: conic-gradient(var(--sn-apricot) 0%, var(--sn-brand-deep) 0);
 }
 
 .progress-center {
   width: 86px;
   height: 86px;
-  background: #f8f4ec;
+  background: var(--sn-surface);
   border-radius: 50%;
   display: flex;
   flex-direction: column;
@@ -107,13 +110,13 @@ ion-content {
   margin: 14px 0;
   padding: 14px;
   border-radius: 14px;
-  background: #fbfaf6;
+  background: var(--sn-surface);
   color: var(--grocery-muted);
 }
 
 .state.error {
-  background: #fff2f2;
-  color: #9c3a3a;
+  background: var(--sn-blush);
+  color: var(--sn-error);
 }
 
 .group-stack {
@@ -188,12 +191,12 @@ ion-content {
 
 
 .complete-state {
-  background: #f8f4ec;
+  background: var(--sn-canvas);
   border-radius: 24px;
   padding: 24px 20px;
   text-align: center;
   box-shadow: var(--app-shadow-sm);
-  border: 1px solid #efe8dc;
+  border: 1px solid var(--sn-line);
 }
 
 .complete-badge {
@@ -201,14 +204,14 @@ ion-content {
   height: 64px;
   border-radius: 50%;
   margin: 0 auto 14px;
-  background: #e8f4e0;
-  color: #2c5e45;
+  background: var(--sn-blush);
+  color: var(--sn-brand);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
   font-weight: 700;
-  box-shadow: inset 0 0 0 6px #f6f2ea;
+  box-shadow: inset 0 0 0 6px var(--sn-surface);
 }
 
 .complete-state h2 {

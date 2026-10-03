@@ -23,7 +23,7 @@
 </div>
 
 <ion-button expand="block" (click)="submit()" [disabled]="loading()" class="main-submit-btn">
-  <span *ngIf="!loading()">{{ mode === 'login' ? 'Login' : 'Create Account' }}</span>
+  <span *ngIf="!loading()">{{ mode === 'login' ? 'Log in' : 'Create account' }}</span>
   <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
 </ion-button>
 

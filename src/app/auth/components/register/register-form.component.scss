@@ -7,12 +7,12 @@
   ion-icon[slot="start"] {
     margin-right: 12px;
     font-size: 20px;
-    color: #636e72;
+    color: var(--sn-muted);
   }
 
   ion-icon[slot="end"] {
     cursor: pointer;
-    color: #b2bec3;
+    color: var(--sn-muted);
     transition: color 0.2s;
 
     &:hover {
@@ -29,7 +29,7 @@
   gap: 8px;
   margin: 12px 0 24px 4px;
   font-size: 13px;
-  color: #636e72;
+  color: var(--sn-muted);
 
   .meter-bars {
     display: flex;
@@ -39,14 +39,14 @@
   .meter-bar {
     width: 14px;
     height: 4px;
-    background: #dfe6e9;
+    background: var(--sn-line);
     border-radius: 2px;
     transition: background-color 0.2s ease;
 
-    &.filled.strength-weak { background: #e74c3c; }
-    &.filled.strength-fair { background: #f0932b; }
-    &.filled.strength-good { background: var(--app-accent); }
-    &.filled.strength-strong { background: var(--app-accent); }
+    &.filled.strength-weak { background: var(--sn-error); }
+    &.filled.strength-fair { background: var(--sn-reported); }
+    &.filled.strength-good { background: var(--sn-present); }
+    &.filled.strength-strong { background: var(--sn-present); }
   }
 
   strong {

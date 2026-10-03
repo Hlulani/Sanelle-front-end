@@ -1,23 +1,41 @@
 :root {
-  --ion-color-primary: #314a38;        /* Deep Green */
-  --ion-color-primary-rgb: 49,74,56;
-  --ion-color-secondary: #e4efe6;      /* Soft Sage */
-  --ion-color-tertiary: #f4976c;       /* Muted Orange for highlights/hearts */
-  --ion-background-color: #fdfaf4;     /* Warm Off-white */
+  /* Ionic colours mapped onto the Sanelle brand (see theme/sanelle.scss). */
+  --ion-color-primary: #74203f;
+  --ion-color-primary-rgb: 116, 32, 63;
+  --ion-color-primary-contrast: #fff6f0;
+  --ion-color-primary-contrast-rgb: 255, 246, 240;
+  --ion-color-primary-shade: #561530;
+  --ion-color-primary-tint: #82365a;
+  --ion-color-secondary: #f6e1e3;
+  --ion-color-secondary-rgb: 246, 225, 227;
+  --ion-color-secondary-contrast: #74203f;
+  --ion-color-secondary-contrast-rgb: 116, 32, 63;
+  --ion-color-secondary-shade: #d8c6c8;
+  --ion-color-secondary-tint: #f7e4e6;
+  --ion-color-tertiary: #f2b37e;
+  --ion-color-tertiary-rgb: 242, 179, 126;
+  --ion-color-tertiary-contrast: #2a1a20;
+  --ion-color-tertiary-contrast-rgb: 42, 26, 32;
+  --ion-color-tertiary-shade: #d59e6f;
+  --ion-color-tertiary-tint: #f3bb8b;
+  --ion-color-danger: #a1262b;
+  --ion-color-danger-rgb: 161, 38, 43;
+  --ion-color-medium: #6b5560;
+  --ion-color-medium-rgb: 107, 85, 96;
+  --ion-background-color: #fbf5ef;
+  --ion-text-color: #2a1a20;
 
-  /* Shared design tokens for the custom-styled tab/auth pages. These were
-     previously hardcoded (and slightly drifted) in each page's own :host
-     block — centralized here as the single source of truth. */
-  --app-ink: #203225;
-  --app-muted: #6f7c72;
-  --app-paper: #f7f4ef;
+  /* Older screens' tokens, now pointing at the brand tokens. */
+  --app-ink: #2a1a20;
+  --app-muted: #6b5560;
+  --app-paper: #fbf5ef;
   --app-card: #ffffff;
-  --app-primary: #314a38;
-  --app-primary-contrast: #ffffff;
-  --app-primary-soft: #e4efe6;
-  --app-accent: #3f8a78;
-  --app-line: #e7e2d8;
-  --app-shadow-sm: 0 1px 2px rgba(25, 42, 27, 0.06), 0 1px 3px rgba(25, 42, 27, 0.04);
+  --app-primary: #74203f;
+  --app-primary-contrast: #fff6f0;
+  --app-primary-soft: #f6e1e3;
+  --app-accent: #74203f;
+  --app-line: #e6d8d4;
+  --app-shadow-sm: 0 1px 2px rgba(42, 26, 32, 0.06), 0 1px 3px rgba(42, 26, 32, 0.04);
 
   --radius-sm: 12px;
   --radius-md: 16px;

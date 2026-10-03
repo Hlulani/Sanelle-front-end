@@ -557,7 +557,7 @@ export class Tab2Page implements OnInit {
   }
 
   heroBackgroundImage(): string {
-    const overlay = 'linear-gradient(145deg, rgba(22, 38, 28, 0.9) 0%, rgba(34, 57, 42, 0.94) 100%)';
+    const overlay = 'linear-gradient(145deg, rgba(116, 32, 63, 0.92) 0%, rgba(86, 21, 48, 0.95) 100%)';
     const photo = this.heroImageUrl();
     return photo ? `${overlay}, url(${photo})` : overlay;
   }

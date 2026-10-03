@@ -1,165 +1,88 @@
-.gray-bg { --background: #f8f9fa; }
-
-.progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  .progress-track {
-    flex: 1; height: 6px; background: #e9ecef; border-radius: 3px;
-    .progress-fill {
-      height: 100%; border-radius: 3px;
-      background: var(--app-primary);
-      transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-  }
+/* One decision per screen, on full berry. */
+.onboarding {
+  --background: var(--sn-brand);
 }
 
-.step-view {
-  padding: 0 24px;
-  .title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-  .subtitle { color: #636e72; margin-bottom: 32px; }
-}
-
-.goal-card {
-  position: relative; border-radius: 24px; overflow: hidden;
-  min-height: 128px; margin-bottom: 16px; padding: 20px;
-  display: flex; align-items: center; gap: 16px;
-  box-shadow: var(--app-shadow-sm);
-  color: white;
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
-
-  &--anti-inflammatory { background: #314a38; }
-  &--iron { background: #a95a3c; }
-  &--fiber { background: #3f6f63; }
-
-  .goal-icon {
-    flex-shrink: 0;
-    font-size: 32px;
-    background: rgba(255,255,255,0.22);
-    border-radius: 50%;
-    padding: 12px;
-  }
-
-  .goal-copy {
-    h3 { margin: 0; font-weight: 700; }
-    p { margin: 4px 0 0; font-size: 14px; opacity: 0.85; }
-  }
-
-  &.selected {
-    transform: scale(0.97);
-    box-shadow: 0 0 0 3px var(--app-paper), 0 0 0 5px var(--app-ink);
-  }
-
-  .selected-badge {
-    position: absolute; top: 14px; right: 14px;
-    font-size: 26px; color: var(--app-accent);
-    background: white; border-radius: 50%;
-  }
-}
-
-.diet-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.diet-option {
+.wrap {
+  min-height: 100%;
+  color: var(--sn-on-brand);
+  padding: calc(env(safe-area-inset-top, 0px) + 1rem) 1.25rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
+}
+
+.top {
+  display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 28px 12px;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid #f1f3f5;
-  box-shadow: var(--app-shadow-sm);
-  font-weight: 700;
+  justify-content: space-between;
+  min-height: var(--sn-tap);
+}
+
+.wordmark {
+  font: 600 1.75rem/1 var(--sn-display);
+}
+
+.back {
+  color: var(--sn-on-brand);
+  margin-left: -0.25rem;
+
+  &:focus-visible { outline-color: var(--sn-apricot); }
+}
+
+.progress {
+  font-weight: 800;
+  color: var(--sn-apricot);
+}
+
+h1 {
+  margin-top: 1rem;
+  font-size: 2rem;
+}
+
+.sub {
+  color: var(--sn-on-brand-muted);
+}
+
+.choices {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.625rem;
+}
+
+.choice {
+  appearance: none;
+  border: 2px solid transparent;
+  background: var(--sn-surface);
+  color: var(--sn-ink);
+  border-radius: 1.25rem;
+  min-height: 4rem;
+  padding: 0.875rem 1.125rem;
+  text-align: left;
+  display: grid;
+  gap: 0.125rem;
   cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  color: #2d3436;
-  transition: transform 0.15s ease-out, border-color 0.15s ease-out, background 0.15s ease-out;
+  font: inherit;
 
-  ion-icon { font-size: 28px; color: var(--app-accent); }
-
-  &:active { transform: scale(0.96); }
-
-  &.selected {
-    transform: scale(0.96);
-    border-color: var(--app-accent);
-    background: rgba(89, 173, 155, 0.08);
-  }
-}
-
-.main-submit-btn {
-  --background: var(--app-primary);
-  --border-radius: var(--radius-md); height: 56px; margin-top: 24px; font-weight: 700;
-}
-
-
-.science-card {
-  background: #ffffff;
-  border-radius: 24px;
-  overflow: hidden;
-  margin-bottom: 24px;
-  box-shadow: var(--app-shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.02);
-
-  .card-media {
-    height: 120px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &.goal-card--anti-inflammatory { background: #314a38; }
-    &.goal-card--iron { background: #a95a3c; }
-    &.goal-card--fiber { background: #3f6f63; }
-
-    ion-icon {
-      font-size: 40px;
-      color: white;
-    }
+  &[aria-pressed="true"] {
+    box-shadow: 0 0 0 3px var(--sn-apricot);
   }
 
-  .card-body {
-    padding: 20px;
-
-    .tag {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--app-accent);
-      margin-bottom: 8px;
-    }
-
-    h3 {
-      margin: 0 0 8px 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: #2d3436;
-    }
-
-    p {
-      margin: 0;
-      font-size: 14px;
-      color: #636e72;
-      line-height: 1.6;
-    }
-  }
+  &:focus-visible { outline: 3px solid var(--sn-on-brand); outline-offset: 3px; }
 }
 
-.pill-item {
-  --background: #ffffff;
-  margin-bottom: 12px;
-  border-radius: 16px;
-  --inner-padding-end: 12px;
-  --padding-start: 12px;
-  box-shadow: var(--app-shadow-sm);
-  border: 1px solid #f1f3f5;
+.choice-label {
+  font: 600 1.25rem/1.2 var(--sn-display);
+  color: var(--sn-brand);
 }
 
+.choice-hint {
+  font-size: 0.9375rem;
+  color: var(--sn-muted);
+}
+
+.actions {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  display: grid;
+}

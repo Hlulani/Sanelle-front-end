@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { OnboardingPage } from './onboarding.page';
 
 describe('OnboardingPage', () => {
   let component: OnboardingPage;
   let fixture: ComponentFixture<OnboardingPage>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,38 +17,40 @@ describe('OnboardingPage', () => {
 
     fixture = TestBed.createComponent(OnboardingPage);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.resolveTo(true);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('advances from step 1 to step 2 on a real DOM click of a goal card', () => {
+  it('starts with what the person wants help with', () => {
     expect(component.currentStep()).toBe(1);
-
-    const goalCard: HTMLElement = fixture.nativeElement.querySelector('.goal-card');
-    expect(goalCard).withContext('expected a .goal-card to be present on step 1').toBeTruthy();
-
-    goalCard.click();
-    fixture.detectChanges();
-
-    expect(component.currentStep()).toBe(2);
+    expect(fixture.nativeElement.textContent).toContain('What would you like help with first?');
   });
 
-  it('advances from step 2 to step 3 on a real DOM click of a diet option', () => {
-    // Get to step 2 first via the same real-click path.
-    const goalCard: HTMLElement = fixture.nativeElement.querySelector('.goal-card');
-    goalCard.click();
+  it('moves to the diet question on a real click of a choice', () => {
+    (fixture.nativeElement.querySelector('.choice') as HTMLElement).click();
     fixture.detectChanges();
     expect(component.currentStep()).toBe(2);
+    expect(fixture.nativeElement.querySelector('.diet-option')).toBeTruthy();
+  });
 
-    const dietOption: HTMLElement = fixture.nativeElement.querySelector('.diet-option');
-    expect(dietOption).withContext('expected a .diet-option button to be present on step 2').toBeTruthy();
+  it('lands on recording the diagnosis when that was chosen', async () => {
+    component.chooseHelp('diagnosis');
+    await component.finish();
+    expect(router.navigate).toHaveBeenCalledWith(['/health/record/count'], { queryParams: { flow: '1' }, replaceUrl: true });
+  });
 
-    dietOption.click();
-    fixture.detectChanges();
+  it('can be skipped entirely and lands on Today', async () => {
+    component.skip();
+    component.skip();
+    await fixture.whenStable();
+    expect(router.navigate).toHaveBeenCalledWith(['/tabs/today'], { queryParams: undefined, replaceUrl: true });
+  });
 
-    expect(component.currentStep()).toBe(3);
+  it('makes no health claims', () => {
+    const text = (fixture.nativeElement.textContent as string).toLowerCase();
+    for (const word of ['inflammat', 'pcos', 'endometriosis', 'hormone', 'heal']) {
+      expect(text).not.toContain(word);
+    }
   });
 });
