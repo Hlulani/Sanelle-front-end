@@ -1,0 +1,68 @@
+.timeline {
+  --background: var(--sn-canvas);
+}
+
+.log-card {
+  padding: 1rem;
+}
+
+.days {
+  list-style: none;
+  margin: 0;
+  padding: 0 1rem;
+  background: var(--sn-surface);
+  border-radius: 1.25rem;
+
+  > li { border-bottom: 1px solid var(--sn-line); }
+  > li:last-child { border-bottom: 0; }
+}
+
+.day {
+  display: grid;
+  gap: 0.375rem;
+  min-height: 3.5rem;
+  padding: 0.75rem 0;
+  color: var(--sn-ink);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.375rem; }
+}
+
+.day-label {
+  font-weight: 800;
+}
+
+.day-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.part {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--sn-brand);
+  background: var(--sn-blush);
+  border-radius: 999px;
+  padding: 0.25rem 0.625rem;
+}
+
+.more {
+  appearance: none;
+  border: 0;
+  background: none;
+  justify-self: start;
+  min-height: var(--sn-tap);
+  padding: 0;
+  font: 800 0.9375rem/1 var(--sn-body);
+  color: var(--sn-brand);
+  cursor: pointer;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.25rem; }
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+  padding-bottom: 2rem;
+}

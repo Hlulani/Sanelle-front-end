@@ -1,0 +1,39 @@
+<ion-content [fullscreen]="true" class="timeline">
+  <main class="sn-page sn-screen">
+    <header class="sn-head">
+      <button type="button" class="sn-btn sn-btn--quiet" (click)="back()">‹ My health</button>
+      <h1>Symptoms</h1>
+      <p class="sn-head-note">Logged {{ loggedCount() }} of the last {{ span() }} days.</p>
+    </header>
+
+    <section class="sn-card log-card">
+      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', days()[0].date]">
+        {{ days()[0].entry ? 'Edit today' : 'Log today' }}
+      </a>
+    </section>
+
+    <section class="sn-section" aria-labelledby="days-title">
+      <h2 id="days-title">Last {{ span() }} days</h2>
+      <ol class="days">
+        @for (d of days(); track d.date) {
+          <li>
+            <a class="day" [routerLink]="['/health/symptoms/log', d.date]" [attr.aria-label]="d.label + (d.entry ? ': ' + d.parts.join(', ') : ': not logged')">
+              <span class="day-label">{{ d.label }}</span>
+              @if (d.entry) {
+                <span class="day-parts">
+                  @for (p of d.parts; track p) {
+                    <span class="part">{{ p }}</span>
+                  }
+                </span>
+              } @else {
+                <span class="sn-status sn-status--unknown">Not logged</span>
+              }
+            </a>
+          </li>
+        }
+      </ol>
+      <button type="button" class="more" (click)="showMore()">{{ span() === 14 ? 'Show 30 days' : 'Show 14 days' }}</button>
+      <p class="hint">Days you didn’t log are left blank, not counted as symptom-free.</p>
+    </section>
+  </main>
+</ion-content>

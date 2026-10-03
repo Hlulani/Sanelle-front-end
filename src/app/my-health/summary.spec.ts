@@ -1,5 +1,5 @@
 import { HealthRecord, emptyHealthRecord } from './diagnosis.model';
-import { buildSummary, summaryAsText } from './summary';
+import { buildSummary, summariseSymptoms, summaryAsText } from './summary';
 
 function record(partial: Partial<HealthRecord>): HealthRecord {
   return { ...emptyHealthRecord(), ...partial };
@@ -65,5 +65,42 @@ describe('buildSummary', () => {
       }),
     );
     expect(s.questions).toEqual(['Second?', 'First?']);
+  });
+});
+
+describe('summariseSymptoms', () => {
+  const today = new Date('2026-10-10T12:00:00');
+
+  it('returns nothing when no day in the period was logged', () => {
+    expect(summariseSymptoms([], today)).toBeNull();
+    expect(summariseSymptoms([{ date: '2026-08-01', pain: 5 }], today)).toBeNull();
+  });
+
+  it('counts logged days only and says missing days are not counted', () => {
+    const s = summariseSymptoms(
+      [
+        { date: '2026-10-01', bleeding: 'heavy', pain: 6 },
+        { date: '2026-10-02', bleeding: 'very-heavy', pain: 8, affected: ['work', 'sleep'] },
+        { date: '2026-10-05', bleeding: 'none', pain: 2, affected: [] },
+      ],
+      today,
+    )!;
+    expect(s.coverage).toBe('Logged 3 days of the last 30. Days without an entry aren’t counted.'.replace('’', "'"));
+    expect(s.lines).toContain('Bleeding: recorded on 3 days; bleeding on 2 days, heavy or very heavy on 2 days (very heavy on 1 day).');
+    expect(s.lines).toContain('Pain (0 to 10): recorded on 3 days, ranging 2 to 8; 7 or more on 1 day.');
+    expect(s.lines).toContain('Affected: sleep on 1 day, work or study on 1 day.');
+  });
+
+  it('leaves out fields that were never recorded instead of reporting them as none', () => {
+    const s = summariseSymptoms([{ date: '2026-10-09', pain: 4 }], today)!;
+    expect(s.lines.join(' ')).not.toMatch(/bleeding|bloating|tiredness|affected/i);
+  });
+
+  it('makes no claims about causes', () => {
+    const s = summariseSymptoms([{ date: '2026-10-09', pain: 9, bleeding: 'heavy', notes: 'after dairy' }], today)!;
+    const text = [s.coverage, ...s.lines].join(' ').toLowerCase();
+    for (const word of ['because', 'caused', 'due to', 'improv', 'worse', 'better', 'dairy', 'inflam']) {
+      expect(text).not.toContain(word);
+    }
   });
 });

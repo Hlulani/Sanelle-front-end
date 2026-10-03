@@ -143,3 +143,16 @@
     display: block;
   }
 }
+
+.period {
+  font-weight: 600;
+  color: var(--sn-muted);
+  font-size: 0.875rem;
+}
+
+.sym {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.375rem;
+}

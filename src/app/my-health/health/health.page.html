@@ -39,6 +39,23 @@
       </ul>
     </section>
 
+    <section class="sn-section" aria-labelledby="sym-title">
+      <div class="sn-section-head">
+        <h2 id="sym-title">Symptoms</h2>
+        <a class="see-all" routerLink="/health/symptoms">See all</a>
+      </div>
+      <div class="week" role="list" aria-label="Last 7 days">
+        @for (d of week(); track d.date) {
+          <a class="dot" role="listitem" [class.logged]="!!d.entry" [routerLink]="['/health/symptoms/log', d.date]"
+             [attr.aria-label]="d.label + (d.entry ? ': logged' : ': not logged')">
+            <span class="dot-day">{{ shortDay(d) }}</span>
+            <span class="dot-mark" aria-hidden="true"></span>
+          </a>
+        }
+      </div>
+      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', today().date]">{{ today().entry ? 'Edit today' : 'Log today' }}</a>
+    </section>
+
     <div class="sn-band">
       <section class="sn-section" aria-labelledby="q-title">
         <div class="sn-section-head">

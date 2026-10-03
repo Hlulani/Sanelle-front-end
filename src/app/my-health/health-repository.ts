@@ -7,7 +7,9 @@ import {
   Finding,
   FindingKey,
   HealthRecord,
+  SymptomEntry,
   emptyHealthRecord,
+  hasContent,
 } from './diagnosis.model';
 
 /**
@@ -113,6 +115,21 @@ export class HealthRepository {
       [list[i], list[j]] = [list[j], list[i]];
       return { ...r, questions: list };
     });
+  }
+
+  /** Saves one day's check-in, replacing any earlier entry for that date. An empty entry removes the day. */
+  saveSymptoms(entry: SymptomEntry): Promise<void> {
+    const stamped: SymptomEntry = { ...entry, updatedAt: new Date().toISOString() };
+    return this.update((r) => {
+      const others = r.symptoms.filter((s) => s.date !== entry.date);
+      const symptoms = hasContent(stamped) ? [...others, stamped] : others;
+      symptoms.sort((a, b) => a.date.localeCompare(b.date));
+      return { ...r, symptoms };
+    });
+  }
+
+  symptomsOn(date: string): SymptomEntry | undefined {
+    return this.state().symptoms.find((s) => s.date === date);
   }
 
   setAppointment(appointment: Appointment): Promise<void> {

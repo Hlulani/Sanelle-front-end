@@ -46,6 +46,26 @@
         </section>
       }
 
+      @if (summary().symptoms; as sym) {
+        <section class="doc-section">
+          <h3>Symptoms I logged <span class="period">{{ sym.periodLabel }}</span></h3>
+          <p class="unknown">{{ sym.coverage }}</p>
+          <ul class="sym">
+            @for (l of sym.lines; track l) {
+              <li>{{ l }}</li>
+            }
+          </ul>
+          @if (sym.treatmentChanges.length) {
+            <h3>Treatment changes I noted</h3>
+            <ul class="sym">
+              @for (t of sym.treatmentChanges; track t) {
+                <li>{{ t }}</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+
       <section class="doc-section">
         <div class="doc-head">
           <h3>My questions</h3>

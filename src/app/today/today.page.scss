@@ -343,3 +343,32 @@
 }
 
 a.row { text-decoration: none; }
+
+.log-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4rem;
+  padding: 0.75rem 1.125rem;
+  background: var(--sn-surface);
+  border-radius: 1.25rem;
+  color: var(--sn-ink);
+  text-decoration: none;
+
+  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 3px; }
+}
+
+.log-text {
+  flex: 1 1 auto;
+  display: grid;
+}
+
+.log-title {
+  font: 600 1.125rem/1.2 var(--sn-display);
+  color: var(--sn-brand);
+}
+
+.log-sub {
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+}

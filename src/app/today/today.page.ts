@@ -81,6 +81,8 @@ export class TodayPage implements OnInit {
   });
 
   readonly questionCount = computed(() => this.health.record().questions.length);
+  readonly todayIso = localIsoDate(new Date());
+  readonly loggedToday = computed(() => (this.health.record().symptoms ?? []).some((s) => s.date === this.todayIso));
 
   readonly todaysMeals = computed<MealPlanItem[]>(() => {
     const plan = this.plan();

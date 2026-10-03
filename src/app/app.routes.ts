@@ -18,6 +18,16 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'health/symptoms',
+    loadComponent: () => import('./my-health/symptoms/symptom-timeline.page').then(m => m.SymptomTimelinePage),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'health/symptoms/log/:date',
+    loadComponent: () => import('./my-health/symptoms/symptom-log.page').then(m => m.SymptomLogPage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'health/summary',
     loadComponent: () => import('./my-health/summary-page/summary.page').then(m => m.SummaryPage),
     canActivate: [authGuard],

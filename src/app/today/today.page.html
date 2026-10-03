@@ -34,6 +34,16 @@
       }
     </section>
 
+    <section class="block">
+      <a class="log-row" [routerLink]="['/health/symptoms/log', todayIso]">
+        <span class="log-text">
+          <span class="log-title">{{ loggedToday() ? 'Today is logged' : 'How was today?' }}</span>
+          <span class="log-sub">{{ loggedToday() ? 'Tap to edit' : 'Bleeding, pain, tiredness, in a few taps' }}</span>
+        </span>
+        <span class="chev" aria-hidden="true">›</span>
+      </a>
+    </section>
+
     @if (hasRecords()) {
       <section class="block" aria-labelledby="dx-title">
         <div class="block-head">

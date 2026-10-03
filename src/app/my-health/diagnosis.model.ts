@@ -137,6 +137,52 @@ export interface Appointment {
   with?: string;
 }
 
+export type BleedingLevel = 'none' | 'spotting' | 'light' | 'moderate' | 'heavy' | 'very-heavy';
+export type SymptomLevel = 'none' | 'mild' | 'moderate' | 'severe';
+export type ImpactArea = 'sleep' | 'work' | 'daily';
+
+export const BLEEDING_LABELS: Record<BleedingLevel, string> = {
+  none: 'None',
+  spotting: 'Spotting',
+  light: 'Light',
+  moderate: 'Moderate',
+  heavy: 'Heavy',
+  'very-heavy': 'Very heavy',
+};
+
+export const LEVEL_LABELS: Record<SymptomLevel, string> = {
+  none: 'None',
+  mild: 'Mild',
+  moderate: 'Moderate',
+  severe: 'Severe',
+};
+
+export const IMPACT_LABELS: Record<ImpactArea, string> = {
+  sleep: 'Sleep',
+  work: 'Work or study',
+  daily: 'Daily activities',
+};
+
+/**
+ * One day's check-in, in the person's own words. Every field is optional: a field
+ * that's missing was not recorded, which is different from "none".
+ * This is a personal record, not a validated questionnaire.
+ */
+export interface SymptomEntry {
+  date: string; // YYYY-MM-DD, one entry per day
+  bleeding?: BleedingLevel;
+  /** 0 = no pain, 10 = worst pain imaginable. */
+  pain?: number;
+  bloating?: SymptomLevel;
+  fatigue?: SymptomLevel;
+  /** Areas the person said were affected. Absent means not recorded. */
+  affected?: ImpactArea[];
+  notes?: string;
+  /** e.g. "Started iron tablets". Recorded as the person describes it. */
+  treatmentChange?: string;
+  updatedAt?: string;
+}
+
 /** Everything Sanelle stores about one person's health, on their device. */
 export interface HealthRecord {
   version: 1;
@@ -144,10 +190,24 @@ export interface HealthRecord {
   questions: AppointmentQuestion[];
   appointment: Appointment;
   summaryNotes: string;
+  symptoms: SymptomEntry[];
 }
 
 export function emptyHealthRecord(): HealthRecord {
-  return { version: 1, findings: {}, questions: [], appointment: {}, summaryNotes: '' };
+  return { version: 1, findings: {}, questions: [], appointment: {}, summaryNotes: '', symptoms: [] };
+}
+
+/** True when an entry has at least one recorded field. */
+export function hasContent(e: SymptomEntry): boolean {
+  return (
+    e.bleeding !== undefined ||
+    e.pain !== undefined ||
+    e.bloating !== undefined ||
+    e.fatigue !== undefined ||
+    (e.affected !== undefined) ||
+    !!e.notes?.trim() ||
+    !!e.treatmentChange?.trim()
+  );
 }
 
 /** A finding that hasn't been recorded at all reads as unknown, never as absent. */
