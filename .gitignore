@@ -73,3 +73,7 @@ Thumbs.db
 .qodo/
 .claude/
 .env
+
+# Playwright demo recording (dev tooling)
+/demo/.output
+/demo/recordings
