@@ -151,7 +151,7 @@ export class Tab3Page implements OnInit {
     return ingredients.length > 0 && ingredients.every((i) => this.isChecked(i.name));
   }
 
-  groupedItems(): { group: string; items: AisleItem[] }[] {
+  readonly groupedItems = computed((): { group: string; items: AisleItem[] }[] => {
     const groups = new Map<string, AisleItem[]>();
     this.visibleItems().forEach((item) => {
       if (!groups.has(item.group)) groups.set(item.group, []);
@@ -160,7 +160,7 @@ export class Tab3Page implements OnInit {
     return Array.from(groups.entries())
       .map(([group, items]) => ({ group, items: items.sort((a, b) => a.name.localeCompare(b.name)) }))
       .sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group));
-  }
+  });
 
   totalItems(): number {
     return this.items().length;

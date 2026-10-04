@@ -6,26 +6,19 @@ import {
   IonTitle,
   IonContent,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonItem,
-  IonLabel,
   IonButton,
   IonText,
   IonList,
-  IonSegment,
-  IonSegmentButton,
   IonModal,
   IonListHeader,
-  IonAvatar,
   IonButtons,
   IonDatetime,
   IonIcon,
   IonSpinner,
   IonInput,
   IonTextarea,
-  AlertController,
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 
@@ -42,7 +35,7 @@ import {
 import { AuthService } from '../core/auth/auth.service';
 import { FocusPreferencesService } from '../core/services/focus-preferences.service';
 import { NotificationService } from '../core/services/notification.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { ALLERGENS, AllergenCode, FoodRestrictionsService, sameRestrictions } from '../core/services/food-restrictions.service';
 import { MealProgressService } from '../core/services/meal-progress.service';
@@ -68,7 +61,8 @@ type SwapOption = {
   reasons: string[];
 };
 
-import { mealImageSrc } from '../shared/meal-photos';
+import { localDay, replaceMealSlot, startPlanOn } from './plan-actions';
+import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
 
 @Component({
   selector: 'app-tab2',
@@ -78,25 +72,21 @@ import { mealImageSrc } from '../shared/meal-photos';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     InitialAvatarComponent,
+    MealImageComponent,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
     IonCardContent,
     IonItem,
-    IonLabel,
     IonButton,
     IonText,
     IonList,
-    IonSegment,
-    IonSegmentButton,
     IonModal,
     IonListHeader,
-    IonAvatar,
     IonButtons,
     IonDatetime,
     IonIcon,
@@ -116,7 +106,6 @@ export class Tab2Page implements OnInit {
   customChallengesService = inject(CustomChallengesService);
   private focusPreferences = inject(FocusPreferencesService);
   private notifications = inject(NotificationService);
-  private alertController = inject(AlertController);
 
   // --- Custom challenges: create ---
   createModalOpen = signal(false);
@@ -140,23 +129,22 @@ export class Tab2Page implements OnInit {
   private loadingMembersFor = new Set<string>();
 
   ngOnInit(): void {
-    void this.mealProgress.init();
-    void this.challengesService.init();
-    this.challengesService.refreshCounts();
-
-    void this.foodRestrictions.load();
+    void Promise.all([this.foodRestrictions.load(), this.mealProgress.init()]).then(() => this.ready.set(true)).catch(() => this.error.set('Could not load your saved food choices. Please reload before making a plan.'));
 
     void this.focusPreferences.loadDiet().then((diet) => {
-      if (diet) this.proteinPreference.set(diet);
+      if (diet && !this.planStore.getPlanSnapshot()?.preferences) this.proteinPreference.set(diet);
     });
 
-    void this.customChallengesService.init().then(() => {
-      this.customChallengesService.refresh(() => this.loadAllCustomChallengeMembers());
-    });
 
     this.planStore.plan$.subscribe((plan) => {
+      const previous = this.selectedDay()?.date;
       this.plan.set(plan);
-      if (plan) this.selectedDayIndex.set(this.indexOfTodayOrFirst(plan));
+      if (plan) {
+        const index = plan.daysPlan.findIndex((day) => day.date === previous);
+        this.selectedDayIndex.set(index >= 0 ? index : this.indexOfTodayOrFirst(plan));
+        if (plan.preferences) this.restorePreferences(plan.preferences);
+        this.preferencesOpen.set(false);
+      }
     });
   }
   private todayLocalYYYYMMDD(): string {
@@ -188,7 +176,44 @@ export class Tab2Page implements OnInit {
     return next;
   }
 
-  selectedDayIndex = signal<number>(0);
+  readonly ready = signal(false);
+  readonly today = localDay(new Date());
+  readonly settingsStep = signal<'schedule' | 'food' | 'review'>('schedule');
+  readonly planView = signal<'day' | 'week'>('day');
+  readonly previewPlan = signal<GenerateMealPlanResponse | null>(null);
+  readonly displayPlan = computed(() => this.previewPlan() ?? this.plan());
+  readonly savingPlan = signal(false);
+  readonly planStatus = signal<string | null>(null);
+  readonly undoPlan = signal<GenerateMealPlanResponse | null>(null);
+  readonly communityOpen = signal(false);
+  private communityLoaded = false;
+  readonly swapError = signal<string | null>(null);
+  private swapDay = '';
+  private swapReference: GenerateMealPlanResponse | null = null;
+  private swapRequest = 0;
+  readonly dayWindow = computed(() => {
+    const start = Math.floor(this.selectedDayIndex() / 7) * 7;
+    return (this.displayPlan()?.daysPlan ?? []).slice(start, start + 7).map((day, i) => ({ day, index: start + i }));
+  });
+  readonly ended = computed(() => { const days = this.plan()?.daysPlan; return !!days?.length && days[days.length - 1].date < this.today; });
+
+  openCommunity() {
+    this.communityOpen.update((open) => !open);
+    if (this.communityLoaded) return;
+    this.communityLoaded = true;
+    void this.challengesService.init(); this.challengesService.refreshCounts();
+    void this.customChallengesService.init().then(() => this.customChallengesService.refresh(() => this.loadAllCustomChallengeMembers()));
+  }
+  private restorePreferences(p: GenerateMealPlanRequest & { startDate: string }) {
+    this.duration.set(p.duration === 'DAYS_7' ? 7 : p.duration === 'DAYS_14' ? 14 : 30);
+    this.fastingStyle.set(p.fastingStyle === 'NO_FASTING_3_MEALS' ? 'NO_FASTING_3_MEALS' : 'FASTING_16_8');
+    this.proteinPreference.set(p.proteinPreference); this.maxPrepMinutes.set(p.maxPrepMinutes); this.startDateISO.set(p.startDate);
+  }
+  openPreferences() {
+    this.preferencesOpen.set(true); this.settingsStep.set('schedule');
+    if (this.ended()) this.startDateISO.set(this.today);
+  }
+  readonly selectedDayIndex = signal<number>(0);
   // Collapsed by default once a plan already exists — a returning user should land
   // on their actual plan, not the form that generated it. Expanded when there's
   // nothing to show yet, since the form is the only thing to do at that point.
@@ -201,23 +226,29 @@ export class Tab2Page implements OnInit {
   startDateISO = signal<string | null>(null);
 
   openSwap(meal: MealPlanItem) {
+    const request = ++this.swapRequest;
+    this.swapReference = this.displayPlan();
+    this.swapDay = this.selectedDay()?.date ?? '';
+    this.swapError.set(null);
     this.swapMeal.set(meal);
     this.swapOptions.set([]);
     this.swapModalOpen.set(true);
     this.swapLoading.set(true);
 
     const r = this.foodRestrictions.restrictions();
+    const preferences = this.displayPlan()?.preferences;
     this.mealPlansService
       .swapOptions({
         mealType: meal.mealType,
         currentMealId: meal.mealId,
-        proteinPreference: this.proteinPreference(),
-        maxPrepMinutes: this.maxPrepMinutes(),
+        proteinPreference: preferences?.proteinPreference ?? this.proteinPreference(),
+        maxPrepMinutes: preferences ? preferences.maxPrepMinutes : this.maxPrepMinutes(),
         allergies: r.allergies,
         dislikes: r.dislikes,
       })
       .subscribe({
         next: (items) => {
+          if (request !== this.swapRequest) return;
           this.swapOptions.set(
             items.map((m): SwapOption => ({
               id: m.mealId,
@@ -232,6 +263,8 @@ export class Tab2Page implements OnInit {
           this.swapLoading.set(false);
         },
         error: () => {
+          if (request !== this.swapRequest) return;
+          this.swapError.set('Could not load alternatives. Check your connection and try again.');
           this.swapOptions.set([]);
           this.swapLoading.set(false);
         },
@@ -249,6 +282,7 @@ export class Tab2Page implements OnInit {
 
 
   closeSwap() {
+    this.swapRequest++;
     this.swapModalOpen.set(false);
   }
 
@@ -268,34 +302,54 @@ export class Tab2Page implements OnInit {
     if (dateOnly) this.startDateISO.set(dateOnly);
   }
 
-  applySwap(option: SwapOption) {
-    const current = this.swapMeal();
-    if (!current) return;
-
-    const plan = this.plan();
-    if (!plan) return;
-
-    const updated: GenerateMealPlanResponse = {
-      ...plan,
-      daysPlan: plan.daysPlan.map((day) => ({
-        ...day,
-        meals: day.meals.map((meal) => {
-          if (meal.mealId !== current.mealId) return meal;
-          return {
-            ...meal,
-            mealId: option.id,
-            name: option.name,
-            imageUrl: option.imageUrl ?? meal.imageUrl ?? null,
-            tags: option.tags,
-            prepTimeMinutes: option.prepTimeMinutes ?? null,
-            reasons: option.reasons,
-          };
-        }),
-      })),
-    };
-
-    this.planStore.setPlan(updated);
-    this.closeSwap();
+  async applySwap(option: SwapOption) {
+    const current = this.swapMeal(); const plan = this.displayPlan();
+    if (!current || !plan || this.swapReference !== plan || this.savingPlan()) return;
+    const replacement: MealPlanItem = { mealType: current.mealType, mealId: option.id, name: option.name, imageUrl: option.imageUrl ?? null, tags: option.tags, prepTimeMinutes: option.prepTimeMinutes, reasons: option.reasons };
+    const updated = replaceMealSlot(plan, this.swapDay, current, replacement);
+    this.savingPlan.set(true); this.error.set(null);
+    try {
+      if (this.previewPlan()) this.previewPlan.set(updated);
+      else {
+        await this.planStore.savePlan(updated);
+        this.undoPlan.set(plan);
+      }
+      this.planStatus.set('Replaced only this meal on ' + this.swapDay + '.');
+      this.closeSwap();
+    } catch { this.swapError.set('Could not save this swap. Your meal has not changed.'); }
+    finally { this.savingPlan.set(false); }
+  }
+  retrySwap() { const meal = this.swapMeal(); if (meal) this.openSwap(meal); }
+  async acceptPreview() {
+    const preview = this.previewPlan(); if (!preview || this.savingPlan() || this.foodSaving()) return;
+    if (!sameRestrictions(preview.madeWith ? { allergies: preview.madeWith.allergies as AllergenCode[], dislikes: preview.madeWith.dislikes } : null, this.restrictions())) { this.error.set('Your food exclusions changed after this preview. Make a fresh preview before saving.'); return; }
+    this.savingPlan.set(true); this.error.set(null);
+    const previous = this.plan();
+    try {
+      await this.planStore.savePlan(preview);
+      this.previewPlan.set(null); this.undoPlan.set(previous); this.preferencesOpen.set(false);
+      this.planStatus.set('Your plan is saved. Choose a day, open a recipe or build your grocery list.');
+      void this.notifications.reschedule().catch(() => undefined);
+    } catch { this.error.set('Could not save the new plan. Your previous plan is still here. Please try again.'); }
+    finally { this.savingPlan.set(false); }
+  }
+  discardPreview() { this.previewPlan.set(null); this.selectedDayIndex.set(this.plan() ? this.indexOfTodayOrFirst(this.plan()!) : 0); this.preferencesOpen.set(true); this.settingsStep.set('review'); }
+  async undoChange() {
+    const previous = this.undoPlan(); if (!previous || this.savingPlan()) return;
+    this.savingPlan.set(true);
+    try { await this.planStore.savePlan(previous); this.undoPlan.set(null); this.planStatus.set('Previous plan restored.'); }
+    catch { this.error.set('Could not restore your previous plan. Please try again.'); }
+    finally { this.savingPlan.set(false); }
+  }
+  previousDay() { this.selectDay(Math.max(0, this.selectedDayIndex() - 1)); }
+  nextDay() { this.selectDay(Math.min((this.displayPlan()?.daysPlan.length ?? 1) - 1, this.selectedDayIndex() + 1)); }
+  dayTitle(date: string) { return this.formatDate(date, { weekday: 'long', day: 'numeric', month: 'long' }); }
+  allergySummary() { return this.allergens.filter((a) => this.hasAllergy(a.code)).map((a) => a.label).join(', ') || 'None selected'; }
+  preferenceSummary(preferences?: GenerateMealPlanRequest) {
+    const meals = preferences?.fastingStyle ?? this.fastingStyle();
+    const diet = preferences?.proteinPreference ?? this.proteinPreference();
+    const prep = preferences ? preferences.maxPrepMinutes : this.maxPrepMinutes();
+    return `${meals === 'NO_FASTING_3_MEALS' ? 'Breakfast, lunch and dinner' : 'Lunch and dinner'} · ${diet === 'ANY' ? 'any eating style' : diet.toLowerCase()} · ${prep ? 'up to ' + prep + ' minutes' : 'any prep time'}`;
   }
 
   selectDay(index: number): void {
@@ -303,7 +357,7 @@ export class Tab2Page implements OnInit {
   }
 
   selectedDay(): DayPlan | null {
-    const plan = this.plan();
+    const plan = this.displayPlan();
     if (!plan?.daysPlan?.length) return null;
     const index = Math.min(this.selectedDayIndex(), plan.daysPlan.length - 1);
     return plan.daysPlan[index] ?? null;
@@ -335,6 +389,7 @@ export class Tab2Page implements OnInit {
 
   readonly allergens = ALLERGENS;
   readonly restrictions = computed(() => this.foodRestrictions.restrictions());
+  readonly foodSaving = this.foodRestrictions.saving;
   newDislike = '';
 
   hasAllergy(code: AllergenCode): boolean {
@@ -342,16 +397,16 @@ export class Tab2Page implements OnInit {
   }
 
   toggleAllergy(code: AllergenCode) {
-    void this.foodRestrictions.toggleAllergy(code);
+    void this.foodRestrictions.toggleAllergy(code).catch(() => this.error.set('Could not save this allergy choice. It has not changed. Please try again.'));
   }
 
-  addDislike() {
-    void this.foodRestrictions.addDislike(this.newDislike);
-    this.newDislike = '';
+  async addDislike() {
+    try { await this.foodRestrictions.addDislike(this.newDislike); this.newDislike = ''; }
+    catch { this.error.set('Could not save this food exclusion. Please try again.'); }
   }
 
   removeDislike(food: string) {
-    void this.foodRestrictions.removeDislike(food);
+    void this.foodRestrictions.removeDislike(food).catch(() => this.error.set('Could not remove this food exclusion. Please try again.'));
   }
 
   /** True when allergies or dislikes changed after the current plan was made. */
@@ -368,7 +423,7 @@ export class Tab2Page implements OnInit {
 
 
   readonly unfilledLabel = computed(() => {
-    const unfilled = this.plan()?.unfilled ?? [];
+    const unfilled = this.displayPlan()?.unfilled ?? [];
     if (!unfilled.length) return null;
     const names = unfilled.map((t) => t.charAt(0) + t.slice(1).toLowerCase());
     return names.join(' and ');
@@ -378,7 +433,7 @@ export class Tab2Page implements OnInit {
   proteinPreference = signal<ProteinPreference>('ANY');
 
   // Plan duration (weekly/biweekly/monthly)
-  duration = signal<PlanDuration>(30);
+  duration = signal<PlanDuration>(7);
 
   // Stores the plan result (typed)
   plan = signal<GenerateMealPlanResponse | null>(null);
@@ -417,14 +472,10 @@ export class Tab2Page implements OnInit {
   planStartDate(): string {
     const manualStart = this.startDateISO();
     if (manualStart) return manualStart;
-    const p = this.plan();
-    if (p?.daysPlan?.length) return p.daysPlan[0].date;
     return this.todayLocalYYYYMMDD();
   }
 
   planEndDate(): string {
-    const p = this.plan();
-    if (!this.startDateISO() && p?.daysPlan?.length) return p.daysPlan[p.daysPlan.length - 1].date;
     const start = this.parseLocalDate(this.planStartDate());
     if (!start) return this.planStartDate();
     return this.formatDateISO(this.addDays(start, this.duration() - 1));
@@ -460,6 +511,8 @@ export class Tab2Page implements OnInit {
   planEndDateLabel(): string {
     return this.formatDate(this.planEndDate(), { month: 'short', day: 'numeric' });
   }
+
+  savedRangeLabel() { const days = this.plan()?.daysPlan; return days?.length ? `${this.formatDate(days[0].date, { month: 'short', day: 'numeric' })} – ${this.formatDate(days[days.length - 1].date, { month: 'short', day: 'numeric' })}` : ''; }
 
   mealTypeLabel(type: MealPlanItem['mealType']): string {
     switch (type) {
@@ -500,10 +553,6 @@ export class Tab2Page implements OnInit {
       .slice(0, 2)
       .map((t) => t.replace(/-/g, ' '))
       .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
-  }
-
-  mealImage(meal: { name?: string | null; imageUrl?: string | null }): string | null {
-    return mealImageSrc(meal.name, meal.imageUrl);
   }
 
   challenges(): ChallengeDefinition[] {
@@ -547,10 +596,14 @@ export class Tab2Page implements OnInit {
   }
 
   goToGroceryList(): void {
+    if (this.previewPlan()) return;
     this.router.navigateByUrl('/tabs/tab3');
   }
 
   generatePlan() {
+    if (!this.ready() || this.isLoading() || this.savingPlan() || this.foodSaving()) return;
+    const startDate = this.planStartDate();
+    if (startDate < this.today || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) { this.error.set('Choose today or a future date for the new plan.'); return; }
     if (!this.authService.hasValidToken()) {
       this.router.navigateByUrl('/auth?mode=login');
       return;
@@ -575,41 +628,26 @@ export class Tab2Page implements OnInit {
 
     this.mealPlansService.generate(payload).subscribe({
       next: (res) => {
-        this.planStore.setPlan({ ...res, madeWith: { allergies: payload.allergies, dislikes: payload.dislikes } });
-        this.preferencesOpen.set(false);
+        try {
+          this.previewPlan.set(startPlanOn({ ...res, madeWith: { allergies: payload.allergies, dislikes: payload.dislikes }, preferences: { ...payload, startDate } }, startDate));
+          this.selectedDayIndex.set(0); this.preferencesOpen.set(false);
+          this.planStatus.set('Preview ready. Swap anything you don’t want before saving.');
+        } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not prepare a preview.'); }
         this.isLoading.set(false);
-        void this.notifications.reschedule();
-        void this.maybePromptForNotifications();
       },
       error: (err) => {
         console.error('Failed to generate meal plan', err);
-        this.error.set('Failed to generate plan');
+        this.error.set('Could not make a plan. Your saved meals are still here. Check your connection and try again.');
         this.isLoading.set(false);
       },
     });
   }
 
-  private async maybePromptForNotifications(): Promise<void> {
-    if (await this.notifications.hasPromptedBefore()) return;
-    if (await this.notifications.isEnabled()) return;
-
-    await this.notifications.markPrompted();
-
-    const alert = await this.alertController.create({
-      header: 'Meal reminders?',
-      message: 'A reminder of today’s meals, and one in the evening to tick off what you cooked. You can turn them off in Account.',
-      buttons: [
-        { text: 'Not now', role: 'cancel' },
-        { text: 'Enable', handler: () => void this.notifications.enable() },
-      ],
-    });
-    await alert.present();
+  openMealDetails(mealId: string, date: string) {
+    if (!mealId) return;
+    // A preview recipe must not mark a meal in the saved plan as cooked.
+    this.router.navigate(['/meal-details', mealId], { queryParams: this.previewPlan() ? {} : { date } });
   }
-
-openMealDetails(mealId: string, date: string) {
-  if (!mealId) return;
-  this.router.navigate(['/meal-details', mealId], { queryParams: { date } });
-}
 
   // --- Custom challenges ---
 
@@ -745,7 +783,7 @@ openMealDetails(mealId: string, date: string) {
   }
 
   async shareChallenge(challenge: CustomChallengeResponse): Promise<void> {
-    const message = `Join my "${challenge.name}" challenge on Cook Through! Use code ${challenge.inviteCode} in the app to join me.`;
+    const message = `Join my "${challenge.name}" challenge on Sanelle! Use code ${challenge.inviteCode} in the app to join me.`;
     try {
       await Share.share({
         title: challenge.name,

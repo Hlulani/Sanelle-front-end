@@ -4,8 +4,8 @@
     <button type="button" class="sn-back" (click)="back()">Back</button>
   </div>
   <ng-container *ngIf="meal; else notReady">
-    <section class="hero" [class.has-image]="heroImage(meal)">
-      <ion-img *ngIf="heroImage(meal) as src" [src]="src" class="hero-image"></ion-img>
+    <section class="hero has-image">
+      <app-meal-image class="hero-image" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType" [eager]="true" (imageLoaded)="heroPhoto.set($event)"></app-meal-image>
       <div class="hero-body">
         <h1>{{ meal.name }}</h1>
         <div class="meta-row">
@@ -15,6 +15,13 @@
       </div>
     </section>
 
+    @if (heroPhoto(); as photo) {
+      <details class="photo-credit">
+        <summary>{{ photo.match === 'ingredient' ? 'Ingredient photo' : photo.match === 'exact' ? 'Photo credits' : 'Serving suggestion · Photo credits' }}</summary>
+        @if (photo.note) { <p>{{ photo.note }}</p> }
+        <p>Photo: <a [href]="photo.source" target="_blank" rel="noopener noreferrer">{{ photo.credit }}</a> · <a [href]="photo.licenseUrl" target="_blank" rel="noopener noreferrer">{{ photo.license }}</a>. Resized for display.</p>
+      </details>
+    }
 
     <section class="content-card" *ngIf="meal.colorPalette">
       <h2>On the plate</h2>

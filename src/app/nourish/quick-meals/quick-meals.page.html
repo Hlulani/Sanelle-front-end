@@ -28,7 +28,7 @@
             @for (m of s.meals; track m.mealId) {
               <li>
                 <a class="meal" [routerLink]="['/meal-details', m.mealId]">
-                  <app-meal-image class="meal-img" [name]="m.name" [mealType]="m.mealType"></app-meal-image>
+                  <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
                   <span class="meal-text">
                     <span class="meal-name">{{ m.name }}</span>
                     <span class="meal-why">{{ why(m) }}</span>

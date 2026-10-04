@@ -36,6 +36,13 @@ export class PlanStoreService {
     }
   }
 
+  /** Publish a reviewed change only after device storage accepts it. */
+  async savePlan(plan: GenerateMealPlanResponse | null): Promise<void> {
+    if (plan) await Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(plan) });
+    else await Preferences.remove({ key: STORAGE_KEY });
+    this.planSubject.next(plan);
+  }
+
   getPlanSnapshot(): GenerateMealPlanResponse | null {
     return this.planSubject.getValue();
   }

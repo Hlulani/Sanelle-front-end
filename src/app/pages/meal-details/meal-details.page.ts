@@ -3,7 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonButtons,
-  IonTitle, IonContent, IonImg, IonButton, IonIcon, IonModal
+  IonTitle, IonContent, IonButton, IonIcon, IonModal
 } from '@ionic/angular/standalone';
 import { MealService } from '../../core/services/meal.service';
 import { Ingredient, MealResponse } from '../../core/models/meal.model';
@@ -15,7 +15,8 @@ const MIN_SERVINGS = 1;
 const MAX_SERVINGS = 12;
 
 
-import { mealImageSrc } from '../../shared/meal-photos';
+import { MealPhoto } from '../../shared/meal-photos';
+import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
 
 @Component({
   selector: 'app-meal-details',
@@ -27,7 +28,7 @@ import { mealImageSrc } from '../../shared/meal-photos';
     IonButtons,
     IonTitle,
     IonContent,
-    IonImg,
+    MealImageComponent,
     IonButton,
     IonIcon,
     IonModal,
@@ -51,6 +52,7 @@ export class MealDetailsPage implements OnInit {
   private planDate: string | null = null;
 
   servings = signal(1);
+  heroPhoto = signal<MealPhoto | null>(null);
 
   cookModeOpen = signal(false);
   currentStep = signal(0);
@@ -59,10 +61,6 @@ export class MealDetailsPage implements OnInit {
   back() {
     if (window.history.length > 1) this.location.back();
     else this.router.navigateByUrl('/tabs/tab2');
-  }
-
-  heroImage(meal: { name?: string | null; imageUrl?: string | null }): string | null {
-    return mealImageSrc(meal.name, meal.imageUrl);
   }
 
   ngOnInit() {

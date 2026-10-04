@@ -60,6 +60,7 @@ export interface GenerateMealPlanResponse {
   madeWith?: { allergies: string[]; dislikes: string[] };
   /** Meal types no recipe could fill without breaking a preference, e.g. "BREAKFAST". */
   unfilled?: string[];
+  preferences?: GenerateMealPlanRequest & { startDate: string };
 }
 
 @Injectable({ providedIn: 'root' })
