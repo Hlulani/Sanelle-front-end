@@ -2,13 +2,15 @@
   <main class="sn-page sn-screen">
     <header class="sn-head">
       <h1>Learn</h1>
-      <p class="sn-head-note">Food claims you might have read, checked against research.</p>
+      <p class="sn-head-note">Understand what you’ve read and turn your concerns into questions for care.</p>
     </header>
 
-    <section class="sn-card intro">
-      <p class="intro-text">Each answer separates getting fibroids, growth, bleeding, pain and fertility, because a study on one says nothing about the others.</p>
+    <section class="sn-section" aria-labelledby="trusted-title"><h2 id="trusted-title">Start with trusted reading</h2><p>Published patient information from the NHS. Links open the original source. Food guidance is general; these resources do not create a personal treatment or diet plan.</p>
+      @for (resource of resources; track resource.url) { <article class="sn-card resource"><h3>{{ resource.title }}</h3><p>{{ resource.description }}</p><a class="sn-btn sn-btn--brand" [href]="resource.url" target="_blank" rel="noopener noreferrer">Read on {{ resource.publisher }} ↗</a><button type="button" class="resource-question" (click)="saveQuestion(resource.question)">Save a question about this for my visit</button></article> }
     </section>
-
+    @if (error()) { <p role="alert">{{ error() }}</p> }
+    @if (saved()) { <p class="saved" role="status">Saved to your next-visit questions. <a routerLink="/health/questions">Review my questions</a></p> }
+    @if (list.length) {
     <section class="sn-section" aria-labelledby="topics-title">
       <h2 id="topics-title">Food questions</h2>
       @if (list.length) {
@@ -31,12 +33,13 @@
       }
     </section>
 
+    }
     <div class="sn-band">
       <section class="sn-section" aria-labelledby="ask-title">
         <h2 id="ask-title">Read something else?</h2>
-        <p class="band-text">We don’t answer health questions automatically. Save what you read and ask about it at your appointment.</p>
+        <p class="band-text">Save what you read as a question for your clinician. It goes into My health and your appointment summary, so you can bring it to your visit.</p>
         @if (saved()) {
-          <p class="saved" role="status">Added: {{ saved() }}</p>
+          <p class="saved" role="status">Added to your next-visit questions: {{ saved() }} <a routerLink="/health/questions">See my questions</a></p>
         }
         <form class="ask" (submit)="$event.preventDefault(); saveClaim()">
           <label class="sn-field">

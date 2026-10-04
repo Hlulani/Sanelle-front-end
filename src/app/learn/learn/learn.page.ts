@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { EvidenceTopicsService } from '../evidence-topics.service';
 import { HealthRepository } from '../../my-health/health-repository';
+import { TRUSTED_RESOURCES } from '../trusted-resources';
 import { OUTCOME_LABELS } from '../evidence.model';
 
 /** Turns a claim someone read into a question for their gynaecologist. */
@@ -23,6 +24,15 @@ export class LearnPage {
   private topics = inject(EvidenceTopicsService);
   private health = inject(HealthRepository);
 
+  readonly resources = TRUSTED_RESOURCES;
+  readonly error = signal('');
+  ionViewWillEnter() { void this.health.load(); }
+  async saveQuestion(question: string) {
+    this.error.set('');
+    try { await this.health.addQuestion(question); this.saved.set(question); }
+    catch { this.error.set('Could not save your question. Please try again.'); }
+  }
+
   readonly list = this.topics.list();
   readonly outcomes = OUTCOME_LABELS;
   readonly saved = signal<string | null>(null);
@@ -41,8 +51,7 @@ export class LearnPage {
     const text = this.claim.trim();
     if (!text) return;
     const q = claimToQuestion(text);
-    await this.health.addQuestion(q);
-    this.saved.set(q);
-    this.claim = '';
+    await this.saveQuestion(q);
+    if (!this.error()) this.claim = '';
   }
 }

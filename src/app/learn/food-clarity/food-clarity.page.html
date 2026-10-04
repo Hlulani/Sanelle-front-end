@@ -91,7 +91,7 @@
           <ul class="meal-strip" *ngIf="$any(meals()).meals.length; else noMeals">
             <li *ngFor="let m of $any(meals()).meals">
               <button type="button" class="meal" (click)="openMeal(m)">
-                <app-meal-image class="meal-img" [name]="m.name" [mealType]="m.mealType"></app-meal-image>
+                <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
                 <span class="meal-name">{{ m.name }}</span>
                 <span class="meal-meta" *ngIf="m.prepTimeMinutes">{{ m.prepTimeMinutes }} min</span>
               </button>
