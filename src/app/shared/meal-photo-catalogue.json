@@ -1,0 +1,1608 @@
+{
+  "photos": {
+    "apple-cinnamon-oatmeal": {
+      "src": "assets/meals/apple-cinnamon-oatmeal.jpg",
+      "alt": "Apple Cinnamon Oatmeal",
+      "credit": "K8 / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/4zG050fMarw",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "apple-with-almond-butter": {
+      "src": "assets/meals/apple-with-almond-butter.jpg",
+      "alt": "Apple with Almond Butter",
+      "credit": "Aasiya Khan / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/F-ReDCrjQbo",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "avocado-tomato-toast": {
+      "src": "assets/meals/avocado-tomato-toast.jpg",
+      "alt": "Avocado Tomato Toast",
+      "credit": "Jasper Gribble / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/a-white-plate-topped-with-bread-topped-with-veggies-8RxCzAKmSOA",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "baked-salmon-with-sweet-potato": {
+      "src": "assets/meals/baked-salmon-with-sweet-potato.jpg",
+      "alt": "Baked Salmon with Sweet Potato",
+      "credit": "Gu Ko / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/traditional-japanese-salmon-and-sweet-potato-dish-37332337/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "beef-and-broccoli-stir-fry-with-ginger": {
+      "src": "assets/meals/beef-and-broccoli-stir-fry-with-ginger.jpg",
+      "alt": "Beef and Broccoli Stir-Fry with Ginger",
+      "credit": "sheri silver / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/a-bowl-of-beef-and-broccoli-with-white-rice-BA2UZ6w8JfY",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "boiled-eggs-with-salt": {
+      "src": "assets/meals/boiled-eggs-with-salt.jpg",
+      "alt": "Boiled Eggs with Salt",
+      "credit": "Faris Mohammed / Unsplash",
+      "match": "exact",
+      "source": "https://unsplash.com/photos/two-sliced-boiled-eggs-pVO700FnVH8",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "buckwheat-pancakes-with-blueberry-compote": {
+      "src": "assets/meals/buckwheat-pancakes-with-blueberry-compote.jpg",
+      "alt": "Buckwheat Pancakes with Blueberry Compote",
+      "credit": "Sandra Seitamaa / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/black-and-brown-food-on-white-ceramic-plate-3GQmiTvDVLs",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "chia-seed-pudding-with-mango-and-coconut": {
+      "src": "assets/meals/chia-seed-pudding-with-mango-and-coconut.jpg",
+      "alt": "Chia Seed Pudding with Mango and Coconut",
+      "credit": "VD Photography / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/a-close-up-of-two-glasses-of-food-on-a-table-bT-eRvDBrZQ",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "chickpea-coconut-curry": {
+      "src": "assets/meals/chickpea-coconut-curry.jpg",
+      "alt": "Chickpea Coconut Curry",
+      "match": "close",
+      "source": "https://unsplash.com/photos/cooked-food-on-white-ceramic-plate-ReySmTMcKEQ",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "credit": "Álvaro Bernal / Unsplash"
+    },
+    "chickpea-salad-with-lemon-dressing": {
+      "src": "assets/meals/chickpea-salad-with-lemon-dressing.jpg",
+      "alt": "Chickpea Salad with Lemon Dressing",
+      "credit": "dimitri.photography / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/JDP_yzauSYg",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "cucumber-feta-salad": {
+      "src": "assets/meals/cucumber-feta-salad.jpg",
+      "alt": "Cucumber Feta Salad",
+      "credit": "Alesia Kozik / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-of-fruits-and-vegetables-on-the-table-6065179/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "dark-chocolate-and-almonds": {
+      "src": "assets/meals/dark-chocolate-and-almonds.jpg",
+      "alt": "Dark Chocolate and Almonds",
+      "credit": "alishefi / Unsplash",
+      "match": "exact",
+      "source": "https://unsplash.com/photos/bitten-chocolate-bar-and-almonds-on-wooden-dishes-7TN2lkiQXHw",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "edamame-with-sea-salt": {
+      "src": "assets/meals/edamame-with-sea-salt.jpg",
+      "alt": "Edamame with Sea Salt",
+      "credit": "Daniel Brubaker / Unsplash",
+      "match": "exact",
+      "source": "https://unsplash.com/photos/green-beans-on-bowl-ukkQ2PYm0ew",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "egg-salad-lettuce-cups": {
+      "src": "assets/meals/egg-salad-lettuce-cups.jpg",
+      "alt": "Egg Salad Lettuce Cups",
+      "credit": "Mike Art Visual Creator / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-lettuce-wraps-on-wooden-platter-37112189/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "garlic-lemon-chicken-with-broccoli": {
+      "src": "assets/meals/garlic-lemon-chicken-with-broccoli.jpg",
+      "alt": "Garlic Lemon Chicken with Broccoli",
+      "credit": "Pixabay / Pexels",
+      "match": "exact",
+      "source": "https://www.pexels.com/photo/broccoli-in-bowl-262973/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "greek-yogurt-parfait-with-blueberries-flaxseed-honey": {
+      "src": "assets/meals/greek-yogurt-parfait-with-blueberries-flaxseed-honey.jpg",
+      "alt": "Greek Yogurt Parfait with Blueberries, Flaxseed, Honey",
+      "credit": "Christopher Gaines / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/blueberry-yogurt-parfait-in-glass-bowl-30041629/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "greek-yogurt-with-honey-cinnamon-and-pomegranate": {
+      "src": "assets/meals/greek-yogurt-with-honey-cinnamon-and-pomegranate.jpg",
+      "alt": "Greek Yogurt with Honey, Cinnamon, and Pomegranate",
+      "credit": "Dan Tang / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/red-round-fruit-on-black-ceramic-bowl-TakGTVn1HUs",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "hummus-and-carrot-sticks": {
+      "src": "assets/meals/hummus-and-carrot-sticks.jpg",
+      "alt": "Hummus and Carrot Sticks",
+      "credit": "Bora C / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-snack-with-carrots-celery-and-hummus-35440206/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "lentil-bolognese": {
+      "src": "assets/meals/lentil-bolognese.jpg",
+      "alt": "Lentil Bolognese",
+      "credit": "Max Griss / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/cooked-food-in-black-cooking-pot-jhAhm-mGiRg",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "lentil-soup": {
+      "src": "assets/meals/lentil-soup.jpg",
+      "alt": "Lentil Soup (Quick)",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/elegant-bowl-of-lentil-soup-with-golden-spoon-37275982/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/",
+      "credit": "Jovan Vasiljević / Pexels"
+    },
+    "mediterranean-pasta-salad": {
+      "src": "assets/meals/mediterranean-pasta-salad.jpg",
+      "alt": "Mediterranean Pasta Salad",
+      "credit": "Ayrat / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/fusilli-pasta-with-feta-and-olives-12354402/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "mixed-berries-with-walnuts": {
+      "src": "assets/meals/mixed-berries-with-walnuts.jpg",
+      "alt": "Mixed Berries with Walnuts",
+      "credit": "Pexels user / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/bowl-of-fruit-salad-1646738/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "oat-banana-pancakes": {
+      "src": "assets/meals/oat-banana-pancakes.jpg",
+      "alt": "Oat Banana Pancakes (2-Ingredient)",
+      "credit": "Kelsey Curtis / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/pancakes-on-white-ceramic-plate-OWwYniuOyiU",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "overnight-oats-with-chia-and-berries": {
+      "src": "assets/meals/overnight-oats-with-chia-and-berries.jpg",
+      "alt": "Overnight Oats with Chia and Berries",
+      "credit": "Livilla Latini / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/a-bowl-of-oatmeal-with-berries-and-milk-27850091/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "roasted-chickpeas": {
+      "src": "assets/meals/roasted-chickpeas.jpg",
+      "alt": "Roasted Chickpeas (Quick)",
+      "credit": "Zoshua Colah / Unsplash",
+      "match": "exact",
+      "source": "https://unsplash.com/photos/roasted-chickpeas-with-golden-texture-W7PA-D8Suko",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "salmon-rice-bowl": {
+      "src": "assets/meals/salmon-rice-bowl.jpg",
+      "alt": "Salmon Rice Bowl",
+      "credit": "Ranya Obeidallah / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/dinner-on-a-plate-16507285/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "shrimp-zucchini-noodles": {
+      "src": "assets/meals/shrimp-zucchini-noodles.jpg",
+      "alt": "Shrimp Zucchini Noodles",
+      "credit": "Kenan Giffard / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/zuchini-and-shrimp-in-white-sauce-5597691/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "spinach-and-mushroom-omelet-with-olive-oil": {
+      "src": "assets/meals/spinach-and-mushroom-omelet-with-olive-oil.jpg",
+      "alt": "Spinach and Mushroom Omelet with Olive Oil",
+      "credit": "Aleyna Yetkin / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-mushroom-spinach-omelette-close-up-37547474/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "tomato-mozzarella-plate": {
+      "src": "assets/meals/tomato-mozzarella-plate.jpg",
+      "alt": "Tomato and mozzarella with olive oil on a white plate",
+      "credit": "Brina Blum / Unsplash",
+      "match": "exact",
+      "source": "https://unsplash.com/photos/WfSZ_XNPViY",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "trail-mix-cup": {
+      "src": "assets/meals/trail-mix-cup.jpg",
+      "alt": "Trail Mix Cup",
+      "credit": "Monaz Nazary / Unsplash",
+      "match": "close",
+      "source": "https://unsplash.com/photos/a-close-up-view-of-a-mixed-nut-and-raisin-blend-dCcEyzd6e7Q",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license"
+    },
+    "turkey-meatballs-with-tomato-sauce": {
+      "src": "assets/meals/turkey-meatballs-with-tomato-sauce.jpg",
+      "alt": "Turkey Meatballs with Tomato Sauce",
+      "credit": "Cookie Marenco / Pexels",
+      "match": "exact",
+      "source": "https://www.pexels.com/photo/delicious-homemade-meatballs-in-tomato-sauce-36958915/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "veggie-fried-rice": {
+      "src": "assets/meals/veggie-fried-rice.jpg",
+      "alt": "Veggie Fried Rice (Egg)",
+      "credit": "Studio D7 / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/vibrant-asian-fried-rice-with-eggs-and-vegetables-32845321/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "walnut-and-date-energy-balls": {
+      "src": "assets/meals/walnut-and-date-energy-balls.jpg",
+      "alt": "Walnut and Date Energy Balls",
+      "credit": "Livilla Latini / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/a-bowl-of-chocolate-balls-with-oats-and-nuts-27850074/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "scrambled-eggs": {
+      "src": "assets/meals/scrambled-eggs.jpg",
+      "alt": "Scrambled eggs in a frying pan",
+      "credit": "cottonbro studio / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/cooked-food-in-the-frying-pan-7696496/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "green-smoothie-bowl": {
+      "src": "assets/meals/green-smoothie-bowl.jpg",
+      "alt": "Green smoothie bowl with seeds and almonds",
+      "credit": "Tima Miroshnichenko / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-shot-of-a-smoothie-bowl-6327128/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "golden-smoothie-bowl": {
+      "src": "assets/meals/golden-smoothie-bowl.jpg",
+      "alt": "Golden mango smoothie bowl with banana and seeds",
+      "credit": "N G / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-mango-smoothie-bowl-with-granola-34122326/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "berry-smoothie": {
+      "src": "assets/meals/berry-smoothie.jpg",
+      "alt": "Berry smoothie in a glass",
+      "credit": "Jamie Niederer / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/a-berry-smoothie-in-a-glass-4162533/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "smoked-salmon-toast": {
+      "src": "assets/meals/smoked-salmon-toast.jpg",
+      "alt": "Smoked salmon and avocado toast",
+      "credit": "Inna Gritsenko / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-smoked-salmon-and-avocado-toasts-31327892/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "fried-egg-toast": {
+      "src": "assets/meals/fried-egg-toast.jpg",
+      "alt": "Fried egg on toast with greens",
+      "credit": "Daniela Constantini / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-of-a-toasted-bread-with-egg-on-a-plate-5720793/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "cottage-cheese-berries": {
+      "src": "assets/meals/cottage-cheese-berries.jpg",
+      "alt": "Cottage cheese topped with berries",
+      "credit": "Jessica Lewis / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/breakfast-with-frozen-fruits-15048298/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "quinoa-salad": {
+      "src": "assets/meals/quinoa-salad.jpg",
+      "alt": "Quinoa, chickpeas and vegetable bowl",
+      "credit": "Diet Guide / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-balanced-bowl-with-quinoa-and-vegetables-29269831/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chicken-avocado-salad": {
+      "src": "assets/meals/chicken-avocado-salad.jpg",
+      "alt": "Grilled chicken and avocado salad",
+      "credit": "Nadin Sh / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-grilled-chicken-avocado-salad-close-up-37357456/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chicken-quinoa-salad": {
+      "src": "assets/meals/chicken-quinoa-salad.jpg",
+      "alt": "Quinoa salad topped with grilled chicken",
+      "credit": "Asad Photo Maldives / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-quinoa-salad-with-grilled-chicken-30225351/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "beet-salad": {
+      "src": "assets/meals/beet-salad.jpg",
+      "alt": "Beetroot and feta salad",
+      "credit": "tomateoignons / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-shot-of-a-salad-3774599/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "burrata-salad": {
+      "src": "assets/meals/burrata-salad.jpg",
+      "alt": "Burrata salad with vegetables and toast",
+      "credit": "Filipp Romanovski / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/food-on-plate-17889603/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "shrimp-rice-bowl": {
+      "src": "assets/meals/shrimp-rice-bowl.jpg",
+      "alt": "Shrimp rice bowl with vegetables",
+      "credit": "furkanfdemir / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/cooked-food-in-the-bowl-8286766/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chicken-vegetable-soup": {
+      "src": "assets/meals/chicken-vegetable-soup.jpg",
+      "alt": "Chicken and vegetable soup",
+      "credit": "Tiya Nh / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-homemade-chicken-vegetable-soup-37057656/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "roasted-chicken": {
+      "src": "assets/meals/roasted-chicken.jpg",
+      "alt": "Roasted chicken with vegetables",
+      "credit": "Valeria Boltneva / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/roasted-chicken-with-vegetables-19615783/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "beef-vegetable-stew": {
+      "src": "assets/meals/beef-vegetable-stew.jpg",
+      "alt": "Beef stew with vegetables",
+      "credit": "Novkov Visuals / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-beef-stew-with-vegetables-on-plate-34636420/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "roasted-white-fish": {
+      "src": "assets/meals/roasted-white-fish.jpg",
+      "alt": "Roasted white fish with asparagus and greens",
+      "credit": "Valeria Boltneva / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/yummy-roast-fish-fillets-served-with-asparagus-and-parsley-10038682/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "tofu-stir-fry": {
+      "src": "assets/meals/tofu-stir-fry.jpg",
+      "alt": "Stir-fried tofu and vegetables",
+      "credit": "Polina Tankilevitch / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/stir-fry-vegetables-and-tofu-on-a-ceramic-plate-5848482/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "grilled-tofu": {
+      "src": "assets/meals/grilled-tofu.jpg",
+      "alt": "Grilled tofu with vegetables",
+      "credit": "Anna Tarazevich / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/food-plate-dinner-lunch-5182130/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "grilled-mackerel": {
+      "src": "assets/meals/grilled-mackerel.jpg",
+      "alt": "Grilled mackerel with lemon and scallions",
+      "credit": "Richard L / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/grilled-mackerel-with-lemon-and-scallions-32722832/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "vegetable-couscous": {
+      "src": "assets/meals/vegetable-couscous.jpg",
+      "alt": "Couscous served with vegetables",
+      "credit": "Patrizia Signorelli / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/groats-with-vegetables-19824910/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chicken-curry": {
+      "src": "assets/meals/chicken-curry.jpg",
+      "alt": "Chicken curry served with rice",
+      "credit": "Chait Goli / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/chicken-curry-in-a-bowl-7353487/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "pea-soup": {
+      "src": "assets/meals/pea-soup.jpg",
+      "alt": "Green pea soup",
+      "credit": "Farhad Ibrahimzade / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-shot-of-pea-soup-8738014/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "pumpkin-seeds": {
+      "src": "assets/meals/pumpkin-seeds.jpg",
+      "alt": "Pumpkin seeds in a white bowl",
+      "credit": "Antoni Shkraba / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/top-view-of-pumpkin-seeds-in-a-white-bowl-4753633/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "deviled-eggs": {
+      "src": "assets/meals/deviled-eggs.jpg",
+      "alt": "Deviled eggs with herbs",
+      "credit": "Büşra Yaman / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-of-deviled-eggs-17290375/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "salmon-cucumber-bites": {
+      "src": "assets/meals/salmon-cucumber-bites.jpg",
+      "alt": "Smoked salmon bites on cucumber",
+      "credit": "Natalia S / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/gourmet-smoked-salmon-appetizers-on-cucumber-base-35212376/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "green-smoothie": {
+      "src": "assets/meals/green-smoothie.jpg",
+      "alt": "Green smoothie in a tall glass",
+      "credit": "Anastasia Belousova / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/close-up-shot-of-a-glass-of-smoothie-5366704/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chicken-rice-broccoli": {
+      "src": "assets/meals/chicken-rice-broccoli.jpg",
+      "alt": "Chicken, broccoli and rice in a pan",
+      "credit": "Keegan Evans / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/white-rice-chicken-and-broccoli-on-black-non-stick-pan-105588/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "lentil-curry": {
+      "src": "assets/meals/lentil-curry.jpg",
+      "alt": "Lentil curry with rice",
+      "credit": "Alesia Kozik / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/food-healthy-dinner-lunch-6544380/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "tempeh-bowl": {
+      "src": "assets/meals/tempeh-bowl.jpg",
+      "alt": "Tempeh, grains and vegetables",
+      "credit": "Andaru Firmansyah / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-vegan-buddha-bowl-with-fresh-vegetables-37279768/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "banana-snack": {
+      "src": "assets/meals/banana-snack.jpg",
+      "alt": "Sliced banana on a decorative plate",
+      "credit": "Juliane Chatillon / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-banana-snacks-on-decorative-plate-36852876/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "yogurt-nuts-honey": {
+      "src": "assets/meals/yogurt-nuts-honey.jpg",
+      "alt": "Yogurt with pecans and honey",
+      "credit": "Amnah Mohammad / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/yogurt-with-pecan-nuts-and-honey-5620415/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chia-berry-pudding": {
+      "src": "assets/meals/chia-berry-pudding.jpg",
+      "alt": "Chia pudding with berries",
+      "credit": "Anastasia Belousova / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/desserts-in-glasses-on-tablecloth-9022035/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "beef-vegetable-skillet": {
+      "src": "assets/meals/beef-vegetable-skillet.jpg",
+      "alt": "Beef stir-fry with vegetables in a skillet",
+      "credit": "Mohamed Olwy / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/delicious-beef-stir-fry-with-vegetables-on-skillet-36984972/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "cucumber-corn-salad": {
+      "src": "assets/meals/cucumber-corn-salad.jpg",
+      "alt": "Corn, cucumber and tomato salad",
+      "credit": "Nadin Sh / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/veggy-salad-in-blue-bowl-23645805/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "cabbage-eggs": {
+      "src": "assets/meals/cabbage-eggs.jpg",
+      "alt": "Cabbage and boiled eggs",
+      "credit": "Pavel Subbotin / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/chopped-boiled-eggs-with-vegetable-on-stainless-steel-bowl-5925035/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "tofu-noodle-soup": {
+      "src": "assets/meals/tofu-noodle-soup.jpg",
+      "alt": "Tofu and vegetable noodle bowls",
+      "credit": "Ella Olsson / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/vegetable-salad-3026808/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "shrimp-noodle-soup": {
+      "src": "assets/meals/shrimp-noodle-soup.jpg",
+      "alt": "Shrimp noodle soup",
+      "credit": "Khanh Nguyen / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/a-person-holding-a-spoon-with-noodles-and-shrimp-26632453/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "tuna-salad": {
+      "src": "assets/meals/tuna-salad.jpg",
+      "alt": "Tuna salad with vegetables",
+      "credit": "Aida Shukuhi / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/vegan-rice-bowl-with-tofu-and-vegetables-34429484/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "sweet-potato-rounds": {
+      "src": "assets/meals/sweet-potato-rounds.jpg",
+      "alt": "Roasted sweet potato pieces with herbs",
+      "credit": "Damir Mijailovic / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/bowl-of-delicious-baked-sweet-potatoes-5612346/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "egg-muffins": {
+      "src": "assets/meals/egg-muffins.jpg",
+      "alt": "Egg muffins with greens",
+      "credit": "Meg H / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Egg-muffin_(49218808517).jpg",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+    },
+    "golden-milk": {
+      "src": "assets/meals/golden-milk.jpg",
+      "alt": "Golden turmeric latte",
+      "credit": "Andy Li / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Golden_turmeric_latte_-_Hello_My_Moon_2024-04-07.jpg",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+    },
+    "bean-chili": {
+      "src": "assets/meals/bean-chili.jpg",
+      "alt": "Bean chili in a bowl",
+      "credit": "Miscellaneous contributor / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Vegan_chili.jpeg",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+    },
+    "turkey-wrap": {
+      "src": "assets/meals/turkey-wrap.jpg",
+      "alt": "Turkey tortilla wraps with lettuce",
+      "credit": "U.S. Department of Agriculture / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:20111012-FNCS-LSC-0225_-_Flickr_-_USDAgov.jpg",
+      "license": "Public domain",
+      "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+    },
+    "chicken-lettuce": {
+      "src": "assets/meals/chicken-lettuce.jpg",
+      "alt": "Chicken lettuce wraps",
+      "credit": "A Healthier Michigan from Detroit, United States / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Slow_Cooker_Asian_Chicken_Lettuce_Wraps_(36167537862).jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+    },
+    "tuna-bean": {
+      "src": "assets/meals/tuna-bean.jpg",
+      "alt": "White bean and tuna salad",
+      "credit": "Katrin Gilger / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Insalata_di_Fagioli_e_Tonno_%E2%80%93_Bohnensalat_mit_Thunfisch_(7327273414).jpg",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+    },
+    "sardine-toast": {
+      "src": "assets/meals/sardine-toast.jpg",
+      "alt": "Sardines served on toast",
+      "credit": "Arnaud 25 / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Sardines_et_pain_grill%C3%A9_01.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+    },
+    "tomato-eggs": {
+      "src": "assets/meals/tomato-eggs.jpg",
+      "alt": "Tomato and scrambled egg stir-fry",
+      "credit": "Huangdan2060 / Wikimedia Commons",
+      "match": "close",
+      "source": "https://commons.wikimedia.org/wiki/File:Hunan_cuisine,_stir-fried_tomato_with_eggs.jpg",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+    },
+    "avocado-egg-toast": {
+      "src": "assets/meals/avocado-egg-toast.jpg",
+      "alt": "Avocado and egg toast",
+      "credit": "Daniela Constantini / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/photo-of-fried-egg-and-avocado-toast-on-a-ceramic-plate-5591717/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "banana-oatmeal": {
+      "src": "assets/meals/banana-oatmeal.jpg",
+      "alt": "Oatmeal with sliced bananas and nuts",
+      "credit": "Kaique Lopes / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/oatmeal-with-bananas-in-a-kitchen-9304017/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "cocoa-banana-oats": {
+      "src": "assets/meals/cocoa-banana-oats.jpg",
+      "alt": "Chocolate oatmeal topped with banana",
+      "credit": "Yisenia Soto / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/healthy-breakfast-with-banana-and-chocolate-oatmeal-36654567/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "peanut-banana-rice-cakes": {
+      "src": "assets/meals/peanut-banana-rice-cakes.jpg",
+      "alt": "Rice cakes with peanut butter and banana",
+      "credit": "Gül Işık / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/bananas-and-food-on-plate-16797804/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "avocado-dip": {
+      "src": "assets/meals/avocado-dip.jpg",
+      "alt": "Avocado dip with vegetables and nachos",
+      "credit": "www.kaboompics.com / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/avocado-and-nachos-beside-fresh-vegetables-on-wooden-table-4968347/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "chickpea-stew": {
+      "src": "assets/meals/chickpea-stew.jpg",
+      "alt": "Chickpea stew served beside bread",
+      "credit": "Chait Goli / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/bowl-of-delicious-stewed-chickpeas-with-onion-4149256/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "apple-yogurt": {
+      "src": "assets/meals/apple-yogurt.jpg",
+      "alt": "Yogurt with apple slices and granola",
+      "credit": "Ecrin / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/food-healthy-apple-brunch-7994280/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "cottage-cheese": {
+      "src": "assets/meals/cottage-cheese.jpg",
+      "alt": "Cottage cheese in a bowl",
+      "credit": "Vladimír Sládek / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/white-cream-on-white-ceramic-bowl-10165775/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "white-bean-stew": {
+      "src": "assets/meals/white-bean-stew.jpg",
+      "alt": "Bean stew in a white bowl",
+      "credit": "Jenny Sirimis / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/stout-with-beans-in-white-bowl-10468384/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "stuffed-peppers": {
+      "src": "assets/meals/stuffed-peppers.jpg",
+      "alt": "Stuffed bell pepper with grains",
+      "credit": "Lisa Fotios / Pexels",
+      "match": "close",
+      "source": "https://www.pexels.com/photo/green-bell-pepper-stuffed-with-couscous-1438540/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "vegetarian-egg-muffins": {
+      "src": "assets/meals/vegetable-frittata.jpg",
+      "alt": "Baked vegetable frittata in a skillet",
+      "credit": "Steve House / Pexels",
+      "match": "representative",
+      "source": "https://www.pexels.com/photo/frittata-in-close-up-photography-14302155/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    },
+    "meal-ingredients": {
+      "src": "assets/meals/meal-ingredients.jpg",
+      "alt": "An assortment of vegetable dishes on a table",
+      "credit": "Ella Olsson / Pexels",
+      "match": "representative",
+      "source": "https://www.pexels.com/photo/assorted-salads-on-bowls-1640773/",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/"
+    }
+  },
+  "recipes": {
+    "Apple Cinnamon Oatmeal": {
+      "photoKey": "apple-cinnamon-oatmeal"
+    },
+    "Apple Slices with Almond Butter and Cinnamon": {
+      "photoKey": "apple-with-almond-butter",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Apple Slices with Almond Butter, Cinnamon, and Cheddar (Non-Vegan Alt)": {
+      "photoKey": "apple-with-almond-butter",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Apple with Almond Butter": {
+      "photoKey": "apple-with-almond-butter"
+    },
+    "Avocado Toast on Whole Grain with Hemp Seeds": {
+      "photoKey": "avocado-tomato-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Avocado Tomato Toast": {
+      "photoKey": "avocado-tomato-toast"
+    },
+    "Grilled Salmon Salad with Sweet Potato, Mixed Greens, and Walnuts": {
+      "photoKey": "baked-salmon-with-sweet-potato",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Salmon with Roasted Brussels Sprouts and Sweet Potato": {
+      "photoKey": "baked-salmon-with-sweet-potato",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Salmon with Sweet Potato": {
+      "photoKey": "baked-salmon-with-sweet-potato"
+    },
+    "Beef and Broccoli Stir-Fry with Ginger": {
+      "photoKey": "beef-and-broccoli-stir-fry-with-ginger"
+    },
+    "Soft-Boiled Eggs with Turmeric Roasted Asparagus": {
+      "photoKey": "boiled-eggs-with-salt",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Hard-Boiled Eggs with Everything Seasoning": {
+      "photoKey": "boiled-eggs-with-salt",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Boiled Eggs with Salt": {
+      "photoKey": "boiled-eggs-with-salt"
+    },
+    "Buckwheat Pancakes with Blueberry Compote": {
+      "photoKey": "buckwheat-pancakes-with-blueberry-compote"
+    },
+    "Chia Seed Pudding with Mango and Coconut": {
+      "photoKey": "chia-seed-pudding-with-mango-and-coconut"
+    },
+    "Chia Seed Pudding with Mango and Greek Yogurt (Non-Vegan Alt)": {
+      "photoKey": "chia-seed-pudding-with-mango-and-coconut",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chickpea and Spinach Curry with Brown Rice": {
+      "photoKey": "chickpea-coconut-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Vegetable and Chickpea Curry": {
+      "photoKey": "chickpea-coconut-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chickpea Coconut Curry": {
+      "photoKey": "chickpea-coconut-curry"
+    },
+    "Chickpea Salad with Lemon Dressing": {
+      "photoKey": "chickpea-salad-with-lemon-dressing"
+    },
+    "Cucumber Feta Salad": {
+      "photoKey": "cucumber-feta-salad"
+    },
+    "Dark Chocolate and Almonds": {
+      "photoKey": "dark-chocolate-and-almonds"
+    },
+    "Edamame with Sea Salt and Chili Flakes": {
+      "photoKey": "edamame-with-sea-salt",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Edamame and Soft-Boiled Egg with Sea Salt and Chili Flakes (Non-Vegan Alt)": {
+      "photoKey": "edamame-with-sea-salt",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Edamame with Sea Salt": {
+      "photoKey": "edamame-with-sea-salt"
+    },
+    "Egg Salad Lettuce Cups": {
+      "photoKey": "egg-salad-lettuce-cups"
+    },
+    "Turmeric Chicken Thighs with Steamed Broccoli and Charred Lemon": {
+      "photoKey": "garlic-lemon-chicken-with-broccoli",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Garlic Lemon Chicken with Broccoli": {
+      "photoKey": "garlic-lemon-chicken-with-broccoli"
+    },
+    "Greek Yogurt Parfait with Blueberries, Flaxseed, Honey": {
+      "photoKey": "greek-yogurt-parfait-with-blueberries-flaxseed-honey"
+    },
+    "Silken Tofu Berry Parfait (Yogurt-Free)": {
+      "photoKey": "greek-yogurt-parfait-with-blueberries-flaxseed-honey",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Mixed Berries with Walnuts and Greek Yogurt (Non-Vegan Alt)": {
+      "photoKey": "greek-yogurt-parfait-with-blueberries-flaxseed-honey",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Greek Yogurt with Honey, Cinnamon, and Pomegranate": {
+      "photoKey": "greek-yogurt-with-honey-cinnamon-and-pomegranate"
+    },
+    "Whipped Coconut Cream with Cinnamon and Pomegranate (Yogurt-Free)": {
+      "photoKey": "greek-yogurt-with-honey-cinnamon-and-pomegranate",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Hummus with Carrot, Cucumber, and Red Pepper Sticks": {
+      "photoKey": "hummus-and-carrot-sticks",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Hummus and Egg Plate with Carrot, Cucumber, and Red Pepper (Non-Vegan Alt)": {
+      "photoKey": "hummus-and-carrot-sticks",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Hummus and Carrot Sticks": {
+      "photoKey": "hummus-and-carrot-sticks"
+    },
+    "Lentil Bolognese": {
+      "photoKey": "lentil-bolognese"
+    },
+    "Lentil Soup with Turmeric and Ginger": {
+      "photoKey": "lentil-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Lentil Soup (Quick)": {
+      "photoKey": "lentil-soup"
+    },
+    "Simple Tomato Lentil Stew": {
+      "photoKey": "lentil-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Mediterranean Pasta Salad": {
+      "photoKey": "mediterranean-pasta-salad"
+    },
+    "Mixed Berries with Walnuts": {
+      "photoKey": "mixed-berries-with-walnuts"
+    },
+    "Oat Banana Pancakes (2-Ingredient)": {
+      "photoKey": "oat-banana-pancakes"
+    },
+    "Turmeric Ginger Oatmeal with Berries and Walnuts": {
+      "photoKey": "overnight-oats-with-chia-and-berries",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Overnight Oats with Cinnamon, Walnuts, and Raspberries": {
+      "photoKey": "overnight-oats-with-chia-and-berries",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Overnight Oats with Milk, Honey, Walnuts, and Raspberries (Non-Vegan Alt)": {
+      "photoKey": "overnight-oats-with-chia-and-berries",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Overnight Oats with Chia and Berries": {
+      "photoKey": "overnight-oats-with-chia-and-berries"
+    },
+    "Warm Quinoa Breakfast Bowl": {
+      "photoKey": "overnight-oats-with-chia-and-berries",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turmeric Roasted Chickpeas": {
+      "photoKey": "roasted-chickpeas",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turmeric Roasted Chickpeas with Parmesan (Non-Vegan Alt)": {
+      "photoKey": "roasted-chickpeas",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Chickpeas (Quick)": {
+      "photoKey": "roasted-chickpeas"
+    },
+    "Salmon and Avocado Breakfast Bowl": {
+      "photoKey": "salmon-rice-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Salmon Rice Bowl": {
+      "photoKey": "salmon-rice-bowl"
+    },
+    "Grilled Shrimp with Asparagus, Lemon, and Cherry Tomatoes": {
+      "photoKey": "shrimp-zucchini-noodles",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Ginger Turmeric Stir-Fry with Shrimp, Bell Pepper, and Snap Peas (Non-Vegan Alt)": {
+      "photoKey": "shrimp-zucchini-noodles",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Shrimp Zucchini Noodles": {
+      "photoKey": "shrimp-zucchini-noodles"
+    },
+    "Spinach and Mushroom Omelet with Olive Oil": {
+      "photoKey": "spinach-and-mushroom-omelet-with-olive-oil"
+    },
+    "Veggie Omelette": {
+      "photoKey": "spinach-and-mushroom-omelet-with-olive-oil",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tomato Mozzarella Snack Plate": {
+      "photoKey": "tomato-mozzarella-plate"
+    },
+    "Green Tea and Mixed Nuts": {
+      "photoKey": "trail-mix-cup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Green Tea with Honey-Drizzled Mixed Nuts (Non-Vegan Alt)": {
+      "photoKey": "trail-mix-cup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Trail Mix Cup": {
+      "photoKey": "trail-mix-cup"
+    },
+    "Turkey Meatballs with Tomato Sauce": {
+      "photoKey": "turkey-meatballs-with-tomato-sauce"
+    },
+    "Veggie Fried Rice (Egg)": {
+      "photoKey": "veggie-fried-rice"
+    },
+    "Walnut and Date Energy Balls": {
+      "photoKey": "walnut-and-date-energy-balls"
+    },
+    "Walnut, Date, and Honey Energy Balls (Non-Vegan Alt)": {
+      "photoKey": "walnut-and-date-energy-balls",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turmeric Scrambled Eggs with Spinach and Roasted Tomatoes": {
+      "photoKey": "scrambled-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turkey Sausage and Spinach Scramble": {
+      "photoKey": "scrambled-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cottage Cheese and Egg Scramble with Chives": {
+      "photoKey": "scrambled-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Spinach and Feta Scramble": {
+      "photoKey": "scrambled-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Green Smoothie Bowl (Spinach, Pineapple, Ginger, Flaxseed)": {
+      "photoKey": "green-smoothie-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Green Smoothie Bowl with Greek Yogurt (Non-Vegan Alt)": {
+      "photoKey": "green-smoothie-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Anti-Inflammatory Golden Milk Smoothie Bowl": {
+      "photoKey": "golden-smoothie-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Golden Milk Smoothie Bowl with Dairy Milk and Honey (Non-Vegan Alt)": {
+      "photoKey": "golden-smoothie-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Kefir Berry Smoothie with Flaxseed": {
+      "photoKey": "berry-smoothie",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Berry Spinach Smoothie": {
+      "photoKey": "berry-smoothie",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Smoked Salmon and Avocado Toast with Everything Seasoning": {
+      "photoKey": "smoked-salmon-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Smoked Salmon Cucumber Toast": {
+      "photoKey": "smoked-salmon-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Fried Egg Toast with Sauteed Greens, Radish, and Pomegranate": {
+      "photoKey": "fried-egg-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cottage Cheese with Berries and Flaxseed": {
+      "photoKey": "cottage-cheese-berries",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Loaded Quinoa Power Salad with Chickpeas, Roasted Vegetables, and Feta": {
+      "photoKey": "quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Kale and White Bean Salad with Roasted Sweet Potato and Soft Egg": {
+      "photoKey": "quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Vegetable and Farro Bowl with Chickpeas and Tahini": {
+      "photoKey": "quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Mediterranean Loaded Chickpea Salad with Grilled Chicken and Feta": {
+      "photoKey": "chicken-avocado-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Grilled Chicken and Kale Bowl with Lemon-Anchovy Dressing": {
+      "photoKey": "chicken-avocado-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken Avocado Salad": {
+      "photoKey": "chicken-avocado-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Sweet Potato, Black Bean, and Grilled Chicken Buddha Bowl": {
+      "photoKey": "chicken-quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Vegetable and Farro Bowl with Grilled Chicken and Tahini (Non-Vegan Alt)": {
+      "photoKey": "chicken-quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Quinoa Chicken Salad": {
+      "photoKey": "chicken-quinoa-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Beet, Walnut, and Chickpea Salad with Goat Cheese": {
+      "photoKey": "beet-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Beet, Orange, and Avocado Salad with Feta and Walnuts": {
+      "photoKey": "beet-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Grilled Peach, Burrata, and Tomato Salad with Basil and Pistachios": {
+      "photoKey": "burrata-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Shrimp and Avocado Rice Bowl with Lime": {
+      "photoKey": "shrimp-rice-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken and Lentil Soup with Turmeric and Ginger (Non-Vegan Alt)": {
+      "photoKey": "chicken-vegetable-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken and Spinach Stew with Whole Grain Bread (Non-Vegan Alt)": {
+      "photoKey": "chicken-vegetable-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken Veggie Soup": {
+      "photoKey": "chicken-vegetable-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken Rice Soup": {
+      "photoKey": "chicken-vegetable-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Herb-Roasted Chicken with Root Vegetables": {
+      "photoKey": "roasted-chicken",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "One-Pan Paprika Chicken": {
+      "photoKey": "roasted-chicken",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Slow-Cooked Beef and Vegetable Stew with Turmeric": {
+      "photoKey": "beef-vegetable-stew",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Cod with Roasted Cauliflower, Olive Oil, and Turmeric": {
+      "photoKey": "roasted-white-fish",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Trout with Steamed Kale, Quinoa, and Roasted Beets": {
+      "photoKey": "roasted-white-fish",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Halibut with Roasted Fennel and Olives": {
+      "photoKey": "roasted-white-fish",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Cod with Lemon and Greens": {
+      "photoKey": "roasted-white-fish",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Ginger Turmeric Stir-Fry with Tofu, Bell Pepper, and Snap Peas": {
+      "photoKey": "tofu-stir-fry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tofu Stir-Fry Bowl": {
+      "photoKey": "tofu-stir-fry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Baked Tofu with Roasted Veggies": {
+      "photoKey": "grilled-tofu",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Grilled Mackerel with Sauteed Spinach, Garlic, and Roasted Tomatoes": {
+      "photoKey": "grilled-mackerel",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Mackerel Potato Plate": {
+      "photoKey": "grilled-mackerel",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Veggie Couscous": {
+      "photoKey": "vegetable-couscous",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken and Spinach Curry with Brown Rice (Non-Vegan Alt)": {
+      "photoKey": "chicken-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken and Lentil Curry with Brown Rice (Non-Vegan Alt)": {
+      "photoKey": "chicken-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Vegetable and Chicken Curry (Non-Vegan Alt)": {
+      "photoKey": "chicken-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Pea Soup (Quick)": {
+      "photoKey": "pea-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Pumpkin Seeds with Ginger": {
+      "photoKey": "pumpkin-seeds",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Roasted Pumpkin Seeds with Ginger and Parmesan (Non-Vegan Alt)": {
+      "photoKey": "pumpkin-seeds",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turmeric Deviled Eggs": {
+      "photoKey": "deviled-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Smoked Salmon and Cucumber Bites with Dill": {
+      "photoKey": "salmon-cucumber-bites",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Kefir Green Smoothie with Mango and Ginger": {
+      "photoKey": "green-smoothie",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Grilled Chicken and Broccoli Bowl with Turmeric Rice": {
+      "photoKey": "chicken-rice-broccoli",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Lentil and Vegetable Curry with Brown Rice": {
+      "photoKey": "lentil-curry",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tempeh and Broccoli Stir-Fry with Ginger": {
+      "photoKey": "tempeh-bowl",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Banana Cinnamon Snack": {
+      "photoKey": "banana-snack",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Greek Yogurt with Nuts and Honey": {
+      "photoKey": "yogurt-nuts-honey",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Greek Yogurt Snack Cup": {
+      "photoKey": "yogurt-nuts-honey",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chia Seed Pudding Cup with Mixed Berries": {
+      "photoKey": "chia-berry-pudding",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chia Seed Pudding Cup with Milk, Honey, and Mixed Berries (Non-Vegan Alt)": {
+      "photoKey": "chia-berry-pudding",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cinnamon Chia Pudding": {
+      "photoKey": "chia-berry-pudding",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Beef and Veggie Skillet": {
+      "photoKey": "beef-vegetable-skillet",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Beef Spinach Rice Bowl": {
+      "photoKey": "beef-vegetable-skillet",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cucumber, Red Onion, and Corn Salad with Herbed Yogurt Dressing": {
+      "photoKey": "cucumber-corn-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Bean and Corn Salsa Bowl": {
+      "photoKey": "cucumber-corn-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Braised Cabbage and Apple with Soft-Boiled Egg": {
+      "photoKey": "cabbage-eggs",
+      "match": "representative",
+      "note": "Cabbage and egg are pictured as a salad rather than braised; apple is not shown."
+    },
+    "Miso Ginger Soup with Tofu, Bok Choy, and Soba Noodles": {
+      "photoKey": "tofu-noodle-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Miso Ginger Soup with Shrimp, Bok Choy, and Soba Noodles (Non-Vegan Alt)": {
+      "photoKey": "shrimp-noodle-soup",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cucumber Tuna Bites": {
+      "photoKey": "tuna-salad",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Sweet Potato and Black Bean Breakfast Hash": {
+      "photoKey": "sweet-potato-rounds",
+      "match": "ingredient",
+      "note": "Roasted sweet potato is pictured; the other ingredients and toppings are not shown."
+    },
+    "Chicken Sausage and Sweet Potato Breakfast Skillet": {
+      "photoKey": "sweet-potato-rounds",
+      "match": "ingredient",
+      "note": "Roasted sweet potato is pictured; the other ingredients and toppings are not shown."
+    },
+    "Honey-Pecan Brie Sweet Potato Rounds": {
+      "photoKey": "sweet-potato-rounds",
+      "match": "ingredient",
+      "note": "Roasted sweet potato is pictured; the other ingredients and toppings are not shown."
+    },
+    "Ham and Spinach Frittata Muffins": {
+      "photoKey": "egg-muffins",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Golden Milk (Turmeric Latte)": {
+      "photoKey": "golden-milk",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turkey Chili with Kidney Beans, Bell Peppers, and Avocado": {
+      "photoKey": "bean-chili",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Bean Chili (Quick)": {
+      "photoKey": "bean-chili",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turkey and Avocado Wrap on Whole Grain Tortilla with Roasted Peppers": {
+      "photoKey": "turkey-wrap",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Turkey and Cucumber Roll-Ups with Mustard": {
+      "photoKey": "turkey-wrap",
+      "match": "representative",
+      "note": "Turkey is pictured in a tortilla wrap rather than cucumber roll-ups."
+    },
+    "Turkey Hummus Wrap": {
+      "photoKey": "turkey-wrap",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chicken and Avocado Lettuce Cups": {
+      "photoKey": "chicken-lettuce",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tuna and White Bean Salad with Olive Oil": {
+      "photoKey": "tuna-bean",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tuna and White Bean Bowl": {
+      "photoKey": "tuna-bean",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Bean Tuna Salad": {
+      "photoKey": "tuna-bean",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Sardine and Arugula Salad with White Beans and Olive Oil": {
+      "photoKey": "sardine-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Sardine Toast with Lemon": {
+      "photoKey": "sardine-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Sardine Rice Bowl": {
+      "photoKey": "sardine-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tomato Egg Stir Fry": {
+      "photoKey": "tomato-eggs",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Avocado Toast with Fried Egg and Feta (Non-Vegan Alt)": {
+      "photoKey": "avocado-egg-toast",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Peanut Butter Banana Oat Bowl": {
+      "photoKey": "banana-oatmeal",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Oats with Cocoa and Banana": {
+      "photoKey": "cocoa-banana-oats",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Peanut Butter and Banana Rice Cakes": {
+      "photoKey": "peanut-banana-rice-cakes",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Avocado Yogurt Dip Plate": {
+      "photoKey": "avocado-dip",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Stuffed Bell Peppers with Quinoa, Black Beans, and Corn": {
+      "photoKey": "stuffed-peppers",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Beef and Quinoa Stuffed Bell Peppers (Non-Vegan Alt)": {
+      "photoKey": "stuffed-peppers",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Chickpea and Spinach Stew with Whole Grain Bread": {
+      "photoKey": "chickpea-stew",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Apple Slices with Greek Yogurt and Cinnamon": {
+      "photoKey": "apple-yogurt",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Tomato Basil White Bean Stew": {
+      "photoKey": "white-bean-stew",
+      "match": "representative",
+      "note": "Serving suggestion; toppings, sides and preparation may differ."
+    },
+    "Cottage Cheese and Pineapple Bowl": {
+      "photoKey": "cottage-cheese",
+      "match": "ingredient",
+      "note": "Cottage cheese is pictured; the pineapple topping is not shown."
+    },
+    "Tomato Basil Egg Muffins": {
+      "photoKey": "vegetarian-egg-muffins",
+      "match": "representative",
+      "note": "Baked vegetable eggs are pictured as a frittata rather than individual muffins."
+    }
+  },
+  "fallbackPhotoKey": "meal-ingredients"
+}

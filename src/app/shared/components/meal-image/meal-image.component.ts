@@ -1,5 +1,5 @@
-import { Component, Input, computed, signal } from '@angular/core';
-import { MealPhoto, photoFor } from '../../meal-photos';
+import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
+import { FALLBACK_MEAL_PHOTO, MealPhoto, mealImageCandidates, photoFor } from '../../meal-photos';
 
 type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 
@@ -17,15 +17,14 @@ export function shortDishName(name: string): string {
 }
 
 /**
- * A recipe photo when a matched, licensed one exists; otherwise a designed tile
- * with the dish's short name. Never an unrelated photo.
+ * One image path for every meal view, with local recovery for broken backend URLs.
  */
 @Component({
   selector: 'app-meal-image',
   standalone: true,
   template: `
-    @if (photo(); as p) {
-      <img class="photo" [src]="p.src" [alt]="p.alt" loading="lazy" />
+    @if (src(); as source) {
+      <img class="photo" [src]="source" [alt]="alt()" [attr.loading]="eager ? 'eager' : 'lazy'" decoding="async" (load)="loaded()" (error)="failed(source)" />
     } @else {
       <div class="fallback" [class]="'fallback is-' + type().toLowerCase()" role="img" [attr.aria-label]="dishName()">
         <span class="plate" aria-hidden="true"></span>
@@ -57,13 +56,41 @@ export function shortDishName(name: string): string {
 export class MealImageComponent {
   private readonly _name = signal('');
   private readonly _type = signal<MealType>('LUNCH');
+  private readonly _imageUrl = signal<string | null>(null);
+  private readonly failedSources = signal<string[]>([]);
 
-  @Input({ required: true }) set name(v: string) { this._name.set(v ?? ''); }
+  @Input({ required: true }) set name(v: string) {
+    if ((v ?? '') !== this._name()) this.failedSources.set([]);
+    this._name.set(v ?? '');
+  }
   @Input() set mealType(v: MealType | undefined) { if (v) this._type.set(v); }
+  @Input() set imageUrl(v: string | undefined | null) {
+    if ((v ?? null) !== this._imageUrl()) this.failedSources.set([]);
+    this._imageUrl.set(v ?? null);
+  }
+  @Input() eager = false;
+  @Output() imageLoaded = new EventEmitter<MealPhoto | null>();
 
   readonly type = this._type.asReadonly();
   readonly dishName = this._name.asReadonly();
-  readonly photo = computed<MealPhoto | null>(() => photoFor(this._name()));
+  readonly src = computed(() => mealImageCandidates(this._name(), this._imageUrl()).find((src) => !this.failedSources().includes(src)) ?? null);
+  readonly photo = computed<MealPhoto | null>(() => {
+    const matched = photoFor(this._name());
+    return matched?.src === this.src() ? matched : this.src() === FALLBACK_MEAL_PHOTO.src ? FALLBACK_MEAL_PHOTO : null;
+  });
+  readonly alt = computed(() => {
+    const photo = this.photo();
+    if (!photo) return this._name();
+    const prefix = photo.match === 'exact' ? '' : photo.match === 'ingredient' ? 'Ingredient photo: ' : 'Serving suggestion: ';
+    return prefix + photo.alt;
+  });
   readonly shortName = computed(() => shortDishName(this._name()));
 
+  failed(src: string) {
+    if (src !== this.src()) return;
+    this.failedSources.update((failed) => failed.includes(src) ? failed : [...failed, src]);
+    this.imageLoaded.emit(null);
+  }
+
+  loaded() { this.imageLoaded.emit(this.photo()); }
 }
