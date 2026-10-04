@@ -1,0 +1,14 @@
+<ion-content [fullscreen]="true"><main class="sn-page sn-screen">
+  <header class="sn-head"><a class="sn-back" routerLink="/tabs/health">My health</a><h1>My report history</h1><p class="sn-head-note">Keep earlier findings and choose which report you want to bring to your next visit.</p></header>
+  <a class="sn-btn sn-btn--brand" routerLink="/health/report">Add another report</a>
+  <p>Each report keeps its own findings. Selecting one changes your overview and appointment summary; details missing from it stay unknown.</p>
+  @if (error()) { <p role="alert" class="error">{{ error() }}</p> }@if (status()) { <p role="status">{{ status() }}</p> }
+  @for (report of reports(); track report.id) {
+    <article class="sn-card"><h2>{{ report.title }}</h2><p>{{ report.reportDate ? 'Report date: ' + report.reportDate : 'Report date not recorded' }}</p>
+      @if (record().activeReportId === report.id) { <p class="current">Current report · used in My health and your summary</p> }
+      <dl>@for (key of keys; track key) { <div><dt>{{ defs[key].fieldLabel }}</dt><dd>{{ report.findings[key]?.completeness?.state === 'present' ? $any(report.findings[key]?.completeness).value : report.findings[key]?.completeness?.state === 'absent' ? 'Report explicitly says it is not affected' : 'Not recorded in this report' }}</dd>@if (report.findings[key]?.originalWording) { <dd class="hint">“{{ report.findings[key]?.originalWording }}”</dd> }</div> }</dl>
+      @if (record().activeReportId !== report.id) { <button type="button" class="sn-btn sn-btn--apricot" [disabled]="busy()" (click)="select(report)">Use this report for my next visit</button> }
+    </article>
+  } @empty { <section class="sn-card"><p>No report history yet. Your existing manually entered details are still in My health and will be kept when you add a new report.</p></section> }
+  <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my appointment summary</a>
+</main></ion-content>

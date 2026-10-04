@@ -9,8 +9,12 @@
     </div>
 
     <h1>How was {{ dateLabel() === 'Today' ? 'today' : dateLabel() }}?</h1>
-    <p class="sub">Fill in only what you want. Tap a choice again to clear it.</p>
+    <p class="sub">Keep a note for your next visit, so you don’t have to remember everything on the day. Symptoms, their impact and your notes can go into your appointment summary.</p>
+    <p class="sub">Optional. Record only what matters to you; you don’t need to log every day. Tap a choice again to clear it.</p>
 
+    @if (ready()) {
+      <section class="panel" aria-labelledby="remember-h"><h2 id="remember-h">What do you want to remember today?</h2><p>Choose just the things you want to record.</p><div class="chips">@for (section of sections; track section[0]) { <button type="button" class="chip" [attr.aria-pressed]="visible().includes(section[0])" (click)="toggleSection(section[0])">{{ section[1] }}</button> }</div></section>
+    @if (visible().includes('bleeding')) {
     <section class="panel" aria-labelledby="bleed-h">
       <h2 id="bleed-h">Bleeding</h2>
       <div class="chips">
@@ -19,7 +23,9 @@
         }
       </div>
     </section>
+    }
 
+    @if (visible().includes('pain')) {
     <section class="panel" aria-labelledby="pain-h">
       <h2 id="pain-h">Pain</h2>
       <p class="scale-note">0 is no pain, 10 is the worst pain you can imagine.</p>
@@ -29,7 +35,9 @@
         }
       </div>
     </section>
+    }
 
+    @if (visible().includes('bloating')) {
     <section class="panel" aria-labelledby="bloat-h">
       <h2 id="bloat-h">Pressure or bloating</h2>
       <div class="chips">
@@ -38,7 +46,9 @@
         }
       </div>
     </section>
+    }
 
+    @if (visible().includes('fatigue')) {
     <section class="panel" aria-labelledby="tired-h">
       <h2 id="tired-h">Tiredness</h2>
       <div class="chips">
@@ -47,7 +57,9 @@
         }
       </div>
     </section>
+    }
 
+    @if (visible().includes('affected')) {
     <section class="panel" aria-labelledby="impact-h">
       <h2 id="impact-h">Did it get in the way of…</h2>
       <div class="chips">
@@ -57,7 +69,9 @@
         <button type="button" class="chip" [attr.aria-pressed]="affected()?.length === 0" (click)="noneAffected()">None of these</button>
       </div>
     </section>
+    }
 
+    @if (visible().includes('more')) {
     <section class="panel" aria-labelledby="more-h">
       <h2 id="more-h">Anything else</h2>
       <label class="sn-field">
@@ -69,11 +83,16 @@
         <input type="text" [(ngModel)]="treatmentChange" placeholder="e.g. started iron tablets" />
       </label>
     </section>
+    }
+
+
+    } @else { <p role="status">Loading your check-in…</p> }
 
     <p class="private">This is your own record, not a medical assessment.</p>
 
     <div class="actions">
-      <button type="button" class="sn-btn sn-btn--apricot" (click)="save()">Save</button>
+      @if (error()) { <p role="alert">{{ error() }}</p> }
+      <button type="button" class="sn-btn sn-btn--apricot" [disabled]="!ready() || saving()" (click)="save()">{{ saving() ? 'Saving…' : 'Save for my visit' }}</button>
     </div>
   </main>
 </ion-content>

@@ -17,7 +17,7 @@ export type FindingSource =
   | 'entered-from-report' // typed in by the person while reading their report
   | 'told-by-clinician' // the person's own account of what they were told
   | 'self-reported'
-  | 'extracted-and-confirmed'; // future: from an uploaded report, confirmed by the person
+  | 'extracted-and-confirmed'; // read on device from a report, checked by the person
 
 export const SOURCE_LABELS: Record<FindingSource, string> = {
   'entered-from-report': 'From your report, entered by you',
@@ -55,6 +55,9 @@ export interface Finding {
 export interface FindingDefinition {
   key: FindingKey;
   label: string;
+  /** Specific instructions for the editable field; separate from compact summary labels. */
+  fieldLabel: string;
+  inputHint: string;
   /** Asked one at a time while recording. */
   question: string;
   /** Placeholder for the value field. */
@@ -72,6 +75,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
   count: {
     key: 'count',
     label: 'Fibroids',
+    fieldLabel: 'Number of fibroids',
+    inputHint: 'Enter the number mentioned, or copy wording such as “multiple fibroids” if no number is given.',
     question: 'How many fibroids does your report mention?',
     example: 'e.g. 2',
     canBeAbsent: false,
@@ -82,6 +87,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
   largestSize: {
     key: 'largestSize',
     label: 'Largest',
+    fieldLabel: 'Size of the largest fibroid',
+    inputHint: 'Include the unit, cm or mm. If several measurements are given, copy them together, for example 41 × 36 mm.',
     question: 'How big is the largest one?',
     example: 'e.g. 4.1 cm or 41 x 36 mm',
     canBeAbsent: false,
@@ -92,6 +99,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
   location: {
     key: 'location',
     label: 'Location',
+    fieldLabel: 'Where the fibroids are located',
+    inputHint: 'Copy the location words as written. You don’t need to translate medical terms.',
     question: 'Where are they, in your report’s words?',
     example: 'e.g. intramural, posterior wall',
     canBeAbsent: false,
@@ -102,6 +111,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
   cavity: {
     key: 'cavity',
     label: 'Uterine cavity',
+    fieldLabel: 'What is written about the uterine cavity',
+    inputHint: 'Copy the statement about the cavity. If it is not mentioned, choose “I don’t know”.',
     question: 'Does your report say whether the uterine cavity is affected?',
     example: 'e.g. cavity distorted by a submucosal fibroid',
     canBeAbsent: true,
@@ -113,6 +124,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
   figo: {
     key: 'figo',
     label: 'FIGO type',
+    fieldLabel: 'FIGO type stated in the report',
+    inputHint: 'Copy the type exactly, for example “FIGO 2”. If no FIGO type is written, choose “I don’t know”.',
     question: 'Does your report give a FIGO type?',
     example: 'e.g. FIGO 2',
     canBeAbsent: false,
@@ -135,6 +148,33 @@ export interface AppointmentQuestion {
 export interface Appointment {
   date?: string; // YYYY-MM-DD
   with?: string;
+}
+
+/** The person's account of a visit, never an app-generated treatment plan. */
+export interface VisitReview {
+  date: string;
+  discussion: string;
+  nextSteps: string;
+  followUp: string;
+}
+
+export interface CareTask {
+  id: string;
+  title: string;
+  visitDate?: string;
+  dueDate?: string;
+  reminderAt?: string;
+  completedAt?: string;
+  createdAt: string;
+}
+
+/** A report is kept separately so later scans never erase earlier findings. */
+export interface HealthReport {
+  id: string;
+  title: string;
+  reportDate?: string;
+  savedAt: string;
+  findings: Partial<Record<FindingKey, Finding>>;
 }
 
 export type BleedingLevel = 'none' | 'spotting' | 'light' | 'moderate' | 'heavy' | 'very-heavy';
@@ -192,7 +232,22 @@ export interface HealthRecord {
   summaryNotes: string;
   /** Whether check-ins go into the appointment summary. Missing means yes. */
   summaryIncludesCheckins?: boolean;
+  summaryPeriodDays?: 14 | 30 | 90;
   symptoms: SymptomEntry[];
+  visitGoal?: string;
+  visits?: VisitReview[];
+  tasks?: CareTask[];
+  reports?: HealthReport[];
+  activeReportId?: string;
+  /** Missing selections preserve the previous behavior for existing records. */
+  summaryQuestionIds?: string[];
+  summaryAnswerIds?: string[];
+  summarySymptomDates?: string[];
+  summaryVisitDates?: string[];
+}
+
+export function unansweredQuestions(record: HealthRecord): AppointmentQuestion[] {
+  return record.questions.filter((q) => !q.answer?.trim());
 }
 
 export function emptyHealthRecord(): HealthRecord {

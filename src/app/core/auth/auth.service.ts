@@ -6,6 +6,7 @@ import { MealProgressService } from '../services/meal-progress.service';
 import { ChallengesService } from '../services/challenges.service';
 import { CustomChallengesService } from '../services/custom-challenges.service';
 import { firstValueFrom, from, map, switchMap, tap } from 'rxjs';
+import { CareReminders } from '../../my-health/steps/care-reminders.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
   private mealProgress = inject(MealProgressService);
   private challenges = inject(ChallengesService);
   private customChallenges = inject(CustomChallengesService);
+  private careReminders = inject(CareReminders);
 
   private readonly TOKEN_KEY = 'access_token';
   private readonly REFRESH_KEY = 'refresh_token';
@@ -90,6 +92,7 @@ export class AuthService {
   }
 
   logout(): void {
+    void this.careReminders.clear().catch(() => undefined);
     this.accessToken = null;
     this.refreshToken = null;
     this.onboardingCompleted = false;

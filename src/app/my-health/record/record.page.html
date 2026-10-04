@@ -8,6 +8,9 @@
     </div>
 
     <h1>{{ def().question }}</h1>
+    @if (key() === 'count') {
+      <a class="report-link" routerLink="/health/report" [queryParams]="{ from: inFlow ? 'flow' : 'health' }">Have the report? Read a photo or PDF instead</a>
+    }
 
     <button type="button" class="why" [attr.aria-expanded]="showWhy()" (click)="showWhy.set(!showWhy())">
       {{ showWhy() ? '– ' : '+ ' }}What does this mean?
@@ -21,7 +24,7 @@
 
     <div class="choices" role="radiogroup" [attr.aria-label]="def().question">
       <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'present'" (click)="choose('present')">
-        I know this
+        I have this information
       </button>
       @if (def().canBeAbsent) {
         <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'absent'" (click)="choose('absent')">
@@ -37,12 +40,25 @@
       <section class="panel">
         @if (answer() === 'present') {
           <label class="sn-field">
-            <span>{{ def().label }}</span>
-            <input type="text" [(ngModel)]="value" [placeholder]="def().example" />
+            <span id="finding-label">{{ def().fieldLabel }}</span>
+            <input type="text" [(ngModel)]="value" [placeholder]="def().example" aria-labelledby="finding-label" aria-describedby="input-hint" [disabled]="!ready() || saving()" />
+            <span class="input-hint" id="input-hint">{{ def().inputHint }}</span>
           </label>
+          @if (needsUnit()) {
+            <div class="sn-field">
+              <span>Unit written in your report</span>
+              <div class="sn-segment" role="group" aria-label="Size unit">
+                <button type="button" [attr.aria-pressed]="unit === 'cm'" (click)="unit = 'cm'">cm</button>
+                <button type="button" [attr.aria-pressed]="unit === 'mm'" (click)="unit = 'mm'">mm</button>
+              </div>
+              <p class="input-hint">Choose the unit shown. Sanelle won’t guess it.</p>
+            </div>
+          }
         }
+        <details class="source-details" [open]="!inFlow || step() === 1">
+          <summary>Source: {{ sourceChoices[source] }}{{ source === 'entered-from-report' && reportDate ? ' · ' + reportDate : '' }} · Edit details</summary>
         <div class="sn-field">
-          <span>Where is this from?</span>
+          <span>Where did you get this information?</span>
           <div class="sn-segment">
             @for (s of sources; track s) {
               <button type="button" [attr.aria-pressed]="source === s" (click)="source = s">{{ sourceChoices[s] }}</button>
@@ -51,14 +67,17 @@
         </div>
         @if (source === 'entered-from-report') {
           <label class="sn-field">
-            <span>Report wording <em>(optional)</em></span>
-            <textarea [(ngModel)]="wording" placeholder="Copy the sentence from your report"></textarea>
+            <span>Exact sentence about this detail <em>(optional)</em></span>
+            <textarea [(ngModel)]="wording" placeholder="e.g. Two intramural fibroids are noted."></textarea>
+            <span class="input-hint">Keep the report’s words beside this detail. Leave this blank if you don’t want to copy the sentence.</span>
           </label>
           <label class="sn-field">
-            <span>Report date <em>(optional)</em></span>
+            <span>Date printed on the report <em>(optional)</em></span>
             <input type="date" [(ngModel)]="reportDate" />
+            @if (inFlow) { <span class="input-hint">We’ll use this source and date for the next details. You can change them on any step.</span> }
           </label>
         }
+        </details>
       </section>
     }
 
@@ -78,8 +97,8 @@
     }
 
     <div class="actions">
-      <button type="button" class="sn-btn sn-btn--apricot" (click)="save()">
-        {{ inFlow && step() < total ? 'Save and continue' : 'Save' }}
+      <button type="button" class="sn-btn sn-btn--apricot" [disabled]="!ready() || saving()" (click)="save()">
+        {{ inFlow && step() < total ? 'Save and continue' : fromSummary() ? 'Save to my summary' : 'Save' }}
       </button>
       <button type="button" class="sn-btn sn-btn--outline-on-brand" (click)="skip()">Skip for now</button>
     </div>

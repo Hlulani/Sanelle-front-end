@@ -6,6 +6,12 @@
       <p class="sn-head-note">{{ coverage() }}</p>
     </header>
 
+    <section class="sn-card">
+      <h2>Bring what you’ve noticed</h2>
+      <p>Your entries help you describe symptoms and their impact at your visit. Review them here, then choose the period to include in your summary.</p>
+      <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my appointment summary</a>
+    </section>
+
     @if (entries().length) {
       @if (observations().length) {
         <section class="sn-card obs" aria-labelledby="obs-title">
@@ -47,6 +53,7 @@
               @if (e.notes) {
                 <p class="entry-note">“{{ e.notes }}”</p>
               }
+              <a class="edit" routerLink="/health/questions" [queryParams]="{ from: 'history', draft: questionFor(e) }">Make this a question for my visit</a>
             </li>
           }
         </ol>

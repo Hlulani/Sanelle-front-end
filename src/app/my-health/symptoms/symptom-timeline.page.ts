@@ -30,6 +30,10 @@ export class SymptomTimelinePage {
   private router = inject(Router);
 
   readonly span = signal(14);
+  questionFor(e: SymptomEntry): string {
+    const details = [...symptomParts(e), impactLine(e), e.notes].filter(Boolean).join('; ');
+    return `On ${e.date} I noted: ${details || e.treatmentChange || 'a change I want to discuss'}. What should we discuss or monitor?`;
+  }
   readonly todayIso = isoDay(new Date());
   readonly entries = computed(() => checkinsInWindow(this.repo.record().symptoms ?? [], this.span()));
   readonly coverage = computed(() => coverageLine(this.entries().length, this.span()));

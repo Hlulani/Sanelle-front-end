@@ -37,7 +37,12 @@ export class SymptomLogPage implements OnInit {
   readonly impactOptions = Object.entries(IMPACT_LABELS) as [ImpactArea, string][];
   readonly painScale = Array.from({ length: 11 }, (_, i) => i);
 
+  readonly sections = [['bleeding', 'Bleeding'], ['pain', 'Pain'], ['bloating', 'Pressure or bloating'], ['fatigue', 'Tiredness'], ['affected', 'Impact on my day'], ['more', 'A note or treatment change']] as const;
+  readonly visible = signal<string[]>([]);
+  readonly ready = signal(false);
   readonly date = signal(isoToday());
+  readonly saving = signal(false);
+  readonly error = signal<string | null>(null);
   readonly bleeding = signal<BleedingLevel | undefined>(undefined);
   readonly pain = signal<number | undefined>(undefined);
   readonly bloating = signal<SymptomLevel | undefined>(undefined);
@@ -64,6 +69,7 @@ export class SymptomLogPage implements OnInit {
     if (from === 'health' || from === 'history') this.from.set(from);
     await this.repo.load();
     this.fill(this.repo.symptomsOn(this.date()));
+    this.ready.set(true);
   }
 
   private fill(e: SymptomEntry | undefined) {
@@ -74,6 +80,20 @@ export class SymptomLogPage implements OnInit {
     this.affected.set(e?.affected ? [...e.affected] : undefined);
     this.notes = e?.notes ?? '';
     this.treatmentChange = e?.treatmentChange ?? '';
+    this.visible.set(this.sections.filter(([key]) => key === 'more' ? !!(e?.notes || e?.treatmentChange) : e?.[key] !== undefined).map(([key]) => key));
+  }
+
+  toggleSection(key: string) {
+    const selected = this.visible().includes(key);
+    this.visible.update((values) => selected ? values.filter((v) => v !== key) : [...values, key]);
+    if (selected) {
+      if (key === 'more') { this.notes = ''; this.treatmentChange = ''; }
+      else if (key === 'affected') this.affected.set(undefined);
+      else if (key === 'bleeding') this.bleeding.set(undefined);
+      else if (key === 'pain') this.pain.set(undefined);
+      else if (key === 'bloating') this.bloating.set(undefined);
+      else if (key === 'fatigue') this.fatigue.set(undefined);
+    }
   }
 
   changeDate(value: string) {
@@ -97,7 +117,11 @@ export class SymptomLogPage implements OnInit {
   }
 
   async save() {
-    await this.repo.saveSymptoms({
+    if (!this.ready() || this.saving()) return;
+    this.saving.set(true);
+    this.error.set(null);
+    try {
+      await this.repo.saveSymptoms({
       date: this.date(),
       bleeding: this.bleeding(),
       pain: this.pain(),
@@ -106,7 +130,13 @@ export class SymptomLogPage implements OnInit {
       affected: this.affected(),
       notes: this.notes.trim() || undefined,
       treatmentChange: this.treatmentChange.trim() || undefined,
-    });
+      });
+    } catch {
+      this.error.set('Could not save your check-in. Please try again.');
+      return;
+    } finally {
+      this.saving.set(false);
+    }
     // Back to where she started, with a short confirmation on Today. Never into another questionnaire.
     if (this.from() === 'history') {
       this.router.navigateByUrl('/health/symptoms', { replaceUrl: true });

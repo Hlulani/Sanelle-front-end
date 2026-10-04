@@ -1,0 +1,5 @@
+ion-content { --background: var(--sn-canvas); }
+.sn-card { margin: 1rem; }
+.current { color: var(--sn-brand); font-weight: 800; }
+dl { display: grid; gap: .75rem; margin: 0; }dt { font-weight: 800; }dd { margin: .25rem 0 0; overflow-wrap: anywhere; }
+.hint { color: var(--sn-muted); font-size: .875rem; }.error { color: var(--sn-error); font-weight: 700; }

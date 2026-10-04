@@ -1,9 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
-import { AppointmentQuestion, FINDINGS, FINDING_KEYS, findingOrUnknown } from '../diagnosis.model';
+import { AppointmentQuestion, FINDINGS, FINDING_KEYS, findingOrUnknown, unansweredQuestions } from '../diagnosis.model';
 
 export const STARTER_QUESTIONS = [
   'What do the words in my report mean?',
@@ -19,12 +20,16 @@ export const STARTER_QUESTIONS = [
   templateUrl: './questions.page.html',
   styleUrls: ['./questions.page.scss'],
 })
-export class QuestionsPage {
+export class QuestionsPage implements OnInit {
   private repo = inject(HealthRepository);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   readonly questions = this.repo.questions;
+  readonly pendingCount = computed(() => unansweredQuestions(this.repo.record()).length);
+  readonly answeredCount = computed(() => this.questions().length - this.pendingCount());
+  readonly error = signal<string | null>(null);
   readonly editing = signal<string | null>(null);
   readonly answering = signal<string | null>(null);
   readonly fromCheckin = signal(false);
@@ -50,43 +55,49 @@ export class QuestionsPage {
     return STARTER_QUESTIONS.filter((text) => !have.has(text.toLowerCase()));
   });
 
-  readonly backLabel = computed(() => (this.from() === 'today' ? 'Today' : 'My health'));
-  private readonly from = signal<'today' | 'health'>('health');
+  readonly backLabel = computed(() => ({ today: 'Today', health: 'My health', history: 'Symptoms' })[this.from()]);
+  private readonly from = signal<'today' | 'health' | 'history'>('health');
 
-  ionViewWillEnter() {
-    this.from.set(this.route.snapshot.queryParamMap.get('from') === 'today' ? 'today' : 'health');
+  ngOnInit() {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => this.prepareDraft(params));
+  }
+
+  ionViewWillEnter() { void this.repo.load(); }
+
+  private prepareDraft(params: ParamMap) {
+    const from = params.get('from');
+    this.from.set(from === 'today' || from === 'history' ? from : 'health');
     // A question drafted from a check-in arrives here to be edited, not saved for her.
-    const draft = this.route.snapshot.queryParamMap.get('draft');
+    const draft = params.get('draft');
     if (draft) {
       this.newQuestion = draft;
       this.fromCheckin.set(true);
     }
-    void this.repo.load();
   }
 
   back() {
-    this.router.navigateByUrl(this.from() === 'today' ? '/tabs/today' : '/tabs/health');
+    this.router.navigateByUrl({ today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()]);
   }
 
-  addStarter(text: string) {
-    void this.repo.addQuestion(text);
+  async addStarter(text: string) {
+    if (await this.saveChange(() => this.repo.addQuestion(text))) this.added.set(text);
   }
 
-  addSuggestion(s: { key: (typeof FINDING_KEYS)[number]; text: string }) {
-    void this.repo.addQuestion(s.text, s.key);
+  async addSuggestion(s: { key: (typeof FINDING_KEYS)[number]; text: string }) {
+    if (await this.saveChange(() => this.repo.addQuestion(s.text, s.key))) this.added.set(s.text);
   }
 
-  addOwn() {
+  async addOwn() {
     const text = this.newQuestion.trim();
     if (!text) return;
-    void this.repo.addQuestion(text);
+    if (!await this.saveChange(() => this.repo.addQuestion(text))) return;
     this.newQuestion = '';
     this.added.set(text);
     this.fromCheckin.set(false);
   }
 
   move(q: AppointmentQuestion, delta: -1 | 1) {
-    void this.repo.moveQuestion(q.id, delta);
+    void this.saveChange(() => this.repo.moveQuestion(q.id, delta));
   }
 
   startEdit(q: AppointmentQuestion) {
@@ -95,9 +106,9 @@ export class QuestionsPage {
     this.draft = q.text;
   }
 
-  saveEdit(q: AppointmentQuestion) {
+  async saveEdit(q: AppointmentQuestion) {
     const text = this.draft.trim();
-    if (text) void this.repo.updateQuestion(q.id, { text });
+    if (!text || !await this.saveChange(() => this.repo.updateQuestion(q.id, { text }))) return;
     this.editing.set(null);
   }
 
@@ -107,12 +118,23 @@ export class QuestionsPage {
     this.draft = q.answer ?? '';
   }
 
-  saveAnswer(q: AppointmentQuestion) {
-    void this.repo.updateQuestion(q.id, { answer: this.draft.trim() || undefined });
+  async saveAnswer(q: AppointmentQuestion) {
+    if (!await this.saveChange(() => this.repo.updateQuestion(q.id, { answer: this.draft.trim() || undefined }))) return;
     this.answering.set(null);
   }
 
+  async saveChange(change: () => Promise<void>): Promise<boolean> {
+    this.error.set(null);
+    try {
+      await change();
+      return true;
+    } catch {
+      this.error.set('Could not save your changes. Please try again.');
+      return false;
+    }
+  }
+
   remove(q: AppointmentQuestion) {
-    void this.repo.removeQuestion(q.id);
+    void this.saveChange(() => this.repo.removeQuestion(q.id));
   }
 }

@@ -19,9 +19,10 @@
       @switch (next().kind) {
         @case ('start') {
           <h2 class="q" id="next-q">Start with what you know</h2>
-          <p class="prompt">Blanks are fine. We’ll turn them into questions.</p>
-          <p class="meta">5 short questions. A report helps, but isn’t required.</p>
-          <button type="button" class="sn-btn sn-btn--brand" (click)="record()">Record my diagnosis</button>
+          <p class="prompt">Keep what your report says for your visit. Blanks stay visible and can become questions for your clinician.</p>
+          <p class="meta">Have your report? Capture it and check the details. You can also enter what you know yourself.</p>
+          <a class="sn-btn sn-btn--brand" routerLink="/health/report">Take a photo or choose my report</a>
+          <button type="button" class="secondary" (click)="record()">Enter details myself</button>
         }
         @case ('continue') {
           @if (progress(); as pr) {
@@ -44,16 +45,14 @@
           <a class="secondary" routerLink="/tabs/tab2">{{ hasPlan() ? 'See my meal plan' : 'Plan my meals' }}</a>
         }
         @case ('appointment') {
-          <h2 class="q" id="next-q">Prepare for your gynae</h2>
+          <h2 class="q" id="next-q">Prepare for your next visit</h2>
           <p class="prompt">
             {{ questionCount()
               ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved. Add more whenever something comes up.'
               : 'Save what you want to ask. Add an appointment date whenever you’re ready.' }}
           </p>
-          <a class="sn-btn sn-btn--brand" routerLink="/health/questions" [queryParams]="{ from: 'today' }">Prepare my questions</a>
-          @if (questionCount()) {
-            <a class="secondary" routerLink="/health/summary">Open my summary</a>
-          }
+          <a class="sn-btn sn-btn--brand" routerLink="/tabs/health">See my visit preparation</a>
+          <a class="secondary" routerLink="/health/questions" [queryParams]="{ from: 'today' }">Prepare my questions</a>
         }
         @case ('ask') {
           @if (ask(); as a) {
@@ -63,15 +62,38 @@
           }
         }
         @default {
-          <h2 class="q" id="next-q">{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} ready</h2>
-          <p class="prompt">Check your summary before the appointment.</p>
-          <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Open my summary</a>
+          <h2 class="q" id="next-q">{{ questionCount() ? questionCount() + (questionCount() === 1 ? ' question ready' : ' questions ready') + ' for your next doctor’s visit' : 'Prepare for your next doctor’s visit' }}</h2>
+          <p class="prompt">Review the questions and notes you want to bring to your doctor.</p>
+          <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my visit summary</a>
         }
       }
       @if (justSaved()) {
         <p class="saved-note" role="status">Saved: “{{ justSaved() }}”</p>
       }
     </section>
+
+    @if (openSteps().length) {
+      <section class="block"><div class="block-head"><h2>My next steps</h2><a class="see-all" routerLink="/health/steps">See all</a></div>
+        @for (task of openSteps().slice(0, 2); track task.id) { <a class="card-row" routerLink="/health/steps"><span class="card-text"><span class="card-title">{{ task.title }}</span><span class="card-sub">{{ task.dueDate ? (task.dueDate < todayIso ? 'Date has passed · ' : 'Planned for ') + task.dueDate : 'No date set' }} · Open to update or mark done</span></span><span class="chev" aria-hidden="true">›</span></a> }
+      </section>
+    }
+    @if (started()) {
+      <section class="block" aria-labelledby="visit-title">
+        <div class="block-head"><h2 id="visit-title">For your next visit</h2><a class="see-all" routerLink="/tabs/health">Review</a></div>
+        @if (visitGoal()) { <p class="prompt">Your main concern for your next doctor’s visit: {{ visitGoal() }}</p> }
+        <a class="card-row" routerLink="/health/questions" [queryParams]="{ from: 'today' }">
+          <span class="card-text"><span class="card-title">{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} to ask</span><span class="card-sub">{{ pendingQuestions()[0]?.text || 'Save what you want your clinician to help with.' }}</span></span>
+          <span class="chev" aria-hidden="true">›</span>
+        </a>
+        <a class="card-row" routerLink="/health/summary">
+          <span class="card-text"><span class="card-title">Review what I’ll bring</span><span class="card-sub">Your priorities, report details, questions and optional symptom notes, ready to share or print.</span></span>
+          <span class="chev" aria-hidden="true">›</span>
+        </a>
+        @if (lastVisit(); as visit) {
+          <a class="card-row" routerLink="/health/visit"><span class="card-text"><span class="card-title">What happened at my last visit</span><span class="card-sub">{{ visit.followUp || visit.nextSteps || 'Review your saved conversation and follow-up.' }}</span></span><span class="chev" aria-hidden="true">›</span></a>
+        }
+      </section>
+    }
 
     @if (started()) {
       <section class="block" aria-labelledby="checkin-title">
@@ -91,6 +113,8 @@
             @if (e.treatmentChange) {
               <p class="checkin-parts">Treatment change: {{ e.treatmentChange }}</p>
             }
+            <a class="edit-link" routerLink="/health/summary">Review this in my appointment summary</a>
+            <p class="checkin-parts">You choose the period and whether to share your check-ins.</p>
           </div>
           @if (support().length) {
             <h2 class="support-title" id="support-title">What would help right now?</h2>
@@ -108,7 +132,7 @@
           <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">
             <span class="card-text">
               <span class="card-title" id="checkin-title">How was today?</span>
-              <span class="card-sub">Optional. Bleeding, pain, tiredness and what it got in the way of.</span>
+              <span class="card-sub">Optional notes to help you describe symptoms at your visit. You choose what to include in your summary.</span>
             </span>
             <span class="chev" aria-hidden="true">›</span>
           </a>
@@ -159,9 +183,9 @@
         }
         @case ('appointment') {
           <section class="block">
-            <a class="card-row" routerLink="/health/questions" [queryParams]="{ from: 'today' }">
+            <a class="card-row" routerLink="/tabs/health">
               <span class="card-text">
-                <span class="card-title">Prepare for your gynae</span>
+                <span class="card-title">Prepare for your next visit</span>
                 <span class="card-sub">
                   {{ questionCount()
                     ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved so far.'
@@ -182,7 +206,7 @@
           <ul class="meal-strip" *ngIf="todaysMeals().length; else noMeals">
             <li *ngFor="let meal of todaysMeals()">
               <button type="button" class="meal" (click)="openMeal(meal)">
-                <app-meal-image class="meal-img" [name]="meal.name" [mealType]="meal.mealType"></app-meal-image>
+                <app-meal-image class="meal-img" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image>
                 <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
                 <span class="meal-name">{{ meal.name }}</span>
               </button>

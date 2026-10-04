@@ -8,7 +8,7 @@ import {
   IonToggle,
   AlertController,
 } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
 import { NotificationService } from '../core/services/notification.service';
 
@@ -28,6 +28,7 @@ import {
   styleUrls: ['account.page.scss'],
   imports: [
     CommonModule,
+    RouterLink,
           IonContent,
     IonButton,
         IonIcon,

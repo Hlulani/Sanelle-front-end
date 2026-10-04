@@ -2,20 +2,48 @@
   <main class="sn-page sn-screen">
     <header class="sn-head">
       <h1>My health</h1>
+      <p class="sn-head-note">Bring what you know, what you’ve noticed and what you want to ask to your next visit.</p>
     </header>
 
     <section class="sn-card" aria-labelledby="appt-title">
-      <h2 id="appt-title" class="appt-title">Next appointment</h2>
+      <h2 id="appt-title" class="appt-title">Your next visit</h2>
+      <p class="purpose">This is where your preparation comes together. You don’t need an appointment date to begin.</p>
+      <div class="visit-links">
+        <a class="sn-row" routerLink="/health/steps"><span class="sn-row-text"><span class="sn-row-name">My next steps</span><span>{{ openSteps().length ? openSteps().length + ' to follow through on' : 'Dates, reminders and steps you agreed' }}</span></span><span class="sn-chev" aria-hidden="true">›</span></a>
+        <a class="sn-row" routerLink="/health/questions">
+          <span class="sn-row-text"><span class="sn-row-name">Questions to ask</span><span>{{ pendingQuestions().length ? pendingQuestions().length + ' unanswered · most important first' : 'Choose what you want to ask' }}</span></span>
+          <span class="sn-chev" aria-hidden="true">›</span>
+        </a>
+        <a class="sn-row" routerLink="/health/symptoms">
+          <span class="sn-row-text"><span class="sn-row-name">What I’ve noticed</span><span>{{ checkinCount() ? checkinCount() + ' check-ins in the last 30 days · review for your visit' : 'Optional notes to help describe symptoms and their impact' }}</span></span>
+          <span class="sn-chev" aria-hidden="true">›</span>
+        </a>
+      </div>
+      <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review what I’ll bring</a>
+      <p class="purpose">Your priorities, findings, questions and optional symptom notes, ready to share or print.</p>
+      @if (visitGoal) { <p class="purpose"><strong>My main concern for this visit:</strong> {{ visitGoal }}</p> }
+      <details class="visit-details">
+        <summary>{{ visitGoal || appointment().date || appointment().with ? 'Edit my main concern and appointment details' : 'Add my main concern or appointment details' }}</summary>
       <div class="appt-fields">
         <label class="sn-field">
-          <span>Date</span>
+          <span>Date <em>(optional)</em></span>
           <input type="date" [ngModel]="appointment().date ?? ''" (ngModelChange)="setDate($event)" />
         </label>
         <label class="sn-field">
-          <span>With</span>
+          <span>With <em>(optional)</em></span>
           <input type="text" placeholder="e.g. my gynaecologist" [ngModel]="appointment().with ?? ''" (change)="setWith($any($event.target).value)" />
         </label>
       </div>
+      @if (appointment().date && appointment().date! < todayIso) {
+        <p class="purpose">This appointment date has passed. <a routerLink="/health/visit">Record what happened</a>, or update the date when your next visit is booked.</p>
+      }
+      <label class="sn-field">
+        <span>What would you like help with at your next doctor’s visit? <em>(optional)</em></span>
+        <textarea [(ngModel)]="visitGoal" (blur)="saveGoal()" rows="4" placeholder="e.g. I’m worried about whether my fibroids could affect my chances of having a baby"></textarea>
+      </label>
+      <p class="purpose">Write the main thing you want your doctor to help with. It appears first in your visit summary.</p>
+      @if (saveError()) { <p class="save-error" role="alert">{{ saveError() }}</p> }
+      </details>
     </section>
 
     <section class="sn-section" aria-labelledby="dx-title">
@@ -27,6 +55,10 @@
           <span class="count">{{ unknownCount() }} not recorded</span>
         }
       </div>
+      <p class="purpose">Keep your report details here. Anything missing stays visible in your summary and can become a question.</p>
+      <a class="sn-btn sn-btn--brand" routerLink="/health/report">Read a photo or PDF of my report</a>
+      @if (activeReport(); as report) { <p class="purpose">Showing: <strong>{{ report.title }}</strong>{{ report.reportDate ? ' · ' + report.reportDate : ' · report date not added' }}. Missing details are missing from this report.</p> }
+      <a routerLink="/health/reports" class="see-all">View my report history</a>
       <ul class="sn-rows">
         @for (f of rows(); track f.key) {
           <li>
@@ -47,6 +79,7 @@
         <h2 id="sym-title">Symptoms</h2>
         <a class="see-all" routerLink="/health/symptoms">See all</a>
       </div>
+      <p class="purpose">Record what you want to remember, so you can describe it at your visit. Your last 30 days can go into your summary; daily logging is optional.</p>
       <p class="coverage">{{ coverage() }}</p>
       @if (latest(); as e) {
         <a class="latest" routerLink="/health/symptoms">
@@ -65,26 +98,34 @@
     <div class="sn-band">
       <section class="sn-section" aria-labelledby="q-title">
         <div class="sn-section-head">
-          <h2 id="q-title">Questions</h2>
+          <h2 id="q-title">Questions for your next visit</h2>
           <a class="band-link" routerLink="/health/questions">{{ questions().length ? 'Edit' : 'Add' }}</a>
         </div>
-        @if (questions().length) {
+        @if (pendingQuestions().length) {
           <ol class="q-preview">
-            @for (q of questions().slice(0, 3); track q.id) {
+            @for (q of pendingQuestions().slice(0, 3); track q.id) {
               <li>{{ q.text }}</li>
             }
           </ol>
-          @if (questions().length > 3) {
-            <p class="more">+ {{ questions().length - 3 }} more</p>
+          @if (pendingQuestions().length > 3) {
+            <p class="more">+ {{ pendingQuestions().length - 3 }} more</p>
           }
         } @else {
-          <p class="empty">No questions yet. Missing details become suggestions.</p>
+          <p class="empty">No unanswered questions. Add what you want help with, or choose a suggestion.</p>
         }
+        @if (answeredCount()) { <p class="more">{{ answeredCount() }} answered. Your recorded answers stay in your question list; choose any you want to bring in your summary.</p> }
       </section>
 
       <section class="sn-section">
-        <a class="sn-btn sn-btn--apricot" routerLink="/health/summary">Prepare my summary</a>
+        <h2>After your visit</h2>
+        <p class="more">Keep what your clinician said, agreed next steps and follow-up. Unanswered questions stay ready for next time.</p>
+        @if (lastVisit(); as visit) {
+          <p class="more">Latest saved visit: {{ visit.date }}</p>
+          @if (visit.followUp) { <p class="more">Follow-up you noted: {{ visit.followUp }}</p> }
+        }
+        <a class="sn-btn sn-btn--apricot" routerLink="/health/visit">{{ visitCount() ? 'Review or add visit notes' : 'Record what happened at my visit' }}</a>
       </section>
+      <section class="sn-section"><h2>Keep your records</h2><p class="more">Health records stay on this device. Save an encrypted backup so you can restore them on another phone or browser.</p><a class="sn-btn sn-btn--apricot" routerLink="/health/backup">Back up or restore my records</a></section>
     </div>
   </main>
 </ion-content>

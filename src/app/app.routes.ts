@@ -4,9 +4,17 @@ import { AuthShellPage } from './auth/auth-shell.page';
 
 
 export const routes: Routes = [
+  { path: 'health/steps', loadComponent: () => import('./my-health/steps/steps.page').then(m => m.StepsPage), canActivate: [authGuard] },
+  { path: 'health/reports', loadComponent: () => import('./my-health/reports/reports.page').then(m => m.ReportsPage), canActivate: [authGuard] },
+  { path: 'health/backup', loadComponent: () => import('./my-health/backup/backup.page').then(m => m.BackupPage), canActivate: [authGuard] },
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', loadComponent: () => import('./welcome/welcome.page').then(m => m.WelcomePage) },
   { path: 'auth', component: AuthShellPage },
+  {
+    path: 'health/report',
+    loadComponent: () => import('./my-health/report/report.page').then(m => m.ReportPage),
+    canActivate: [authGuard],
+  },
   {
     path: 'health/record/:key',
     loadComponent: () => import('./my-health/record/record.page').then(m => m.RecordPage),
@@ -35,6 +43,11 @@ export const routes: Routes = [
   {
     path: 'health/symptoms/log/:date',
     loadComponent: () => import('./my-health/symptoms/symptom-log.page').then(m => m.SymptomLogPage),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'health/visit',
+    loadComponent: () => import('./my-health/visit/visit.page').then(m => m.VisitPage),
     canActivate: [authGuard],
   },
   {

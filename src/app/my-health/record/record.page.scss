@@ -135,3 +135,11 @@ h1 {
   display: grid;
   gap: 0.75rem;
 }
+
+.input-hint { color: var(--sn-muted); font-size: 0.875rem; font-weight: 400; }
+.report-link { color: var(--sn-apricot); font-weight: 800; min-height: var(--sn-tap); display: inline-flex; align-items: center; }
+.source-details {
+  summary { color: var(--sn-brand); font-weight: 800; min-height: var(--sn-tap); cursor: pointer; align-content: center; }
+  summary:focus-visible { outline: 3px solid var(--sn-brand); outline-offset: 2px; }
+  .sn-field { margin-top: 0.75rem; }
+}

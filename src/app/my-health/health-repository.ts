@@ -8,8 +8,12 @@ import {
   FindingKey,
   HealthRecord,
   SymptomEntry,
+  VisitReview,
+  CareTask,
+  HealthReport,
   emptyHealthRecord,
   hasContent,
+  unansweredQuestions,
 } from './diagnosis.model';
 
 /**
@@ -37,6 +41,7 @@ export class HealthRepository {
   private readonly state = signal<HealthRecord>(emptyHealthRecord());
   private loadedFor: string | null = null;
   private loading: Promise<void> | null = null;
+  private saveQueue: Promise<void> = Promise.resolve();
 
   readonly record = this.state.asReadonly();
   readonly questions = computed(() => this.state().questions);
@@ -64,19 +69,96 @@ export class HealthRepository {
           // A corrupt record is ignored rather than crashing the app.
         }
       }
-      this.state.set(record);
+      if (this.loadedFor === key) this.state.set(record);
     })();
     return this.loading;
   }
 
   saveFinding(finding: Finding): Promise<void> {
-    const stamped: Finding = { ...finding, updatedAt: new Date().toISOString() };
-    // An unknown finding carries no source: there is nothing it came from.
-    if (stamped.completeness.state === 'unknown') {
-      delete stamped.source;
-      delete stamped.originalWording;
-    }
-    return this.update((r) => ({ ...r, findings: { ...r.findings, [finding.key]: stamped } }));
+    return this.saveFindings([finding]);
+  }
+
+  /** Saves manual edits together, preserving unedited fields and the report's prior revision. */
+  saveFindings(findings: Finding[]): Promise<void> {
+    const changes = findings.map((finding) => {
+      const stamped: Finding = { ...finding, updatedAt: new Date().toISOString() };
+      // An unknown finding carries no source: there is nothing it came from.
+      if (stamped.completeness.state === 'unknown') {
+        delete stamped.source;
+        delete stamped.originalWording;
+        delete stamped.reportDate;
+      }
+      return stamped;
+    });
+    return this.update((r) => {
+      const next = changes.reduce((all, f) => ({ ...all, [f.key]: f }), r.findings);
+      // Editing the overview preserves a dated revision of the selected report.
+      const reports = r.activeReportId ? (r.reports ?? []).map((report) => report.id === r.activeReportId
+        ? { ...report, findings: next } : report) : r.reports;
+      const prior = r.activeReportId ? (r.reports ?? []).find((report) => report.id === r.activeReportId) : undefined;
+      return { ...r, findings: next, reports: prior ? [...(reports ?? []), { ...prior, id: newId(), title: prior.title + ' · before edit' }] : reports };
+    });
+  }
+
+  saveReport(findings: Finding[], title: string, reportDate?: string, makeCurrent = true): Promise<void> {
+    return this.update((r) => {
+      const savedAt = new Date().toISOString();
+      const report: HealthReport = {
+        id: newId(), title: title.trim() || 'My report', reportDate, savedAt,
+        findings: findings.reduce<HealthReport['findings']>((all, finding) => ({ ...all, [finding.key]: { ...finding, updatedAt: savedAt } }), {}),
+      };
+      const reports = [...(r.reports ?? [])];
+      let activeReportId = r.activeReportId;
+      if (!r.activeReportId && Object.keys(r.findings).length) {
+        const previous = { id: newId(), title: 'Previously recorded details', savedAt, findings: r.findings };
+        reports.push(previous);
+        activeReportId = previous.id;
+      }
+      reports.push(report);
+      return { ...r, reports, activeReportId: makeCurrent ? report.id : activeReportId, ...(makeCurrent ? { findings: report.findings } : {}) };
+    });
+  }
+
+  selectReport(id: string): Promise<void> {
+    return this.update((r) => {
+      const report = r.reports?.find((item) => item.id === id);
+      if (!report) throw new Error('Report not found.');
+      return { ...r, activeReportId: id, findings: report.findings };
+    });
+  }
+
+  saveTask(task: Omit<CareTask, 'id' | 'createdAt'> & { id?: string }): Promise<void> {
+    return this.update((r) => {
+      const prior = r.tasks?.find((item) => item.id === task.id);
+      const next: CareTask = { ...task, id: prior?.id ?? newId(), createdAt: prior?.createdAt ?? new Date().toISOString(), title: task.title.trim() };
+      if (!next.title) throw new Error('Add a next step.');
+      return { ...r, tasks: [...(r.tasks ?? []).filter((item) => item.id !== next.id), next] };
+    });
+  }
+
+  completeTask(id: string, completed: boolean): Promise<void> {
+    return this.update((r) => ({ ...r, tasks: (r.tasks ?? []).map((task) => task.id === id ? { ...task, completedAt: completed ? new Date().toISOString() : undefined } : task) }));
+  }
+
+  removeTask(id: string): Promise<void> {
+    return this.update((r) => ({ ...r, tasks: (r.tasks ?? []).filter((task) => task.id !== id) }));
+  }
+
+  setSummarySelection(changes: Partial<Pick<HealthRecord, 'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'>>): Promise<void> {
+    return this.update((r) => ({ ...r, ...changes }));
+  }
+
+  toggleSummarySelection(key: keyof Pick<HealthRecord, 'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'>, id: string, include: boolean): Promise<void> {
+    return this.update((r) => {
+      const defaults = key === 'summaryQuestionIds' ? unansweredQuestions(r).slice(0, 3).map((q) => q.id)
+        : key === 'summarySymptomDates' ? r.symptoms.map((entry) => entry.date) : [];
+      const current = r[key] ?? defaults;
+      return { ...r, [key]: include ? [...new Set([...current, id])] : current.filter((value) => value !== id) };
+    });
+  }
+
+  restoreRecord(record: HealthRecord): Promise<void> {
+    return this.update(() => record);
   }
 
   addQuestion(text: string, findingKey?: FindingKey): Promise<void> {
@@ -133,7 +215,19 @@ export class HealthRepository {
   }
 
   setAppointment(appointment: Appointment): Promise<void> {
-    return this.update((r) => ({ ...r, appointment }));
+    return this.update((r) => ({ ...r, appointment: { ...r.appointment, ...appointment } }));
+  }
+
+  setVisitGoal(goal: string): Promise<void> {
+    return this.update((r) => ({ ...r, visitGoal: goal.trim() }));
+  }
+
+  saveVisit(visit: VisitReview): Promise<void> {
+    return this.update((r) => ({
+      ...r,
+      visits: [...(r.visits ?? []).filter((v) => v.date !== visit.date), visit]
+        .sort((a, b) => b.date.localeCompare(a.date)),
+    }));
   }
 
   setSummaryNotes(notes: string): Promise<void> {
@@ -142,6 +236,10 @@ export class HealthRepository {
 
   setSummaryIncludesCheckins(include: boolean): Promise<void> {
     return this.update((r) => ({ ...r, summaryIncludesCheckins: include }));
+  }
+
+  setSummaryPeriodDays(days: 14 | 30 | 90): Promise<void> {
+    return this.update((r) => ({ ...r, summaryPeriodDays: days }));
   }
 
   /** Removes this person's records from the device (used when deleting the account). */
@@ -159,13 +257,18 @@ export class HealthRepository {
     }
   }
 
-  private async update(change: (r: HealthRecord) => HealthRecord): Promise<void> {
-    await this.load();
+  private update(change: (r: HealthRecord) => HealthRecord): Promise<void> {
     const email = this.auth.getUserEmail();
-    if (!email) return;
-    const next = change(this.state());
-    if (next === this.state()) return;
-    this.state.set(next);
-    await this.store.set(storageKeyFor(email), JSON.stringify(next));
+    const saved = this.saveQueue.then(async () => {
+      if (!email || this.auth.getUserEmail() !== email) throw new Error('The signed-in account changed.');
+      await this.load();
+      if (this.auth.getUserEmail() !== email) throw new Error('The signed-in account changed.');
+      const next = change(this.state());
+      if (next === this.state()) return;
+      await this.store.set(storageKeyFor(email), JSON.stringify(next));
+      if (this.auth.getUserEmail() === email) this.state.set(next);
+    });
+    this.saveQueue = saved.catch(() => undefined);
+    return saved;
   }
 }
