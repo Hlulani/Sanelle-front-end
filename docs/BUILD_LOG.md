@@ -44,3 +44,7 @@ Built before the event in the earlier meal-planner project, then moved into thes
 ### Not built yet
 
 Recording a diagnosis, saving questions (the button on Today is demo-only and nothing is stored), allergy exclusions, the appointment summary, symptom records, report upload, and reworking meal selection without the /5 scores.
+
+## 4. Subsequent implementation (4 October 2026)
+
+The status above records the earlier visual slice. Diagnosis entry, encrypted health records, questions/answers, check-ins, appointment summaries, dated visit notes, local report capture/review and the revised meal-selection flow have since been implemented. The latest work also adds report history, selected-summary controls, trackable agreed steps, encrypted backup/restore and the Nourish preview/day/week flow. See [implementation and validation details](product-improvements-2026-10-04.md) for current behavior and remaining device-testing limits.

@@ -20,23 +20,30 @@ The app has four tabs: **Today**, **My health**, **Nourish** and **Learn**.
 - **Recording:** five questions (number, largest size, location, uterine cavity, FIGO type), one at a time. "I don't know" is a real answer and becomes a suggested appointment question. **Finish later** keeps what's typed, and **Carry on** picks up where she stopped.
 - **Three states for every finding:** recorded, explicitly absent, or **Not recorded**. Unknown is never shown as "no".
 - **Sources:** every value keeps where it came from (report, appointment or own note), plus the report's own wording and date.
+- **Capture first:** Today offers the report reader before the manual form. Take a photo or choose one PDF (up to 10 pages) or up to 10 photos. PDF.js reads text PDFs; Tesseract reads photos and scanned pages on the device using bundled English language assets. The file is never uploaded or retained. Conservative text matching suggests explicit findings; the person checks, edits and selects details before saving. Missing information stays unknown and replacements require selection. Each suggestion can open the original page with source highlights. Confirmed details go into My health and the appointment summary with their source wording and an optional shared report date.
+- **Report history:** each import has a name, optional report date and its own findings. Choose the current report explicitly. Missing fields stay unknown instead of borrowing details from a different scan. Earlier reports and revisions remain available. Original files are shown during review, then released; they are not retained in history.
+- **Clear manual fields:** labels explain the expected information, size requires an explicit unit, and source/date carry through the guided entry flow. Optional source wording stays available without requiring it for every detail.
 
 ### Navigate food advice (Learn and Nourish)
-- **Food questions:** each answer starts short, then shows evidence separately for getting fibroids, growth, bleeding, pain and fertility. Every study opens with its population and limitations. "No studies found" is never presented as "no effect".
+- **Published resources:** production Learn links directly to NHS patient information about fibroids, heavy periods and the Eatwell Guide, with attribution and optional questions to save. These external resources are separate from Sanelle-authored topics.
+- **Food questions (development drafts until reviewed):** each answer starts short, then shows evidence separately for getting fibroids, growth, bleeding, pain and fertility. Every study opens with its population and limitations. "No studies found" is never presented as "no effect".
 - **Read something else?:** any other claim becomes a question for the appointment.
-- **Meal plans:** built from meals per day, diet (anything, pescatarian, vegetarian, vegan), prep time, allergies and foods she doesn't eat. Allergy and diet rules are applied on the server, so swaps follow them too.
+- **Meal plans:** start with 7 days by default. Choose the schedule and start date, then diet, prep time, allergies and foods she does not eat, then review those choices. Preview the meals and swap recipes before choosing **Use this plan**. The previous plan stays saved until then. Day/week views, preparation times, one-meal swaps with retry, and undo make the saved plan easier to use. Allergy and diet rules still come from the existing API. Food exclusions are displayed as saved only after encrypted device storage succeeds.
 - **Easy meals for today:** meals ready in 15 minutes or less that match her saved preferences.
 - **Groceries:** for the next 3 days, a week or the whole plan, shown by aisle or by meal. Ingredients used in several meals say "for N meals"; free-text amounts are listed, never added up.
 
 ### Prepare for care
-- **Check-ins (optional):** bleeding, pain 0–10, pressure or bloating, tiredness, what it got in the way of, notes and treatment changes. After saving, Today confirms it and offers at most two useful next steps, chosen by explicit rules.
+- **Your next visit:** My health brings preparation together: what matters most to you, unanswered questions, symptom history and a summary to bring. Today previews questions and links directly to this preparation. A date is optional.
+- **Check-ins (optional):** first choose only the areas to remember: bleeding, pain 0–10, pressure or bloating, tiredness, impact, or notes and treatment changes. The form opens just those fields. A saved history entry can become an editable question for the next visit; it is never added automatically. After saving, Today confirms it and offers at most two useful next steps, chosen by explicit rules.
 - **Symptom history:** only recorded check-ins, with coverage stated once ("2 check-ins recorded in the last 14 days"). Observations need at least two check-ins and always use the check-in count as the denominator. Days without a check-in are unknown, never symptom-free.
 - **Questions:** her own, ones suggested from missing details, and starter questions. Each can be edited, reordered and answered afterwards.
-- **Appointment summary:** findings, unknowns, check-in counts, treatment changes, questions and notes, ready to share or print. Check-ins can be left out. It works without an appointment date.
+- **Appointment summary:** the main concern, first three unanswered questions and symptom observations come before supporting report details. Select individual questions/check-ins and the last 14, 30 or 90 days. Earlier answers and visit notes are excluded initially; include only the ones you want to bring. It works without an appointment date and is ready to share or print.
+- **After your visit:** keep dated notes about what was discussed, next steps agreed with your clinician and follow-up to remember. Saved visits remain editable; you choose which visits appear in your summary. Answers stay in your question list for reference and unanswered questions remain ready for next time. An agreed step can be opened in **My next steps**, dated, completed/reopened, exported to a calendar, or given an optional device reminder in the native app. Pending steps also appear on Today. Sanelle does not generate treatment decisions.
 
 ## How health information is handled
 
 - **Health records stay on the device.** Diagnosis details, questions, check-ins and allergies are encrypted (AES-256-GCM) and stored per account on the phone or in the browser, not on the server. The key is held in the iOS Keychain or Android Keystore, or as a non-extractable key in the browser. A different browser, or cleared site data, starts empty.
+- **Portable backup:** My health and Account link to an encrypted health backup. A separate passphrase of at least 12 characters protects the file with PBKDF2-SHA-256 and AES-256-GCM. Unlock and review before explicitly replacing the signed-in account's device records. The file includes findings/history, questions/answers, check-ins, visits, next steps and summary choices; original report files and meal plans are excluded. Imported device reminders remain off. There is no passphrase recovery.
 - **Counts are plain code.** Coverage, frequencies and ranges are calculated by tested functions (`src/app/my-health/checkins.ts`, `summary.ts`). Nothing is generated by AI, and nothing suggests a cause.
 - **Health content is labelled until reviewed.** The diagnosis explanations and food topics (dairy, soy, red meat, green tea) were researched against published papers but haven't been reviewed by a clinician or dietitian. They're labelled "Draft · not reviewed" and left out of production builds (`topics.drafts.prod.ts` replaces the drafts). Some sources were checked from the abstract only, and each one says so.
 - **Symptom explanations appear only once reviewed.** The rule that matches check-ins to explanations exists (`symptom-topics.ts`), but no topic has been reviewed yet, so none is shown.
@@ -47,7 +54,7 @@ The app has four tabs: **Today**, **My health**, **Nourish** and **Learn**.
 - **Framework:** Angular 20, standalone components and signals
 - **UI:** Ionic 8, with Sanelle's own theme (`src/theme/sanelle.scss`)
 - **Type:** Fredoka for page titles and the wordmark, Nunito Sans for everything else (bundled locally)
-- **Native:** Capacitor 8 (Preferences, Secure Storage, Local Notifications, Share, Haptics)
+- **Native:** Capacitor 8 (Preferences, Secure Storage, Local Notifications, Filesystem, Share, Haptics)
 - **Testing:** Karma and Jasmine. **Linting:** ESLint (`@angular-eslint`)
 
 ## Project structure
@@ -59,6 +66,11 @@ src/app/
 ├── today/              # Today: lead action, check-in confirmation and next steps
 ├── my-health/          # Diagnosis recording, questions, check-ins, summary
 │   ├── record/         #   The five diagnosis questions
+│   ├── report/         #   On-device PDF/photo reading and original-page review
+│   ├── reports/        #   Dated history and current report selection
+│   ├── steps/          #   Agreed steps, completion, calendar and native reminders
+│   ├── backup/         #   Passphrase-protected export and explicit restoration
+│   ├── visit/          #   Dated notes and agreed next steps after appointments
 │   ├── symptoms/       #   Check-in form and history
 │   ├── summary-page/   #   Appointment summary
 │   ├── checkins.ts     #   Counts and observations (no generated text)
@@ -87,11 +99,12 @@ Open http://localhost:4200 in Chrome, set DevTools to an iPhone size, and create
 
 ### A quick walkthrough
 
-1. **Diagnosis:** choose "Understanding my diagnosis" in onboarding, then **Record my diagnosis** on Today. Enter `2` with the report's wording, `4.1 cm`, then **I don't know** for location. The question it suggests is added to your list.
-2. **Check-in:** My health → **Check in today**. Choose Severe tiredness and Work or study, then save. Try both suggestions on Today.
-3. **Food:** Learn → "Should I cut out dairy?". Open "Getting fibroids" and Sources, then type a claim into "Read something else?".
-4. **Meals:** Nourish → set a milk allergy → **Make my plan** → Swap and **Groceries** (try **By meal**). Back in Learn, the dairy topic's meals are now hidden.
-5. **Summary:** My health → **Prepare my summary**, then share or print.
+1. **Diagnosis:** My health → **Read a photo or PDF of my report**. Choose an English report, compare suggestions with the original, select the details to save and confirm. Alternatively choose **Record my diagnosis** on Today: enter `2`, then `4.1` with the report's unit, then **I don't know** for location. The question it suggests is added to your list.
+2. **Check-in:** My health → **Check in today**. Choose Tiredness and Impact, record only what matters today, then save. Open Symptoms and turn an entry into an editable appointment question.
+3. **Learn:** open an attributed NHS resource, or save its starter question. Development builds also show clearly labelled draft evidence topics.
+4. **Meals:** Nourish → choose your week → set food exclusions → **Preview my meals** → Swap → **Use this plan**. Try Day/Week and **Groceries** → **By meal**. Challenges are optional and collapsed initially.
+5. **Summary:** My health → **Review what I’ll bring**, choose the questions/check-ins to include, then share or print.
+6. **Follow-through and backup:** save a dated step from your visit notes; complete or reopen it on My next steps. Export a backup, then unlock and review it before restoring.
 
 ## Scripts
 
@@ -118,7 +131,8 @@ npx cap open android    # Android Studio
 
 - **iOS Simulator:** needs full Xcode (`xcodebuild -version`). Open `ios/App/App.xcodeproj` directly; plugins use Swift Package Manager, so there's no workspace or CocoaPods step. Pick a simulator and press ⌘R. Debug builds call `http://localhost:8080`, which the simulator can reach.
 - **Android Emulator:** create a device in Android Studio's Device Manager and press Run. The emulator can't reach your computer's `localhost`; use `http://10.0.2.2:8080` in `environment.ts` when testing against a local backend.
-- **Meal reminders** only work in the native builds, not in a browser.
+- **Meal and next-step reminders** work in the native builds. Browser users can download next-step calendar files. Next-step reminders use generic notification text and are cleared on logout.
+- **Save/share files:** Filesystem and Share are registered in both native projects. iOS includes the required file timestamp and UserDefaults privacy manifest. Physical-device verification remains necessary.
 
 ### App icon and splash screen
 
@@ -138,8 +152,10 @@ npx capacitor-assets generate --ios --android
 ## Known limitations
 
 - **Unreviewed health content.** Everything listed under "How health information is handled" stays labelled as a draft until a named reviewer signs it off.
-- **Manual entry only.** Reading uploaded scan reports isn't built yet.
+- **Report reading:** English only, with conservative matching of explicit statements. OCR can misread text and many report formats will need manual entry. It does not infer a diagnosis, translate reports or interpret measurements. Desktop Chrome capture has been checked; camera behavior and memory use still need testing on physical iOS/Android devices.
 - **Placeholder photos.** 33 of 166 recipes have one, from Unsplash and Pexels (see `docs/design/image-credits.md`). The rest show a designed tile.
 - **Carried-over recipe text.** Some recipe text from an earlier version (such as the "Why it helps" section) still needs reviewing against Sanelle's evidence rules.
-- **Challenges** come from an earlier meal-planning version of the app.
+- **Challenges** come from an earlier meal-planning version and are optional, collapsed until opened.
 - **Allergy filtering** works from ingredient names and isn't a guarantee of allergen safety. Always check labels.
+
+Implementation details and validation: [2026-10-04 improvements](docs/product-improvements-2026-10-04.md).
