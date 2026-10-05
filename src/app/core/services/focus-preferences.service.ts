@@ -24,13 +24,8 @@ export class FocusPreferencesService {
   /** The signed-in account's choices, in pillar order. Empty means none chosen. */
   readonly focus = signal<HelpFocus[]>([]);
 
-  private keyFor(prefix: string): string | null {
-    const email = this.auth.getUserEmail();
-    return email ? prefix + email.toLowerCase() : null;
-  }
-
   async loadFocus(): Promise<HelpFocus[]> {
-    const key = this.keyFor(FOCUS_KEY_PREFIX);
+    const key = this.auth.currentAccountKey(FOCUS_KEY_PREFIX);
     let focus: HelpFocus[] = [];
     if (key) {
       const { value } = await Preferences.get({ key });
@@ -48,17 +43,17 @@ export class FocusPreferencesService {
   async saveFocus(focus: HelpFocus[]): Promise<void> {
     const ordered = HELP_FOCUSES.filter((f) => focus.includes(f));
     this.focus.set(ordered);
-    const key = this.keyFor(FOCUS_KEY_PREFIX);
+    const key = this.auth.currentAccountKey(FOCUS_KEY_PREFIX);
     if (key) await Preferences.set({ key, value: JSON.stringify(ordered) });
   }
 
   async saveDiet(diet: ProteinPreference): Promise<void> {
-    const key = this.keyFor(DIET_KEY_PREFIX);
+    const key = this.auth.currentAccountKey(DIET_KEY_PREFIX);
     if (key) await Preferences.set({ key, value: diet });
   }
 
   async loadDiet(): Promise<ProteinPreference | null> {
-    const key = this.keyFor(DIET_KEY_PREFIX);
+    const key = this.auth.currentAccountKey(DIET_KEY_PREFIX);
     if (!key) return null;
     const { value } = await Preferences.get({ key });
     // Older installs may hold 'MEATY', which is no longer offered.

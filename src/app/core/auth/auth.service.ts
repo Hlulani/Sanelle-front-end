@@ -7,6 +7,7 @@ import { ChallengesService } from '../services/challenges.service';
 import { CustomChallengesService } from '../services/custom-challenges.service';
 import { firstValueFrom, from, map, switchMap, tap } from 'rxjs';
 import { CareReminders } from '../../my-health/steps/care-reminders.service';
+import { accountKey, normalizeEmail } from '../storage/account-key';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -72,7 +73,7 @@ export class AuthService {
         this.mealProgress.clear();
         this.challenges.clear();
         this.customChallenges.clear();
-        void Preferences.set({ key: this.LAST_USER_KEY, value: email.toLowerCase() });
+        void Preferences.set({ key: this.LAST_USER_KEY, value: normalizeEmail(email) });
         if (res?.accessToken && res?.refreshToken) {
           this.storeTokens(res.accessToken, res.refreshToken);
         }
@@ -115,7 +116,7 @@ export class AuthService {
   private async clearLocalDataIfDifferentUser(): Promise<void> {
     const email = this.getUserEmail();
     if (!email) return;
-    const normalized = email.toLowerCase();
+    const normalized = normalizeEmail(email);
 
     const { value: lastEmail } = await Preferences.get({ key: this.LAST_USER_KEY });
     if (lastEmail && lastEmail !== normalized) {
@@ -210,7 +211,13 @@ export class AuthService {
   }
 
   private onboardingKey(email: string): string {
-    return this.ONBOARDING_KEY_PREFIX + email.toLowerCase();
+    return accountKey(this.ONBOARDING_KEY_PREFIX, email);
+  }
+
+  /** A storage key for the signed-in account, or null when nobody is signed in. */
+  currentAccountKey(prefix: string): string | null {
+    const email = this.getUserEmail();
+    return email ? accountKey(prefix, email) : null;
   }
 
   /**
@@ -229,18 +236,18 @@ export class AuthService {
 
   /** The `sub` claim the backend embeds in the access token — this is the user's email. */
   getUserEmail(): string | null {
-    const token = this.getAccessToken();
-    if (!token) return null;
-    const claims = this.decodeJwtPayload(token);
-    return typeof claims?.['sub'] === 'string' ? (claims['sub'] as string) : null;
+    return this.claim('sub');
   }
 
   /** The `username` claim the backend embeds in the access token. */
   getUsername(): string | null {
+    return this.claim('username');
+  }
+
+  private claim(name: string): string | null {
     const token = this.getAccessToken();
-    if (!token) return null;
-    const claims = this.decodeJwtPayload(token);
-    return typeof claims?.['username'] === 'string' ? (claims['username'] as string) : null;
+    const value = token ? this.decodeJwtPayload(token)?.[name] : undefined;
+    return typeof value === 'string' ? value : null;
   }
 
   private getJwtExp(token: string): number | null {

@@ -1,6 +1,5 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { EncryptedStore } from '../storage/encrypted-store.service';
-import { AuthService } from '../auth/auth.service';
+import { Injectable, computed } from '@angular/core';
+import { AccountRecordStore } from '../storage/account-record-store';
 
 /** Must match the backend's Allergen enum; the server rejects unknown codes. */
 export type AllergenCode =
@@ -40,41 +39,19 @@ export function sameRestrictions(a: FoodRestrictions | null, b: FoodRestrictions
  * They're sent with each plan or swap request and enforced by the server.
  */
 @Injectable({ providedIn: 'root' })
-export class FoodRestrictionsService {
-  private auth = inject(AuthService);
-  private store = inject(EncryptedStore);
-  private readonly state = signal<FoodRestrictions>({ allergies: [], dislikes: [] });
-  private loadedFor: string | null = null;
-  private loading: Promise<void> | null = null;
-  private queue: Promise<void> = Promise.resolve();
-  private pendingWrites = 0;
-  private readonly savingState = signal(false);
-  readonly saving = this.savingState.asReadonly();
+export class FoodRestrictionsService extends AccountRecordStore<FoodRestrictions> {
+  protected readonly keyPrefix = KEY_PREFIX;
 
   readonly restrictions = this.state.asReadonly();
   readonly hasAny = computed(() => this.state().allergies.length > 0 || this.state().dislikes.length > 0);
 
-  async load(): Promise<void> {
-    const email = this.auth.getUserEmail();
-    if (!email) {
-      this.state.set({ allergies: [], dislikes: [] });
-      this.loadedFor = null;
-      this.loading = null;
-      return;
-    }
-    const key = KEY_PREFIX + email.toLowerCase();
-    if (this.loadedFor === key && this.loading) return this.loading;
-    this.loadedFor = key;
-    this.loading = (async () => {
-      const value = await this.store.get(key);
-      let next: FoodRestrictions = { allergies: [], dislikes: [] };
-      try {
-        const parsed = value ? (JSON.parse(value) as FoodRestrictions) : null;
-        next = { allergies: parsed?.allergies ?? [], dislikes: parsed?.dislikes ?? [] };
-      } catch { /* Unreadable preferences start empty. */ }
-      if (this.loadedFor === key) this.state.set(next);
-    })();
-    return this.loading;
+  protected empty(): FoodRestrictions {
+    return { allergies: [], dislikes: [] };
+  }
+
+  protected revive(stored: unknown): FoodRestrictions {
+    const parsed = stored as Partial<FoodRestrictions> | null;
+    return { allergies: parsed?.allergies ?? [], dislikes: parsed?.dislikes ?? [] };
   }
 
   toggleAllergy(code: AllergenCode): Promise<void> {
@@ -91,31 +68,5 @@ export class FoodRestrictionsService {
 
   removeDislike(food: string): Promise<void> {
     return this.update((current) => ({ ...current, dislikes: current.dislikes.filter((d) => d !== food) }));
-  }
-
-  /** Removes one account's restrictions from this device (used when deleting the account). */
-  async clearFor(email: string): Promise<void> {
-    await this.queue;
-    await this.store.remove(KEY_PREFIX + email.toLowerCase());
-    if (this.loadedFor === KEY_PREFIX + email.toLowerCase()) {
-      this.loadedFor = null;
-      this.loading = null;
-      this.state.set({ allergies: [], dislikes: [] });
-    }
-  }
-
-  private update(change: (current: FoodRestrictions) => FoodRestrictions): Promise<void> {
-    const email = this.auth.getUserEmail();
-    this.pendingWrites++; this.savingState.set(true);
-    const saved = this.queue.then(async () => {
-      if (!email || email !== this.auth.getUserEmail()) throw new Error('Sign in again before changing your food choices.');
-      await this.load();
-      if (email !== this.auth.getUserEmail()) throw new Error('Your account changed. Sign in again before changing food choices.');
-      const next = change(this.state());
-      await this.store.set(KEY_PREFIX + email.toLowerCase(), JSON.stringify(next));
-      if (email === this.auth.getUserEmail()) this.state.set(next);
-    }).finally(() => { if (--this.pendingWrites === 0) this.savingState.set(false); });
-    this.queue = saved.catch(() => undefined);
-    return saved;
   }
 }

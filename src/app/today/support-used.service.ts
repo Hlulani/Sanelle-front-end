@@ -10,8 +10,7 @@ export class SupportUsedService {
   readonly used = signal<SupportId[]>([]);
 
   private key(): string | null {
-    const email = this.auth.getUserEmail();
-    return email ? `checkin_support_used.${email.toLowerCase()}` : null;
+    return this.auth.currentAccountKey('checkin_support_used.');
   }
 
   async load(today: string): Promise<void> {

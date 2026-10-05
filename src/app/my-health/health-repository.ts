@@ -1,6 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { EncryptedStore } from '../core/storage/encrypted-store.service';
-import { AuthService } from '../core/auth/auth.service';
+import { Injectable, computed } from '@angular/core';
+import { AccountRecordStore } from '../core/storage/account-record-store';
+import { accountKey } from '../core/storage/account-key';
 import {
   AppointmentQuestion,
   Appointment,
@@ -26,7 +26,7 @@ import {
 const KEY_PREFIX = 'sanelle.health.v1.';
 
 export function storageKeyFor(email: string): string {
-  return KEY_PREFIX + email.trim().toLowerCase();
+  return accountKey(KEY_PREFIX, email);
 }
 
 function newId(): string {
@@ -34,44 +34,20 @@ function newId(): string {
 }
 
 @Injectable({ providedIn: 'root' })
-export class HealthRepository {
-  private auth = inject(AuthService);
-  private store = inject(EncryptedStore);
-
-  private readonly state = signal<HealthRecord>(emptyHealthRecord());
-  private loadedFor: string | null = null;
-  private loading: Promise<void> | null = null;
-  private saveQueue: Promise<void> = Promise.resolve();
+export class HealthRepository extends AccountRecordStore<HealthRecord> {
+  protected readonly keyPrefix = KEY_PREFIX;
 
   readonly record = this.state.asReadonly();
   readonly questions = computed(() => this.state().questions);
   readonly hasAnyFinding = computed(() => Object.keys(this.state().findings).length > 0);
 
-  /** Loads the signed-in person's record. Safe to call repeatedly. */
-  load(): Promise<void> {
-    const email = this.auth.getUserEmail();
-    if (!email) {
-      this.state.set(emptyHealthRecord());
-      this.loadedFor = null;
-      return Promise.resolve();
-    }
-    const key = storageKeyFor(email);
-    if (this.loadedFor === key && this.loading) return this.loading;
-    this.loadedFor = key;
-    this.loading = (async () => {
-      const value = await this.store.get(key);
-      let record = emptyHealthRecord();
-      if (value) {
-        try {
-          const parsed = JSON.parse(value) as HealthRecord;
-          if (parsed?.version === 1) record = { ...emptyHealthRecord(), ...parsed };
-        } catch {
-          // A corrupt record is ignored rather than crashing the app.
-        }
-      }
-      if (this.loadedFor === key) this.state.set(record);
-    })();
-    return this.loading;
+  protected empty(): HealthRecord {
+    return emptyHealthRecord();
+  }
+
+  protected revive(stored: unknown): HealthRecord {
+    const parsed = stored as HealthRecord | null;
+    return parsed?.version === 1 ? { ...emptyHealthRecord(), ...parsed } : emptyHealthRecord();
   }
 
   saveFinding(finding: Finding): Promise<void> {
@@ -246,29 +222,5 @@ export class HealthRepository {
   async clearCurrentUser(): Promise<void> {
     const email = this.auth.getUserEmail();
     if (email) await this.clearFor(email);
-  }
-
-  async clearFor(email: string): Promise<void> {
-    await this.store.remove(storageKeyFor(email));
-    if (this.loadedFor === storageKeyFor(email)) {
-      this.state.set(emptyHealthRecord());
-      this.loadedFor = null;
-      this.loading = null;
-    }
-  }
-
-  private update(change: (r: HealthRecord) => HealthRecord): Promise<void> {
-    const email = this.auth.getUserEmail();
-    const saved = this.saveQueue.then(async () => {
-      if (!email || this.auth.getUserEmail() !== email) throw new Error('The signed-in account changed.');
-      await this.load();
-      if (this.auth.getUserEmail() !== email) throw new Error('The signed-in account changed.');
-      const next = change(this.state());
-      if (next === this.state()) return;
-      await this.store.set(storageKeyFor(email), JSON.stringify(next));
-      if (this.auth.getUserEmail() === email) this.state.set(next);
-    });
-    this.saveQueue = saved.catch(() => undefined);
-    return saved;
   }
 }
