@@ -56,6 +56,3 @@ export function mealImageCandidates(name: string | undefined | null, imageUrl?: 
   return [...new Set([backendMealImageSrc(imageUrl), photoFor(name)?.src, FALLBACK_MEAL_PHOTO.src].filter((src): src is string => !!src))];
 }
 
-export function mealImageSrc(name: string | undefined | null, imageUrl?: string | null): string {
-  return mealImageCandidates(name, imageUrl)[0];
-}

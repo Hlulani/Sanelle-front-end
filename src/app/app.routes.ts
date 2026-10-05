@@ -84,10 +84,6 @@ export const routes: Routes = [
   },
 
   {
-    path: 'auth-shell',
-    loadComponent: () => import('./auth/auth-shell.page').then( m => m.AuthShellPage)
-  },
-  {
     path: 'onboarding',
     loadComponent: () => import('./auth/components/onboarding/onboarding.page').then( m => m.OnboardingPage),
     canActivate: [authGuard],

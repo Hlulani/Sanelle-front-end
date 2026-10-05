@@ -112,6 +112,13 @@
   &:focus-visible { outline-color: var(--sn-apricot); }
 }
 
+/* Outlined button on a light surface. */
+.sn-btn--outline {
+  background: var(--sn-surface);
+  color: var(--sn-brand);
+  box-shadow: inset 0 0 0 2px var(--sn-brand);
+}
+
 .sn-btn--quiet {
   background: transparent;
   color: var(--sn-brand);
@@ -393,4 +400,14 @@ ion-tab-button {
 
 @media print {
   ion-tab-bar, .sn-no-print { display: none !important; }
+}
+
+/* Read by screen readers, hidden on screen. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

@@ -19,13 +19,6 @@ export type FindingSource =
   | 'self-reported'
   | 'extracted-and-confirmed'; // read on device from a report, checked by the person
 
-export const SOURCE_LABELS: Record<FindingSource, string> = {
-  'entered-from-report': 'From your report, entered by you',
-  'told-by-clinician': 'What you were told at an appointment',
-  'self-reported': 'Your own note',
-  'extracted-and-confirmed': 'Read from your report, checked by you',
-};
-
 /** One-word source tag shown on collapsed rows. */
 export const SOURCE_TAGS: Record<FindingSource, string> = {
   'entered-from-report': 'Report',
