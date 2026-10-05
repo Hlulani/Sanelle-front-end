@@ -2,7 +2,8 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { MealProgressService } from './meal-progress.service';
 import { ApiService } from './api.service';
-import { ChallengeType, ChallengeProgress, computeChallengeProgress, todayIso } from './challenge-progress.util';
+import { ChallengeType, ChallengeProgress, computeChallengeProgress } from './challenge-progress.util';
+import { localIsoDate } from '../../shared/calendar-date';
 
 export type { ChallengeType, ChallengeProgress };
 
@@ -96,7 +97,7 @@ export class ChallengesService {
 
   join(id: string): void {
     if (this.isJoined(id)) return;
-    const next = { ...this.joinedAt(), [id]: todayIso() };
+    const next = { ...this.joinedAt(), [id]: localIsoDate() };
     this.joinedAt.set(next);
     void Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(next) });
 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { VisitReview } from '../diagnosis.model';
-import { isoDay } from '../checkins';
+import { isIsoDate, localIsoDate } from '../../shared/calendar-date';
 
 @Component({
   selector: 'app-visit',
@@ -16,7 +16,7 @@ import { isoDay } from '../checkins';
 export class VisitPage implements OnInit {
   private repo = inject(HealthRepository);
   readonly record = this.repo.record;
-  readonly today = isoDay(new Date());
+  readonly today = localIsoDate();
   readonly saving = signal(false);
   readonly ready = signal(false);
   readonly status = signal<string | null>(null);
@@ -51,8 +51,7 @@ export class VisitPage implements OnInit {
     if (!this.ready() || this.saving()) return;
     this.error.set(null);
     this.status.set(null);
-    const parsed = new Date(this.date + 'T00:00:00');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(this.date) || isNaN(parsed.getTime()) || isoDay(parsed) !== this.date || this.date > this.today) {
+    if (!isIsoDate(this.date) || this.date > this.today) {
       this.error.set('Choose the date of a visit that has already happened.');
       return;
     }

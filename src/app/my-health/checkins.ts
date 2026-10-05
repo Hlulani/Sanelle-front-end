@@ -1,4 +1,5 @@
 import { BLEEDING_LABELS, IMPACT_LABELS, ImpactArea, LEVEL_LABELS, SymptomEntry } from './diagnosis.model';
+import { addDays, localIsoDate } from '../shared/calendar-date';
 
 /**
  * Plain counts over the check-ins someone recorded. Ordinary code, no generated text.
@@ -15,17 +16,10 @@ import { BLEEDING_LABELS, IMPACT_LABELS, ImpactArea, LEVEL_LABELS, SymptomEntry 
  */
 export const MIN_CHECKINS_FOR_OBSERVATIONS = 2;
 
-export function isoDay(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
 /** Check-ins from the last `days` days (today included), newest first. */
 export function checkinsInWindow(entries: SymptomEntry[], days: number, today = new Date()): SymptomEntry[] {
-  const start = new Date(today);
-  start.setDate(start.getDate() - (days - 1));
-  const from = isoDay(start);
-  const to = isoDay(today);
+  const to = localIsoDate(today);
+  const from = addDays(to, -(days - 1));
   return entries.filter((e) => e.date >= from && e.date <= to).sort((a, b) => b.date.localeCompare(a.date));
 }
 

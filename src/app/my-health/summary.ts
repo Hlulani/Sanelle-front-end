@@ -11,6 +11,7 @@ import {
   findingOrUnknown,
   unansweredQuestions,
 } from './diagnosis.model';
+import { addDays, localIsoDate } from '../shared/calendar-date';
 
 export interface SummaryLine {
   label: string;
@@ -49,20 +50,13 @@ export interface SymptomSummary {
 
 export const SYMPTOM_PERIOD_DAYS = 30;
 
-function isoDay(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
 /**
  * Plain counts over logged days. Missing days are never treated as symptom-free,
  * and nothing here suggests a cause.
  */
 export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), periodDays = SYMPTOM_PERIOD_DAYS): SymptomSummary | null {
-  const start = new Date(today);
-  start.setDate(start.getDate() - (periodDays - 1));
-  const from = isoDay(start);
-  const to = isoDay(today);
+  const to = localIsoDate(today);
+  const from = addDays(to, -(periodDays - 1));
   const inPeriod = entries.filter((e) => e.date >= from && e.date <= to);
   if (!inPeriod.length) return null;
 

@@ -1,5 +1,12 @@
 export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 
+export const MEAL_TYPE_LABELS: Record<MealType, string> = {
+  BREAKFAST: 'Breakfast',
+  LUNCH: 'Lunch',
+  DINNER: 'Dinner',
+  SNACK: 'Snack',
+};
+
 export interface Ingredient {
   name: string;
   amount: string;

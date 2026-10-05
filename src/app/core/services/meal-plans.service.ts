@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { MealType } from '../models/meal.model';
 
 export type Duration = 'DAYS_7' | 'DAYS_14' | 'DAYS_30';
 export type FastingStyle =
@@ -38,7 +39,7 @@ export interface SwapOptionsRequest {
 }
 
 export interface MealPlanItem {
-  mealType: 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
+  mealType: MealType;
   mealId: string;
   name: string;
   imageUrl: string | null;

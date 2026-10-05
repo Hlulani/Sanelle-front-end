@@ -3,15 +3,15 @@ import { Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { SymptomEntry } from '../diagnosis.model';
-import { checkinsInWindow, coverageLine, impactLine, isoDay, observations, symptomParts } from '../checkins';
+import { checkinsInWindow, coverageLine, impactLine, observations, symptomParts } from '../checkins';
+import { addDays, localIsoDate, parseLocalDate } from '../../shared/calendar-date';
 
 /** "Today", "Yesterday" or "Sat 3 Oct". */
 export function dayLabel(iso: string, today = new Date()): string {
-  if (iso === isoDay(today)) return 'Today';
-  const y = new Date(today);
-  y.setDate(y.getDate() - 1);
-  if (iso === isoDay(y)) return 'Yesterday';
-  return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(iso + 'T00:00:00'));
+  const todayIso = localIsoDate(today);
+  if (iso === todayIso) return 'Today';
+  if (iso === addDays(todayIso, -1)) return 'Yesterday';
+  return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(parseLocalDate(iso));
 }
 
 /**
@@ -34,7 +34,7 @@ export class SymptomTimelinePage {
     const details = [...symptomParts(e), impactLine(e), e.notes].filter(Boolean).join('; ');
     return `On ${e.date} I noted: ${details || e.treatmentChange || 'a change I want to discuss'}. What should we discuss or monitor?`;
   }
-  readonly todayIso = isoDay(new Date());
+  readonly todayIso = localIsoDate();
   readonly entries = computed(() => checkinsInWindow(this.repo.record().symptoms ?? [], this.span()));
   readonly coverage = computed(() => coverageLine(this.entries().length, this.span()));
   readonly observations = computed(() => observations(this.entries()));

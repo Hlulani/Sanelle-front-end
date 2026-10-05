@@ -1,5 +1,6 @@
 import { HealthRecord, emptyHealthRecord } from './diagnosis.model';
 import { buildSummary, summariseSymptoms, summaryAsText } from './summary';
+import { localIsoDate } from '../shared/calendar-date';
 
 function record(partial: Partial<HealthRecord>): HealthRecord {
   return { ...emptyHealthRecord(), ...partial };
@@ -93,7 +94,7 @@ describe('buildSummary', () => {
 
   it('puts the goal, questions and symptoms ahead of supporting report details', () => {
     const today = new Date();
-    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const date = localIsoDate(today);
     const text = summaryAsText(buildSummary(record({
       visitGoal: 'My main concern',
       questions: [{ id: 'q', text: 'My priority question?', origin: 'custom', createdAt: '' }],
@@ -178,9 +179,9 @@ describe('summariseSymptoms', () => {
 describe('check-ins in the summary', () => {
   it('excludes every part of a deselected check-in and labels the counts as selected entries', () => {
     const today = new Date();
-    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const date = localIsoDate(today);
     const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
-    const otherDate = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+    const otherDate = localIsoDate(yesterday);
     const r = record({ symptoms: [{ date, pain: 2 }, { date: otherDate, pain: 9, notes: 'Private note', treatmentChange: 'Private change' }], summarySymptomDates: [date] });
     const s = buildSummary(r);
     expect(s.symptoms?.coverage).toContain('Selected entries only.');
@@ -192,7 +193,7 @@ describe('check-ins in the summary', () => {
     const today = new Date();
     const older = new Date(today);
     older.setDate(older.getDate() - 40);
-    const date = `${older.getFullYear()}-${String(older.getMonth() + 1).padStart(2, '0')}-${String(older.getDate()).padStart(2, '0')}`;
+    const date = localIsoDate(older);
     const r = record({ symptoms: [{ date, notes: 'A note from an earlier check-in' }], summaryPeriodDays: 90 });
     expect(summaryAsText(buildSummary(r))).toContain('A note from an earlier check-in');
     expect(buildSummary({ ...r, summaryPeriodDays: 30 }).symptoms).toBeNull();
@@ -200,8 +201,7 @@ describe('check-ins in the summary', () => {
   });
   it('leaves them out when she switches them off, and keeps everything else', () => {
     const today = new Date();
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const date = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    const date = localIsoDate(today);
     const record = { ...emptyHealthRecord(), symptoms: [{ date, fatigue: 'severe' as const, affected: ['work' as const] }], questions: [{ id: '1', text: 'Q?', origin: 'custom' as const, createdAt: '' }] };
     expect(buildSummary(record).symptoms).not.toBeNull();
     const off = buildSummary({ ...record, summaryIncludesCheckins: false });

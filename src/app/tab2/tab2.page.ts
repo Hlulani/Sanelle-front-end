@@ -61,8 +61,10 @@ type SwapOption = {
   reasons: string[];
 };
 
-import { localDay, replaceMealSlot, startPlanOn } from './plan-actions';
+import { replaceMealSlot, startPlanOn } from './plan-actions';
+import { addDays, isIsoDate, localIsoDate, parseLocalDate } from '../shared/calendar-date';
 import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
+import { MEAL_TYPE_LABELS, MealType } from '../core/models/meal.model';
 
 @Component({
   selector: 'app-tab2',
@@ -147,37 +149,13 @@ export class Tab2Page implements OnInit {
       }
     });
   }
-  private todayLocalYYYYMMDD(): string {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-  private parseLocalDate(dateStr: string | null | undefined): Date | null {
-    if (!dateStr) return null;
-    const parts = dateStr.split('-').map(Number);
-    if (parts.length !== 3) return null;
-    const [y, m, d] = parts;
-    if (!y || !m || !d) return null;
-    return new Date(y, m - 1, d);
-  }
-
   private formatDate(dateStr: string, options: Intl.DateTimeFormatOptions): string {
-    const d = this.parseLocalDate(dateStr);
-    if (!d || Number.isNaN(d.getTime())) return dateStr;
-    return new Intl.DateTimeFormat('en-US', options).format(d);
-  }
-
-  private addDays(date: Date, days: number): Date {
-    const next = new Date(date);
-    next.setDate(next.getDate() + days);
-    return next;
+    if (!isIsoDate(dateStr)) return dateStr;
+    return new Intl.DateTimeFormat('en-US', options).format(parseLocalDate(dateStr));
   }
 
   readonly ready = signal(false);
-  readonly today = localDay(new Date());
+  readonly today = localIsoDate();
   readonly settingsStep = signal<'schedule' | 'food' | 'review'>('schedule');
   readonly planView = signal<'day' | 'week'>('day');
   readonly previewPlan = signal<GenerateMealPlanResponse | null>(null);
@@ -456,14 +434,14 @@ export class Tab2Page implements OnInit {
   }
 
   private indexOfTodayOrFirst(plan: GenerateMealPlanResponse): number {
-    const today = this.todayLocalYYYYMMDD();
+    const today = localIsoDate();
     const index = plan.daysPlan.findIndex((d) => d.date === today);
     return index >= 0 ? index : 0;
   }
 
   private relativeDayLabel(dateStr: string, weekdayFormat: 'long' | 'short'): string {
-    const today = this.todayLocalYYYYMMDD();
-    const tomorrow = this.formatDateISO(this.addDays(this.parseLocalDate(today) ?? new Date(), 1));
+    const today = localIsoDate();
+    const tomorrow = addDays(today, 1);
     if (dateStr === today) return 'Today';
     if (dateStr === tomorrow) return 'Tomorrow';
     return this.formatDate(dateStr, { weekday: weekdayFormat });
@@ -472,20 +450,12 @@ export class Tab2Page implements OnInit {
   planStartDate(): string {
     const manualStart = this.startDateISO();
     if (manualStart) return manualStart;
-    return this.todayLocalYYYYMMDD();
+    return localIsoDate();
   }
 
   planEndDate(): string {
-    const start = this.parseLocalDate(this.planStartDate());
-    if (!start) return this.planStartDate();
-    return this.formatDateISO(this.addDays(start, this.duration() - 1));
-  }
-
-  private formatDateISO(date: Date): string {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
+    const start = this.planStartDate();
+    return isIsoDate(start) ? addDays(start, this.duration() - 1) : start;
   }
 
   planRangeLabel(): string {
@@ -514,34 +484,12 @@ export class Tab2Page implements OnInit {
 
   savedRangeLabel() { const days = this.plan()?.daysPlan; return days?.length ? `${this.formatDate(days[0].date, { month: 'short', day: 'numeric' })} – ${this.formatDate(days[days.length - 1].date, { month: 'short', day: 'numeric' })}` : ''; }
 
-  mealTypeLabel(type: MealPlanItem['mealType']): string {
-    switch (type) {
-      case 'BREAKFAST':
-        return 'Breakfast';
-      case 'LUNCH':
-        return 'Lunch';
-      case 'DINNER':
-        return 'Dinner';
-      case 'SNACK':
-        return 'Snack';
-      default:
-        return type;
-    }
+  mealTypeLabel(type: MealType): string {
+    return MEAL_TYPE_LABELS[type];
   }
 
-  mealTypeClass(type: MealPlanItem['mealType']): string {
-    switch (type) {
-      case 'BREAKFAST':
-        return 'chip chip-breakfast';
-      case 'LUNCH':
-        return 'chip chip-lunch';
-      case 'DINNER':
-        return 'chip chip-dinner';
-      case 'SNACK':
-        return 'chip chip-snack';
-      default:
-        return 'chip';
-    }
+  mealTypeClass(type: MealType): string {
+    return `chip chip-${type.toLowerCase()}`;
   }
 
   /** Factual tags only. Score-based labels ("anti-inflammatory", "iron-rich") aren't shown. */

@@ -2,7 +2,8 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { MealProgressService } from './meal-progress.service';
 import { ApiService, CustomChallengeResponse, ChallengeMemberResponse } from './api.service';
-import { ChallengeProgress, computeChallengeProgress, todayIso } from './challenge-progress.util';
+import { ChallengeProgress, computeChallengeProgress } from './challenge-progress.util';
+import { localIsoDate } from '../../shared/calendar-date';
 
 const STORAGE_KEY = 'joined_custom_challenges';
 
@@ -131,7 +132,7 @@ export class CustomChallengesService {
 
   private recordLocalJoin(challengeId: string): void {
     if (this.joinedAt()[challengeId]) return;
-    const next = { ...this.joinedAt(), [challengeId]: todayIso() };
+    const next = { ...this.joinedAt(), [challengeId]: localIsoDate() };
     this.joinedAt.set(next);
     void Preferences.set({ key: STORAGE_KEY, value: JSON.stringify(next) });
   }
@@ -147,7 +148,7 @@ export class CustomChallengesService {
     const next = { ...current };
     for (const challenge of list) {
       if (!next[challenge.id]) {
-        next[challenge.id] = todayIso();
+        next[challenge.id] = localIsoDate();
         changed = true;
       }
     }

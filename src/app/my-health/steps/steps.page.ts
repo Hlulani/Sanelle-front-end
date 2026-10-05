@@ -6,7 +6,7 @@ import { IonContent } from '@ionic/angular/standalone';
 import { CareTask } from '../diagnosis.model';
 import { HealthRepository } from '../health-repository';
 import { CareReminders } from './care-reminders.service';
-import { isoDay } from '../checkins';
+import { addDays, localIsoDate } from '../../shared/calendar-date';
 import { saveFile } from '../../shared/files/save-file';
 
 @Component({ selector: 'app-steps', standalone: true, imports: [FormsModule, RouterLink, IonContent], templateUrl: './steps.page.html', styleUrls: ['./steps.page.scss'] })
@@ -27,7 +27,7 @@ export class StepsPage implements OnInit {
   reminderAt = '';
   visitDate = '';
   reminder = false;
-  readonly today = isoDay(new Date());
+  readonly today = localIsoDate();
 
   async ngOnInit() {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -83,13 +83,13 @@ export class StepsPage implements OnInit {
   }
 }
 function localDateTime(date: Date): string {
-  return `${isoDay(date)}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  return `${localIsoDate(date)}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 }
 export function calendarEntry(task: CareTask): string {
   const escape = (value: string) => value.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
-  const day = (task.dueDate ?? isoDay(new Date())).replace(/-/g, '');
-  const next = new Date((task.dueDate ?? isoDay(new Date())) + 'T00:00:00'); next.setDate(next.getDate() + 1);
+  const start = task.dueDate ?? localIsoDate();
+  const day = start.replace(/-/g, '');
   return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sanelle//Next Steps//EN', 'BEGIN:VEVENT', `UID:${task.id}@sanelle`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')}`, `DTSTART;VALUE=DATE:${day}`,
-    `DTEND;VALUE=DATE:${isoDay(next).replace(/-/g, '')}`, `SUMMARY:${escape(task.title)}`, 'END:VEVENT', 'END:VCALENDAR', ''].join('\r\n');
+    `DTEND;VALUE=DATE:${addDays(start, 1).replace(/-/g, '')}`, `SUMMARY:${escape(task.title)}`, 'END:VEVENT', 'END:VCALENDAR', ''].join('\r\n');
 }

@@ -7,13 +7,10 @@ import { MealPlanItem, MealPlansService, ProteinPreference } from '../../core/se
 import { FocusPreferencesService } from '../../core/services/focus-preferences.service';
 import { FoodRestrictionsService } from '../../core/services/food-restrictions.service';
 import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
+import { MEAL_TYPE_LABELS } from '../../core/models/meal.model';
 
 export const QUICK_MINUTES = 15;
-const TYPES: { type: MealPlanItem['mealType']; label: string }[] = [
-  { type: 'BREAKFAST', label: 'Breakfast' },
-  { type: 'LUNCH', label: 'Lunch' },
-  { type: 'DINNER', label: 'Dinner' },
-];
+const TYPES = (['BREAKFAST', 'LUNCH', 'DINNER'] as const).map((type) => ({ type, label: MEAL_TYPE_LABELS[type] }));
 
 /**
  * Low-effort meals for today: 15 minutes or less, filtered on the server by her saved diet,

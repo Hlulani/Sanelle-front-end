@@ -18,18 +18,8 @@ import { FindingStatusComponent } from '../my-health/finding-status.component';
 import { EvidenceTopicsService } from '../learn/evidence-topics.service';
 import { CareReminders } from '../my-health/steps/care-reminders.service';
 import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
-
-const MEAL_TYPE_LABELS: Record<MealPlanItem['mealType'], string> = {
-  BREAKFAST: 'Breakfast',
-  LUNCH: 'Lunch',
-  DINNER: 'Dinner',
-  SNACK: 'Snack',
-};
-
-function localIsoDate(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
+import { daysBetween, localIsoDate } from '../shared/calendar-date';
+import { MEAL_TYPE_LABELS } from '../core/models/meal.model';
 
 @Component({
   selector: 'app-today',
@@ -69,9 +59,7 @@ export class TodayPage implements OnInit {
   readonly daysToAppointment = computed(() => {
     const date = this.health.record().appointment.date;
     if (!date) return null;
-    const today = new Date(localIsoDate(new Date()) + 'T00:00:00');
-    const appt = new Date(date + 'T00:00:00');
-    const days = Math.round((appt.getTime() - today.getTime()) / 86400000);
+    const days = daysBetween(localIsoDate(), date);
     return days >= 0 ? days : null;
   });
 
@@ -99,7 +87,7 @@ export class TodayPage implements OnInit {
   readonly questionCount = computed(() => this.pendingQuestions().length);
   readonly visitGoal = computed(() => this.health.record().visitGoal ?? '');
   readonly lastVisit = computed(() => this.health.record().visits?.[0] ?? null);
-  readonly todayIso = localIsoDate(new Date());
+  readonly todayIso = localIsoDate();
   readonly todayEntry = computed(() => (this.health.record().symptoms ?? []).find((s) => s.date === this.todayIso) ?? null);
   /** True right after saving today's check-in, for the "saved" confirmation. */
   readonly justCheckedIn = signal(false);
@@ -117,7 +105,7 @@ export class TodayPage implements OnInit {
   readonly todaysMeals = computed<MealPlanItem[]>(() => {
     const plan = this.plan();
     if (!plan) return [];
-    const today = localIsoDate(new Date());
+    const today = localIsoDate();
     return plan.daysPlan.find((d) => d.date === today)?.meals ?? [];
   });
 

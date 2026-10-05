@@ -3,14 +3,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChallengesService, CHALLENGE_DEFINITIONS } from './challenges.service';
 import { MealProgressService } from './meal-progress.service';
+import { addDays, localIsoDate } from '../../shared/calendar-date';
 
 function isoOffset(days: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return addDays(localIsoDate(), days);
 }
 
 describe('ChallengesService', () => {

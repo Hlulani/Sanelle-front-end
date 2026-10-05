@@ -5,6 +5,7 @@ import { CustomChallengesService } from './custom-challenges.service';
 import { CustomChallengeResponse } from './api.service';
 import { MealProgressService } from './meal-progress.service';
 import { environment } from '../../../environments/environment';
+import { localIsoDate } from '../../shared/calendar-date';
 
 function makeChallenge(overrides: Partial<CustomChallengeResponse> = {}): CustomChallengeResponse {
   return {
@@ -72,7 +73,7 @@ describe('CustomChallengesService', () => {
     httpMock.expectOne(`${base}/mine`).flush([challenge]);
 
     const today = new Date();
-    const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const iso = localIsoDate(today);
     mealProgress.toggleCooked(iso, 'meal-a');
     mealProgress.toggleCooked(iso, 'meal-b');
 

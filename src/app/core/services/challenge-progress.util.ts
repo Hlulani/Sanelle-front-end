@@ -1,3 +1,4 @@
+import { addDays, daysBetween, localIsoDate } from '../../shared/calendar-date';
 // 'meals-in-period': counts individual cooked meals (multiple meals on the
 // same day each count). 'days-in-period': counts distinct days with at least
 // one cooked meal. 'streak': longest run of consecutive cooked days.
@@ -30,12 +31,8 @@ export function computeChallengeProgress(
   joinedAtIso: string,
   cookedEntries: CookedEntry[],
 ): ChallengeProgress {
-  const start = parseIsoDate(joinedAtIso);
-  const windowEnd = new Date(start);
-  windowEnd.setDate(windowEnd.getDate() + durationDays - 1);
-  const windowEndIso = toIso(windowEnd);
-
-  const elapsedDays = daysBetween(start, parseIsoDate(todayIso())) + 1;
+  const windowEndIso = addDays(joinedAtIso, durationDays - 1);
+  const elapsedDays = daysBetween(joinedAtIso, localIsoDate()) + 1;
   const daysRemaining = Math.max(0, durationDays - elapsedDays);
 
   const entriesInWindow = cookedEntries.filter(
@@ -68,8 +65,8 @@ function longestStreakInWindow(cookedDates: string[], startIso: string, endIso: 
   const cookedSet = new Set(cookedDates);
   let longest = 0;
   let running = 0;
-  for (let d = parseIsoDate(startIso); toIso(d) <= endIso; d.setDate(d.getDate() + 1)) {
-    if (cookedSet.has(toIso(d))) {
+  for (let day = startIso; day <= endIso; day = addDays(day, 1)) {
+    if (cookedSet.has(day)) {
       running++;
       longest = Math.max(longest, running);
     } else {
@@ -77,25 +74,4 @@ function longestStreakInWindow(cookedDates: string[], startIso: string, endIso: 
     }
   }
   return longest;
-}
-
-export function todayIso(): string {
-  return toIso(new Date());
-}
-
-export function toIso(d: Date): string {
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-export function parseIsoDate(iso: string): Date {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d);
-}
-
-function daysBetween(a: Date, b: Date): number {
-  const ms = b.getTime() - a.getTime();
-  return Math.round(ms / 86_400_000);
 }

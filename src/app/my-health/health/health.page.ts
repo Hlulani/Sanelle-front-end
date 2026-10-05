@@ -5,8 +5,9 @@ import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { FINDINGS, FINDING_KEYS, diagnosisProgress, findingOrUnknown, unansweredQuestions } from '../diagnosis.model';
 import { FindingStatusComponent } from '../finding-status.component';
-import { checkinsInWindow, coverageLine, impactLine, isoDay, symptomParts } from '../checkins';
+import { checkinsInWindow, coverageLine, impactLine, symptomParts } from '../checkins';
 import { dayLabel } from '../symptoms/symptom-timeline.page';
+import { localIsoDate } from '../../shared/calendar-date';
 
 @Component({
   selector: 'app-health',
@@ -38,7 +39,7 @@ export class HealthPage {
   visitGoal = '';
   readonly appointment = computed(() => this.repo.record().appointment);
   /** The latest check-in and coverage, instead of a strip of empty days. */
-  readonly todayIso = isoDay(new Date());
+  readonly todayIso = localIsoDate();
   private readonly recent = computed(() => checkinsInWindow(this.repo.record().symptoms ?? [], 14));
   readonly coverage = computed(() => coverageLine(this.recent().length, 14));
   readonly latest = computed(() => this.recent()[0] ?? null);

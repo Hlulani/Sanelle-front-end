@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { GenerateMealPlanResponse, MealPlanItem } from '../core/services/meal-plans.service';
-import { MealResponse } from '../core/models/meal.model';
+import { MEAL_TYPE_LABELS, MealResponse } from '../core/models/meal.model';
 import {
   AisleItem,
   ShoppingWindow,
@@ -19,22 +19,11 @@ import {
   haveKey,
   slotsInWindow,
 } from './grocery-list';
+import { addDays, localIsoDate, parseLocalDate } from '../shared/calendar-date';
 
 type View = 'aisle' | 'meal';
 
-const MEAL_TYPE_LABELS: Record<MealPlanItem['mealType'], string> = {
-  BREAKFAST: 'Breakfast',
-  LUNCH: 'Lunch',
-  DINNER: 'Dinner',
-  SNACK: 'Snack',
-};
-
 const GROUP_ORDER = ['Produce', 'Meat', 'Seafood', 'Eggs', 'Dairy', 'Grains', 'Legumes', 'Nuts & Seeds', 'Condiments', 'Spices & Herbs', 'Sweeteners', 'Other'];
-
-function localIsoDate(d: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
 
 @Component({
   selector: 'app-tab3',
@@ -141,10 +130,8 @@ export class Tab3Page implements OnInit {
   /** "Today", "Tomorrow" or "Mon 5". */
   dayLabel(iso: string): string {
     if (iso === this.today) return 'Today';
-    const tomorrow = new Date(this.today + 'T00:00:00');
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if (iso === localIsoDate(tomorrow)) return 'Tomorrow';
-    return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric' }).format(new Date(iso + 'T00:00:00'));
+    if (iso === addDays(this.today, 1)) return 'Tomorrow';
+    return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric' }).format(parseLocalDate(iso));
   }
 
   mealDone(ingredients: { name: string }[]): boolean {

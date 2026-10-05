@@ -9,6 +9,7 @@ import { MealService } from '../core/services/meal.service';
 import { GenerateMealPlanResponse } from '../core/services/meal-plans.service';
 
 import { Tab3Page } from './tab3.page';
+import { localIsoDate } from '../shared/calendar-date';
 
 describe('Tab3Page', () => {
   let component: Tab3Page;
@@ -41,7 +42,7 @@ describe('Tab3Page', () => {
 
   function showPlan() {
     const today = new Date();
-    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const date = localIsoDate(today);
     plans.next({ days: 1, daysPlan: [{ date, meals: [{
       mealId: 'salad', name: 'Chickpea salad', mealType: 'LUNCH', tags: [], imageUrl: null,
     }] }] });

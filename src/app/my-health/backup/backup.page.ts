@@ -8,6 +8,7 @@ import { decryptBackup, encryptBackup } from './health-backup';
 import { HealthRecord } from '../diagnosis.model';
 import { saveFile } from '../../shared/files/save-file';
 import { CareReminders } from '../steps/care-reminders.service';
+import { localIsoDate } from '../../shared/calendar-date';
 
 @Component({ selector: 'app-backup', standalone: true, imports: [FormsModule, RouterLink, IonContent], templateUrl: './backup.page.html', styleUrls: ['./backup.page.scss'] })
 export class BackupPage {
@@ -40,7 +41,7 @@ export class BackupPage {
     try {
       await this.repo.load();
       const content = await encryptBackup(this.repo.record(), this.password);
-      await saveFile(`sanelle-health-${new Date().toISOString().slice(0, 10)}.json`, content, 'application/json');
+      await saveFile(`sanelle-health-${localIsoDate()}.json`, content, 'application/json');
       this.password = ''; this.repeatPassword = '';
       this.status.set('Encrypted backup ready. Keep the file and your passphrase somewhere you can access on another device.');
     } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not create your backup.'); }

@@ -12,12 +12,7 @@ import {
   SymptomEntry,
   SymptomLevel,
 } from '../diagnosis.model';
-
-export function isoToday(): string {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
+import { localIsoDate } from '../../shared/calendar-date';
 
 /** One day's check-in. Every section is optional; tapping a selected choice clears it. */
 @Component({
@@ -40,7 +35,7 @@ export class SymptomLogPage implements OnInit {
   readonly sections = [['bleeding', 'Bleeding'], ['pain', 'Pain'], ['bloating', 'Pressure or bloating'], ['fatigue', 'Tiredness'], ['affected', 'Impact on my day'], ['more', 'A note or treatment change']] as const;
   readonly visible = signal<string[]>([]);
   readonly ready = signal(false);
-  readonly date = signal(isoToday());
+  readonly date = signal(localIsoDate());
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly bleeding = signal<BleedingLevel | undefined>(undefined);
@@ -50,13 +45,13 @@ export class SymptomLogPage implements OnInit {
   readonly affected = signal<ImpactArea[] | undefined>(undefined);
   notes = '';
   treatmentChange = '';
-  readonly maxDate = isoToday();
+  readonly maxDate = localIsoDate();
   /** Where she came from: saving today's check-in returns to Today; editing from history returns there. */
   readonly from = signal<'today' | 'health' | 'history'>('today');
   readonly backLabel = computed(() => ({ today: 'Today', health: 'My health', history: 'Symptoms' })[this.from()]);
 
   readonly dateLabel = computed(() => {
-    if (this.date() === isoToday()) return 'Today';
+    if (this.date() === localIsoDate()) return 'Today';
     return new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(
       new Date(this.date() + 'T00:00:00'),
     );
@@ -64,7 +59,7 @@ export class SymptomLogPage implements OnInit {
 
   async ngOnInit() {
     const d = this.route.snapshot.paramMap.get('date');
-    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= isoToday()) this.date.set(d);
+    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= localIsoDate()) this.date.set(d);
     const from = this.route.snapshot.queryParamMap.get('from');
     if (from === 'health' || from === 'history') this.from.set(from);
     await this.repo.load();
@@ -97,7 +92,7 @@ export class SymptomLogPage implements OnInit {
   }
 
   changeDate(value: string) {
-    if (!value || value > isoToday()) return;
+    if (!value || value > localIsoDate()) return;
     this.date.set(value);
     this.fill(this.repo.symptomsOn(value));
   }
