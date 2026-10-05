@@ -113,8 +113,20 @@ npm start          # dev server on :4200
 npm run build      # production build to www/ (no draft content)
 npm run watch      # development build with file watching
 npm test           # unit tests (Karma/Jasmine)
+npm run e2e        # end-to-end tests (Playwright)
 npm run lint       # ESLint
 ```
+
+### End-to-end tests
+
+`e2e/` drives the real app against the real backend on an iPhone-sized WebKit browser: accounts, recording a diagnosis, Learn, meal planning and cooking, groceries and the appointment summary. Each test registers its own throwaway account and deletes it afterwards.
+
+```bash
+npx playwright install webkit   # first time only
+npm run e2e                     # report: e2e/.output/report
+```
+
+It reuses the dev server on :4200 and the backend on :8080 if they're running, and otherwise starts them. The backend is expected next to this repo (`../sanelle-back-end`); set `SANELLE_BACKEND_DIR` if it lives elsewhere, and start its database first (`docker compose up -d db`).
 
 Before a production build, set the real API domain in `src/environments/environment.prod.ts`; it still contains placeholders (`YOUR-PROD-DOMAIN`).
 
