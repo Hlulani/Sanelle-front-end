@@ -4,11 +4,18 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 
+/** Calls made without a session, or to start or end one. Everything else carries the access token. */
+const PUBLIC_AUTH_PATHS = ['/api/v1/auth/login', '/api/v1/auth/register', '/api/v1/auth/refresh', '/api/v1/auth/logout'];
+
+export function isPublicAuthRequest(url: string): boolean {
+  return PUBLIC_AUTH_PATHS.some((path) => url.includes(path));
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  const isAuthRequest = req.url.includes('/api/v1/auth/');
+  const isAuthRequest = isPublicAuthRequest(req.url);
   const token = auth.getAccessToken();
 
   const authReq = !isAuthRequest && token
