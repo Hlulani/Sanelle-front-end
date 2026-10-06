@@ -15,6 +15,7 @@ import {
   hasContent,
   unansweredQuestions,
 } from './diagnosis.model';
+import { UserFacingError } from '../core/errors/errors';
 
 /**
  * Health records live on the device only, stored per account so another person
@@ -116,7 +117,7 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
   selectReport(id: string): Promise<void> {
     return this.update((r) => {
       const report = r.reports?.find((item) => item.id === id);
-      if (!report) throw new Error('Report not found.');
+      if (!report) throw new UserFacingError('Report not found.');
       return { ...r, activeReportId: id, findings: report.findings };
     });
   }
@@ -130,7 +131,7 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
         createdAt: prior?.createdAt ?? new Date().toISOString(),
         title: task.title.trim(),
       };
-      if (!next.title) throw new Error('Add a next step.');
+      if (!next.title) throw new UserFacingError('Add a next step.');
       return { ...r, tasks: [...(r.tasks ?? []).filter((item) => item.id !== next.id), next] };
     });
   }

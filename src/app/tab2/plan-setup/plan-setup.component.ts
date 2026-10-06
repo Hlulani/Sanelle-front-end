@@ -27,6 +27,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { addDays, isIsoDate, localIsoDate } from '../../shared/calendar-date';
 import { startPlanOn } from '../plan-actions';
 import { dateRange, describePlanChoices } from '../plan-format';
+import { messageFor } from '../../core/errors/errors';
 
 export type SetupStep = 'schedule' | 'food' | 'review';
 /** The two schedules that behave differently; the API treats 16:8 and 18:6 alike. */
@@ -206,7 +207,7 @@ export class PlanSetupComponent implements OnInit {
           );
           this.open.set(false);
         } catch (error) {
-          this.failed.emit(error instanceof Error ? error.message : 'Could not prepare a preview.');
+          this.failed.emit(messageFor(error, 'Could not prepare a preview.'));
         }
       },
       error: () => {

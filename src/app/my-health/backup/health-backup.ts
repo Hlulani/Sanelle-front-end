@@ -9,34 +9,38 @@ import {
   VisitReview,
   AppointmentQuestion,
 } from '../diagnosis.model';
+import { UserFacingError } from '../../core/errors/errors';
 
 const FORMAT = 'sanelle-health-backup';
 const ITERATIONS = 210_000;
-const MAX_BYTES = 15 * 1024 * 1024;
+/** The largest backup file Sanelle reads; checked before the file is even loaded. */
+export const MAX_BACKUP_BYTES = 15 * 1024 * 1024;
+export const TOO_LARGE_BACKUP = 'Choose a Sanelle backup smaller than 15 MB.';
 /** Backups are only as strong as their passphrase; shorter ones are refused. */
 export const MIN_PASSPHRASE_LENGTH = 12;
 
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value))
-    throw new Error('This backup contains invalid health records.');
+    throw new UserFacingError('This backup contains invalid health records.');
   return value as Record<string, unknown>;
 }
 function text(value: unknown, max = 20_000): string {
-  if (typeof value !== 'string' || value.length > max) throw new Error('This backup contains invalid text.');
+  if (typeof value !== 'string' || value.length > max) throw new UserFacingError('This backup contains invalid text.');
   return value;
 }
 function optional(value: unknown): string | undefined {
   return value === undefined ? undefined : text(value);
 }
 function list(value: unknown): unknown[] {
-  if (!Array.isArray(value) || value.length > 20_000) throw new Error('This backup contains an invalid list.');
+  if (!Array.isArray(value) || value.length > 20_000)
+    throw new UserFacingError('This backup contains an invalid list.');
   return value;
 }
 function date(value: unknown): string {
   const iso = text(value, 10);
   const parsed = new Date(iso + 'T00:00:00Z');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso) || isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== iso)
-    throw new Error('This backup contains an invalid date.');
+    throw new UserFacingError('This backup contains an invalid date.');
   return iso;
 }
 function optionalDate(value: unknown): string | undefined {
@@ -45,12 +49,12 @@ function optionalDate(value: unknown): string | undefined {
 function timestamp(value: unknown): string {
   const iso = text(value, 40);
   if (!/^\d{4}-\d{2}-\d{2}T/.test(iso) || isNaN(new Date(iso).getTime()))
-    throw new Error('This backup contains an invalid time.');
+    throw new UserFacingError('This backup contains an invalid time.');
   return iso;
 }
 function id(value: unknown): string {
   const valueText = text(value, 200);
-  if (!/^[a-zA-Z0-9_.:-]+$/.test(valueText)) throw new Error('This backup contains an invalid identifier.');
+  if (!/^[a-zA-Z0-9_.:-]+$/.test(valueText)) throw new UserFacingError('This backup contains an invalid identifier.');
   return valueText;
 }
 function findings(value: unknown): HealthRecord['findings'] {
@@ -60,7 +64,7 @@ function findings(value: unknown): HealthRecord['findings'] {
     const finding = object(source[key]);
     const completeness = object(finding['completeness']);
     if (finding['key'] !== key || !['present', 'absent', 'unknown'].includes(String(completeness['state'])))
-      throw new Error('Invalid finding in backup.');
+      throw new UserFacingError('Invalid finding in backup.');
     const f: Finding = {
       key,
       completeness:
@@ -74,7 +78,7 @@ function findings(value: unknown): HealthRecord['findings'] {
           String(finding['source']),
         )
       )
-        throw new Error('Invalid source in backup.');
+        throw new UserFacingError('Invalid source in backup.');
       f.source = finding['source'] as Finding['source'];
     }
     f.originalWording = optional(finding['originalWording']);
@@ -87,7 +91,7 @@ function findings(value: unknown): HealthRecord['findings'] {
 /** Validate and rebuild known fields; imported objects cannot add arbitrary storage properties. */
 export function validateHealthRecord(value: unknown): HealthRecord {
   const r = object(value);
-  if (r['version'] !== 1) throw new Error('This health-record version is not supported.');
+  if (r['version'] !== 1) throw new UserFacingError('This health-record version is not supported.');
   const appointment = object(r['appointment']);
   const result: HealthRecord = {
     version: 1,
@@ -97,8 +101,10 @@ export function validateHealthRecord(value: unknown): HealthRecord {
     questions: list(r['questions']).map((value): AppointmentQuestion => {
       const q = object(value);
       const key = q['findingKey'];
-      if (key !== undefined && !FINDING_KEYS.includes(key as FindingKey)) throw new Error('Invalid question source.');
-      if (q['origin'] !== 'suggested' && q['origin'] !== 'custom') throw new Error('Invalid question origin.');
+      if (key !== undefined && !FINDING_KEYS.includes(key as FindingKey))
+        throw new UserFacingError('Invalid question source.');
+      if (q['origin'] !== 'suggested' && q['origin'] !== 'custom')
+        throw new UserFacingError('Invalid question origin.');
       return {
         id: id(q['id']),
         text: text(q['text']),
@@ -117,23 +123,23 @@ export function validateHealthRecord(value: unknown): HealthRecord {
       };
       if (s['bleeding'] !== undefined) {
         if (!['none', 'spotting', 'light', 'moderate', 'heavy', 'very-heavy'].includes(String(s['bleeding'])))
-          throw new Error('Invalid bleeding entry.');
+          throw new UserFacingError('Invalid bleeding entry.');
         entry.bleeding = s['bleeding'] as SymptomEntry['bleeding'];
       }
       if (s['pain'] !== undefined) {
         if (!Number.isInteger(s['pain']) || Number(s['pain']) < 0 || Number(s['pain']) > 10)
-          throw new Error('Invalid pain entry.');
+          throw new UserFacingError('Invalid pain entry.');
         entry.pain = Number(s['pain']);
       }
       for (const field of ['bloating', 'fatigue'] as const) {
         if (s[field] === undefined) continue;
         if (!['none', 'mild', 'moderate', 'severe'].includes(String(s[field])))
-          throw new Error('Invalid symptom entry.');
+          throw new UserFacingError('Invalid symptom entry.');
         entry[field] = s[field] as SymptomEntry['bloating'];
       }
       if (s['affected'] !== undefined)
         entry.affected = list(s['affected']).map((v) => {
-          if (!['sleep', 'work', 'daily'].includes(String(v))) throw new Error('Invalid impact entry.');
+          if (!['sleep', 'work', 'daily'].includes(String(v))) throw new UserFacingError('Invalid impact entry.');
           return v as 'sleep' | 'work' | 'daily';
         });
       entry.updatedAt = s['updatedAt'] === undefined ? undefined : timestamp(s['updatedAt']);
@@ -142,11 +148,11 @@ export function validateHealthRecord(value: unknown): HealthRecord {
   };
   result.visitGoal = optional(r['visitGoal']);
   if (r['summaryIncludesCheckins'] !== undefined) {
-    if (typeof r['summaryIncludesCheckins'] !== 'boolean') throw new Error('Invalid summary selection.');
+    if (typeof r['summaryIncludesCheckins'] !== 'boolean') throw new UserFacingError('Invalid summary selection.');
     result.summaryIncludesCheckins = r['summaryIncludesCheckins'];
   }
   if (r['summaryPeriodDays'] !== undefined) {
-    if (![14, 30, 90].includes(Number(r['summaryPeriodDays']))) throw new Error('Invalid summary period.');
+    if (![14, 30, 90].includes(Number(r['summaryPeriodDays']))) throw new UserFacingError('Invalid summary period.');
     result.summaryPeriodDays = r['summaryPeriodDays'] as 14 | 30 | 90;
   }
   if (r['visits'] !== undefined)
@@ -186,7 +192,7 @@ export function validateHealthRecord(value: unknown): HealthRecord {
   if (r['activeReportId'] !== undefined) {
     result.activeReportId = id(r['activeReportId']);
     const active = result.reports?.find((report) => report.id === result.activeReportId);
-    if (!active) throw new Error('The selected report is missing from this backup.');
+    if (!active) throw new UserFacingError('The selected report is missing from this backup.');
     result.findings = active.findings;
   }
   for (const key of ['summaryQuestionIds', 'summaryAnswerIds', 'summarySymptomDates', 'summaryVisitDates'] as const) {
@@ -194,7 +200,7 @@ export function validateHealthRecord(value: unknown): HealthRecord {
   }
   for (const records of [result.questions, result.tasks ?? [], result.reports ?? []]) {
     if (new Set(records.map((entry) => entry.id)).size !== records.length)
-      throw new Error('Duplicate records in backup.');
+      throw new UserFacingError('Duplicate records in backup.');
   }
   return result;
 }
@@ -204,9 +210,9 @@ function encode(bytes: Uint8Array): string {
   return btoa(binary);
 }
 function decode(value: unknown, length?: number): Uint8Array<ArrayBuffer> {
-  const binary = atob(text(value, MAX_BYTES));
+  const binary = atob(text(value, MAX_BACKUP_BYTES));
   const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-  if (length && bytes.length !== length) throw new Error('Invalid backup encryption data.');
+  if (length && bytes.length !== length) throw new UserFacingError('Invalid backup encryption data.');
   return bytes;
 }
 async function keyFor(password: string, salt: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
@@ -223,12 +229,14 @@ async function keyFor(password: string, salt: Uint8Array<ArrayBuffer>): Promise<
 }
 export async function encryptBackup(record: HealthRecord, password: string): Promise<string> {
   if (password.length < MIN_PASSPHRASE_LENGTH)
-    throw new Error(`Use a backup passphrase with at least ${MIN_PASSPHRASE_LENGTH} characters.`);
+    throw new UserFacingError(`Use a backup passphrase with at least ${MIN_PASSPHRASE_LENGTH} characters.`);
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const payload = JSON.stringify({ record: validateHealthRecord(record), exportedAt: new Date().toISOString() });
   if (payload.length > 10 * 1024 * 1024)
-    throw new Error('These records exceed the backup size limit. Your records are still saved on this device.');
+    throw new UserFacingError(
+      'These records exceed the backup size limit. Your records are still saved on this device.',
+    );
   const encrypted = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     await keyFor(password, salt),
@@ -247,15 +255,15 @@ export async function decryptBackup(
   content: string,
   password: string,
 ): Promise<{ record: HealthRecord; exportedAt: string }> {
-  if (content.length > MAX_BYTES) throw new Error('Choose a Sanelle backup smaller than 15 MB.');
+  if (content.length > MAX_BACKUP_BYTES) throw new UserFacingError(TOO_LARGE_BACKUP);
   let envelope: Record<string, unknown>;
   try {
     envelope = object(JSON.parse(content));
   } catch {
-    throw new Error('Choose an encrypted Sanelle health backup.');
+    throw new UserFacingError('Choose an encrypted Sanelle health backup.');
   }
   if (envelope['format'] !== FORMAT || envelope['version'] !== 1 || envelope['iterations'] !== ITERATIONS)
-    throw new Error('This backup format is not supported.');
+    throw new UserFacingError('This backup format is not supported.');
   let payload: unknown;
   try {
     const bytes = await crypto.subtle.decrypt(
@@ -265,7 +273,7 @@ export async function decryptBackup(
     );
     payload = JSON.parse(new TextDecoder().decode(bytes));
   } catch {
-    throw new Error('The passphrase is incorrect or this backup is damaged. Nothing has been restored.');
+    throw new UserFacingError('The passphrase is incorrect or this backup is damaged. Nothing has been restored.');
   }
   const unpacked = object(payload);
   return { record: validateHealthRecord(unpacked['record']), exportedAt: timestamp(unpacked['exportedAt']) };

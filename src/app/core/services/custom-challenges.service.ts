@@ -4,6 +4,7 @@ import { MealProgressService } from './meal-progress.service';
 import { ApiService, CustomChallengeResponse, ChallengeMemberResponse } from './api.service';
 import { ChallengeProgress, computeChallengeProgress } from './challenge-progress.util';
 import { localIsoDate } from '../../shared/calendar-date';
+import { apiError } from '../errors/errors';
 
 const STORAGE_KEY = 'joined_custom_challenges';
 
@@ -100,7 +101,7 @@ export class CustomChallengesService {
       },
       error: (err) => {
         const message =
-          err?.status === 404
+          apiError(err)?.status === 404
             ? "That code doesn't match a challenge. Double-check it and try again."
             : 'Could not join that challenge. Please try again.';
         onError(message);

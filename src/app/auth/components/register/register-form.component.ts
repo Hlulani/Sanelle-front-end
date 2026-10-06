@@ -5,6 +5,7 @@ import { IonItem, IonInput, IonButton, IonText, IonIcon, IonSpinner } from '@ion
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { apiError } from '../../../core/errors/errors';
 
 @Component({
   selector: 'app-register-form',
@@ -70,20 +71,22 @@ export class RegisterFormComponent {
       });
   }
 
-  private applyServerError(err: { status?: number; error?: { message?: string } }): void {
-    const message = err?.error?.message || 'Registration failed';
+  /** The server names the field it rejected; show its reason beside that field. */
+  private applyServerError(err: unknown): void {
+    const reply = apiError(err);
+    const message = reply?.message || 'Registration failed. Please try again.';
 
-    if (err?.status === 409 && /email/i.test(message)) {
+    if (reply?.status === 409 && /email/i.test(message)) {
       this.emailError.set(message);
       return;
     }
 
-    if (err?.status === 409 && /username/i.test(message)) {
+    if (reply?.status === 409 && /username/i.test(message)) {
       this.usernameError.set(message);
       return;
     }
 
-    if (err?.status === 400 && /username/i.test(message)) {
+    if (reply?.status === 400 && /username/i.test(message)) {
       this.usernameError.set(message);
       return;
     }

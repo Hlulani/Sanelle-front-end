@@ -16,6 +16,7 @@ import { CareReminders } from './care-reminders.service';
 import { addDays, localIsoDate } from '../../shared/calendar-date';
 import { saveFile } from '../../shared/files/save-file';
 import { calendarDate, notBlank } from '../../shared/forms/validators';
+import { UserFacingError, messageFor } from '../../core/errors/errors';
 
 /** A device reminder, when asked for, needs a real time that hasn't passed yet. */
 function reminderInFuture(): ValidatorFn {
@@ -116,7 +117,7 @@ export class StepsPage implements OnInit {
     this.busy.set(true);
     try {
       if (reminder && this.reminders.available && !(await this.reminders.enable()))
-        throw new Error('Allow notifications in device settings, or save this step without a reminder.');
+        throw new UserFacingError('Allow notifications in device settings, or save this step without a reminder.');
       const id = this.editingId();
       const prior = this.tasks().find((task) => task.id === id);
       await this.repo.saveTask({
@@ -131,7 +132,7 @@ export class StepsPage implements OnInit {
       this.reset();
       this.status.set('Next step saved. You can find it in My health and Today.');
     } catch (error) {
-      this.error.set(error instanceof Error ? error.message : 'Could not save this step. Please try again.');
+      this.error.set(messageFor(error, 'Could not save this step. Please try again.'));
     } finally {
       this.busy.set(false);
     }

@@ -1,11 +1,12 @@
 import { GenerateMealPlanResponse, MealPlanItem } from '../core/services/meal-plans.service';
 import { addDays, isIsoDate } from '../shared/calendar-date';
+import { UserFacingError } from '../core/errors/errors';
 
 /** The API generates consecutive days from today; the chosen start is applied before previewing. */
 export function startPlanOn(plan: GenerateMealPlanResponse, start: string): GenerateMealPlanResponse {
-  if (!isIsoDate(start)) throw new Error('Choose a valid start date.');
+  if (!isIsoDate(start)) throw new UserFacingError('Choose a valid start date.');
   if (!Array.isArray(plan.daysPlan) || !plan.daysPlan.length)
-    throw new Error('No meals were returned. Try different prep-time choices.');
+    throw new UserFacingError('No meals were returned. Try different prep-time choices.');
   return { ...plan, daysPlan: plan.daysPlan.map((day, i) => ({ ...day, date: addDays(start, i) })) };
 }
 

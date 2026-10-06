@@ -4,12 +4,19 @@ import { RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { AuthService } from '../../core/auth/auth.service';
-import { MIN_PASSPHRASE_LENGTH, decryptBackup, encryptBackup } from './health-backup';
+import {
+  MAX_BACKUP_BYTES,
+  MIN_PASSPHRASE_LENGTH,
+  TOO_LARGE_BACKUP,
+  decryptBackup,
+  encryptBackup,
+} from './health-backup';
 import { HealthRecord } from '../diagnosis.model';
 import { saveFile } from '../../shared/files/save-file';
 import { CareReminders } from '../steps/care-reminders.service';
 import { localIsoDate } from '../../shared/calendar-date';
 import { matching } from '../../shared/forms/validators';
+import { UserFacingError, messageFor } from '../../core/errors/errors';
 
 @Component({
   selector: 'app-backup',
@@ -82,7 +89,7 @@ export class BackupPage {
         'Encrypted backup ready. Keep the file and your passphrase somewhere you can access on another device.',
       );
     } catch (error) {
-      this.error.set(error instanceof Error ? error.message : 'Could not create your backup.');
+      this.error.set(messageFor(error, 'Could not create your backup.'));
     } finally {
       this.busy.set(false);
     }
@@ -96,12 +103,12 @@ export class BackupPage {
     this.preview.set(null);
     this.restoreConfirmed.reset();
     try {
-      if (file.size > 15 * 1024 * 1024) throw new Error('Choose a backup smaller than 15 MB.');
+      if (file.size > MAX_BACKUP_BYTES) throw new UserFacingError(TOO_LARGE_BACKUP);
       this.previewAccount = this.email();
       this.preview.set(await decryptBackup(await file.text(), this.restoreForm.controls.passphrase.value));
       this.restoreForm.reset();
     } catch (error) {
-      this.error.set(error instanceof Error ? error.message : 'Could not unlock your backup.');
+      this.error.set(messageFor(error, 'Could not unlock your backup.'));
     } finally {
       this.busy.set(false);
     }
@@ -114,7 +121,7 @@ export class BackupPage {
     this.error.set('');
     try {
       if (!this.previewAccount || this.email() !== this.previewAccount)
-        throw new Error('Your signed-in account changed. Unlock the backup again.');
+        throw new UserFacingError('Your signed-in account changed. Unlock the backup again.');
       // Reminders remain off after importing, until the person enables them on this device.
       const record = {
         ...preview.record,
@@ -129,11 +136,7 @@ export class BackupPage {
         'Health records restored for this account on this device. Check My health to review them. Device reminders need to be enabled again.',
       );
     } catch (error) {
-      this.error.set(
-        error instanceof Error
-          ? error.message
-          : 'Could not restore the backup. Your current records have not been replaced.',
-      );
+      this.error.set(messageFor(error, 'Could not restore the backup. Your current records have not been replaced.'));
     } finally {
       this.busy.set(false);
     }

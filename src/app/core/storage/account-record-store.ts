@@ -2,6 +2,7 @@ import { inject, signal } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { EncryptedStore } from './encrypted-store.service';
 import { accountKey } from './account-key';
+import { UserFacingError } from '../errors/errors';
 
 /**
  * One encrypted record per account, kept on this device. Subclasses say what the record is
@@ -87,7 +88,7 @@ export abstract class AccountRecordStore<T> {
 
   private assertStillSignedIn(email: string | null): void {
     if (!email || this.auth.getUserEmail() !== email) {
-      throw new Error('The signed-in account changed. Sign in again and try once more.');
+      throw new UserFacingError('The signed-in account changed. Sign in again and try once more.');
     }
   }
 

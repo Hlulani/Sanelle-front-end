@@ -7,6 +7,7 @@ import { FINDINGS, FINDING_KEYS, Finding, FindingKey } from '../diagnosis.model'
 import { ReportPreview, ReportReader, ReportRegion } from './report-reader.service';
 import { ReportSuggestion, suggestReportFindings } from './report-parser';
 import { isBareMeasurement } from '../record/record-input';
+import { UserFacingError, messageFor } from '../../core/errors/errors';
 
 interface ReviewRow {
   key: FindingKey;
@@ -86,11 +87,11 @@ export class ReportPage {
       if (generation !== this.generation) return;
       const text = pages.join('\n\n').trim();
       if (!text)
-        throw new Error(
+        throw new UserFacingError(
           'No readable text was found. Try a clearer photo with the whole page visible, or add the details manually.',
         );
       if (text.length > 100_000)
-        throw new Error(
+        throw new UserFacingError(
           'This report is too long to review here. Choose the relevant pages or add the details manually.',
         );
       this.text.set(text);
@@ -116,9 +117,7 @@ export class ReportPage {
     } catch (error) {
       if (generation === this.generation)
         this.error.set(
-          error instanceof Error
-            ? error.message
-            : 'This report could not be read. Try another file or add the details manually.',
+          messageFor(error, 'This report could not be read. Try another file or add the details manually.'),
         );
     } finally {
       if (generation === this.generation) this.reading.set(false);
