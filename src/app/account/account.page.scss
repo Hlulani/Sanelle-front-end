@@ -71,8 +71,13 @@
   text-align: left;
   cursor: pointer;
 
-  &[aria-pressed='true'] { border-color: var(--sn-brand); }
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; }
+  &[aria-pressed='true'] {
+    border-color: var(--sn-brand);
+  }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 2px;
+  }
 }
 
 /* Shape plus colour, so the chosen state doesn't rely on colour alone. */

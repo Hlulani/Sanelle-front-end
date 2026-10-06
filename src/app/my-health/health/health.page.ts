@@ -21,7 +21,9 @@ export class HealthPage {
   private repo = inject(HealthRepository);
 
   readonly defs = FINDINGS;
-  readonly activeReport = computed(() => this.repo.record().reports?.find((r) => r.id === this.repo.record().activeReportId));
+  readonly activeReport = computed(() =>
+    this.repo.record().reports?.find((r) => r.id === this.repo.record().activeReportId),
+  );
   readonly openSteps = computed(() => (this.repo.record().tasks ?? []).filter((task) => !task.completedAt));
   readonly rows = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.repo.record(), k)));
   readonly hasFindings = this.repo.hasAnyFinding;

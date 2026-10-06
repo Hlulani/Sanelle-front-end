@@ -2,8 +2,14 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IonHeader, IonToolbar, IonButtons,
-  IonTitle, IonContent, IonButton, IonIcon, IonModal
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonTitle,
+  IonContent,
+  IonButton,
+  IonIcon,
+  IonModal,
 } from '@ionic/angular/standalone';
 import { MealService } from '../../core/services/meal.service';
 import { Ingredient, MealResponse } from '../../core/models/meal.model';
@@ -14,7 +20,6 @@ import { scaleIngredientAmount } from '../../core/services/ingredient-scaling.ut
 const MIN_SERVINGS = 1;
 const MAX_SERVINGS = 12;
 
-
 import { MealPhoto } from '../../shared/meal-photos';
 import { MealImageComponent } from '../../shared/components/meal-image/meal-image.component';
 
@@ -22,17 +27,7 @@ import { MealImageComponent } from '../../shared/components/meal-image/meal-imag
   selector: 'app-meal-details',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonTitle,
-    IonContent,
-    MealImageComponent,
-    IonButton,
-    IonIcon,
-    IonModal
-],
+  imports: [IonHeader, IonToolbar, IonButtons, IonTitle, IonContent, MealImageComponent, IonButton, IonIcon, IonModal],
   templateUrl: './meal-details.page.html',
   styleUrls: ['./meal-details.page.scss'],
 })

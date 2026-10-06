@@ -63,7 +63,9 @@ export class QuestionsPage implements OnInit {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => this.prepareDraft(params));
   }
 
-  ionViewWillEnter() { void this.repo.load(); }
+  ionViewWillEnter() {
+    void this.repo.load();
+  }
 
   private prepareDraft(params: ParamMap) {
     const from = params.get('from');
@@ -77,7 +79,9 @@ export class QuestionsPage implements OnInit {
   }
 
   back() {
-    this.router.navigateByUrl({ today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()]);
+    this.router.navigateByUrl(
+      { today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()],
+    );
   }
 
   async addStarter(text: string) {
@@ -91,7 +95,7 @@ export class QuestionsPage implements OnInit {
   async addOwn() {
     const text = this.newQuestion.trim();
     if (!text) return;
-    if (!await this.saveChange(() => this.repo.addQuestion(text))) return;
+    if (!(await this.saveChange(() => this.repo.addQuestion(text)))) return;
     this.newQuestion = '';
     this.added.set(text);
     this.fromCheckin.set(false);
@@ -109,7 +113,7 @@ export class QuestionsPage implements OnInit {
 
   async saveEdit(q: AppointmentQuestion) {
     const text = this.draft.trim();
-    if (!text || !await this.saveChange(() => this.repo.updateQuestion(q.id, { text }))) return;
+    if (!text || !(await this.saveChange(() => this.repo.updateQuestion(q.id, { text })))) return;
     this.editing.set(null);
   }
 
@@ -120,7 +124,8 @@ export class QuestionsPage implements OnInit {
   }
 
   async saveAnswer(q: AppointmentQuestion) {
-    if (!await this.saveChange(() => this.repo.updateQuestion(q.id, { answer: this.draft.trim() || undefined }))) return;
+    if (!(await this.saveChange(() => this.repo.updateQuestion(q.id, { answer: this.draft.trim() || undefined }))))
+      return;
     this.answering.set(null);
   }
 

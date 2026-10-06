@@ -11,7 +11,9 @@ export function dayLabel(iso: string, today = new Date()): string {
   const todayIso = localIsoDate(today);
   if (iso === todayIso) return 'Today';
   if (iso === addDays(todayIso, -1)) return 'Yesterday';
-  return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(parseLocalDate(iso));
+  return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(
+    parseLocalDate(iso),
+  );
 }
 
 /**

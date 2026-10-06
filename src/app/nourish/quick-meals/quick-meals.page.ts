@@ -44,7 +44,14 @@ export class QuickMealsPage implements OnInit {
     forkJoin(
       TYPES.map((t) =>
         this.plans
-          .swapOptions({ mealType: t.type, currentMealId: null, proteinPreference, maxPrepMinutes: QUICK_MINUTES, allergies, dislikes })
+          .swapOptions({
+            mealType: t.type,
+            currentMealId: null,
+            proteinPreference,
+            maxPrepMinutes: QUICK_MINUTES,
+            allergies,
+            dislikes,
+          })
           .pipe(catchError(() => of(null))),
       ),
     ).subscribe((results) => {
@@ -56,7 +63,9 @@ export class QuickMealsPage implements OnInit {
         TYPES.map((t, i) => ({
           label: t.label,
           // Quickest first, a few per meal, so the choice stays small.
-          meals: [...(results[i] ?? [])].sort((a, b) => (a.prepTimeMinutes ?? 99) - (b.prepTimeMinutes ?? 99)).slice(0, 3),
+          meals: [...(results[i] ?? [])]
+            .sort((a, b) => (a.prepTimeMinutes ?? 99) - (b.prepTimeMinutes ?? 99))
+            .slice(0, 3),
         })).filter((s) => s.meals.length),
       );
     });

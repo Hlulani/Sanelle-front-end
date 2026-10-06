@@ -34,7 +34,9 @@
     border-bottom: 1px solid var(--sn-line);
   }
 
-  > li:last-child { border-bottom: 0; }
+  > li:last-child {
+    border-bottom: 0;
+  }
 }
 
 .facts > li {

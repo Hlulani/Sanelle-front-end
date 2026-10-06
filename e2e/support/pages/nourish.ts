@@ -15,7 +15,8 @@ export class NourishScreen extends ScreenObject {
   /** Steps through plan setup with the defaults except what someone eats, then previews. */
   async previewPlan(eats: 'Any' | 'Pescatarian' | 'Vegetarian' | 'Vegan'): Promise<void> {
     await this.tapInView(this.button('Next: food choices'));
-    const choice = this.page.locator('.chip-row')
+    const choice = this.page
+      .locator('.chip-row')
       .filter({ has: this.button('Pescatarian', true) })
       .getByRole('button', { name: eats, exact: true });
     await this.tapInView(choice);

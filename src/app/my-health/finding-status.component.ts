@@ -10,10 +10,14 @@ import { Finding, SOURCE_TAGS } from './diagnosis.model';
     @let f = finding();
     @switch (f.completeness.state) {
       @case ('present') {
-        <span class="sn-status sn-status--present">{{ $any(f.completeness).value }}{{ f.source ? ' · ' + tags[f.source] : '' }}</span>
+        <span class="sn-status sn-status--present"
+          >{{ $any(f.completeness).value }}{{ f.source ? ' · ' + tags[f.source] : '' }}</span
+        >
       }
       @case ('absent') {
-        <span class="sn-status sn-status--absent">Report says no{{ f.source && f.source !== 'entered-from-report' ? ' · ' + tags[f.source] : '' }}</span>
+        <span class="sn-status sn-status--absent"
+          >Report says no{{ f.source && f.source !== 'entered-from-report' ? ' · ' + tags[f.source] : '' }}</span
+        >
       }
       @default {
         <span class="sn-status sn-status--unknown">Not recorded</span>

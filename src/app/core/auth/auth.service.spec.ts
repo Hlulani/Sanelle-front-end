@@ -28,7 +28,9 @@ describe('AuthService onboarding and diet, per account', () => {
 
   async function login(email: string) {
     const done = firstValueFrom(auth.login(email, 'pw'));
-    http.expectOne((r) => r.url.endsWith('/auth/login')).flush({ accessToken: tokenFor(email), refreshToken: tokenFor(email) });
+    http
+      .expectOne((r) => r.url.endsWith('/auth/login'))
+      .flush({ accessToken: tokenFor(email), refreshToken: tokenFor(email) });
     await done;
   }
 

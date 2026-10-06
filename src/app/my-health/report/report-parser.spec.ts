@@ -2,10 +2,17 @@ import { suggestReportFindings } from './report-parser';
 
 describe('Report suggestions', () => {
   it('keeps explicit statements with their wording and units', () => {
-    const text = 'Two intramural fibroids are noted. The largest fibroid measures 41 x 36 mm. The uterine cavity is not distorted. FIGO type 2.';
+    const text =
+      'Two intramural fibroids are noted. The largest fibroid measures 41 x 36 mm. The uterine cavity is not distorted. FIGO type 2.';
     const suggestions = suggestReportFindings(text);
-    expect(suggestions.find((s) => s.key === 'count')?.completeness).toEqual({ state: 'present', value: 'Two intramural fibroids' });
-    expect(suggestions.find((s) => s.key === 'largestSize')?.completeness).toEqual({ state: 'present', value: '41 x 36 mm' });
+    expect(suggestions.find((s) => s.key === 'count')?.completeness).toEqual({
+      state: 'present',
+      value: 'Two intramural fibroids',
+    });
+    expect(suggestions.find((s) => s.key === 'largestSize')?.completeness).toEqual({
+      state: 'present',
+      value: '41 x 36 mm',
+    });
     expect(suggestions.find((s) => s.key === 'largestSize')?.wording).toBe('The largest fibroid measures 41 x 36 mm.');
     expect(suggestions.find((s) => s.key === 'cavity')?.completeness).toEqual({ state: 'absent' });
     expect(suggestions.find((s) => s.key === 'figo')?.completeness).toEqual({ state: 'present', value: 'FIGO type 2' });

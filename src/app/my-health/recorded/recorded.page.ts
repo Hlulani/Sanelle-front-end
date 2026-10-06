@@ -30,9 +30,15 @@ export class RecordedPage {
   private route = inject(ActivatedRoute);
 
   private readonly findings = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.repo.record(), k)));
-  readonly known = computed(() => this.findings()
-    .filter((f) => f.completeness.state !== 'unknown')
-    .map((f): { key: FindingKey; label: string; finding: Finding } => ({ key: f.key, label: FINDINGS[f.key].label, finding: f })));
+  readonly known = computed(() =>
+    this.findings()
+      .filter((f) => f.completeness.state !== 'unknown')
+      .map((f): { key: FindingKey; label: string; finding: Finding } => ({
+        key: f.key,
+        label: FINDINGS[f.key].label,
+        finding: f,
+      })),
+  );
   readonly missing = computed(() => {
     const asked = new Set(this.repo.record().questions.map((q) => q.text.toLowerCase()));
     return this.findings()

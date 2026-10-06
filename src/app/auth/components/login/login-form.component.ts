@@ -1,14 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import {
-  IonItem,
-  IonInput,
-  IonButton,
-  IonText,
-  IonSpinner,
-  IonIcon,
-} from '@ionic/angular/standalone';
+import { IonItem, IonInput, IonButton, IonText, IonSpinner, IonIcon } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
@@ -16,15 +9,7 @@ import { AuthService } from '../../../core/auth/auth.service';
   selector: 'app-login-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    FormsModule,
-    IonItem,
-    IonInput,
-    IonButton,
-    IonText,
-    IonSpinner,
-    IonIcon
-],
+  imports: [FormsModule, IonItem, IonInput, IonButton, IonText, IonSpinner, IonIcon],
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
 })

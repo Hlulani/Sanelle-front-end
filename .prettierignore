@@ -1,0 +1,13 @@
+# Only source code is formatted; generated, native and vendored files are left alone.
+www/
+android/
+ios/
+resources/
+coverage/
+node_modules/
+demo/
+docs/
+e2e/.output/
+*.md
+package-lock.json
+src/app/shared/meal-photo-catalogue.json

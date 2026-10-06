@@ -19,7 +19,9 @@ export function newAccountDetails(): TestAccount {
 export async function registerAccount(api: APIRequestContext): Promise<TestAccount> {
   const account = newAccountDetails();
   const response = await api.post(`${API_URL}/auth/register`, { data: account });
-  expect(response.ok(), `Registering a test account failed (HTTP ${response.status()}). Is the backend running?`).toBe(true);
+  expect(response.ok(), `Registering a test account failed (HTTP ${response.status()}). Is the backend running?`).toBe(
+    true,
+  );
   return account;
 }
 

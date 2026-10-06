@@ -19,7 +19,13 @@ describe('diagnosisProgress', () => {
   });
 
   it('has nothing left once all five are answered', () => {
-    const all = withFindings({ count: 'present', largestSize: 'present', location: 'unknown', cavity: 'unknown', figo: 'unknown' });
+    const all = withFindings({
+      count: 'present',
+      largestSize: 'present',
+      location: 'unknown',
+      cavity: 'unknown',
+      figo: 'unknown',
+    });
     expect(diagnosisProgress(all).nextKey).toBeNull();
   });
 });
@@ -39,7 +45,13 @@ describe('nextStep (top of Today)', () => {
   });
 
   it('suggests asking about a blank once all five are answered', () => {
-    const all = withFindings({ count: 'present', largestSize: 'present', location: 'unknown', cavity: 'present', figo: 'present' });
+    const all = withFindings({
+      count: 'present',
+      largestSize: 'present',
+      location: 'unknown',
+      cavity: 'present',
+      figo: 'present',
+    });
     expect(nextStep(all, [])).toEqual({ kind: 'ask', key: 'location', question: 'Where are my fibroids?' });
   });
 

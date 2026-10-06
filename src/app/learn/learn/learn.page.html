@@ -5,52 +5,76 @@
       <p class="sn-head-note">Understand what you’ve read and turn your concerns into questions for care.</p>
     </header>
 
-    <section class="sn-section" aria-labelledby="trusted-title"><h2 id="trusted-title">Start with trusted reading</h2><p class="section-note">Patient information published by the NHS. General guidance, not a personal treatment or diet plan.</p>
+    <section class="sn-section" aria-labelledby="trusted-title">
+      <h2 id="trusted-title">Start with trusted reading</h2>
+      <p class="section-note">
+        Patient information published by the NHS. General guidance, not a personal treatment or diet plan.
+      </p>
       <div class="resources">
         @for (resource of resources; track resource.url) {
           <article class="resource">
             <h3>{{ resource.title }}</h3>
             <p>{{ resource.description }}</p>
             <div class="resource-actions">
-              <a class="resource-link" [href]="resource.url" target="_blank" rel="noopener noreferrer">Read on {{ resource.publisher }} <span aria-hidden="true">↗</span><span class="visually-hidden">(opens the original page)</span></a>
-              <button type="button" class="resource-question" (click)="saveQuestion(resource.question)">Save a question about this for my visit</button>
+              <a class="resource-link" [href]="resource.url" target="_blank" rel="noopener noreferrer"
+                >Read on {{ resource.publisher }} <span aria-hidden="true">↗</span
+                ><span class="visually-hidden">(opens the original page)</span></a
+              >
+              <button type="button" class="resource-question" (click)="saveQuestion(resource.question)">
+                Save a question about this for my visit
+              </button>
             </div>
           </article>
         }
       </div>
     </section>
-    @if (error()) { <p role="alert">{{ error() }}</p> }
-    @if (saved()) { <p class="saved" role="status">Saved to your next-visit questions. <a routerLink="/health/questions">Review my questions</a></p> }
+    @if (error()) {
+      <p role="alert">{{ error() }}</p>
+    }
+    @if (saved()) {
+      <p class="saved" role="status">
+        Saved to your next-visit questions. <a routerLink="/health/questions">Review my questions</a>
+      </p>
+    }
     @if (list.length) {
-    <section class="sn-section" aria-labelledby="topics-title">
-      <h2 id="topics-title">Food questions</h2>
-      @if (list.length) {
-        <ul class="topics">
-          @for (t of list; track t.id) {
-            <li>
-              <a class="topic" [routerLink]="['/learn', t.id]">
-                <span class="topic-text">
-                  <span class="topic-claim">“{{ t.claim }}”</span>
-                  <span class="topic-q">{{ t.title }}</span>
-                  <span class="topic-meta">{{ coverage(t.id) }}@if (t.review.state === 'draft') { · <span class="draft">Draft</span> }</span>
-                </span>
-                <span class="chev" aria-hidden="true">›</span>
-              </a>
-            </li>
-          }
-        </ul>
-      } @else {
-        <p class="empty">No reviewed topics yet.</p>
-      }
-    </section>
-
+      <section class="sn-section" aria-labelledby="topics-title">
+        <h2 id="topics-title">Food questions</h2>
+        @if (list.length) {
+          <ul class="topics">
+            @for (t of list; track t.id) {
+              <li>
+                <a class="topic" [routerLink]="['/learn', t.id]">
+                  <span class="topic-text">
+                    <span class="topic-claim">“{{ t.claim }}”</span>
+                    <span class="topic-q">{{ t.title }}</span>
+                    <span class="topic-meta"
+                      >{{ coverage(t.id) }}
+                      @if (t.review.state === 'draft') {
+                        · <span class="draft">Draft</span>
+                      }
+                    </span>
+                  </span>
+                  <span class="chev" aria-hidden="true">›</span>
+                </a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty">No reviewed topics yet.</p>
+        }
+      </section>
     }
     <div class="sn-band">
       <section class="sn-section" aria-labelledby="ask-title">
         <h2 id="ask-title">Read something else?</h2>
-        <p class="band-text">Save what you read as a question for your clinician. It goes into My health and your appointment summary, so you can bring it to your visit.</p>
+        <p class="band-text">
+          Save what you read as a question for your clinician. It goes into My health and your appointment summary, so
+          you can bring it to your visit.
+        </p>
         @if (saved()) {
-          <p class="saved" role="status">Added to your next-visit questions: {{ saved() }} <a routerLink="/health/questions">See my questions</a></p>
+          <p class="saved" role="status">
+            Added to your next-visit questions: {{ saved() }} <a routerLink="/health/questions">See my questions</a>
+          </p>
         }
         <form class="ask" (submit)="$event.preventDefault(); saveClaim()">
           <label class="sn-field">

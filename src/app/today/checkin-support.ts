@@ -18,11 +18,15 @@ export interface SupportAction {
  */
 export function draftQuestion(e: SymptomEntry): string | null {
   if (e.affected?.includes('work')) return 'My symptoms have affected my work or study. What could help with that?';
-  if (e.affected?.includes('daily')) return 'My symptoms have got in the way of daily activities. What could help with that?';
+  if (e.affected?.includes('daily'))
+    return 'My symptoms have got in the way of daily activities. What could help with that?';
   if (e.affected?.includes('sleep')) return 'My symptoms have affected my sleep. What could help with that?';
-  if (e.bleeding === 'heavy' || e.bleeding === 'very-heavy') return 'I’ve had heavy bleeding on some days. What should I keep an eye on?';
-  if (e.pain !== undefined && e.pain >= 7) return `I’ve had pain of ${e.pain} out of 10. What could help with the pain?`;
-  if (e.treatmentChange?.trim()) return `I noted a treatment change (${e.treatmentChange.trim()}). Is there anything I should look out for?`;
+  if (e.bleeding === 'heavy' || e.bleeding === 'very-heavy')
+    return 'I’ve had heavy bleeding on some days. What should I keep an eye on?';
+  if (e.pain !== undefined && e.pain >= 7)
+    return `I’ve had pain of ${e.pain} out of 10. What could help with the pain?`;
+  if (e.treatmentChange?.trim())
+    return `I noted a treatment change (${e.treatmentChange.trim()}). Is there anything I should look out for?`;
   return null;
 }
 
@@ -45,7 +49,12 @@ export function supportActions(input: SupportInput): SupportAction[] {
 
   const topic = reviewedTopicFor(concernsIn(entry), input.topics);
   if (topic) {
-    candidates.push({ id: 'understand', title: 'Understand what I’m experiencing', body: topic.title, route: topic.route });
+    candidates.push({
+      id: 'understand',
+      title: 'Understand what I’m experiencing',
+      body: topic.title,
+      route: topic.route,
+    });
   }
 
   const draft = draftQuestion(entry);
@@ -60,7 +69,10 @@ export function supportActions(input: SupportInput): SupportAction[] {
     });
   }
 
-  const lowEnergy = entry.fatigue === 'moderate' || entry.fatigue === 'severe' || !!entry.affected?.some((a) => a === 'daily' || a === 'work');
+  const lowEnergy =
+    entry.fatigue === 'moderate' ||
+    entry.fatigue === 'severe' ||
+    !!entry.affected?.some((a) => a === 'daily' || a === 'work');
   if (lowEnergy || focus.includes('food')) {
     candidates.push({
       id: 'food',
@@ -73,7 +85,9 @@ export function supportActions(input: SupportInput): SupportAction[] {
 
   // What she chose in onboarding goes first; otherwise understanding, then care, then food.
   const rank = (id: SupportId) =>
-    (focus.includes('appointment') && id === 'care') || (focus.includes('food') && id === 'food') ? -1 : ['understand', 'care', 'food'].indexOf(id);
+    (focus.includes('appointment') && id === 'care') || (focus.includes('food') && id === 'food')
+      ? -1
+      : ['understand', 'care', 'food'].indexOf(id);
   return candidates
     .filter((a) => !usedToday.includes(a.id))
     .sort((a, b) => rank(a.id) - rank(b.id))

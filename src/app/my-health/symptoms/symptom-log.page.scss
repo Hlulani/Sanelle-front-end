@@ -27,7 +27,10 @@
   min-height: var(--sn-tap);
   padding: 0 0.875rem;
 
-  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-apricot);
+    outline-offset: 2px;
+  }
 }
 
 h1 {
@@ -75,13 +78,16 @@ h1 {
   font: 700 0.9375rem/1 var(--sn-body);
   cursor: pointer;
 
-  &[aria-pressed="true"] {
+  &[aria-pressed='true'] {
     background: var(--sn-brand);
     border-color: var(--sn-brand);
     color: var(--sn-on-brand);
   }
 
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 2px;
+  }
 }
 
 .chip {

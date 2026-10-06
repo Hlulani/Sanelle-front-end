@@ -5,5 +5,5 @@ export const environment = {
 
   // add these
   apiBaseUrl: 'https://YOUR-PROD-DOMAIN/api/v1',
-  hostBaseUrl: 'https://YOUR-PROD-DOMAIN'
+  hostBaseUrl: 'https://YOUR-PROD-DOMAIN',
 };

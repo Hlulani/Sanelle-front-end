@@ -9,7 +9,9 @@ test.describe('Understanding my diagnosis', () => {
 
     const results = await app.diagnosis.results();
     expect(results.recorded).toEqual(['Fibroids', 'Largest', 'Location', 'FIGO type']);
-    expect(results.missing).toEqual([{ label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: true }]);
+    expect(results.missing).toEqual([
+      { label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: true },
+    ]);
 
     await app.diagnosis.seeQuestions();
     await expect(page.locator('ol.list')).toContainText(SAMPLE_REPORT.cavity.suggested);
@@ -25,7 +27,9 @@ test.describe('Understanding my diagnosis', () => {
     await app.diagnosis.record(r.figo, 'Save');
 
     const results = await app.diagnosis.results();
-    expect(results.missing).toEqual([{ label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: false }]);
+    expect(results.missing).toEqual([
+      { label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: false },
+    ]);
 
     await app.diagnosis.saveQuestionFor('Uterine cavity');
     await app.diagnosis.seeQuestions();

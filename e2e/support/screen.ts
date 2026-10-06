@@ -8,13 +8,18 @@ import { expect, type Locator, type Page } from '@playwright/test';
 export async function arrive(page: Page, landmark: Locator): Promise<void> {
   await expect(landmark).toBeVisible();
   await expect
-    .poll(() => landmark.evaluate((el) => new Promise<boolean>((resolve) => {
-      const start = el.getBoundingClientRect().left;
-      setTimeout(() => {
-        const end = el.getBoundingClientRect().left;
-        resolve(Math.abs(end - start) < 0.5 && end >= 0 && end < 100);
-      }, 250);
-    })))
+    .poll(() =>
+      landmark.evaluate(
+        (el) =>
+          new Promise<boolean>((resolve) => {
+            const start = el.getBoundingClientRect().left;
+            setTimeout(() => {
+              const end = el.getBoundingClientRect().left;
+              resolve(Math.abs(end - start) < 0.5 && end >= 0 && end < 100);
+            }, 250);
+          }),
+      ),
+    )
     .toBe(true);
   await page.evaluate(() => document.fonts.ready);
 }

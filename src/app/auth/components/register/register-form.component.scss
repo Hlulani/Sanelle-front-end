@@ -3,14 +3,13 @@
 }
 
 .custom-input {
-
-  ion-icon[slot="start"] {
+  ion-icon[slot='start'] {
     margin-right: 12px;
     font-size: 20px;
     color: var(--sn-muted);
   }
 
-  ion-icon[slot="end"] {
+  ion-icon[slot='end'] {
     cursor: pointer;
     color: var(--sn-muted);
     transition: color 0.2s;
@@ -20,8 +19,6 @@
     }
   }
 }
-
-
 
 .strength-meter {
   display: flex;
@@ -43,10 +40,18 @@
     border-radius: 2px;
     transition: background-color 0.2s ease;
 
-    &.filled.strength-weak { background: var(--sn-error); }
-    &.filled.strength-fair { background: var(--sn-reported); }
-    &.filled.strength-good { background: var(--sn-present); }
-    &.filled.strength-strong { background: var(--sn-present); }
+    &.filled.strength-weak {
+      background: var(--sn-error);
+    }
+    &.filled.strength-fair {
+      background: var(--sn-reported);
+    }
+    &.filled.strength-good {
+      background: var(--sn-present);
+    }
+    &.filled.strength-strong {
+      background: var(--sn-present);
+    }
   }
 
   strong {

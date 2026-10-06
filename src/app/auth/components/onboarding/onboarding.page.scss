@@ -55,11 +55,14 @@ h1 {
   position: relative;
   padding-right: 3.25rem;
 
-  &[aria-pressed="true"] {
+  &[aria-pressed='true'] {
     box-shadow: 0 0 0 3px var(--sn-apricot);
   }
 
-  &:focus-visible { outline: 3px solid var(--sn-on-brand); outline-offset: 3px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-on-brand);
+    outline-offset: 3px;
+  }
 }
 
 .choice-label {
@@ -83,7 +86,7 @@ h1 {
   color: var(--sn-ink);
 }
 
-.choice[aria-pressed="true"] .tick {
+.choice[aria-pressed='true'] .tick {
   background: var(--sn-apricot);
   border-color: var(--sn-apricot);
 }
@@ -122,5 +125,7 @@ h1 {
   color: var(--sn-on-brand);
   text-decoration: underline;
 
-  &:focus-visible { outline-color: var(--sn-apricot); }
+  &:focus-visible {
+    outline-color: var(--sn-apricot);
+  }
 }

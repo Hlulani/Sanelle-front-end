@@ -1,5 +1,5 @@
 /* Sanelle brand tokens, fonts and shared components */
-@use "./theme/sanelle";
+@use './theme/sanelle';
 
 /*
  * App Global CSS
@@ -8,24 +8,23 @@
  */
 
 /* Core CSS required for Ionic components */
-@import "@ionic/angular/css/core.css";
+@import '@ionic/angular/css/core.css';
 
 /* Basic Ionic CSS */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional Ionic utilities */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
 /* Dark mode palette */
-@import "@ionic/angular/css/palettes/dark.system.css";
-
+@import '@ionic/angular/css/palettes/dark.system.css';
 
 /* ─────────────────────────────────────────────
    App-specific UI styles (SAFE)
@@ -57,11 +56,9 @@ body {
   overflow: hidden;
 }
 
-
-
 :root {
-  --app-font-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --app-font-heading: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+  --app-font-body: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --app-font-heading: 'Fredoka', 'Nunito Sans', system-ui, sans-serif;
   /* Ionic's own components (segments, alerts, back buttons, date pickers) use Sanelle's font too. */
   --ion-font-family: var(--app-font-body);
 }
@@ -112,8 +109,6 @@ ion-content::part(scroll) {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-
-
 
 .custom-input {
   --background: var(--sn-surface);
@@ -169,8 +164,6 @@ ion-toolbar ion-button {
 ion-header::after {
   display: none;
 }
-
-
 
 ion-checkbox {
   --checkbox-background-checked: var(--sn-brand);

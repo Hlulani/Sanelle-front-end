@@ -11,7 +11,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "playwright test --config e2e/playwright.config.ts"
+    "e2e": "playwright test --config e2e/playwright.config.ts",
+    "format": "prettier --write src e2e",
+    "format:check": "prettier --check src e2e"
   },
   "private": true,
   "dependencies": {
@@ -70,6 +72,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.9.9",
     "typescript": "~5.9.0"
   },
   "description": "Sanelle meal planner app (Ionic + Angular + Capacitor)"

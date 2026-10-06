@@ -10,16 +10,23 @@ describe('Report review', () => {
   let save: jasmine.Spy;
   let read: jasmine.Spy;
   let page: ReportPage;
-  const event = () => ({ target: { files: [new File(['test'], 'report.pdf', { type: 'application/pdf' })], value: 'report.pdf' } }) as unknown as Event;
+  const event = () =>
+    ({
+      target: { files: [new File(['test'], 'report.pdf', { type: 'application/pdf' })], value: 'report.pdf' },
+    }) as unknown as Event;
 
   beforeEach(() => {
     record.set(emptyHealthRecord());
     save = jasmine.createSpy('saveReport').and.resolveTo();
-    read = jasmine.createSpy('read').and.resolveTo('Two intramural fibroids are noted. The largest fibroid measures 4.1 cm.');
-    TestBed.configureTestingModule({ providers: [
-      { provide: HealthRepository, useValue: { record, load: () => Promise.resolve(), saveReport: save } },
-      { provide: ReportReader, useValue: { read } },
-    ] });
+    read = jasmine
+      .createSpy('read')
+      .and.resolveTo('Two intramural fibroids are noted. The largest fibroid measures 4.1 cm.');
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: HealthRepository, useValue: { record, load: () => Promise.resolve(), saveReport: save } },
+        { provide: ReportReader, useValue: { read } },
+      ],
+    });
     page = TestBed.runInInjectionContext(() => new ReportPage());
   });
 
@@ -31,13 +38,25 @@ describe('Report review', () => {
     page.confirmed = true;
     page.reportDate = '2026-10-01';
     await page.save();
-    expect(save.calls.mostRecent().args[0].every((f: { source: string; reportDate: string }) => f.source === 'extracted-and-confirmed' && f.reportDate === '2026-10-01')).toBeTrue();
+    expect(
+      save.calls
+        .mostRecent()
+        .args[0].every(
+          (f: { source: string; reportDate: string }) =>
+            f.source === 'extracted-and-confirmed' && f.reportDate === '2026-10-01',
+        ),
+    ).toBeTrue();
     expect(page.saved()).toBeTrue();
     expect(page.text()).toBe('');
   });
 
   it('does not select replacements or ambiguous statements automatically', async () => {
-    record.set({ ...emptyHealthRecord(), findings: { count: { key: 'count', completeness: { state: 'present', value: '5' }, source: 'entered-from-report' } } });
+    record.set({
+      ...emptyHealthRecord(),
+      findings: {
+        count: { key: 'count', completeness: { state: 'present', value: '5' }, source: 'entered-from-report' },
+      },
+    });
     read.and.resolveTo('Two fibroids are noted. The largest fibroid measures 4 cm. The largest fibroid measures 5 cm.');
     await page.readFiles(event());
     expect(page.rows().find((r) => r.key === 'count')?.selected).toBeFalse();
@@ -63,7 +82,10 @@ describe('Report review', () => {
   });
 
   it('rejects multiple PDFs before reading or saving', async () => {
-    const files = [new File(['a'], 'a.pdf', { type: 'application/pdf' }), new File(['b'], 'b.pdf', { type: 'application/pdf' })];
+    const files = [
+      new File(['a'], 'a.pdf', { type: 'application/pdf' }),
+      new File(['b'], 'b.pdf', { type: 'application/pdf' }),
+    ];
     await page.readFiles({ target: { files, value: '' } } as unknown as Event);
     expect(read).not.toHaveBeenCalled();
     expect(save).not.toHaveBeenCalled();

@@ -22,7 +22,11 @@ describe('After your visit', () => {
 
   it('prevents typing until saved notes have loaded', async () => {
     let finishLoad!: () => void;
-    load.and.returnValue(new Promise<void>((resolve) => { finishLoad = resolve; }));
+    load.and.returnValue(
+      new Promise<void>((resolve) => {
+        finishLoad = resolve;
+      }),
+    );
     const fixture = TestBed.createComponent(VisitPage);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('fieldset').disabled).toBeTrue();

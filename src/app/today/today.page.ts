@@ -7,7 +7,13 @@ import { AuthService } from '../core/auth/auth.service';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealPlanItem } from '../core/services/meal-plans.service';
 import { HealthRepository } from '../my-health/health-repository';
-import { FINDINGS, FINDING_KEYS, FindingKey, findingOrUnknown, unansweredQuestions } from '../my-health/diagnosis.model';
+import {
+  FINDINGS,
+  FINDING_KEYS,
+  FindingKey,
+  findingOrUnknown,
+  unansweredQuestions,
+} from '../my-health/diagnosis.model';
 import { FocusPreferencesService } from '../core/services/focus-preferences.service';
 import { contextLine, diagnosisStep, leadArea, nextStep, supportingAreas } from './next-step';
 import { SupportId, supportActions } from './checkin-support';
@@ -51,7 +57,9 @@ export class TodayPage implements OnInit {
   ].filter((e) => !!this.topics.get(e.id));
   readonly justSaved = signal<string | null>(null);
 
-  readonly dateLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+  readonly dateLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(
+    new Date(),
+  );
 
   readonly findings = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.health.record(), k)));
   readonly hasRecords = this.health.hasAnyFinding;
@@ -84,12 +92,18 @@ export class TodayPage implements OnInit {
   readonly diagnosisEntry = computed(() => diagnosisStep(this.health.record()));
 
   readonly pendingQuestions = computed(() => unansweredQuestions(this.health.record()));
-  readonly openSteps = computed(() => (this.health.record().tasks ?? []).filter((task) => !task.completedAt).sort((a, b) => (a.dueDate || '9999').localeCompare(b.dueDate || '9999')));
+  readonly openSteps = computed(() =>
+    (this.health.record().tasks ?? [])
+      .filter((task) => !task.completedAt)
+      .sort((a, b) => (a.dueDate || '9999').localeCompare(b.dueDate || '9999')),
+  );
   readonly questionCount = computed(() => this.pendingQuestions().length);
   readonly visitGoal = computed(() => this.health.record().visitGoal ?? '');
   readonly lastVisit = computed(() => this.health.record().visits?.[0] ?? null);
   readonly todayIso = localIsoDate();
-  readonly todayEntry = computed(() => (this.health.record().symptoms ?? []).find((s) => s.date === this.todayIso) ?? null);
+  readonly todayEntry = computed(
+    () => (this.health.record().symptoms ?? []).find((s) => s.date === this.todayIso) ?? null,
+  );
   /** True right after saving today's check-in, for the "saved" confirmation. */
   readonly justCheckedIn = signal(false);
   readonly support = computed(() => {
@@ -115,7 +129,15 @@ export class TodayPage implements OnInit {
   /** Anything recorded, planned or logged. Until then Today only shows where to begin. */
   readonly started = computed(() => {
     const r = this.health.record();
-    return this.hasRecords() || r.questions.length > 0 || !!r.appointment.date || !!r.visitGoal || !!r.visits?.length || (r.symptoms ?? []).length > 0 || this.hasPlan();
+    return (
+      this.hasRecords() ||
+      r.questions.length > 0 ||
+      !!r.appointment.date ||
+      !!r.visitGoal ||
+      !!r.visits?.length ||
+      (r.symptoms ?? []).length > 0 ||
+      this.hasPlan()
+    );
   });
 
   ngOnInit() {
@@ -123,7 +145,10 @@ export class TodayPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    void this.health.load().then(() => this.reminders.reconcile(this.health.record().tasks ?? [])).catch(() => undefined);
+    void this.health
+      .load()
+      .then(() => this.reminders.reconcile(this.health.record().tasks ?? []))
+      .catch(() => undefined);
     void this.focusPreferences.loadFocus();
     void this.supportUsed.load(this.todayIso);
     this.justCheckedIn.set(this.route.snapshot.queryParamMap.get('checkin') === this.todayIso);

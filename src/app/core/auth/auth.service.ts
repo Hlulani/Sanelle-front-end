@@ -60,7 +60,7 @@ export class AuthService {
         void this.clearLocalDataIfDifferentUser();
       }),
       // Guards read the onboarding state synchronously, so it must be loaded before anyone navigates.
-      switchMap((res) => from(this.loadOnboardingState()).pipe(map(() => res)))
+      switchMap((res) => from(this.loadOnboardingState()).pipe(map(() => res))),
     );
   }
 
@@ -82,9 +82,9 @@ export class AuthService {
       switchMap((res) =>
         from(Preferences.set({ key: this.onboardingKey(email), value: 'false' })).pipe(
           tap(() => (this.onboardingCompleted = false)),
-          map(() => res)
-        )
-      )
+          map(() => res),
+        ),
+      ),
     );
   }
 
@@ -265,7 +265,7 @@ export class AuthService {
         atob(base64)
           .split('')
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
+          .join(''),
       );
 
       return JSON.parse(json);

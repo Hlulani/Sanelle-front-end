@@ -5,7 +5,9 @@ describe('isPublicAuthRequest', () => {
 
   it('sends no token when signing in, signing up, refreshing or signing out', () => {
     for (const path of ['login', 'register', 'refresh', 'logout']) {
-      expect(isPublicAuthRequest(`${api}/auth/${path}`)).withContext(path).toBeTrue();
+      expect(isPublicAuthRequest(`${api}/auth/${path}`))
+        .withContext(path)
+        .toBeTrue();
     }
   });
 

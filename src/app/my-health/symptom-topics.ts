@@ -31,7 +31,10 @@ export function concernsIn(e: SymptomEntry): SymptomConcern[] {
 }
 
 /** The first reviewed topic for a recorded concern, or null. Drafts are never suggested. */
-export function reviewedTopicFor(concerns: SymptomConcern[], topics: SymptomTopic[] = SYMPTOM_TOPICS): SymptomTopic | null {
+export function reviewedTopicFor(
+  concerns: SymptomConcern[],
+  topics: SymptomTopic[] = SYMPTOM_TOPICS,
+): SymptomTopic | null {
   for (const c of concerns) {
     const t = topics.find((x) => x.concern === c && x.review.state === 'reviewed');
     if (t) return t;

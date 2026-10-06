@@ -3,8 +3,7 @@ import { AccountRecordStore } from '../storage/account-record-store';
 
 /** Must match the backend's Allergen enum; the server rejects unknown codes. */
 export type AllergenCode =
-  | 'MILK' | 'EGG' | 'PEANUT' | 'TREE_NUT' | 'SOY' | 'GLUTEN'
-  | 'FISH' | 'SHELLFISH' | 'SESAME' | 'MUSTARD' | 'CELERY';
+  'MILK' | 'EGG' | 'PEANUT' | 'TREE_NUT' | 'SOY' | 'GLUTEN' | 'FISH' | 'SHELLFISH' | 'SESAME' | 'MUSTARD' | 'CELERY';
 
 export const ALLERGENS: { code: AllergenCode; label: string }[] = [
   { code: 'MILK', label: 'Milk' },
@@ -55,15 +54,22 @@ export class FoodRestrictionsService extends AccountRecordStore<FoodRestrictions
   }
 
   toggleAllergy(code: AllergenCode): Promise<void> {
-    return this.update((current) => ({ ...current, allergies: current.allergies.includes(code)
-      ? current.allergies.filter((c) => c !== code) : [...current.allergies, code] }));
+    return this.update((current) => ({
+      ...current,
+      allergies: current.allergies.includes(code)
+        ? current.allergies.filter((c) => c !== code)
+        : [...current.allergies, code],
+    }));
   }
 
   addDislike(food: string): Promise<void> {
     const f = food.trim();
     if (!f) return Promise.resolve();
-    return this.update((current) => current.dislikes.some((d) => d.toLowerCase() === f.toLowerCase())
-      ? current : { ...current, dislikes: [...current.dislikes, f] });
+    return this.update((current) =>
+      current.dislikes.some((d) => d.toLowerCase() === f.toLowerCase())
+        ? current
+        : { ...current, dislikes: [...current.dislikes, f] },
+    );
   }
 
   removeDislike(food: string): Promise<void> {

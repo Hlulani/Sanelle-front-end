@@ -3,10 +3,13 @@ import { GenerateMealPlanResponse, MealPlanItem } from '../core/services/meal-pl
 
 const meal: MealPlanItem = { mealType: 'LUNCH', mealId: 'old', name: 'Old meal', imageUrl: null, tags: [] };
 const replacement: MealPlanItem = { ...meal, mealId: 'new', name: 'New meal' };
-const plan = (): GenerateMealPlanResponse => ({ days: 2, daysPlan: [
-  { date: '2026-10-04', meals: [{ ...meal }, { ...meal, mealType: 'DINNER' }] },
-  { date: '2026-10-05', meals: [{ ...meal }] },
-] });
+const plan = (): GenerateMealPlanResponse => ({
+  days: 2,
+  daysPlan: [
+    { date: '2026-10-04', meals: [{ ...meal }, { ...meal, mealType: 'DINNER' }] },
+    { date: '2026-10-05', meals: [{ ...meal }] },
+  ],
+});
 
 describe('Meal plan changes', () => {
   it('swaps one dated meal slot without changing repetitions on other days or meal types', () => {

@@ -14,7 +14,9 @@
     gap: 0.5rem;
   }
 
-  > li:last-child { border-bottom: 0; }
+  > li:last-child {
+    border-bottom: 0;
+  }
 }
 
 .q-line {
@@ -59,8 +61,15 @@
   font-weight: 800;
   cursor: pointer;
 
-  &:disabled { background: var(--sn-canvas); color: var(--sn-line); cursor: default; }
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; }
+  &:disabled {
+    background: var(--sn-canvas);
+    color: var(--sn-line);
+    cursor: default;
+  }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 2px;
+  }
 }
 
 .answer {
@@ -89,8 +98,14 @@
   color: var(--sn-brand);
   cursor: pointer;
 
-  &.danger { color: var(--sn-error); }
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.25rem; }
+  &.danger {
+    color: var(--sn-error);
+  }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
 }
 
 .row-actions {
@@ -109,7 +124,9 @@
   gap: 0.5rem;
   align-items: end;
 
-  .sn-btn { width: auto; }
+  .sn-btn {
+    width: auto;
+  }
 }
 
 .sugg {
@@ -129,7 +146,9 @@
     padding: 0.5rem 0.5rem 0.5rem 1rem;
     font-weight: 700;
 
-    span { flex: 1 1 auto; }
+    span {
+      flex: 1 1 auto;
+    }
   }
 }
 
@@ -144,7 +163,10 @@
   cursor: pointer;
   white-space: nowrap;
 
-  &:focus-visible { outline: 3px solid var(--sn-on-brand); outline-offset: 2px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-on-brand);
+    outline-offset: 2px;
+  }
 }
 
 .none {
@@ -156,9 +178,21 @@
   font-size: 0.9375rem;
   color: var(--sn-muted);
 
-  a { color: var(--sn-brand); font-weight: 800; }
+  a {
+    color: var(--sn-brand);
+    font-weight: 800;
+  }
 }
 
-.added-note { color: var(--sn-present); font-weight: 700; }
-.question-state { margin-left: 2.5rem; color: var(--sn-muted); font-size: 0.8125rem; }
-.error { color: var(--sn-error); }
+.added-note {
+  color: var(--sn-present);
+  font-weight: 700;
+}
+.question-state {
+  margin-left: 2.5rem;
+  color: var(--sn-muted);
+  font-size: 0.8125rem;
+}
+.error {
+  color: var(--sn-error);
+}

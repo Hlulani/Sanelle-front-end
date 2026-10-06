@@ -14,11 +14,15 @@ export class LearnScreen extends ScreenObject {
 
   /** Saves the starter question attached to one of the NHS resources. */
   async saveQuestionAbout(resource: string): Promise<void> {
-    const button = this.page.locator('article.resource').filter({ hasText: resource })
+    const button = this.page
+      .locator('article.resource')
+      .filter({ hasText: resource })
       .getByRole('button', { name: 'Save a question about this for my visit' });
     await showOnScreen(button);
     await button.tap();
-    await expect(this.page.getByRole('status').filter({ hasText: 'Saved to your next-visit questions.' })).toBeVisible();
+    await expect(
+      this.page.getByRole('status').filter({ hasText: 'Saved to your next-visit questions.' }),
+    ).toBeVisible();
   }
 
   /** Turns something read online into a question for the doctor. */

@@ -5,7 +5,12 @@ import { AuthService } from './auth.service';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 
 /** Calls made without a session, or to start or end one. Everything else carries the access token. */
-const PUBLIC_AUTH_PATHS = ['/api/v1/auth/login', '/api/v1/auth/register', '/api/v1/auth/refresh', '/api/v1/auth/logout'];
+const PUBLIC_AUTH_PATHS = [
+  '/api/v1/auth/login',
+  '/api/v1/auth/register',
+  '/api/v1/auth/refresh',
+  '/api/v1/auth/logout',
+];
 
 export function isPublicAuthRequest(url: string): boolean {
   return PUBLIC_AUTH_PATHS.some((path) => url.includes(path));
@@ -18,9 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isAuthRequest = isPublicAuthRequest(req.url);
   const token = auth.getAccessToken();
 
-  const authReq = !isAuthRequest && token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    : req;
+  const authReq = !isAuthRequest && token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
     catchError((err: unknown) => {
@@ -35,16 +38,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }
 
             const newToken = auth.getAccessToken();
-            const retryReq = newToken
-              ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
-              : req;
+            const retryReq = newToken ? req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } }) : req;
 
             return next(retryReq);
-          })
+          }),
         );
       }
 
       return throwError(() => err);
-    })
+    }),
   );
 };

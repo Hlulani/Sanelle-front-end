@@ -32,10 +32,16 @@ export class BackupPage {
   readonly minLength = MIN_PASSPHRASE_LENGTH;
   private previewAccount: string | null = null;
 
-  readonly exportForm = new FormGroup({
-    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(MIN_PASSPHRASE_LENGTH)] }),
-    repeat: new FormControl('', { nonNullable: true }),
-  }, { validators: matching('password', 'repeat') });
+  readonly exportForm = new FormGroup(
+    {
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(MIN_PASSPHRASE_LENGTH)],
+      }),
+      repeat: new FormControl('', { nonNullable: true }),
+    },
+    { validators: matching('password', 'repeat') },
+  );
 
   readonly restoreForm = new FormGroup({
     passphrase: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -47,59 +53,98 @@ export class BackupPage {
   selectFile(event: Event) {
     const input = event.target as HTMLInputElement;
     this.file.set(input.files?.[0] ?? null);
-    this.preview.set(null); this.restoreConfirmed.reset(); this.error.set('');
+    this.preview.set(null);
+    this.restoreConfirmed.reset();
+    this.error.set('');
     input.value = '';
   }
 
   async export() {
     if (this.busy()) return;
-    this.error.set(''); this.status.set('');
+    this.error.set('');
+    this.status.set('');
     const password = this.exportForm.controls.password;
-    if (password.invalid) { this.error.set(`Use a backup passphrase with at least ${MIN_PASSPHRASE_LENGTH} characters.`); return; }
-    if (this.exportForm.hasError('matching')) { this.error.set('The two passphrases must match.'); return; }
+    if (password.invalid) {
+      this.error.set(`Use a backup passphrase with at least ${MIN_PASSPHRASE_LENGTH} characters.`);
+      return;
+    }
+    if (this.exportForm.hasError('matching')) {
+      this.error.set('The two passphrases must match.');
+      return;
+    }
     this.busy.set(true);
     try {
       await this.repo.load();
       const content = await encryptBackup(this.repo.record(), password.value);
       await saveFile(`sanelle-health-${localIsoDate()}.json`, content, 'application/json');
       this.exportForm.reset();
-      this.status.set('Encrypted backup ready. Keep the file and your passphrase somewhere you can access on another device.');
-    } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not create your backup.'); }
-    finally { this.busy.set(false); }
+      this.status.set(
+        'Encrypted backup ready. Keep the file and your passphrase somewhere you can access on another device.',
+      );
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'Could not create your backup.');
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   async unlock() {
     const file = this.file();
     if (this.busy() || !file || this.restoreForm.invalid) return;
-    this.busy.set(true); this.error.set(''); this.preview.set(null); this.restoreConfirmed.reset();
+    this.busy.set(true);
+    this.error.set('');
+    this.preview.set(null);
+    this.restoreConfirmed.reset();
     try {
       if (file.size > 15 * 1024 * 1024) throw new Error('Choose a backup smaller than 15 MB.');
       this.previewAccount = this.email();
       this.preview.set(await decryptBackup(await file.text(), this.restoreForm.controls.passphrase.value));
       this.restoreForm.reset();
-    } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not unlock your backup.'); }
-    finally { this.busy.set(false); }
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'Could not unlock your backup.');
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   async restore() {
     const preview = this.preview();
     if (!preview || !this.restoreConfirmed.value || this.busy()) return;
-    this.busy.set(true); this.error.set('');
+    this.busy.set(true);
+    this.error.set('');
     try {
-      if (!this.previewAccount || this.email() !== this.previewAccount) throw new Error('Your signed-in account changed. Unlock the backup again.');
+      if (!this.previewAccount || this.email() !== this.previewAccount)
+        throw new Error('Your signed-in account changed. Unlock the backup again.');
       // Reminders remain off after importing, until the person enables them on this device.
-      const record = { ...preview.record, tasks: preview.record.tasks?.map((task) => ({ ...task, reminderAt: undefined })) };
+      const record = {
+        ...preview.record,
+        tasks: preview.record.tasks?.map((task) => ({ ...task, reminderAt: undefined })),
+      };
       await this.repo.restoreRecord(record);
       await this.reminders.clear().catch(() => undefined);
-      this.preview.set(null); this.file.set(null); this.restoreConfirmed.reset();
-      this.status.set('Health records restored for this account on this device. Check My health to review them. Device reminders need to be enabled again.');
-    } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not restore the backup. Your current records have not been replaced.'); }
-    finally { this.busy.set(false); }
+      this.preview.set(null);
+      this.file.set(null);
+      this.restoreConfirmed.reset();
+      this.status.set(
+        'Health records restored for this account on this device. Check My health to review them. Device reminders need to be enabled again.',
+      );
+    } catch (error) {
+      this.error.set(
+        error instanceof Error
+          ? error.message
+          : 'Could not restore the backup. Your current records have not been replaced.',
+      );
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   /** Passphrases and an unlocked backup never outlive the screen. */
   ionViewWillLeave() {
-    this.exportForm.reset(); this.restoreForm.reset(); this.restoreConfirmed.reset();
-    this.preview.set(null); this.file.set(null);
+    this.exportForm.reset();
+    this.restoreForm.reset();
+    this.restoreConfirmed.reset();
+    this.preview.set(null);
+    this.file.set(null);
   }
 }

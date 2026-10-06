@@ -1,7 +1,9 @@
 <ion-content [fullscreen]="true" class="record">
   <main class="sn-page wrap">
     <div class="top">
-      <button type="button" class="sn-back" (click)="inFlow ? finishLater() : cancel()">{{ inFlow ? 'Finish later' : 'Cancel' }}</button>
+      <button type="button" class="sn-back" (click)="inFlow ? finishLater() : cancel()">
+        {{ inFlow ? 'Finish later' : 'Cancel' }}
+      </button>
       @if (inFlow) {
         <p class="progress" aria-label="Step {{ step() }} of {{ total }}">{{ step() }} of {{ total }}</p>
       }
@@ -9,7 +11,9 @@
 
     <h1>{{ def().question }}</h1>
     @if (key() === 'count') {
-      <a class="report-link" routerLink="/health/report" [queryParams]="{ from: inFlow ? 'flow' : 'health' }">Have the report? Read a photo or PDF instead</a>
+      <a class="report-link" routerLink="/health/report" [queryParams]="{ from: inFlow ? 'flow' : 'health' }"
+        >Have the report? Read a photo or PDF instead</a
+      >
     }
 
     <button type="button" class="why" [attr.aria-expanded]="showWhy()" (click)="showWhy.set(!showWhy())">
@@ -23,15 +27,33 @@
     }
 
     <div class="choices" role="radiogroup" [attr.aria-label]="def().question">
-      <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'present'" (click)="choose('present')">
+      <button
+        type="button"
+        role="radio"
+        class="choice"
+        [attr.aria-checked]="answer() === 'present'"
+        (click)="choose('present')"
+      >
         I have this information
       </button>
       @if (def().canBeAbsent) {
-        <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'absent'" (click)="choose('absent')">
+        <button
+          type="button"
+          role="radio"
+          class="choice"
+          [attr.aria-checked]="answer() === 'absent'"
+          (click)="choose('absent')"
+        >
           {{ def().absentLabel }}
         </button>
       }
-      <button type="button" role="radio" class="choice" [attr.aria-checked]="answer() === 'unknown'" (click)="choose('unknown')">
+      <button
+        type="button"
+        role="radio"
+        class="choice"
+        [attr.aria-checked]="answer() === 'unknown'"
+        (click)="choose('unknown')"
+      >
         I don’t know
       </button>
     </div>
@@ -41,7 +63,14 @@
         @if (answer() === 'present') {
           <label class="sn-field">
             <span id="finding-label">{{ def().fieldLabel }}</span>
-            <input type="text" [(ngModel)]="value" [placeholder]="def().example" aria-labelledby="finding-label" aria-describedby="input-hint" [disabled]="!ready() || saving()" />
+            <input
+              type="text"
+              [(ngModel)]="value"
+              [placeholder]="def().example"
+              aria-labelledby="finding-label"
+              aria-describedby="input-hint"
+              [disabled]="!ready() || saving()"
+            />
             <span class="input-hint" id="input-hint">{{ def().inputHint }}</span>
           </label>
           @if (needsUnit()) {
@@ -56,27 +85,39 @@
           }
         }
         <details class="source-details" [open]="!inFlow">
-          <summary>Source: {{ sourceChoices[source] }}{{ source === 'entered-from-report' && reportDate ? ' · ' + reportDate : '' }} · Edit details</summary>
-        <div class="sn-field">
-          <span>Where did you get this information?</span>
-          <div class="sn-segment">
-            @for (s of sources; track s) {
-              <button type="button" [attr.aria-pressed]="source === s" (click)="source = s">{{ sourceChoices[s] }}</button>
-            }
+          <summary>
+            Source: {{ sourceChoices[source]
+            }}{{ source === 'entered-from-report' && reportDate ? ' · ' + reportDate : '' }} · Edit details
+          </summary>
+          <div class="sn-field">
+            <span>Where did you get this information?</span>
+            <div class="sn-segment">
+              @for (s of sources; track s) {
+                <button type="button" [attr.aria-pressed]="source === s" (click)="source = s">
+                  {{ sourceChoices[s] }}
+                </button>
+              }
+            </div>
           </div>
-        </div>
-        @if (source === 'entered-from-report') {
-          <label class="sn-field">
-            <span>Exact sentence about this detail <em>(optional)</em></span>
-            <textarea [(ngModel)]="wording" placeholder="e.g. Two intramural fibroids are noted."></textarea>
-            <span class="input-hint">Keep the report’s words beside this detail. Leave this blank if you don’t want to copy the sentence.</span>
-          </label>
-          <label class="sn-field">
-            <span>Date printed on the report <em>(optional)</em></span>
-            <input type="date" [(ngModel)]="reportDate" />
-            @if (inFlow) { <span class="input-hint">We’ll use this source and date for the next details. You can change them on any step.</span> }
-          </label>
-        }
+          @if (source === 'entered-from-report') {
+            <label class="sn-field">
+              <span>Exact sentence about this detail <em>(optional)</em></span>
+              <textarea [(ngModel)]="wording" placeholder="e.g. Two intramural fibroids are noted."></textarea>
+              <span class="input-hint"
+                >Keep the report’s words beside this detail. Leave this blank if you don’t want to copy the
+                sentence.</span
+              >
+            </label>
+            <label class="sn-field">
+              <span>Date printed on the report <em>(optional)</em></span>
+              <input type="date" [(ngModel)]="reportDate" />
+              @if (inFlow) {
+                <span class="input-hint"
+                  >We’ll use this source and date for the next details. You can change them on any step.</span
+                >
+              }
+            </label>
+          }
         </details>
       </section>
     }

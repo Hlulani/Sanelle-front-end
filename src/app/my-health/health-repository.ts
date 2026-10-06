@@ -69,10 +69,17 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
     return this.update((r) => {
       const next = changes.reduce((all, f) => ({ ...all, [f.key]: f }), r.findings);
       // Editing the overview preserves a dated revision of the selected report.
-      const reports = r.activeReportId ? (r.reports ?? []).map((report) => report.id === r.activeReportId
-        ? { ...report, findings: next } : report) : r.reports;
+      const reports = r.activeReportId
+        ? (r.reports ?? []).map((report) => (report.id === r.activeReportId ? { ...report, findings: next } : report))
+        : r.reports;
       const prior = r.activeReportId ? (r.reports ?? []).find((report) => report.id === r.activeReportId) : undefined;
-      return { ...r, findings: next, reports: prior ? [...(reports ?? []), { ...prior, id: newId(), title: prior.title + ' · before edit' }] : reports };
+      return {
+        ...r,
+        findings: next,
+        reports: prior
+          ? [...(reports ?? []), { ...prior, id: newId(), title: prior.title + ' · before edit' }]
+          : reports,
+      };
     });
   }
 
@@ -80,8 +87,14 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
     return this.update((r) => {
       const savedAt = new Date().toISOString();
       const report: HealthReport = {
-        id: newId(), title: title.trim() || 'My report', reportDate, savedAt,
-        findings: findings.reduce<HealthReport['findings']>((all, finding) => ({ ...all, [finding.key]: { ...finding, updatedAt: savedAt } }), {}),
+        id: newId(),
+        title: title.trim() || 'My report',
+        reportDate,
+        savedAt,
+        findings: findings.reduce<HealthReport['findings']>(
+          (all, finding) => ({ ...all, [finding.key]: { ...finding, updatedAt: savedAt } }),
+          {},
+        ),
       };
       const reports = [...(r.reports ?? [])];
       let activeReportId = r.activeReportId;
@@ -91,7 +104,12 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
         activeReportId = previous.id;
       }
       reports.push(report);
-      return { ...r, reports, activeReportId: makeCurrent ? report.id : activeReportId, ...(makeCurrent ? { findings: report.findings } : {}) };
+      return {
+        ...r,
+        reports,
+        activeReportId: makeCurrent ? report.id : activeReportId,
+        ...(makeCurrent ? { findings: report.findings } : {}),
+      };
     });
   }
 
@@ -106,28 +124,55 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
   saveTask(task: Omit<CareTask, 'id' | 'createdAt'> & { id?: string }): Promise<void> {
     return this.update((r) => {
       const prior = r.tasks?.find((item) => item.id === task.id);
-      const next: CareTask = { ...task, id: prior?.id ?? newId(), createdAt: prior?.createdAt ?? new Date().toISOString(), title: task.title.trim() };
+      const next: CareTask = {
+        ...task,
+        id: prior?.id ?? newId(),
+        createdAt: prior?.createdAt ?? new Date().toISOString(),
+        title: task.title.trim(),
+      };
       if (!next.title) throw new Error('Add a next step.');
       return { ...r, tasks: [...(r.tasks ?? []).filter((item) => item.id !== next.id), next] };
     });
   }
 
   completeTask(id: string, completed: boolean): Promise<void> {
-    return this.update((r) => ({ ...r, tasks: (r.tasks ?? []).map((task) => task.id === id ? { ...task, completedAt: completed ? new Date().toISOString() : undefined } : task) }));
+    return this.update((r) => ({
+      ...r,
+      tasks: (r.tasks ?? []).map((task) =>
+        task.id === id ? { ...task, completedAt: completed ? new Date().toISOString() : undefined } : task,
+      ),
+    }));
   }
 
   removeTask(id: string): Promise<void> {
     return this.update((r) => ({ ...r, tasks: (r.tasks ?? []).filter((task) => task.id !== id) }));
   }
 
-  setSummarySelection(changes: Partial<Pick<HealthRecord, 'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'>>): Promise<void> {
+  setSummarySelection(
+    changes: Partial<
+      Pick<HealthRecord, 'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'>
+    >,
+  ): Promise<void> {
     return this.update((r) => ({ ...r, ...changes }));
   }
 
-  toggleSummarySelection(key: keyof Pick<HealthRecord, 'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'>, id: string, include: boolean): Promise<void> {
+  toggleSummarySelection(
+    key: keyof Pick<
+      HealthRecord,
+      'summaryQuestionIds' | 'summaryAnswerIds' | 'summarySymptomDates' | 'summaryVisitDates'
+    >,
+    id: string,
+    include: boolean,
+  ): Promise<void> {
     return this.update((r) => {
-      const defaults = key === 'summaryQuestionIds' ? unansweredQuestions(r).slice(0, 3).map((q) => q.id)
-        : key === 'summarySymptomDates' ? r.symptoms.map((entry) => entry.date) : [];
+      const defaults =
+        key === 'summaryQuestionIds'
+          ? unansweredQuestions(r)
+              .slice(0, 3)
+              .map((q) => q.id)
+          : key === 'summarySymptomDates'
+            ? r.symptoms.map((entry) => entry.date)
+            : [];
       const current = r[key] ?? defaults;
       return { ...r, [key]: include ? [...new Set([...current, id])] : current.filter((value) => value !== id) };
     });
@@ -201,8 +246,9 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
   saveVisit(visit: VisitReview): Promise<void> {
     return this.update((r) => ({
       ...r,
-      visits: [...(r.visits ?? []).filter((v) => v.date !== visit.date), visit]
-        .sort((a, b) => b.date.localeCompare(a.date)),
+      visits: [...(r.visits ?? []).filter((v) => v.date !== visit.date), visit].sort((a, b) =>
+        b.date.localeCompare(a.date),
+      ),
     }));
   }
 

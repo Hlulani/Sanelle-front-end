@@ -20,7 +20,11 @@
   color: var(--sn-on-brand);
   border-radius: 0 0 2.25rem 2.25rem;
 
-  h1 { margin: 0; font-size: 2rem; color: var(--sn-on-brand); }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--sn-on-brand);
+  }
 }
 
 .head-text {
@@ -65,31 +69,12 @@
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .planner-card {
   margin-top: 18px;
   border-radius: 20px;
   box-shadow: var(--app-shadow-sm);
   background: var(--sn-surface);
 }
-
-
-
-
 
 .section-title {
   font-size: 1.1rem;
@@ -124,16 +109,15 @@
   ion-icon {
     font-size: 16px;
   }
-
 }
 
-
-
-
-
-
-
-.pref-chip.active, .pref-chip[aria-pressed="true"] { background: var(--sn-brand); border-color: transparent; color: var(--sn-on-brand); box-shadow: none; }
+.pref-chip.active,
+.pref-chip[aria-pressed='true'] {
+  background: var(--sn-brand);
+  border-color: transparent;
+  color: var(--sn-on-brand);
+  box-shadow: none;
+}
 
 .primary-btn {
   --background: var(--app-primary);
@@ -143,8 +127,6 @@
   font-weight: 700;
   box-shadow: none;
 }
-
-
 
 .plan-preview {
   margin-top: 22px;
@@ -192,7 +174,6 @@
   color: var(--plan-ink);
   font-family: inherit;
   cursor: pointer;
-
 }
 
 .day-pill-top {
@@ -234,13 +215,27 @@
     position: relative;
     box-shadow: var(--app-shadow-sm);
   }
-
 }
 
-.plan-meal-photo { position: absolute; inset: 0; }
-.swap-meal-photo { width: 4rem; height: 4rem; border-radius: .75rem; }
-.week-meal-photo { width: 3.5rem; height: 3.5rem; border-radius: .625rem; }
-.week-meal-text { display: grid; gap: .25rem; min-width: 0; }
+.plan-meal-photo {
+  position: absolute;
+  inset: 0;
+}
+.swap-meal-photo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+}
+.week-meal-photo {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.625rem;
+}
+.week-meal-text {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
 
 .meal-card-body {
   padding: 14px 16px 16px;
@@ -320,7 +315,8 @@
   --border-color: var(--sn-brand);
 }
 
-.meal-swap, .meal-view {
+.meal-swap,
+.meal-view {
   --color: var(--sn-brand);
   font-weight: 600;
 }
@@ -347,7 +343,7 @@
 .swap-item {
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr);
-  gap: .75rem;
+  gap: 0.75rem;
   padding: 1rem;
   background: var(--sn-surface);
   margin: 10px 16px;
@@ -355,9 +351,24 @@
   border: 1px solid rgba(42, 26, 32, 0.08);
 }
 
-.swap-meal-text h3 { margin: 0; font-size: 1rem; line-height: 1.4; color: var(--sn-ink); }
-.swap-meal-text p { margin: .375rem 0 0; font-size: .875rem; color: var(--sn-muted); }
-.swap-action { grid-column: 1 / -1; margin: 0; --color: var(--sn-brand); --border-color: var(--sn-brand); --border-radius: .75rem; }
+.swap-meal-text h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--sn-ink);
+}
+.swap-meal-text p {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+}
+.swap-action {
+  grid-column: 1 / -1;
+  margin: 0;
+  --color: var(--sn-brand);
+  --border-color: var(--sn-brand);
+  --border-radius: 0.75rem;
+}
 
 .challenges-section {
   margin-top: 26px;
@@ -688,7 +699,10 @@
   min-height: 2.75rem;
   padding: 0 1rem;
 
-  &:focus-visible { outline: 3px solid var(--sn-brand); outline-offset: 1px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-brand);
+    outline-offset: 1px;
+  }
 }
 
 .allergy-note {
@@ -707,20 +721,144 @@
   border-radius: 999px;
   font-size: 0.9375rem;
 }
-.plan-page { overflow-x: clip; }
-.plan-page .sn-card { margin: 0 0 1rem; }
-.plan-page .nourish-head + .sn-card { margin-top: 3.75rem; }
-.plan-message { border-radius: 1rem; padding: 1rem; background: var(--sn-surface); margin: 1rem 0; font-size: 1rem; text-align: left; }
-.plan-intro, .preview-banner { margin-bottom: 1.5rem; }
-.plan-link { border: 0; background: none; color: var(--sn-brand); font: 800 1rem var(--sn-body); cursor: pointer; min-height: var(--sn-tap); text-align: left; }
-.planner-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; border: 0; background: var(--sn-surface); padding: 1.25rem; color: var(--sn-ink); font: 800 1.125rem var(--sn-body); text-align: left; cursor: pointer; }
-.setup-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .375rem; margin-bottom: .75rem; }.setup-steps .pref-chip { justify-content: center; padding-inline: .5rem; }
-.setup-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
-.setup-next { margin-top: 1.25rem; }.setup-actions { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; margin-top: 1.25rem; }
-.start-choice { margin-top: 1rem; }
-.day-navigation { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .5rem; align-items: center; margin: .75rem 0; text-align: center; }.day-navigation .pref-chip { min-width: 2.75rem; }
-.plan-view { margin-top: 1rem; }.day-pills { max-width: 100%; }.day-pill { min-width: 3.25rem; }.day-pill[aria-pressed="true"] { background: var(--sn-brand); color: var(--sn-on-brand); border-color: transparent; }
-.plan-adjust { margin-top: 1.25rem; }.meal-time { color: var(--sn-muted); font-size: .875rem; margin-top: .375rem; }
-.week-list { display: grid; gap: .75rem; margin: 1rem 0; }.week-day { border: 0; background: none; text-align: left; font: 800 1.125rem var(--sn-body); color: var(--sn-brand); min-height: var(--sn-tap); cursor: pointer; }
-.week-meal { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); align-items: center; column-gap: .75rem; row-gap: .25rem; border: 0; border-top: 1px solid var(--sn-line); background: none; text-align: left; min-height: var(--sn-tap); padding: .75rem 0; font: 600 .9375rem var(--sn-body); color: var(--sn-ink); cursor: pointer; }.week-meal-text > span { font-size: .875rem; color: var(--sn-muted); }
-.community-entry { margin-top: 1.5rem; }
+.plan-page {
+  overflow-x: clip;
+}
+.plan-page .sn-card {
+  margin: 0 0 1rem;
+}
+.plan-page .nourish-head + .sn-card {
+  margin-top: 3.75rem;
+}
+.plan-message {
+  border-radius: 1rem;
+  padding: 1rem;
+  background: var(--sn-surface);
+  margin: 1rem 0;
+  font-size: 1rem;
+  text-align: left;
+}
+.plan-intro,
+.preview-banner {
+  margin-bottom: 1.5rem;
+}
+.plan-link {
+  border: 0;
+  background: none;
+  color: var(--sn-brand);
+  font: 800 1rem var(--sn-body);
+  cursor: pointer;
+  min-height: var(--sn-tap);
+  text-align: left;
+}
+.planner-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 0;
+  background: var(--sn-surface);
+  padding: 1.25rem;
+  color: var(--sn-ink);
+  font: 800 1.125rem var(--sn-body);
+  text-align: left;
+  cursor: pointer;
+}
+.setup-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.375rem;
+  margin-bottom: 0.75rem;
+}
+.setup-steps .pref-chip {
+  justify-content: center;
+  padding-inline: 0.5rem;
+}
+.setup-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.setup-next {
+  margin-top: 1.25rem;
+}
+.setup-actions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+.start-choice {
+  margin-top: 1rem;
+}
+.day-navigation {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.75rem 0;
+  text-align: center;
+}
+.day-navigation .pref-chip {
+  min-width: 2.75rem;
+}
+.plan-view {
+  margin-top: 1rem;
+}
+.day-pills {
+  max-width: 100%;
+}
+.day-pill {
+  min-width: 3.25rem;
+}
+.day-pill[aria-pressed='true'] {
+  background: var(--sn-brand);
+  color: var(--sn-on-brand);
+  border-color: transparent;
+}
+.plan-adjust {
+  margin-top: 1.25rem;
+}
+.meal-time {
+  color: var(--sn-muted);
+  font-size: 0.875rem;
+  margin-top: 0.375rem;
+}
+.week-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.week-day {
+  border: 0;
+  background: none;
+  text-align: left;
+  font: 800 1.125rem var(--sn-body);
+  color: var(--sn-brand);
+  min-height: var(--sn-tap);
+  cursor: pointer;
+}
+.week-meal {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  border: 0;
+  border-top: 1px solid var(--sn-line);
+  background: none;
+  text-align: left;
+  min-height: var(--sn-tap);
+  padding: 0.75rem 0;
+  font: 600 0.9375rem var(--sn-body);
+  color: var(--sn-ink);
+  cursor: pointer;
+}
+.week-meal-text > span {
+  font-size: 0.875rem;
+  color: var(--sn-muted);
+}
+.community-entry {
+  margin-top: 1.5rem;
+}

@@ -12,7 +12,7 @@
             <div
               class="progress-ring"
               [style.background]="'conic-gradient(#f2b37e ' + progressPercent() + '%, #561530 0)'"
-              >
+            >
               <div class="progress-center">
                 <div class="progress-value">{{ checkedCount() }} of {{ totalItems() }}</div>
                 <div class="progress-label">items collected</div>
@@ -34,7 +34,9 @@
         <p class="control-label" id="window-label">Shop for</p>
         <div class="sn-segment" role="group" aria-labelledby="window-label">
           @for (w of windows; track w) {
-            <button type="button" [attr.aria-pressed]="window() === w" (click)="setWindow(w)">{{ windowLabels[w] }}</button>
+            <button type="button" [attr.aria-pressed]="window() === w" (click)="setWindow(w)">
+              {{ windowLabels[w] }}
+            </button>
           }
         </div>
         <p class="control-label" id="view-label">Show</p>
@@ -111,7 +113,9 @@
           <section class="group-card">
             <div class="group-header">
               <span class="group-pill">{{ dayLabel(m.slot.date) }} · {{ mealTypeLabels[m.slot.mealType] }}</span>
-              <span class="group-count">{{ mealDone(m.ingredients) ? 'All set' : m.ingredients.length + ' items' }}</span>
+              <span class="group-count">{{
+                mealDone(m.ingredients) ? 'All set' : m.ingredients.length + ' items'
+              }}</span>
             </div>
             <h3 class="meal-title">{{ m.slot.name }}</h3>
             <div class="item-grid">

@@ -21,13 +21,28 @@ describe('Tab3Page', () => {
     await TestBed.configureTestingModule({
       imports: [Tab3Page],
       providers: [
-        provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
         { provide: AuthService, useValue: { hasValidToken: () => true } },
         { provide: PlanStoreService, useValue: { plan$: plans } },
-        { provide: MealService, useValue: { getMealById: (id: string) => of({
-          id, name: 'Chickpea salad', mealType: 'LUNCH', tags: [], instructions: [],
-          ingredients: [{ name: 'Cucumber', amount: '1' }, { name: 'Chickpeas', amount: '1 tin' }],
-        }) } },
+        {
+          provide: MealService,
+          useValue: {
+            getMealById: (id: string) =>
+              of({
+                id,
+                name: 'Chickpea salad',
+                mealType: 'LUNCH',
+                tags: [],
+                instructions: [],
+                ingredients: [
+                  { name: 'Cucumber', amount: '1' },
+                  { name: 'Chickpeas', amount: '1 tin' },
+                ],
+              }),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -43,9 +58,23 @@ describe('Tab3Page', () => {
   function showPlan() {
     const today = new Date();
     const date = localIsoDate(today);
-    plans.next({ days: 1, daysPlan: [{ date, meals: [{
-      mealId: 'salad', name: 'Chickpea salad', mealType: 'LUNCH', tags: [], imageUrl: null,
-    }] }] });
+    plans.next({
+      days: 1,
+      daysPlan: [
+        {
+          date,
+          meals: [
+            {
+              mealId: 'salad',
+              name: 'Chickpea salad',
+              mealType: 'LUNCH',
+              tags: [],
+              imageUrl: null,
+            },
+          ],
+        },
+      ],
+    });
     fixture.detectChanges();
   }
 

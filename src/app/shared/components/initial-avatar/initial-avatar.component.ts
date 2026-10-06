@@ -15,18 +15,22 @@ const PALETTE = ['#74203f', '#561530', '#8a5a12', '#1e5f63', '#34497a', '#6b5560
     [style.height.px]="size()"
     [style.fontSize.px]="fontSize()"
     [style.background]="color()"
-  >{{ initial() }}</div>`,
-  styles: [`
-    .initial-avatar {
-      border-radius: 50%;
-      color: #ffffff;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-  `],
+  >
+    {{ initial() }}
+  </div>`,
+  styles: [
+    `
+      .initial-avatar {
+        border-radius: 50%;
+        color: #ffffff;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+    `,
+  ],
 })
 export class InitialAvatarComponent {
   readonly name = input.required<string>();

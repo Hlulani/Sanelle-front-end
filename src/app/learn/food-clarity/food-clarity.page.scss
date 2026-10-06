@@ -42,7 +42,9 @@
   padding: 1.25rem 1.25rem 1.375rem;
   display: grid;
   gap: 0.5rem;
-  box-shadow: 0 1px 2px rgba(42, 26, 32, 0.08), 0 8px 24px rgba(42, 26, 32, 0.1);
+  box-shadow:
+    0 1px 2px rgba(42, 26, 32, 0.08),
+    0 8px 24px rgba(42, 26, 32, 0.1);
 
   .answer-label {
     justify-self: start;
@@ -112,7 +114,9 @@
   font: inherit;
   color: inherit;
 
-  &.expandable { cursor: pointer; }
+  &.expandable {
+    cursor: pointer;
+  }
 
   &:focus-visible {
     outline: 3px solid var(--sn-ink);
@@ -210,7 +214,9 @@
     color: var(--sn-muted);
   }
 
-  dd { margin: 0; }
+  dd {
+    margin: 0;
+  }
 
   ul {
     margin: 0;
@@ -233,7 +239,7 @@
     font-weight: 600;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 1rem;
       top: 1.3rem;
@@ -350,8 +356,12 @@
   color: var(--sn-on-brand);
   border-radius: 0 0 2.25rem 2.25rem;
 
-  h1 { font-size: 1.625rem; }
-  p { color: var(--sn-on-brand-muted); }
+  h1 {
+    font-size: 1.625rem;
+  }
+  p {
+    color: var(--sn-on-brand-muted);
+  }
 }
 
 /* The lower half of the screen is a berry band, carried on by the tab bar. */

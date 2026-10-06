@@ -19,7 +19,10 @@
     } @else if (sections() === null) {
       <p class="state" role="status">Finding meals…</p>
     } @else if (!sections()!.length) {
-      <p class="state">No meals match all your settings in {{ minutes }} minutes. Try changing them in <a routerLink="/tabs/tab2">plan settings</a>.</p>
+      <p class="state">
+        No meals match all your settings in {{ minutes }} minutes. Try changing them in
+        <a routerLink="/tabs/tab2">plan settings</a>.
+      </p>
     } @else {
       @for (s of sections(); track s.label) {
         <section class="sn-section" [attr.aria-labelledby]="'q-' + s.label">
@@ -28,7 +31,12 @@
             @for (m of s.meals; track m.mealId) {
               <li>
                 <a class="meal" [routerLink]="['/meal-details', m.mealId]">
-                  <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
+                  <app-meal-image
+                    class="meal-img"
+                    [name]="m.name"
+                    [imageUrl]="m.imageUrl"
+                    [mealType]="m.mealType"
+                  ></app-meal-image>
                   <span class="meal-text">
                     <span class="meal-name">{{ m.name }}</span>
                     <span class="meal-why">{{ why(m) }}</span>

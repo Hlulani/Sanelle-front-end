@@ -21,7 +21,7 @@
             class="focus-chip"
             [attr.aria-pressed]="focus().includes(c.value)"
             (click)="toggleFocus(c.value)"
-            >
+          >
             <span class="focus-tick" aria-hidden="true">{{ focus().includes(c.value) ? '✓' : '' }}</span>
             {{ c.label }}
           </button>
@@ -58,7 +58,11 @@
       }
     </div>
 
-    <div class="section"><div class="section-title">Your health records</div><p class="focus-hint">Saved on this device. Keep a backup before changing phones or clearing app storage.</p><a class="sn-btn sn-btn--brand" routerLink="/health/backup">Back up or restore my records</a></div>
+    <div class="section">
+      <div class="section-title">Your health records</div>
+      <p class="focus-hint">Saved on this device. Keep a backup before changing phones or clearing app storage.</p>
+      <a class="sn-btn sn-btn--brand" routerLink="/health/backup">Back up or restore my records</a>
+    </div>
 
     <div class="section danger-zone">
       <ion-button
@@ -67,7 +71,7 @@
         color="danger"
         [disabled]="isDeleting()"
         (click)="confirmDeleteAccount()"
-        >
+      >
         @if (isDeleting()) {
           <ion-spinner name="crescent"></ion-spinner>
         }

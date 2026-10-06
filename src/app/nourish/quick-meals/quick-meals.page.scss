@@ -6,14 +6,20 @@
   font-size: 0.9375rem;
   color: var(--sn-muted);
 
-  a { color: var(--sn-brand); font-weight: 800; }
+  a {
+    color: var(--sn-brand);
+    font-weight: 800;
+  }
 }
 
 .state {
   padding: 1.5rem 1.25rem;
   color: var(--sn-muted);
 
-  a { color: var(--sn-brand); font-weight: 800; }
+  a {
+    color: var(--sn-brand);
+    font-weight: 800;
+  }
 }
 
 .meals {
@@ -35,7 +41,10 @@
   color: var(--sn-ink);
   text-decoration: none;
 
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 3px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 3px;
+  }
 }
 
 .meal-img {

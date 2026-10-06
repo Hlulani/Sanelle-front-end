@@ -50,7 +50,7 @@ export const CHALLENGE_DEFINITIONS: ChallengeDefinition[] = [
   {
     id: 'monthly-20',
     title: '30-Day Cook-Along',
-    description: 'Cook 20 meals from your plan over the next 30 days — the big one everyone\'s doing together.',
+    description: "Cook 20 meals from your plan over the next 30 days — the big one everyone's doing together.",
     durationDays: 30,
     target: 20,
     type: 'meals-in-period',
@@ -156,6 +156,12 @@ export class ChallengesService {
   progress(def: ChallengeDefinition): ChallengeProgress | null {
     const startIso = this.joinedAt()[def.id];
     if (!startIso) return null;
-    return computeChallengeProgress(def.type, def.target, def.durationDays, startIso, this.mealProgress.cookedEntries());
+    return computeChallengeProgress(
+      def.type,
+      def.target,
+      def.durationDays,
+      startIso,
+      this.mealProgress.cookedEntries(),
+    );
   }
 }

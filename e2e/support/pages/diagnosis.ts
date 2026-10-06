@@ -25,7 +25,12 @@ export class DiagnosisFlow extends ScreenObject {
   }
 
   /** Leaves a detail unknown; its suggested question is saved unless `addQuestion` is false. */
-  async leaveUnknown(question: string, suggested: string, addQuestion = true, save = 'Save and continue'): Promise<void> {
+  async leaveUnknown(
+    question: string,
+    suggested: string,
+    addQuestion = true,
+    save = 'Save and continue',
+  ): Promise<void> {
     await this.arrive(this.heading(question));
     await this.page.getByRole('radio', { name: 'I don’t know' }).tap();
     await expect(this.page.getByText(`“${suggested}”`)).toBeVisible();

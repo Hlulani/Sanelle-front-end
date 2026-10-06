@@ -5,7 +5,14 @@
   </div>
   @if (meal(); as meal) {
     <section class="hero has-image">
-      <app-meal-image class="hero-image" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType" [eager]="true" (imageLoaded)="heroPhoto.set($event)"></app-meal-image>
+      <app-meal-image
+        class="hero-image"
+        [name]="meal.name"
+        [imageUrl]="meal.imageUrl"
+        [mealType]="meal.mealType"
+        [eager]="true"
+        (imageLoaded)="heroPhoto.set($event)"
+      ></app-meal-image>
       <div class="hero-body">
         <h1>{{ meal.name }}</h1>
         <div class="meta-row">
@@ -20,9 +27,23 @@
     </section>
     @if (heroPhoto(); as photo) {
       <details class="photo-credit">
-        <summary>{{ photo.match === 'ingredient' ? 'Ingredient photo' : photo.match === 'exact' ? 'Photo credits' : 'Serving suggestion · Photo credits' }}</summary>
-        @if (photo.note) { <p>{{ photo.note }}</p> }
-        <p>Photo: <a [href]="photo.source" target="_blank" rel="noopener noreferrer">{{ photo.credit }}</a> · <a [href]="photo.licenseUrl" target="_blank" rel="noopener noreferrer">{{ photo.license }}</a>. Resized for display.</p>
+        <summary>
+          {{
+            photo.match === 'ingredient'
+              ? 'Ingredient photo'
+              : photo.match === 'exact'
+                ? 'Photo credits'
+                : 'Serving suggestion · Photo credits'
+          }}
+        </summary>
+        @if (photo.note) {
+          <p>{{ photo.note }}</p>
+        }
+        <p>
+          Photo: <a [href]="photo.source" target="_blank" rel="noopener noreferrer">{{ photo.credit }}</a> ·
+          <a [href]="photo.licenseUrl" target="_blank" rel="noopener noreferrer">{{ photo.license }}</a
+          >. Resized for display.
+        </p>
       </details>
     }
     @if (meal.colorPalette) {
@@ -76,12 +97,7 @@
       </section>
     }
     <div class="cook-cta">
-      <ion-button
-        expand="block"
-        class="cook-btn"
-        [disabled]="!meal.instructions.length"
-        (click)="startCooking()"
-        >
+      <ion-button expand="block" class="cook-btn" [disabled]="!meal.instructions.length" (click)="startCooking()">
         <ion-icon name="restaurant-outline" slot="start"></ion-icon>
         {{ isCooked() ? 'Cook it again' : 'Start cooking' }}
       </ion-button>
@@ -104,7 +120,6 @@
       </div>
     }
   }
-
 </ion-content>
 
 <ion-modal [isOpen]="cookModeOpen()" (didDismiss)="closeCookMode()">
@@ -130,9 +145,7 @@
       </div>
 
       <div class="cook-nav">
-        <ion-button fill="outline" (click)="prevStep()" [disabled]="currentStep() === 0">
-          Back
-        </ion-button>
+        <ion-button fill="outline" (click)="prevStep()" [disabled]="currentStep() === 0"> Back </ion-button>
         <ion-button class="cook-next-btn" (click)="nextStep()">
           {{ isLastStep() ? 'Done cooking' : 'Next step' }}
         </ion-button>

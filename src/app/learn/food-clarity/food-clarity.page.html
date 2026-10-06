@@ -25,44 +25,57 @@
                   class="row expandable"
                   [attr.aria-expanded]="open() === f.outcome"
                   (click)="toggle(f)"
-                  >
+                >
                   <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
                   <span
                     class="sn-status"
                     [class.sn-status--reported]="f.verdict !== 'none-found'"
                     [class.sn-status--unknown]="f.verdict === 'none-found'"
                     >{{ verdictLabels[f.verdict] }}</span
-                    >
-                    <span class="chev" aria-hidden="true">{{ open() === f.outcome ? '–' : '+' }}</span>
-                  </button>
-                } @else {
-                  <div class="row">
-                    <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
-                    <span class="sn-status sn-status--unknown">{{ verdictLabels[f.verdict] }}</span>
-                  </div>
-                }
-                @if (open() === f.outcome) {
-                  <div class="detail">
-                    <p class="detail-summary">{{ f.summary }}</p>
-                    <ul class="studies">
-                      @for (s of studiesFor(f); track s) {
-                        <li>
-                          <button
-                            type="button"
-                            class="study-head"
-                            [attr.aria-expanded]="openStudy() === s.id"
-                            (click)="toggleStudy(s)"
-                            >
-                            <span class="study-label">{{ s.label }}</span>
-                            <span class="study-key">{{ s.keyFinding }}</span>
-                          </button>
-                          @if (openStudy() === s.id) {
-                            <dl class="study-more">
-                              <div><dt>Type</dt><dd>{{ designLabels[s.design] }}</dd></div>
-                              <div><dt>Who</dt><dd>{{ s.population }}</dd></div>
-                              <div><dt>Limits</dt><dd><ul>@for (l of s.limitations; track l) {
-                              <li>{{ l }}</li>
-                            }</ul></dd></div>
+                  >
+                  <span class="chev" aria-hidden="true">{{ open() === f.outcome ? '–' : '+' }}</span>
+                </button>
+              } @else {
+                <div class="row">
+                  <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
+                  <span class="sn-status sn-status--unknown">{{ verdictLabels[f.verdict] }}</span>
+                </div>
+              }
+              @if (open() === f.outcome) {
+                <div class="detail">
+                  <p class="detail-summary">{{ f.summary }}</p>
+                  <ul class="studies">
+                    @for (s of studiesFor(f); track s) {
+                      <li>
+                        <button
+                          type="button"
+                          class="study-head"
+                          [attr.aria-expanded]="openStudy() === s.id"
+                          (click)="toggleStudy(s)"
+                        >
+                          <span class="study-label">{{ s.label }}</span>
+                          <span class="study-key">{{ s.keyFinding }}</span>
+                        </button>
+                        @if (openStudy() === s.id) {
+                          <dl class="study-more">
+                            <div>
+                              <dt>Type</dt>
+                              <dd>{{ designLabels[s.design] }}</dd>
+                            </div>
+                            <div>
+                              <dt>Who</dt>
+                              <dd>{{ s.population }}</dd>
+                            </div>
+                            <div>
+                              <dt>Limits</dt>
+                              <dd>
+                                <ul>
+                                  @for (l of s.limitations; track l) {
+                                    <li>{{ l }}</li>
+                                  }
+                                </ul>
+                              </dd>
+                            </div>
                           </dl>
                         }
                       </li>
@@ -106,7 +119,12 @@
                       @for (m of $any(meals()).meals; track m) {
                         <li>
                           <button type="button" class="meal" (click)="openMeal(m)">
-                            <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
+                            <app-meal-image
+                              class="meal-img"
+                              [name]="m.name"
+                              [imageUrl]="m.imageUrl"
+                              [mealType]="m.mealType"
+                            ></app-meal-image>
                             <span class="meal-name">{{ m.name }}</span>
                             @if (m.prepTimeMinutes) {
                               <span class="meal-meta">{{ m.prepTimeMinutes }} min</span>
@@ -129,7 +147,7 @@
             class="row expandable"
             [attr.aria-expanded]="sourcesOpen()"
             (click)="sourcesOpen.set(!sourcesOpen())"
-            >
+          >
             <span class="row-name">Sources ({{ t.studies.length + (t.otherSources?.length ?? 0) }})</span>
             <span class="row-meta">Researched {{ researchedLabel() }}</span>
             <span class="chev" aria-hidden="true">{{ sourcesOpen() ? '–' : '+' }}</span>
@@ -158,5 +176,4 @@
       <p>This topic is waiting for review.</p>
     </main>
   }
-
 </ion-content>

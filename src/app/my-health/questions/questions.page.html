@@ -3,13 +3,17 @@
     <header class="sn-head">
       <button type="button" class="sn-back" (click)="back()">{{ backLabel() }}</button>
       <h1>Your questions</h1>
-      <p class="sn-head-note">Saved here for your next visit, and included in your appointment summary. Put the most important first.</p>
+      <p class="sn-head-note">
+        Saved here for your next visit, and included in your appointment summary. Put the most important first.
+      </p>
     </header>
 
     <section class="sn-card" aria-labelledby="list-title">
       <h2 id="list-title" class="visually-hidden">Saved questions</h2>
       <p class="empty">{{ pendingCount() }} to ask · {{ answeredCount() }} answered</p>
-      @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+      @if (error()) {
+        <p class="error" role="alert">{{ error() }}</p>
+      }
       @if (added(); as a) {
         <p class="added-note" role="status">Added “{{ a }}” to your next-visit questions.</p>
       }
@@ -31,11 +35,29 @@
                   <span class="num" aria-hidden="true">{{ i + 1 }}</span>
                   <p class="q-text">{{ q.text }}</p>
                   <div class="order">
-                    <button type="button" class="icon-btn" [disabled]="i === 0" (click)="move(q, -1)" [attr.aria-label]="'Move up: ' + q.text">↑</button>
-                    <button type="button" class="icon-btn" [disabled]="last" (click)="move(q, 1)" [attr.aria-label]="'Move down: ' + q.text">↓</button>
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      [disabled]="i === 0"
+                      (click)="move(q, -1)"
+                      [attr.aria-label]="'Move up: ' + q.text"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      [disabled]="last"
+                      (click)="move(q, 1)"
+                      [attr.aria-label]="'Move down: ' + q.text"
+                    >
+                      ↓
+                    </button>
                   </div>
                 </div>
-                <p class="question-state">{{ q.answer ? 'Answer recorded · kept for reference' : 'Ready to ask at your next visit' }}</p>
+                <p class="question-state">
+                  {{ q.answer ? 'Answer recorded · kept for reference' : 'Ready to ask at your next visit' }}
+                </p>
 
                 @if (answering() === q.id) {
                   <label class="sn-field">
@@ -51,7 +73,9 @@
                     <p class="answer"><strong>Answer:</strong> {{ q.answer }}</p>
                   }
                   <div class="row-links">
-                    <button type="button" class="link" (click)="startAnswer(q)">{{ q.answer ? 'Edit answer' : 'Add answer' }}</button>
+                    <button type="button" class="link" (click)="startAnswer(q)">
+                      {{ q.answer ? 'Edit answer' : 'Add answer' }}
+                    </button>
                     <button type="button" class="link" (click)="startEdit(q)">Edit</button>
                     <button type="button" class="link danger" (click)="remove(q)">Remove</button>
                   </div>
@@ -61,22 +85,34 @@
           }
         </ol>
       } @else {
-        <p class="empty">What would you like your clinician to help with? Write a question or choose a suggestion below.</p>
+        <p class="empty">
+          What would you like your clinician to help with? Write a question or choose a suggestion below.
+        </p>
       }
       <a class="sn-btn sn-btn--brand" routerLink="/health/summary">See these in my summary</a>
-      <p class="empty">After your visit, add what your clinician said. Answered questions stay here for reference; unanswered ones remain in your next-visit list.</p>
+      <p class="empty">
+        After your visit, add what your clinician said. Answered questions stay here for reference; unanswered ones
+        remain in your next-visit list.
+      </p>
       <a routerLink="/health/visit" class="link">Record agreed next steps after your visit</a>
     </section>
 
     <section class="sn-section" aria-labelledby="own-title">
       <h2 id="own-title">Add your own</h2>
       @if (fromCheckin()) {
-        <p class="draft-note">Written from the check-in you chose. Change it to say what you want to ask, then tap Add.</p>
+        <p class="draft-note">
+          Written from the check-in you chose. Change it to say what you want to ask, then tap Add.
+        </p>
       }
       <form class="own" (submit)="$event.preventDefault(); addOwn()">
         <label class="sn-field">
           <span class="visually-hidden">Your question</span>
-          <input type="text" [(ngModel)]="newQuestion" name="newQuestion" placeholder="e.g. What should we monitor for my bleeding?" />
+          <input
+            type="text"
+            [(ngModel)]="newQuestion"
+            name="newQuestion"
+            placeholder="e.g. What should we monitor for my bleeding?"
+          />
         </label>
         <button type="submit" class="sn-btn sn-btn--brand">Add</button>
       </form>
@@ -90,7 +126,9 @@
             @for (s of suggestions(); track s.key) {
               <li>
                 <span>{{ s.text }}</span>
-                <button type="button" class="add" (click)="addSuggestion(s)" [attr.aria-label]="'Add: ' + s.text">+ Add</button>
+                <button type="button" class="add" (click)="addSuggestion(s)" [attr.aria-label]="'Add: ' + s.text">
+                  + Add
+                </button>
               </li>
             }
           </ul>

@@ -14,12 +14,21 @@ function plan(days: { date: string; ids: string[] }[]): GenerateMealPlanResponse
 const meal = (id: string, ingredients: [string, string | null][]) =>
   ({ id, name: id, ingredients: ingredients.map(([name, amount]) => ({ name, amount })) }) as unknown as MealResponse;
 
-const tenDays = plan(Array.from({ length: 10 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, ids: ['oats', 'salad'] })));
+const tenDays = plan(
+  Array.from({ length: 10 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, ids: ['oats', 'salad'] })),
+);
 
 describe('slotsInWindow', () => {
   it('starts today, never includes past days, and limits to the window', () => {
     const three = slotsInWindow(tenDays, 'three', '2026-10-03');
-    expect(three.map((s) => s.date)).toEqual(['2026-10-03', '2026-10-03', '2026-10-04', '2026-10-04', '2026-10-05', '2026-10-05']);
+    expect(three.map((s) => s.date)).toEqual([
+      '2026-10-03',
+      '2026-10-03',
+      '2026-10-04',
+      '2026-10-04',
+      '2026-10-05',
+      '2026-10-05',
+    ]);
     expect(slotsInWindow(tenDays, 'week', '2026-10-03').length).toBe(14);
     expect(slotsInWindow(tenDays, 'all', '2026-10-03').length).toBe(16);
   });
@@ -31,8 +40,20 @@ describe('slotsInWindow', () => {
 
 describe('byAisle', () => {
   const meals = new Map([
-    ['oats', meal('oats', [['Rolled oats', '1/2 cup'], ['Chia seeds', '1 tbsp']])],
-    ['salad', meal('salad', [['Chickpeas', '400 g tin'], ['Chia seeds', '1 tsp']])],
+    [
+      'oats',
+      meal('oats', [
+        ['Rolled oats', '1/2 cup'],
+        ['Chia seeds', '1 tbsp'],
+      ]),
+    ],
+    [
+      'salad',
+      meal('salad', [
+        ['Chickpeas', '400 g tin'],
+        ['Chia seeds', '1 tsp'],
+      ]),
+    ],
   ]);
 
   it('counts how many planned meals use an ingredient instead of adding free-text amounts', () => {
@@ -60,6 +81,8 @@ describe('preparation notes', () => {
     const slots = slotsInWindow(plan([{ date: '2026-10-03', ids: ['a', 'b'] }]), 'all', '2026-10-03');
     const items = byAisle(slots, meals);
     expect(items.length).toBe(1);
-    expect(items[0]).toEqual(jasmine.objectContaining({ name: 'Bell pepper', amounts: ['1/2', '1/2 cup (diced)'], mealCount: 2 }));
+    expect(items[0]).toEqual(
+      jasmine.objectContaining({ name: 'Bell pepper', amounts: ['1/2', '1/2 cup (diced)'], mealCount: 2 }),
+    );
   });
 });

@@ -40,7 +40,11 @@ h1 {
   color: var(--sn-apricot);
   cursor: pointer;
 
-  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; border-radius: 0.375rem; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-apricot);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
 }
 
 .why-text {
@@ -74,17 +78,20 @@ h1 {
   font: 800 1.0625rem/1.25 var(--sn-body);
   cursor: pointer;
 
-  &[aria-checked="true"] {
+  &[aria-checked='true'] {
     border-color: var(--sn-apricot);
     box-shadow: 0 0 0 3px var(--sn-apricot);
   }
 
-  &[aria-checked="true"]::after {
-    content: " ✓";
+  &[aria-checked='true']::after {
+    content: ' ✓';
     color: var(--sn-brand);
   }
 
-  &:focus-visible { outline: 3px solid var(--sn-on-brand); outline-offset: 3px; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-on-brand);
+    outline-offset: 3px;
+  }
 }
 
 .panel {
@@ -95,7 +102,11 @@ h1 {
   display: grid;
   gap: 1rem;
 
-  em { font-style: normal; font-weight: 400; color: var(--sn-muted); }
+  em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--sn-muted);
+  }
 }
 
 .unknown-note {
@@ -136,10 +147,31 @@ h1 {
   gap: 0.75rem;
 }
 
-.input-hint { color: var(--sn-muted); font-size: 0.875rem; font-weight: 400; }
-.report-link { color: var(--sn-apricot); font-weight: 800; min-height: var(--sn-tap); display: inline-flex; align-items: center; }
+.input-hint {
+  color: var(--sn-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+.report-link {
+  color: var(--sn-apricot);
+  font-weight: 800;
+  min-height: var(--sn-tap);
+  display: inline-flex;
+  align-items: center;
+}
 .source-details {
-  summary { color: var(--sn-brand); font-weight: 800; min-height: var(--sn-tap); cursor: pointer; align-content: center; }
-  summary:focus-visible { outline: 3px solid var(--sn-brand); outline-offset: 2px; }
-  .sn-field { margin-top: 0.75rem; }
+  summary {
+    color: var(--sn-brand);
+    font-weight: 800;
+    min-height: var(--sn-tap);
+    cursor: pointer;
+    align-content: center;
+  }
+  summary:focus-visible {
+    outline: 3px solid var(--sn-brand);
+    outline-offset: 2px;
+  }
+  .sn-field {
+    margin-top: 0.75rem;
+  }
 }

@@ -1,36 +1,88 @@
 <ion-content [fullscreen]="true">
   <main class="sn-page sn-screen">
-    <header class="sn-head"><a class="sn-back" routerLink="/tabs/health">My health</a><h1>My next steps</h1><p class="sn-head-note">Keep track of what you agreed and what you want to do next.</p></header>
+    <header class="sn-head">
+      <a class="sn-back" routerLink="/tabs/health">My health</a>
+      <h1>My next steps</h1>
+      <p class="sn-head-note">Keep track of what you agreed and what you want to do next.</p>
+    </header>
     <form class="sn-card" [formGroup]="form" (ngSubmit)="save()">
       <h2>{{ editingId() ? 'Edit this step' : 'Add a next step' }}</h2>
       <p>Use the steps you agreed with your clinician. You choose the dates and reminders.</p>
       <fieldset [disabled]="!ready() || busy()">
-        <label class="sn-field"><span>What do I need to do?</span><input formControlName="title" placeholder="e.g. Book the follow-up we discussed" maxlength="500" /></label>
-        <label class="sn-field"><span>When do I want to do it? (optional)</span><input type="date" formControlName="dueDate" /></label>
+        <label class="sn-field"
+          ><span>What do I need to do?</span
+          ><input formControlName="title" placeholder="e.g. Book the follow-up we discussed" maxlength="500"
+        /></label>
+        <label class="sn-field"
+          ><span>When do I want to do it? (optional)</span><input type="date" formControlName="dueDate"
+        /></label>
         @if (reminders.available) {
-          <label class="toggle"><input type="checkbox" formControlName="reminder" /><span>Remind me on this device</span></label>
-          @if (form.controls.reminder.value) { <label class="sn-field"><span>Reminder date and time</span><input type="datetime-local" formControlName="reminderAt" /></label> }
-        } @else { <p class="hint">With a date, you can add a step to your calendar. Device notifications are available in the phone app.</p> }
+          <label class="toggle"
+            ><input type="checkbox" formControlName="reminder" /><span>Remind me on this device</span></label
+          >
+          @if (form.controls.reminder.value) {
+            <label class="sn-field"
+              ><span>Reminder date and time</span><input type="datetime-local" formControlName="reminderAt"
+            /></label>
+          }
+        } @else {
+          <p class="hint">
+            With a date, you can add a step to your calendar. Device notifications are available in the phone app.
+          </p>
+        }
         <button class="sn-btn sn-btn--brand" type="submit">{{ busy() ? 'Saving…' : 'Save next step' }}</button>
-        @if (editingId()) { <button class="sn-btn sn-btn--quiet" type="button" (click)="reset()">Cancel editing</button> }
+        @if (editingId()) {
+          <button class="sn-btn sn-btn--quiet" type="button" (click)="reset()">Cancel editing</button>
+        }
       </fieldset>
     </form>
-    @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
-    @if (status()) { <p role="status">{{ status() }}</p> }
-    <section class="sn-section"><h2>Saved steps</h2>
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    }
+    @if (status()) {
+      <p role="status">{{ status() }}</p>
+    }
+    <section class="sn-section">
+      <h2>Saved steps</h2>
       @for (task of tasks(); track task.id) {
         <article class="sn-card" [class.done]="task.completedAt">
-          <label class="toggle"><input type="checkbox" [checked]="!!task.completedAt" [disabled]="busy()" (change)="complete(task)" /><span>{{ task.title }}</span></label>
-          @if (task.dueDate) { <p [class.error]="overdue(task)">{{ overdue(task) ? 'Date has passed · ' : 'Planned for ' }}{{ task.dueDate }}</p> }
-          @if (task.completedAt) { <p class="hint">Completed · uncheck to reopen</p> }
-          @if (task.visitDate) { <p class="hint">From my visit on {{ task.visitDate }}</p> }
-          <div class="actions"><button class="link" type="button" [disabled]="busy()" (click)="edit(task)">Edit</button>
-            @if (task.dueDate && !task.completedAt) { <button class="link" type="button" (click)="calendar(task)">Add to calendar</button> }
+          <label class="toggle"
+            ><input
+              type="checkbox"
+              [checked]="!!task.completedAt"
+              [disabled]="busy()"
+              (change)="complete(task)"
+            /><span>{{ task.title }}</span></label
+          >
+          @if (task.dueDate) {
+            <p [class.error]="overdue(task)">
+              {{ overdue(task) ? 'Date has passed · ' : 'Planned for ' }}{{ task.dueDate }}
+            </p>
+          }
+          @if (task.completedAt) {
+            <p class="hint">Completed · uncheck to reopen</p>
+          }
+          @if (task.visitDate) {
+            <p class="hint">From my visit on {{ task.visitDate }}</p>
+          }
+          <div class="actions">
+            <button class="link" type="button" [disabled]="busy()" (click)="edit(task)">Edit</button>
+            @if (task.dueDate && !task.completedAt) {
+              <button class="link" type="button" (click)="calendar(task)">Add to calendar</button>
+            }
             <button class="link" type="button" [disabled]="busy()" (click)="removing.set(task.id)">Remove</button>
           </div>
-          @if (removing() === task.id) { <p>Remove this saved step?</p><div class="actions"><button class="link" type="button" (click)="remove(task)">Yes, remove</button><button class="link" type="button" (click)="removing.set(null)">Keep it</button></div> }
+          @if (removing() === task.id) {
+            <p>Remove this saved step?</p>
+            <div class="actions">
+              <button class="link" type="button" (click)="remove(task)">Yes, remove</button
+              ><button class="link" type="button" (click)="removing.set(null)">Keep it</button>
+            </div>
+          }
         </article>
-      } @empty { <p>No steps saved yet. Add one when you have something you want to follow through on.</p> }
+      } @empty {
+        <p>No steps saved yet. Add one when you have something you want to follow through on.</p>
+      }
     </section>
   </main>
 </ion-content>

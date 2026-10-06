@@ -54,7 +54,11 @@ export const SYMPTOM_PERIOD_DAYS = 30;
  * Plain counts over logged days. Missing days are never treated as symptom-free,
  * and nothing here suggests a cause.
  */
-export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), periodDays = SYMPTOM_PERIOD_DAYS): SymptomSummary | null {
+export function summariseSymptoms(
+  entries: SymptomEntry[],
+  today = new Date(),
+  periodDays = SYMPTOM_PERIOD_DAYS,
+): SymptomSummary | null {
   const to = localIsoDate(today);
   const from = addDays(to, -(periodDays - 1));
   const inPeriod = entries.filter((e) => e.date >= from && e.date <= to);
@@ -63,8 +67,8 @@ export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), p
   // The denominator is always the check-ins recorded in the period, never the days in it.
   const n = inPeriod.length;
   const of = (count: number) => `${count} of ${n} ${n === 1 ? 'check-in' : 'check-ins'}`;
-  const missing = (recorded: number) => recorded < n
-    ? ` Not recorded on ${of(n - recorded)}; these are unknown.` : '';
+  const missing = (recorded: number) =>
+    recorded < n ? ` Not recorded on ${of(n - recorded)}; these are unknown.` : '';
   const lines: string[] = [];
   const bleedingDays = inPeriod.filter((e) => e.bleeding !== undefined);
   if (bleedingDays.length) {
@@ -80,9 +84,16 @@ export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), p
     const max = Math.max(...painDays);
     const min = Math.min(...painDays);
     const sevenPlus = painDays.filter((p) => p >= 7).length;
-    lines.push(`Pain (0 to 10): recorded on ${of(painDays.length)}, ${min === max ? `at ${min}` : `ranging ${min} to ${max}`}` + (sevenPlus ? `; 7 or more on ${sevenPlus}.` : '.') + missing(painDays.length));
+    lines.push(
+      `Pain (0 to 10): recorded on ${of(painDays.length)}, ${min === max ? `at ${min}` : `ranging ${min} to ${max}`}` +
+        (sevenPlus ? `; 7 or more on ${sevenPlus}.` : '.') +
+        missing(painDays.length),
+    );
   }
-  for (const [field, label] of [['bloating', 'Pressure or bloating'], ['fatigue', 'Tiredness']] as const) {
+  for (const [field, label] of [
+    ['bloating', 'Pressure or bloating'],
+    ['fatigue', 'Tiredness'],
+  ] as const) {
     const recorded = inPeriod.filter((e) => e[field] !== undefined);
     if (!recorded.length) continue;
     const severe = recorded.filter((e) => e[field] === 'severe').length;
@@ -92,10 +103,17 @@ export function summariseSymptoms(entries: SymptomEntry[], today = new Date(), p
   const impactRecorded = inPeriod.filter((e) => e.affected !== undefined);
   if (impactRecorded.length) {
     const parts = (Object.keys(IMPACT_LABELS) as ImpactArea[])
-      .map((a) => [IMPACT_LABELS[a].toLowerCase(), impactRecorded.filter((e) => e.affected!.includes(a)).length] as const)
+      .map(
+        (a) => [IMPACT_LABELS[a].toLowerCase(), impactRecorded.filter((e) => e.affected!.includes(a)).length] as const,
+      )
       .filter(([, c]) => c > 0)
       .map(([label, c]) => `${label} on ${of(c)}`);
-    lines.push((parts.length ? `Affected: ${parts.join(', ')}.` : `Affected: nothing, on the ${impactRecorded.length === 1 ? 'check-in' : 'check-ins'} where this was recorded.`) + missing(impactRecorded.length));
+    lines.push(
+      (parts.length
+        ? `Affected: ${parts.join(', ')}.`
+        : `Affected: nothing, on the ${impactRecorded.length === 1 ? 'check-in' : 'check-ins'} where this was recorded.`) +
+        missing(impactRecorded.length),
+    );
   }
 
   const fmt = (iso: string) =>
@@ -126,7 +144,11 @@ function lineFor(f: Finding): SummaryLine {
   const date = formatDate(f.reportDate);
   if (f.completeness.state === 'absent') {
     const text = def.absentLabel ? def.absentLabel.replace(/^My report says/, 'Report says') : 'Report says none';
-    return { label: def.label, text: date ? `${text} (report dated ${date})` : text, wording: f.originalWording || undefined };
+    return {
+      label: def.label,
+      text: date ? `${text} (report dated ${date})` : text,
+      wording: f.originalWording || undefined,
+    };
   }
   const value = f.completeness.state === 'present' ? f.completeness.value : '';
   return {
@@ -153,23 +175,39 @@ export function buildSummary(record: HealthRecord): AppointmentSummary {
 
   const date = formatDate(record.appointment.date);
   const who = record.appointment.with?.trim();
-  const appointmentLine = date ? `Appointment${who ? ` with ${who}` : ''} on ${date}` : who ? `Appointment with ${who}` : null;
-  const previousVisits = (record.visits ?? []).filter((v) => record.summaryVisitDates?.includes(v.date)).sort((a, b) => b.date.localeCompare(a.date));
-  const entries = record.summarySymptomDates ? record.symptoms.filter((e) => record.summarySymptomDates!.includes(e.date)) : record.symptoms;
-  const symptoms = record.summaryIncludesCheckins === false ? null : summariseSymptoms(entries, new Date(), record.summaryPeriodDays ?? SYMPTOM_PERIOD_DAYS);
+  const appointmentLine = date
+    ? `Appointment${who ? ` with ${who}` : ''} on ${date}`
+    : who
+      ? `Appointment with ${who}`
+      : null;
+  const previousVisits = (record.visits ?? [])
+    .filter((v) => record.summaryVisitDates?.includes(v.date))
+    .sort((a, b) => b.date.localeCompare(a.date));
+  const entries = record.summarySymptomDates
+    ? record.symptoms.filter((e) => record.summarySymptomDates!.includes(e.date))
+    : record.symptoms;
+  const symptoms =
+    record.summaryIncludesCheckins === false
+      ? null
+      : summariseSymptoms(entries, new Date(), record.summaryPeriodDays ?? SYMPTOM_PERIOD_DAYS);
   if (symptoms && record.summarySymptomDates) symptoms.coverage = 'Selected entries only. ' + symptoms.coverage;
 
   return {
     appointmentLine,
     visitGoal: record.visitGoal?.trim() ?? '',
-    answeredQuestions: record.questions.filter((q) => q.answer?.trim() && record.summaryAnswerIds?.includes(q.id)).map((q) => ({ question: q.text, answer: q.answer!.trim() })),
+    answeredQuestions: record.questions
+      .filter((q) => q.answer?.trim() && record.summaryAnswerIds?.includes(q.id))
+      .map((q) => ({ question: q.text, answer: q.answer!.trim() })),
     lastVisit: previousVisits[0] ?? null,
     previousVisits,
     reportTitle: record.reports?.find((report) => report.id === record.activeReportId)?.title ?? null,
     fromReport,
     personallyReported,
     notRecorded,
-    questions: (record.summaryQuestionIds ? unansweredQuestions(record).filter((q) => record.summaryQuestionIds!.includes(q.id)) : unansweredQuestions(record).slice(0, 3)).map((q) => q.text),
+    questions: (record.summaryQuestionIds
+      ? unansweredQuestions(record).filter((q) => record.summaryQuestionIds!.includes(q.id))
+      : unansweredQuestions(record).slice(0, 3)
+    ).map((q) => q.text),
     // She decides whether check-ins go into what she shares.
     symptoms,
     notes: record.summaryNotes.trim(),
@@ -186,22 +224,37 @@ export function summaryAsText(s: AppointmentSummary): string {
     out.push('', title, ...lines.map((l) => `- ${l}`));
   };
   if (s.visitGoal) out.push('', 'My main concern for this visit', s.visitGoal);
-  section('Questions I still want to ask', s.questions.map((q, i) => `${i + 1}. ${q}`));
+  section(
+    'Questions I still want to ask',
+    s.questions.map((q, i) => `${i + 1}. ${q}`),
+  );
   if (s.symptoms) {
     section(`Symptoms I logged (${s.symptoms.periodLabel})`, [s.symptoms.coverage, ...s.symptoms.lines]);
     section('Treatment changes I noted', s.symptoms.treatmentChanges);
     section('Symptom notes in my own words', s.symptoms.notes);
   }
-  section(s.reportTitle ? `From my report (${s.reportTitle})` : 'From my report', s.fromReport.map((l) => `${l.label}: ${l.text}${l.wording ? ` ("${l.wording}")` : ''}`));
-  section('What I was told or noted', s.personallyReported.map((l) => `${l.label}: ${l.text}`));
+  section(
+    s.reportTitle ? `From my report (${s.reportTitle})` : 'From my report',
+    s.fromReport.map((l) => `${l.label}: ${l.text}${l.wording ? ` ("${l.wording}")` : ''}`),
+  );
+  section(
+    'What I was told or noted',
+    s.personallyReported.map((l) => `${l.label}: ${l.text}`),
+  );
   section('Not recorded yet', s.notRecorded);
-  section('Answers I recorded from previous conversations', s.answeredQuestions.map((q) => `${q.question}\n  My note: ${q.answer}`));
+  section(
+    'Answers I recorded from previous conversations',
+    s.answeredQuestions.map((q) => `${q.question}\n  My note: ${q.answer}`),
+  );
   for (const v of s.previousVisits) {
-    section(`My notes from a previous visit (${v.date})`, [
-      v.discussion ? `Discussed: ${v.discussion}` : '',
-      v.nextSteps ? `Next steps agreed with my clinician: ${v.nextSteps}` : '',
-      v.followUp ? `Follow-up to remember: ${v.followUp}` : '',
-    ].filter(Boolean));
+    section(
+      `My notes from a previous visit (${v.date})`,
+      [
+        v.discussion ? `Discussed: ${v.discussion}` : '',
+        v.nextSteps ? `Next steps agreed with my clinician: ${v.nextSteps}` : '',
+        v.followUp ? `Follow-up to remember: ${v.followUp}` : '',
+      ].filter(Boolean),
+    );
   }
   if (s.notes) out.push('', 'Notes', s.notes);
   out.push('', s.disclaimer);

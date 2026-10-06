@@ -33,7 +33,14 @@ export class SymptomLogPage implements OnInit {
   readonly impactOptions = Object.entries(IMPACT_LABELS) as [ImpactArea, string][];
   readonly painScale = Array.from({ length: 11 }, (_, i) => i);
 
-  readonly sections = [['bleeding', 'Bleeding'], ['pain', 'Pain'], ['bloating', 'Pressure or bloating'], ['fatigue', 'Tiredness'], ['affected', 'Impact on my day'], ['more', 'A note or treatment change']] as const;
+  readonly sections = [
+    ['bleeding', 'Bleeding'],
+    ['pain', 'Pain'],
+    ['bloating', 'Pressure or bloating'],
+    ['fatigue', 'Tiredness'],
+    ['affected', 'Impact on my day'],
+    ['more', 'A note or treatment change'],
+  ] as const;
   readonly visible = signal<string[]>([]);
   readonly ready = signal(false);
   readonly date = signal(localIsoDate());
@@ -76,15 +83,21 @@ export class SymptomLogPage implements OnInit {
     this.affected.set(e?.affected ? [...e.affected] : undefined);
     this.notes = e?.notes ?? '';
     this.treatmentChange = e?.treatmentChange ?? '';
-    this.visible.set(this.sections.filter(([key]) => key === 'more' ? !!(e?.notes || e?.treatmentChange) : e?.[key] !== undefined).map(([key]) => key));
+    this.visible.set(
+      this.sections
+        .filter(([key]) => (key === 'more' ? !!(e?.notes || e?.treatmentChange) : e?.[key] !== undefined))
+        .map(([key]) => key),
+    );
   }
 
   toggleSection(key: string) {
     const selected = this.visible().includes(key);
-    this.visible.update((values) => selected ? values.filter((v) => v !== key) : [...values, key]);
+    this.visible.update((values) => (selected ? values.filter((v) => v !== key) : [...values, key]));
     if (selected) {
-      if (key === 'more') { this.notes = ''; this.treatmentChange = ''; }
-      else if (key === 'affected') this.affected.set(undefined);
+      if (key === 'more') {
+        this.notes = '';
+        this.treatmentChange = '';
+      } else if (key === 'affected') this.affected.set(undefined);
       else if (key === 'bleeding') this.bleeding.set(undefined);
       else if (key === 'pain') this.pain.set(undefined);
       else if (key === 'bloating') this.bloating.set(undefined);
@@ -118,14 +131,14 @@ export class SymptomLogPage implements OnInit {
     this.error.set(null);
     try {
       await this.repo.saveSymptoms({
-      date: this.date(),
-      bleeding: this.bleeding(),
-      pain: this.pain(),
-      bloating: this.bloating(),
-      fatigue: this.fatigue(),
-      affected: this.affected(),
-      notes: this.notes.trim() || undefined,
-      treatmentChange: this.treatmentChange.trim() || undefined,
+        date: this.date(),
+        bleeding: this.bleeding(),
+        pain: this.pain(),
+        bloating: this.bloating(),
+        fatigue: this.fatigue(),
+        affected: this.affected(),
+        notes: this.notes.trim() || undefined,
+        treatmentChange: this.treatmentChange.trim() || undefined,
       });
     } catch {
       this.error.set('Could not save your check-in. Please try again.');
@@ -142,6 +155,8 @@ export class SymptomLogPage implements OnInit {
   }
 
   close() {
-    this.router.navigateByUrl({ today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()]);
+    this.router.navigateByUrl(
+      { today: '/tabs/today', health: '/tabs/health', history: '/health/symptoms' }[this.from()],
+    );
   }
 }

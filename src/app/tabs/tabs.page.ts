@@ -1,13 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-} from '@ionic/angular/standalone';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { RouterOutlet } from '@angular/router';
-
 
 @Component({
   selector: 'app-tabs',
@@ -15,13 +8,6 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    IonIcon,
-    IonLabel,
-    RouterOutlet
-  ],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, RouterOutlet],
 })
 export class TabsPage {}

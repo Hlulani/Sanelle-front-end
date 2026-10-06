@@ -81,7 +81,8 @@ export const FINDINGS: Record<FindingKey, FindingDefinition> = {
     key: 'largestSize',
     label: 'Largest',
     fieldLabel: 'Size of the largest fibroid',
-    inputHint: 'Include the unit, cm or mm. If several measurements are given, copy them together, for example 41 × 36 mm.',
+    inputHint:
+      'Include the unit, cm or mm. If several measurements are given, copy them together, for example 41 × 36 mm.',
     question: 'How big is the largest one?',
     example: 'e.g. 4.1 cm or 41 x 36 mm',
     canBeAbsent: false,
@@ -254,7 +255,7 @@ export function hasContent(e: SymptomEntry): boolean {
     e.pain !== undefined ||
     e.bloating !== undefined ||
     e.fatigue !== undefined ||
-    (e.affected !== undefined) ||
+    e.affected !== undefined ||
     !!e.notes?.trim() ||
     !!e.treatmentChange?.trim()
   );
@@ -266,7 +267,11 @@ export function findingOrUnknown(record: HealthRecord, key: FindingKey): Finding
 }
 
 /** How far someone is through the five diagnosis questions. "I don't know" counts as answered. */
-export function diagnosisProgress(record: HealthRecord): { answered: number; total: number; nextKey: FindingKey | null } {
+export function diagnosisProgress(record: HealthRecord): {
+  answered: number;
+  total: number;
+  nextKey: FindingKey | null;
+} {
   const answered = FINDING_KEYS.filter((k) => !!record.findings[k]);
   return {
     answered: answered.length,

@@ -70,24 +70,56 @@ export class ReportPage {
     try {
       await this.repo.load();
       const pages: string[] = [];
-      for (const file of files) pages.push(await this.reader.read(file, (message) => { if (generation === this.generation) this.progress.set(message); }, (page) => {
-        if (generation === this.generation) this.previews.update((previews) => [...previews, page]);
-        else URL.revokeObjectURL(page.url);
-      }));
+      for (const file of files)
+        pages.push(
+          await this.reader.read(
+            file,
+            (message) => {
+              if (generation === this.generation) this.progress.set(message);
+            },
+            (page) => {
+              if (generation === this.generation) this.previews.update((previews) => [...previews, page]);
+              else URL.revokeObjectURL(page.url);
+            },
+          ),
+        );
       if (generation !== this.generation) return;
       const text = pages.join('\n\n').trim();
-      if (!text) throw new Error('No readable text was found. Try a clearer photo with the whole page visible, or add the details manually.');
-      if (text.length > 100_000) throw new Error('This report is too long to review here. Choose the relevant pages or add the details manually.');
+      if (!text)
+        throw new Error(
+          'No readable text was found. Try a clearer photo with the whole page visible, or add the details manually.',
+        );
+      if (text.length > 100_000)
+        throw new Error(
+          'This report is too long to review here. Choose the relevant pages or add the details manually.',
+        );
       this.text.set(text);
       const suggestions = suggestReportFindings(text);
-      this.rows.set(FINDING_KEYS.reduce<ReviewRow[]>((rows, key) => {
-        const candidates = suggestions.filter((s) => s.key === key);
-        if (!candidates.length) return rows;
-        const existing = this.repo.record().findings[key];
-        return [...rows, { key, candidates, candidateIndex: 0, value: candidates[0].completeness.state === 'present' ? candidates[0].completeness.value : '', selected: candidates.length === 1 && !existing, existing }];
-      }, []));
+      this.rows.set(
+        FINDING_KEYS.reduce<ReviewRow[]>((rows, key) => {
+          const candidates = suggestions.filter((s) => s.key === key);
+          if (!candidates.length) return rows;
+          const existing = this.repo.record().findings[key];
+          return [
+            ...rows,
+            {
+              key,
+              candidates,
+              candidateIndex: 0,
+              value: candidates[0].completeness.state === 'present' ? candidates[0].completeness.value : '',
+              selected: candidates.length === 1 && !existing,
+              existing,
+            },
+          ];
+        }, []),
+      );
     } catch (error) {
-      if (generation === this.generation) this.error.set(error instanceof Error ? error.message : 'This report could not be read. Try another file or add the details manually.');
+      if (generation === this.generation)
+        this.error.set(
+          error instanceof Error
+            ? error.message
+            : 'This report could not be read. Try another file or add the details manually.',
+        );
     } finally {
       if (generation === this.generation) this.reading.set(false);
     }
@@ -103,9 +135,12 @@ export class ReportPage {
 
   existingValue(row: ReviewRow): string {
     const completeness = row.existing?.completeness;
-    return completeness?.state === 'present' ? completeness.value : completeness?.state === 'absent' ? 'Explicitly absent' : 'Not recorded';
+    return completeness?.state === 'present'
+      ? completeness.value
+      : completeness?.state === 'absent'
+        ? 'Explicitly absent'
+        : 'Not recorded';
   }
-
 
   showOriginal(row: ReviewRow) {
     const wording = normalize(row.candidates[row.candidateIndex].wording);
@@ -119,33 +154,54 @@ export class ReportPage {
   }
   private releasePreviews() {
     this.previews().forEach((p) => URL.revokeObjectURL(p.url));
-    this.previews.set([]); this.viewed.set(null);
+    this.previews.set([]);
+    this.viewed.set(null);
   }
   ionViewWillLeave() {
-    this.generation++; this.releasePreviews(); this.text.set(''); this.rows.set([]); this.reading.set(false);
+    this.generation++;
+    this.releasePreviews();
+    this.text.set('');
+    this.rows.set([]);
+    this.reading.set(false);
   }
 
   async save() {
     if (this.saving() || this.reading()) return;
     this.error.set(null);
     const selected = this.rows().filter((r) => r.selected);
-    if (!selected.length) { this.error.set('Select at least one detail to save, or add details manually.'); return; }
-    if (!this.confirmed) { this.error.set('Check the selected details against your report before saving.'); return; }
+    if (!selected.length) {
+      this.error.set('Select at least one detail to save, or add details manually.');
+      return;
+    }
+    if (!this.confirmed) {
+      this.error.set('Check the selected details against your report before saving.');
+      return;
+    }
     if (selected.some((r) => r.candidates[r.candidateIndex].completeness.state === 'present' && !r.value.trim())) {
-      this.error.set('Fill in each selected detail, or leave it unselected.'); return;
+      this.error.set('Fill in each selected detail, or leave it unselected.');
+      return;
     }
     if (selected.some((r) => r.key === 'largestSize' && isBareMeasurement(r.value))) {
-      this.error.set('Include cm or mm in the size, exactly as written in your report.'); return;
+      this.error.set('Include cm or mm in the size, exactly as written in your report.');
+      return;
     }
     this.saving.set(true);
     try {
-      await this.repo.saveReport(selected.map((row): Finding => ({
-        key: row.key,
-        completeness: row.candidates[row.candidateIndex].completeness.state === 'absent' ? { state: 'absent' } : { state: 'present', value: row.value.trim() },
-        source: 'extracted-and-confirmed',
-        originalWording: row.candidates[row.candidateIndex].wording,
-        reportDate: this.reportDate || undefined,
-      })), this.reportTitle, this.reportDate || undefined, this.makeCurrent);
+      await this.repo.saveReport(
+        selected.map((row): Finding => ({
+          key: row.key,
+          completeness:
+            row.candidates[row.candidateIndex].completeness.state === 'absent'
+              ? { state: 'absent' }
+              : { state: 'present', value: row.value.trim() },
+          source: 'extracted-and-confirmed',
+          originalWording: row.candidates[row.candidateIndex].wording,
+          reportDate: this.reportDate || undefined,
+        })),
+        this.reportTitle,
+        this.reportDate || undefined,
+        this.makeCurrent,
+      );
       this.saved.set(true);
       this.releasePreviews();
       this.text.set('');
@@ -157,4 +213,6 @@ export class ReportPage {
   }
 }
 
-function normalize(value: string): string { return value.replace(/\s+/g, ' ').trim().toLowerCase(); }
+function normalize(value: string): string {
+  return value.replace(/\s+/g, ' ').trim().toLowerCase();
+}

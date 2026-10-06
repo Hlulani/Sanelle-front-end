@@ -1,13 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 
-import {
-  IonContent,
-  IonButton,
-  IonIcon,
-  IonSpinner,
-  IonToggle,
-  AlertController,
-} from '@ionic/angular/standalone';
+import { IonContent, IonButton, IonIcon, IonSpinner, IonToggle, AlertController } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/auth/auth.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -27,14 +20,7 @@ import {
   standalone: true,
   templateUrl: 'account.page.html',
   styleUrls: ['account.page.scss'],
-  imports: [
-    RouterLink,
-    IonContent,
-    IonButton,
-    IonIcon,
-    IonSpinner,
-    IonToggle
-],
+  imports: [RouterLink, IonContent, IonButton, IonIcon, IonSpinner, IonToggle],
 })
 export class AccountPage implements OnInit {
   private health = inject(HealthRepository);
@@ -65,7 +51,9 @@ export class AccountPage implements OnInit {
   /** Changes what Today shows first. */
   toggleFocus(value: HelpFocus): void {
     const current = this.focus();
-    void this.focusPreferences.saveFocus(current.includes(value) ? current.filter((f) => f !== value) : [...current, value]);
+    void this.focusPreferences.saveFocus(
+      current.includes(value) ? current.filter((f) => f !== value) : [...current, value],
+    );
   }
 
   async toggleNotifications(enabled: boolean): Promise<void> {
@@ -75,7 +63,9 @@ export class AccountPage implements OnInit {
       const granted = await this.notifications.enable();
       this.notificationsEnabled.set(granted);
       if (!granted) {
-        this.notificationError.set('Notifications are blocked in your device settings. Enable them there to turn this on.');
+        this.notificationError.set(
+          'Notifications are blocked in your device settings. Enable them there to turn this on.',
+        );
       }
       return;
     }
@@ -104,7 +94,7 @@ export class AccountPage implements OnInit {
   async confirmDeleteAccount(): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Delete account?',
-      message: 'This permanently deletes your account. This can\'t be undone.',
+      message: "This permanently deletes your account. This can't be undone.",
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {

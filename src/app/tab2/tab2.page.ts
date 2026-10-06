@@ -38,7 +38,12 @@ import { FocusPreferencesService } from '../core/services/focus-preferences.serv
 import { NotificationService } from '../core/services/notification.service';
 import { Router, RouterLink } from '@angular/router';
 import { PlanStoreService } from '../core/services/plan-store.service';
-import { ALLERGENS, AllergenCode, FoodRestrictionsService, sameRestrictions } from '../core/services/food-restrictions.service';
+import {
+  ALLERGENS,
+  AllergenCode,
+  FoodRestrictionsService,
+  sameRestrictions,
+} from '../core/services/food-restrictions.service';
 import { MealProgressService } from '../core/services/meal-progress.service';
 import { ChallengesService, ChallengeDefinition, ChallengeProgress } from '../core/services/challenges.service';
 import { CustomChallengesService } from '../core/services/custom-challenges.service';
@@ -95,8 +100,8 @@ import { MEAL_TYPE_LABELS, MealType } from '../core/models/meal.model';
     IonIcon,
     IonSpinner,
     IonInput,
-    IonTextarea
-],
+    IonTextarea,
+  ],
 })
 export class Tab2Page implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
@@ -133,12 +138,13 @@ export class Tab2Page implements OnInit {
   private loadingMembersFor = new Set<string>();
 
   ngOnInit(): void {
-    void Promise.all([this.foodRestrictions.load(), this.mealProgress.init()]).then(() => this.ready.set(true)).catch(() => this.error.set('Could not load your saved food choices. Please reload before making a plan.'));
+    void Promise.all([this.foodRestrictions.load(), this.mealProgress.init()])
+      .then(() => this.ready.set(true))
+      .catch(() => this.error.set('Could not load your saved food choices. Please reload before making a plan.'));
 
     void this.focusPreferences.loadDiet().then((diet) => {
       if (diet && !this.planStore.getPlanSnapshot()?.preferences) this.proteinPreference.set(diet);
     });
-
 
     this.planStore.plan$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((plan) => {
       const previous = this.selectedDay()?.date;
@@ -175,22 +181,31 @@ export class Tab2Page implements OnInit {
     const start = Math.floor(this.selectedDayIndex() / 7) * 7;
     return (this.displayPlan()?.daysPlan ?? []).slice(start, start + 7).map((day, i) => ({ day, index: start + i }));
   });
-  readonly ended = computed(() => { const days = this.plan()?.daysPlan; return !!days?.length && days[days.length - 1].date < this.today; });
+  readonly ended = computed(() => {
+    const days = this.plan()?.daysPlan;
+    return !!days?.length && days[days.length - 1].date < this.today;
+  });
 
   openCommunity() {
     this.communityOpen.update((open) => !open);
     if (this.communityLoaded) return;
     this.communityLoaded = true;
-    void this.challengesService.init(); this.challengesService.refreshCounts();
-    void this.customChallengesService.init().then(() => this.customChallengesService.refresh(() => this.loadAllCustomChallengeMembers()));
+    void this.challengesService.init();
+    this.challengesService.refreshCounts();
+    void this.customChallengesService
+      .init()
+      .then(() => this.customChallengesService.refresh(() => this.loadAllCustomChallengeMembers()));
   }
   private restorePreferences(p: GenerateMealPlanRequest & { startDate: string }) {
     this.duration.set(p.duration === 'DAYS_7' ? 7 : p.duration === 'DAYS_14' ? 14 : 30);
     this.fastingStyle.set(p.fastingStyle === 'NO_FASTING_3_MEALS' ? 'NO_FASTING_3_MEALS' : 'FASTING_16_8');
-    this.proteinPreference.set(p.proteinPreference); this.maxPrepMinutes.set(p.maxPrepMinutes); this.startDateISO.set(p.startDate);
+    this.proteinPreference.set(p.proteinPreference);
+    this.maxPrepMinutes.set(p.maxPrepMinutes);
+    this.startDateISO.set(p.startDate);
   }
   openPreferences() {
-    this.preferencesOpen.set(true); this.settingsStep.set('schedule');
+    this.preferencesOpen.set(true);
+    this.settingsStep.set('schedule');
     if (this.ended()) this.startDateISO.set(this.today);
   }
   readonly selectedDayIndex = signal<number>(0);
@@ -259,8 +274,6 @@ export class Tab2Page implements OnInit {
     return parts.join(' · ') || 'Alternative option';
   }
 
-
-
   closeSwap() {
     this.swapRequest++;
     this.swapModalOpen.set(false);
@@ -283,11 +296,21 @@ export class Tab2Page implements OnInit {
   }
 
   async applySwap(option: SwapOption) {
-    const current = this.swapMeal(); const plan = this.displayPlan();
+    const current = this.swapMeal();
+    const plan = this.displayPlan();
     if (!current || !plan || this.swapReference !== plan || this.savingPlan()) return;
-    const replacement: MealPlanItem = { mealType: current.mealType, mealId: option.id, name: option.name, imageUrl: option.imageUrl ?? null, tags: option.tags, prepTimeMinutes: option.prepTimeMinutes, reasons: option.reasons };
+    const replacement: MealPlanItem = {
+      mealType: current.mealType,
+      mealId: option.id,
+      name: option.name,
+      imageUrl: option.imageUrl ?? null,
+      tags: option.tags,
+      prepTimeMinutes: option.prepTimeMinutes,
+      reasons: option.reasons,
+    };
     const updated = replaceMealSlot(plan, this.swapDay, current, replacement);
-    this.savingPlan.set(true); this.error.set(null);
+    this.savingPlan.set(true);
+    this.error.set(null);
     try {
       if (this.previewPlan()) this.previewPlan.set(updated);
       else {
@@ -296,35 +319,83 @@ export class Tab2Page implements OnInit {
       }
       this.planStatus.set('Replaced only this meal on ' + this.swapDay + '.');
       this.closeSwap();
-    } catch { this.swapError.set('Could not save this swap. Your meal has not changed.'); }
-    finally { this.savingPlan.set(false); }
+    } catch {
+      this.swapError.set('Could not save this swap. Your meal has not changed.');
+    } finally {
+      this.savingPlan.set(false);
+    }
   }
-  retrySwap() { const meal = this.swapMeal(); if (meal) this.openSwap(meal); }
+  retrySwap() {
+    const meal = this.swapMeal();
+    if (meal) this.openSwap(meal);
+  }
   async acceptPreview() {
-    const preview = this.previewPlan(); if (!preview || this.savingPlan() || this.foodSaving()) return;
-    if (!sameRestrictions(preview.madeWith ? { allergies: preview.madeWith.allergies as AllergenCode[], dislikes: preview.madeWith.dislikes } : null, this.restrictions())) { this.error.set('Your food exclusions changed after this preview. Make a fresh preview before saving.'); return; }
-    this.savingPlan.set(true); this.error.set(null);
+    const preview = this.previewPlan();
+    if (!preview || this.savingPlan() || this.foodSaving()) return;
+    if (
+      !sameRestrictions(
+        preview.madeWith
+          ? { allergies: preview.madeWith.allergies as AllergenCode[], dislikes: preview.madeWith.dislikes }
+          : null,
+        this.restrictions(),
+      )
+    ) {
+      this.error.set('Your food exclusions changed after this preview. Make a fresh preview before saving.');
+      return;
+    }
+    this.savingPlan.set(true);
+    this.error.set(null);
     const previous = this.plan();
     try {
       await this.planStore.savePlan(preview);
-      this.previewPlan.set(null); this.undoPlan.set(previous); this.preferencesOpen.set(false);
+      this.previewPlan.set(null);
+      this.undoPlan.set(previous);
+      this.preferencesOpen.set(false);
       this.planStatus.set('Your plan is saved. Choose a day, open a recipe or build your grocery list.');
       void this.notifications.reschedule().catch(() => undefined);
-    } catch { this.error.set('Could not save the new plan. Your previous plan is still here. Please try again.'); }
-    finally { this.savingPlan.set(false); }
+    } catch {
+      this.error.set('Could not save the new plan. Your previous plan is still here. Please try again.');
+    } finally {
+      this.savingPlan.set(false);
+    }
   }
-  discardPreview() { this.previewPlan.set(null); this.selectedDayIndex.set(this.plan() ? this.indexOfTodayOrFirst(this.plan()!) : 0); this.preferencesOpen.set(true); this.settingsStep.set('review'); }
+  discardPreview() {
+    this.previewPlan.set(null);
+    this.selectedDayIndex.set(this.plan() ? this.indexOfTodayOrFirst(this.plan()!) : 0);
+    this.preferencesOpen.set(true);
+    this.settingsStep.set('review');
+  }
   async undoChange() {
-    const previous = this.undoPlan(); if (!previous || this.savingPlan()) return;
+    const previous = this.undoPlan();
+    if (!previous || this.savingPlan()) return;
     this.savingPlan.set(true);
-    try { await this.planStore.savePlan(previous); this.undoPlan.set(null); this.planStatus.set('Previous plan restored.'); }
-    catch { this.error.set('Could not restore your previous plan. Please try again.'); }
-    finally { this.savingPlan.set(false); }
+    try {
+      await this.planStore.savePlan(previous);
+      this.undoPlan.set(null);
+      this.planStatus.set('Previous plan restored.');
+    } catch {
+      this.error.set('Could not restore your previous plan. Please try again.');
+    } finally {
+      this.savingPlan.set(false);
+    }
   }
-  previousDay() { this.selectDay(Math.max(0, this.selectedDayIndex() - 1)); }
-  nextDay() { this.selectDay(Math.min((this.displayPlan()?.daysPlan.length ?? 1) - 1, this.selectedDayIndex() + 1)); }
-  dayTitle(date: string) { return this.formatDate(date, { weekday: 'long', day: 'numeric', month: 'long' }); }
-  allergySummary() { return this.allergens.filter((a) => this.hasAllergy(a.code)).map((a) => a.label).join(', ') || 'None selected'; }
+  previousDay() {
+    this.selectDay(Math.max(0, this.selectedDayIndex() - 1));
+  }
+  nextDay() {
+    this.selectDay(Math.min((this.displayPlan()?.daysPlan.length ?? 1) - 1, this.selectedDayIndex() + 1));
+  }
+  dayTitle(date: string) {
+    return this.formatDate(date, { weekday: 'long', day: 'numeric', month: 'long' });
+  }
+  allergySummary() {
+    return (
+      this.allergens
+        .filter((a) => this.hasAllergy(a.code))
+        .map((a) => a.label)
+        .join(', ') || 'None selected'
+    );
+  }
   preferenceSummary(preferences?: GenerateMealPlanRequest) {
     const meals = preferences?.fastingStyle ?? this.fastingStyle();
     const diet = preferences?.proteinPreference ?? this.proteinPreference();
@@ -351,7 +422,6 @@ export class Tab2Page implements OnInit {
     return this.formatDate(dateStr, { day: 'numeric' });
   }
 
-
   // Eating style — the backend currently treats FASTING_16_8 and FASTING_18_6
   // identically (both produce a 2-meal lunch+dinner day), so the UI only
   // exposes the two choices that actually behave differently.
@@ -377,16 +447,24 @@ export class Tab2Page implements OnInit {
   }
 
   toggleAllergy(code: AllergenCode) {
-    void this.foodRestrictions.toggleAllergy(code).catch(() => this.error.set('Could not save this allergy choice. It has not changed. Please try again.'));
+    void this.foodRestrictions
+      .toggleAllergy(code)
+      .catch(() => this.error.set('Could not save this allergy choice. It has not changed. Please try again.'));
   }
 
   async addDislike() {
-    try { await this.foodRestrictions.addDislike(this.newDislike); this.newDislike = ''; }
-    catch { this.error.set('Could not save this food exclusion. Please try again.'); }
+    try {
+      await this.foodRestrictions.addDislike(this.newDislike);
+      this.newDislike = '';
+    } catch {
+      this.error.set('Could not save this food exclusion. Please try again.');
+    }
   }
 
   removeDislike(food: string) {
-    void this.foodRestrictions.removeDislike(food).catch(() => this.error.set('Could not remove this food exclusion. Please try again.'));
+    void this.foodRestrictions
+      .removeDislike(food)
+      .catch(() => this.error.set('Could not remove this food exclusion. Please try again.'));
   }
 
   /** True when allergies or dislikes changed after the current plan was made. */
@@ -398,9 +476,6 @@ export class Tab2Page implements OnInit {
       this.restrictions(),
     );
   });
-
-
-
 
   readonly unfilledLabel = computed(() => {
     const unfilled = this.displayPlan()?.unfilled ?? [];
@@ -420,7 +495,6 @@ export class Tab2Page implements OnInit {
 
   isLoading = signal(false);
   error = signal<string | null>(null);
-
 
   setDuration(value: string | number | undefined | null) {
     if (value === undefined || value === null) return;
@@ -484,7 +558,12 @@ export class Tab2Page implements OnInit {
     return this.formatDate(this.planEndDate(), { month: 'short', day: 'numeric' });
   }
 
-  savedRangeLabel() { const days = this.plan()?.daysPlan; return days?.length ? `${this.formatDate(days[0].date, { month: 'short', day: 'numeric' })} – ${this.formatDate(days[days.length - 1].date, { month: 'short', day: 'numeric' })}` : ''; }
+  savedRangeLabel() {
+    const days = this.plan()?.daysPlan;
+    return days?.length
+      ? `${this.formatDate(days[0].date, { month: 'short', day: 'numeric' })} – ${this.formatDate(days[days.length - 1].date, { month: 'short', day: 'numeric' })}`
+      : '';
+  }
 
   mealTypeLabel(type: MealType): string {
     return MEAL_TYPE_LABELS[type];
@@ -553,7 +632,10 @@ export class Tab2Page implements OnInit {
   generatePlan() {
     if (!this.ready() || this.isLoading() || this.savingPlan() || this.foodSaving()) return;
     const startDate = this.planStartDate();
-    if (startDate < this.today || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) { this.error.set('Choose today or a future date for the new plan.'); return; }
+    if (startDate < this.today || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+      this.error.set('Choose today or a future date for the new plan.');
+      return;
+    }
     if (!this.authService.hasValidToken()) {
       this.router.navigateByUrl('/auth?mode=login');
       return;
@@ -563,11 +645,7 @@ export class Tab2Page implements OnInit {
     this.error.set(null);
 
     const payload: GenerateMealPlanRequest = {
-      duration: (this.duration() === 7
-        ? 'DAYS_7'
-        : this.duration() === 14
-        ? 'DAYS_14'
-        : 'DAYS_30') as Duration,
+      duration: (this.duration() === 7 ? 'DAYS_7' : this.duration() === 14 ? 'DAYS_14' : 'DAYS_30') as Duration,
 
       fastingStyle: this.fastingStyle(),
       proteinPreference: this.proteinPreference(),
@@ -579,10 +657,22 @@ export class Tab2Page implements OnInit {
     this.mealPlansService.generate(payload).subscribe({
       next: (res) => {
         try {
-          this.previewPlan.set(startPlanOn({ ...res, madeWith: { allergies: payload.allergies, dislikes: payload.dislikes }, preferences: { ...payload, startDate } }, startDate));
-          this.selectedDayIndex.set(0); this.preferencesOpen.set(false);
+          this.previewPlan.set(
+            startPlanOn(
+              {
+                ...res,
+                madeWith: { allergies: payload.allergies, dislikes: payload.dislikes },
+                preferences: { ...payload, startDate },
+              },
+              startDate,
+            ),
+          );
+          this.selectedDayIndex.set(0);
+          this.preferencesOpen.set(false);
           this.planStatus.set('Preview ready. Swap anything you don’t want before saving.');
-        } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not prepare a preview.'); }
+        } catch (error) {
+          this.error.set(error instanceof Error ? error.message : 'Could not prepare a preview.');
+        }
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -670,9 +760,7 @@ export class Tab2Page implements OnInit {
     // Streak challenges only need a target (the streak length) — give a
     // small buffer window automatically rather than asking for a separate
     // duration, same ratio as the built-in "3-Day Cooking Streak".
-    const durationDays = this.isStreakType()
-      ? this.newChallengeTarget + 2
-      : this.newChallengeDuration;
+    const durationDays = this.isStreakType() ? this.newChallengeTarget + 2 : this.newChallengeDuration;
 
     if (durationDays < this.newChallengeTarget) {
       this.createError.set('Duration needs to be at least as long as the target.');

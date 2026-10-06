@@ -68,25 +68,27 @@ export class RecordPage implements OnInit {
   readonly error = signal<string | null>(null);
 
   async ngOnInit() {
-    combineLatest([this.route.paramMap, this.route.queryParamMap]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async ([params, query]) => {
-      const generation = ++this.generation;
-      this.ready.set(false);
-      const k = params.get('key') as FindingKey;
-      this.key.set(FINDING_KEYS.includes(k) ? k : 'count');
-      this.inFlow = query.get('flow') === '1';
-      const from = query.get('from');
-      this.from = from === 'today' || from === 'summary' ? from : 'health';
-      this.fromSummary.set(this.from === 'summary');
-      const context = this.router.getCurrentNavigation()?.extras.state;
-      if (this.inFlow && context) {
-        if (ENTERABLE_SOURCES.includes(context['recordSource'])) this.flowSource = context['recordSource'];
-        this.flowDate = typeof context['reportDate'] === 'string' ? context['reportDate'] : '';
-      }
-      await this.repo.load();
-      if (generation !== this.generation) return;
-      this.prefill();
-      this.ready.set(true);
-    });
+    combineLatest([this.route.paramMap, this.route.queryParamMap])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async ([params, query]) => {
+        const generation = ++this.generation;
+        this.ready.set(false);
+        const k = params.get('key') as FindingKey;
+        this.key.set(FINDING_KEYS.includes(k) ? k : 'count');
+        this.inFlow = query.get('flow') === '1';
+        const from = query.get('from');
+        this.from = from === 'today' || from === 'summary' ? from : 'health';
+        this.fromSummary.set(this.from === 'summary');
+        const context = this.router.getCurrentNavigation()?.extras.state;
+        if (this.inFlow && context) {
+          if (ENTERABLE_SOURCES.includes(context['recordSource'])) this.flowSource = context['recordSource'];
+          this.flowDate = typeof context['reportDate'] === 'string' ? context['reportDate'] : '';
+        }
+        await this.repo.load();
+        if (generation !== this.generation) return;
+        this.prefill();
+        this.ready.set(true);
+      });
   }
 
   private prefill() {
@@ -94,10 +96,17 @@ export class RecordPage implements OnInit {
     const recorded = !!this.repo.record().findings[this.key()];
     this.answer.set(recorded ? f.completeness.state : null);
     this.value = f.completeness.state === 'present' ? f.completeness.value : '';
-    this.source = f.source && f.source !== 'extracted-and-confirmed' ? f.source : this.inFlow ? this.flowSource : 'entered-from-report';
+    this.source =
+      f.source && f.source !== 'extracted-and-confirmed'
+        ? f.source
+        : this.inFlow
+          ? this.flowSource
+          : 'entered-from-report';
     this.wording = f.originalWording ?? '';
     const currentReport = this.repo.record().reports?.find((report) => report.id === this.repo.record().activeReportId);
-    this.reportDate = f.reportDate ?? (this.source === 'entered-from-report' ? this.inFlow ? this.flowDate : currentReport?.reportDate ?? '' : '');
+    this.reportDate =
+      f.reportDate ??
+      (this.source === 'entered-from-report' ? (this.inFlow ? this.flowDate : (currentReport?.reportDate ?? '')) : '');
     this.unit = null;
     this.addQuestion.set(true);
     this.showWhy.set(false);
@@ -121,10 +130,12 @@ export class RecordPage implements OnInit {
       return;
     }
     if (a === 'present' && this.needsUnit() && !this.unit) {
-      this.error.set('Choose cm or mm from your report, or include the unit in the size. If you don’t know the unit, choose “I don’t know”.');
+      this.error.set(
+        'Choose cm or mm from your report, or include the unit in the size. If you don’t know the unit, choose “I don’t know”.',
+      );
       return;
     }
-    if (!await this.saveAnswer(a)) return;
+    if (!(await this.saveAnswer(a))) return;
     this.next();
   }
 
@@ -137,7 +148,7 @@ export class RecordPage implements OnInit {
         this.error.set('Choose the size unit before saving, or choose “I don’t know”.');
         return;
       }
-      if (!await this.saveAnswer(a)) return;
+      if (!(await this.saveAnswer(a))) return;
     }
     this.router.navigateByUrl(this.returnUrl(), { replaceUrl: true });
   }
@@ -159,7 +170,10 @@ export class RecordPage implements OnInit {
     } else {
       await this.repo.saveFinding({
         key,
-        completeness: a === 'present' ? { state: 'present', value: this.needsUnit() ? `${this.value.trim()} ${this.unit}` : this.value.trim() } : { state: 'absent' },
+        completeness:
+          a === 'present'
+            ? { state: 'present', value: this.needsUnit() ? `${this.value.trim()} ${this.unit}` : this.value.trim() }
+            : { state: 'absent' },
         source: this.source,
         originalWording: this.source === 'entered-from-report' ? this.wording.trim() || undefined : undefined,
         reportDate: this.source === 'entered-from-report' ? this.reportDate || undefined : undefined,

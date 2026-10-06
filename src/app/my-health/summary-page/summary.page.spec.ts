@@ -11,11 +11,23 @@ describe('Main concern editor', () => {
   let save: jasmine.Spy;
   beforeEach(() => {
     record.set(emptyHealthRecord());
-    save = jasmine.createSpy('setVisitGoal').and.callFake(async (visitGoal: string) => record.update((r) => ({ ...r, visitGoal })));
-    TestBed.configureTestingModule({ providers: [
-      { provide: HealthRepository, useValue: { record, questions: computed(() => record().questions), load: () => Promise.resolve(), setVisitGoal: save } },
-      { provide: Router, useValue: { navigateByUrl: jasmine.createSpy() } },
-    ] });
+    save = jasmine
+      .createSpy('setVisitGoal')
+      .and.callFake(async (visitGoal: string) => record.update((r) => ({ ...r, visitGoal })));
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: HealthRepository,
+          useValue: {
+            record,
+            questions: computed(() => record().questions),
+            load: () => Promise.resolve(),
+            setVisitGoal: save,
+          },
+        },
+        { provide: Router, useValue: { navigateByUrl: jasmine.createSpy() } },
+      ],
+    });
     page = TestBed.runInInjectionContext(() => new SummaryPage());
   });
 
@@ -49,16 +61,23 @@ describe('Main concern editor', () => {
 
   it('prevents duplicate saves and cancellation while a confirmed save is pending', async () => {
     let release!: () => void;
-    const waiting = new Promise<void>((resolve) => { release = resolve; });
-    save.and.callFake(async (visitGoal: string) => { await waiting; record.update((r) => ({ ...r, visitGoal })); });
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    save.and.callFake(async (visitGoal: string) => {
+      await waiting;
+      record.update((r) => ({ ...r, visitGoal }));
+    });
     await page.openConcern();
     page.concernDraft = 'Understand my report';
     const pending = page.saveConcern();
-    await page.saveConcern(); page.cancelConcern();
+    await page.saveConcern();
+    page.cancelConcern();
     expect(save).toHaveBeenCalledTimes(1);
     expect(page.editingConcern()).toBeTrue();
     expect(page.concernDraft).toBe('Understand my report');
-    release(); await pending;
+    release();
+    await pending;
     expect(page.summary().visitGoal).toBe('Understand my report');
     expect(page.editingConcern()).toBeFalse();
   });

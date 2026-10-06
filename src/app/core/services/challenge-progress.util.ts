@@ -35,18 +35,15 @@ export function computeChallengeProgress(
   const elapsedDays = daysBetween(joinedAtIso, localIsoDate()) + 1;
   const daysRemaining = Math.max(0, durationDays - elapsedDays);
 
-  const entriesInWindow = cookedEntries.filter(
-    (entry) => entry.date >= joinedAtIso && entry.date <= windowEndIso,
-  );
+  const entriesInWindow = cookedEntries.filter((entry) => entry.date >= joinedAtIso && entry.date <= windowEndIso);
 
   let current: number;
   if (type === 'meals-in-period') {
     current = entriesInWindow.length;
   } else {
     const datesInWindow = Array.from(new Set(entriesInWindow.map((entry) => entry.date)));
-    current = type === 'streak'
-      ? longestStreakInWindow(datesInWindow, joinedAtIso, windowEndIso)
-      : datesInWindow.length;
+    current =
+      type === 'streak' ? longestStreakInWindow(datesInWindow, joinedAtIso, windowEndIso) : datesInWindow.length;
   }
 
   const completed = current >= target;

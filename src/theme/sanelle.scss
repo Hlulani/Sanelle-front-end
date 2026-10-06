@@ -5,12 +5,12 @@
  * Contrast ratios for every text/background pair used are listed in
  * docs/design/contrast.md.
  */
-@import "@fontsource/fredoka/500.css";
-@import "@fontsource/fredoka/600.css";
-@import "@fontsource/nunito-sans/400.css";
-@import "@fontsource/nunito-sans/600.css";
-@import "@fontsource/nunito-sans/700.css";
-@import "@fontsource/nunito-sans/800.css";
+@import '@fontsource/fredoka/500.css';
+@import '@fontsource/fredoka/600.css';
+@import '@fontsource/nunito-sans/400.css';
+@import '@fontsource/nunito-sans/600.css';
+@import '@fontsource/nunito-sans/700.css';
+@import '@fontsource/nunito-sans/800.css';
 
 :root {
   --sn-brand: #74203f;
@@ -35,8 +35,8 @@
   --sn-draft: #8a5a12;
 
   /* Short headings only. Everything people read at length uses the body face. */
-  --sn-display: "Fredoka", "Nunito Sans", system-ui, sans-serif;
-  --sn-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sn-display: 'Fredoka', 'Nunito Sans', system-ui, sans-serif;
+  --sn-body: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --sn-radius: 1rem;
   --sn-radius-lg: 1.5rem;
@@ -49,7 +49,9 @@
   font-size: 1rem;
   line-height: 1.55;
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     line-height: 1.15;
     margin: 0;
     text-wrap: balance;
@@ -93,15 +95,21 @@
   background: var(--sn-brand);
   color: var(--sn-on-brand);
 
-  &:active { background: var(--sn-brand-deep); }
+  &:active {
+    background: var(--sn-brand-deep);
+  }
 }
 
 .sn-btn--apricot {
   background: var(--sn-apricot);
   color: var(--sn-ink);
 
-  &:active { background: var(--sn-apricot-pressed); }
-  &:focus-visible { outline-color: var(--sn-on-brand); }
+  &:active {
+    background: var(--sn-apricot-pressed);
+  }
+  &:focus-visible {
+    outline-color: var(--sn-on-brand);
+  }
 }
 
 .sn-btn--outline-on-brand {
@@ -109,7 +117,9 @@
   color: var(--sn-on-brand);
   box-shadow: inset 0 0 0 2px var(--sn-on-brand-muted);
 
-  &:focus-visible { outline-color: var(--sn-apricot); }
+  &:focus-visible {
+    outline-color: var(--sn-apricot);
+  }
 }
 
 /* Outlined button on a light surface. */
@@ -137,7 +147,7 @@
   line-height: 1.3;
 
   &::before {
-    content: "";
+    content: '';
     flex: 0 0 auto;
     width: 0.625rem;
     height: 0.625rem;
@@ -146,10 +156,31 @@
   }
 }
 
-.sn-status--present { color: var(--sn-present); &::before { background: currentColor; } }
-.sn-status--absent { color: var(--sn-absent); &::before { border-radius: 2px; } }
-.sn-status--unknown { color: var(--sn-unknown); &::before { border-style: dashed; } }
-.sn-status--reported { color: var(--sn-reported); &::before { background: currentColor; border-radius: 2px; } }
+.sn-status--present {
+  color: var(--sn-present);
+  &::before {
+    background: currentColor;
+  }
+}
+.sn-status--absent {
+  color: var(--sn-absent);
+  &::before {
+    border-radius: 2px;
+  }
+}
+.sn-status--unknown {
+  color: var(--sn-unknown);
+  &::before {
+    border-style: dashed;
+  }
+}
+.sn-status--reported {
+  color: var(--sn-reported);
+  &::before {
+    background: currentColor;
+    border-radius: 2px;
+  }
+}
 
 /* Demo and draft markers are deliberately plain and unmissable. */
 .sn-demo-label {
@@ -185,7 +216,7 @@
   overflow: hidden;
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     width: 3rem;
     height: 3rem;
@@ -197,14 +228,24 @@
     box-shadow: inset 0 0 0 0.375rem var(--sn-canvas);
   }
 
-  &.is-breakfast { background: #f9dcc4; }
-  &.is-lunch { background: var(--sn-blush); }
-  &.is-dinner { background: #e9cfd6; }
-  &.is-snack { background: #f3e6cf; }
+  &.is-breakfast {
+    background: #f9dcc4;
+  }
+  &.is-lunch {
+    background: var(--sn-blush);
+  }
+  &.is-dinner {
+    background: #e9cfd6;
+  }
+  &.is-snack {
+    background: #f3e6cf;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .sn-btn { transition: background-color 120ms ease; }
+  .sn-btn {
+    transition: background-color 120ms ease;
+  }
 }
 
 /* Tab bar in the brand system. */
@@ -222,7 +263,9 @@ ion-tab-button {
   --ripple-color: var(--sn-brand-deep);
 
   /* Ionic's 10px default is too small to read at a glance. */
-  ion-label { font-size: 0.75rem; }
+  ion-label {
+    font-size: 0.75rem;
+  }
 }
 
 /* ---------- Shared screen layout (My health and later screens) ---------- */
@@ -241,9 +284,18 @@ ion-tab-button {
   display: grid;
   gap: 0.25rem;
 
-  h1 { font-size: 2rem; }
-  .sn-head-note { color: var(--sn-on-brand-muted); font-size: 0.9375rem; }
-  .sn-btn--quiet { color: var(--sn-on-brand); justify-self: start; margin-left: -0.25rem; }
+  h1 {
+    font-size: 2rem;
+  }
+  .sn-head-note {
+    color: var(--sn-on-brand-muted);
+    font-size: 0.9375rem;
+  }
+  .sn-btn--quiet {
+    color: var(--sn-on-brand);
+    justify-self: start;
+    margin-left: -0.25rem;
+  }
 }
 
 /* The deep bottom edge is room for a card that overlaps it; without one it's just empty colour. */
@@ -279,12 +331,19 @@ ion-tab-button {
     width: 1.125rem;
     height: 1.125rem;
     background: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15 18l-6-6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 
-  &:active { background: rgba(255, 255, 255, 0.12); }
-  &:focus-visible { outline: 3px solid var(--sn-apricot); outline-offset: 2px; }
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  &:focus-visible {
+    outline: 3px solid var(--sn-apricot);
+    outline-offset: 2px;
+  }
 }
 
 .sn-card {
@@ -293,7 +352,9 @@ ion-tab-button {
   background: var(--sn-surface);
   border-radius: 1.5rem;
   padding: 1.25rem;
-  box-shadow: 0 1px 2px rgba(42, 26, 32, 0.08), 0 8px 24px rgba(42, 26, 32, 0.08);
+  box-shadow:
+    0 1px 2px rgba(42, 26, 32, 0.08),
+    0 8px 24px rgba(42, 26, 32, 0.08);
   display: grid;
   gap: 0.5rem;
 }
@@ -303,7 +364,9 @@ ion-tab-button {
   display: grid;
   gap: 0.75rem;
 
-  > h2 { font-size: 1.25rem; }
+  > h2 {
+    font-size: 1.25rem;
+  }
 }
 
 .sn-section-head {
@@ -321,7 +384,9 @@ ion-tab-button {
   color: var(--sn-on-brand);
   border-radius: 2.25rem 2.25rem 0 0;
 
-  .sn-section > h2 { color: var(--sn-on-brand); }
+  .sn-section > h2 {
+    color: var(--sn-on-brand);
+  }
 }
 
 .sn-rows {
@@ -332,8 +397,12 @@ ion-tab-button {
   color: var(--sn-ink);
   border-radius: 1.25rem;
 
-  > li { border-bottom: 1px solid var(--sn-line); }
-  > li:last-child { border-bottom: 0; }
+  > li {
+    border-bottom: 1px solid var(--sn-line);
+  }
+  > li:last-child {
+    border-bottom: 0;
+  }
 }
 
 .sn-row {
@@ -352,19 +421,42 @@ ion-tab-button {
   cursor: pointer;
   text-decoration: none;
 
-  &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: 0.375rem; }
+  &:focus-visible {
+    outline: 3px solid var(--sn-ink);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
 
-  .sn-row-text { flex: 1 1 auto; display: grid; gap: 0.125rem; min-width: 0; }
-  .sn-row-name { font-weight: 800; font-size: 1.0625rem; }
-  .sn-row-sub { font-size: 0.875rem; color: var(--sn-muted); }
-  .sn-chev { color: var(--sn-brand); font-size: 1.5rem; line-height: 1; font-weight: 700; }
+  .sn-row-text {
+    flex: 1 1 auto;
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+  .sn-row-name {
+    font-weight: 800;
+    font-size: 1.0625rem;
+  }
+  .sn-row-sub {
+    font-size: 0.875rem;
+    color: var(--sn-muted);
+  }
+  .sn-chev {
+    color: var(--sn-brand);
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 700;
+  }
 }
 
 .sn-field {
   display: grid;
   gap: 0.375rem;
 
-  > span { font-weight: 700; font-size: 0.9375rem; }
+  > span {
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
 
   input,
   textarea {
@@ -378,10 +470,17 @@ ion-tab-button {
     min-height: 3rem;
     width: 100%;
 
-    &:focus-visible { outline: 3px solid var(--sn-brand); outline-offset: 1px; border-color: var(--sn-brand); }
+    &:focus-visible {
+      outline: 3px solid var(--sn-brand);
+      outline-offset: 1px;
+      border-color: var(--sn-brand);
+    }
   }
 
-  textarea { min-height: 5.5rem; resize: vertical; }
+  textarea {
+    min-height: 5.5rem;
+    resize: vertical;
+  }
 }
 
 /* Segmented choice (e.g. where a detail came from). */
@@ -401,13 +500,23 @@ ion-tab-button {
     font: 700 0.9375rem/1.2 var(--sn-body);
     cursor: pointer;
 
-    &[aria-pressed="true"] { background: var(--sn-brand); border-color: var(--sn-brand); color: var(--sn-on-brand); }
-    &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; }
+    &[aria-pressed='true'] {
+      background: var(--sn-brand);
+      border-color: var(--sn-brand);
+      color: var(--sn-on-brand);
+    }
+    &:focus-visible {
+      outline: 3px solid var(--sn-ink);
+      outline-offset: 2px;
+    }
   }
 }
 
 @media print {
-  ion-tab-bar, .sn-no-print { display: none !important; }
+  ion-tab-bar,
+  .sn-no-print {
+    display: none !important;
+  }
 }
 
 /* Read by screen readers, hidden on screen. */

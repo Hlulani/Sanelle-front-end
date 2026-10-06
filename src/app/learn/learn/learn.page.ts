@@ -27,11 +27,17 @@ export class LearnPage {
 
   readonly resources = TRUSTED_RESOURCES;
   readonly error = signal('');
-  ionViewWillEnter() { void this.health.load(); }
+  ionViewWillEnter() {
+    void this.health.load();
+  }
   async saveQuestion(question: string) {
     this.error.set('');
-    try { await this.health.addQuestion(question); this.saved.set(question); }
-    catch { this.error.set('Could not save your question. Please try again.'); }
+    try {
+      await this.health.addQuestion(question);
+      this.saved.set(question);
+    } catch {
+      this.error.set('Could not save your question. Please try again.');
+    }
   }
 
   readonly list = this.topics.list();

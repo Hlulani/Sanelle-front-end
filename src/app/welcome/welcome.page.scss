@@ -59,8 +59,13 @@ h1 {
     border-bottom: 1px solid var(--sn-line);
   }
 
-  dt { font-weight: 800; }
-  dd { margin: 0; text-align: right; }
+  dt {
+    font-weight: 800;
+  }
+  dd {
+    margin: 0;
+    text-align: right;
+  }
 }
 
 .example-ask {
@@ -90,7 +95,14 @@ h1 {
 }
 
 @media (max-height: 740px) {
-  .welcome-layout { gap: 1.125rem; padding-top: calc(env(safe-area-inset-top, 0px) + 1.25rem); }
-  .wordmark { font-size: 2.5rem; }
-  h1 { font-size: 1.75rem; }
+  .welcome-layout {
+    gap: 1.125rem;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1.25rem);
+  }
+  .wordmark {
+    font-size: 2.5rem;
+  }
+  h1 {
+    font-size: 1.75rem;
+  }
 }

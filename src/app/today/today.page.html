@@ -14,12 +14,20 @@
         <p class="context">{{ contextLine() }}</p>
       }
       @if (daysToAppointment() !== null) {
-        <p class="when">{{ daysToAppointment() === 0 ? 'Appointment today' : 'Appointment in ' + daysToAppointment() + (daysToAppointment() === 1 ? ' day' : ' days') }}</p>
+        <p class="when">
+          {{
+            daysToAppointment() === 0
+              ? 'Appointment today'
+              : 'Appointment in ' + daysToAppointment() + (daysToAppointment() === 1 ? ' day' : ' days')
+          }}
+        </p>
       }
       @switch (next().kind) {
         @case ('start') {
           <h2 class="q" id="next-q">Start with what you know</h2>
-          <p class="prompt">Record what your scan report says. Anything it leaves out can become a question for your doctor.</p>
+          <p class="prompt">
+            Record what your scan report says. Anything it leaves out can become a question for your doctor.
+          </p>
           <a class="sn-btn sn-btn--brand" routerLink="/health/report">Take a photo or choose my report</a>
           <button type="button" class="secondary" (click)="record()">Enter details myself</button>
         }
@@ -32,11 +40,15 @@
         }
         @case ('food') {
           <h2 class="q" id="next-q">Check what you’ve read about food</h2>
-          <p class="prompt">See what the research says about common food claims, then plan meals that fit how you eat.</p>
+          <p class="prompt">
+            See what the research says about common food claims, then plan meals that fit how you eat.
+          </p>
           @if (foodExamples.length) {
             <ul class="examples" aria-label="Example questions">
               @for (e of foodExamples; track e.id) {
-                <li><a class="example" [routerLink]="['/learn', e.id]">{{ e.text }}</a></li>
+                <li>
+                  <a class="example" [routerLink]="['/learn', e.id]">{{ e.text }}</a>
+                </li>
               }
             </ul>
           }
@@ -46,9 +58,13 @@
         @case ('appointment') {
           <h2 class="q" id="next-q">Prepare for your next visit</h2>
           <p class="prompt">
-            {{ questionCount()
-            ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved. Add more whenever something comes up.'
-            : 'Save what you want to ask. Add an appointment date whenever you’re ready.' }}
+            {{
+              questionCount()
+                ? questionCount() +
+                  (questionCount() === 1 ? ' question' : ' questions') +
+                  ' saved. Add more whenever something comes up.'
+                : 'Save what you want to ask. Add an appointment date whenever you’re ready.'
+            }}
           </p>
           <a class="sn-btn sn-btn--brand" routerLink="/tabs/health">See my visit preparation</a>
           <a class="secondary" routerLink="/health/questions" [queryParams]="{ from: 'today' }">Prepare my questions</a>
@@ -61,7 +77,15 @@
           }
         }
         @default {
-          <h2 class="q" id="next-q">{{ questionCount() ? questionCount() + (questionCount() === 1 ? ' question ready' : ' questions ready') + ' for your next doctor’s visit' : 'Prepare for your next doctor’s visit' }}</h2>
+          <h2 class="q" id="next-q">
+            {{
+              questionCount()
+                ? questionCount() +
+                  (questionCount() === 1 ? ' question ready' : ' questions ready') +
+                  ' for your next doctor’s visit'
+                : 'Prepare for your next doctor’s visit'
+            }}
+          </h2>
           <p class="prompt">Review the questions and notes you want to bring to your doctor.</p>
           <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my visit summary</a>
         }
@@ -72,183 +96,236 @@
     </section>
 
     @if (openSteps().length) {
-      <section class="block"><div class="block-head"><h2>My next steps</h2><a class="see-all" routerLink="/health/steps">See all</a></div>
-      @for (task of openSteps().slice(0, 2); track task.id) { <a class="card-row" routerLink="/health/steps"><span class="card-text"><span class="card-title">{{ task.title }}</span><span class="card-sub">{{ task.dueDate ? (task.dueDate < todayIso ? 'Date has passed · ' : 'Planned for ') + task.dueDate : 'No date set' }} · Open to update or mark done</span></span><span class="chev" aria-hidden="true">›</span></a> }
-    </section>
-  }
-  @if (started()) {
-    <section class="block" aria-labelledby="visit-title">
-      <div class="block-head"><h2 id="visit-title">For your next visit</h2><a class="see-all" routerLink="/tabs/health">Review</a></div>
-      @if (visitGoal()) { <p class="prompt">Your main concern for your next doctor’s visit: {{ visitGoal() }}</p> }
-      <a class="card-row" routerLink="/health/questions" [queryParams]="{ from: 'today' }">
-        <span class="card-text"><span class="card-title">{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} to ask</span><span class="card-sub">{{ pendingQuestions()[0]?.text || 'Save what you want your clinician to help with.' }}</span></span>
-        <span class="chev" aria-hidden="true">›</span>
-      </a>
-      @if (next().kind !== 'summary') {
-        <a class="card-row" routerLink="/health/summary">
-          <span class="card-text"><span class="card-title">Review what I’ll bring</span><span class="card-sub">Your priorities, report details, questions and optional symptom notes, ready to share or print.</span></span>
-          <span class="chev" aria-hidden="true">›</span>
-        </a>
-      }
-      @if (lastVisit(); as visit) {
-        <a class="card-row" routerLink="/health/visit"><span class="card-text"><span class="card-title">What happened at my last visit</span><span class="card-sub">{{ visit.followUp || visit.nextSteps || 'Review your saved conversation and follow-up.' }}</span></span><span class="chev" aria-hidden="true">›</span></a>
-      }
-    </section>
-  }
-
-  @if (started()) {
-    <section class="block" aria-labelledby="checkin-title">
-      @if (todayEntry(); as e) {
-        <!-- A compact confirmation, then at most two useful next steps. Doing nothing else is fine. -->
-        <div class="checkin-card" [attr.role]="justCheckedIn() ? 'status' : null">
-          <div class="checkin-head">
-            <h2 id="checkin-title">{{ justCheckedIn() ? 'Today’s check-in saved' : 'Today’s check-in' }}</h2>
-            <a class="edit-link" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">Edit</a>
-          </div>
-          @if (impactOf(e); as impact) {
-            <p class="checkin-impact">{{ impact }}</p>
-          }
-          @if (partsOf(e).length) {
-            <p class="checkin-parts">{{ partsOf(e).join(' · ') }}</p>
-          }
-          @if (e.treatmentChange) {
-            <p class="checkin-parts">Treatment change: {{ e.treatmentChange }}</p>
-          }
-          <a class="edit-link" routerLink="/health/summary">Review this in my appointment summary</a>
-          <p class="checkin-parts">You choose the period and whether to share your check-ins.</p>
+      <section class="block">
+        <div class="block-head">
+          <h2>My next steps</h2>
+          <a class="see-all" routerLink="/health/steps">See all</a>
         </div>
-        @if (support().length) {
-          <h2 class="support-title" id="support-title">What would help right now?</h2>
-          @for (a of support(); track a.id) {
-            <a class="card-row" [routerLink]="a.route" [queryParams]="a.queryParams" (click)="useSupport(a.id)">
-              <span class="card-text">
-                <span class="card-title">{{ a.title }}</span>
-                <span class="card-sub">{{ a.body }}</span>
-              </span>
-              <span class="chev" aria-hidden="true">›</span>
-            </a>
-          }
+        @for (task of openSteps().slice(0, 2); track task.id) {
+          <a class="card-row" routerLink="/health/steps"
+            ><span class="card-text"
+              ><span class="card-title">{{ task.title }}</span
+              ><span class="card-sub"
+                >{{
+                  task.dueDate
+                    ? (task.dueDate < todayIso ? 'Date has passed · ' : 'Planned for ') + task.dueDate
+                    : 'No date set'
+                }}
+                · Open to update or mark done</span
+              ></span
+            ><span class="chev" aria-hidden="true">›</span></a
+          >
         }
-      } @else {
-        <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">
-          <span class="card-text">
-            <span class="card-title" id="checkin-title">How was today?</span>
-            <span class="card-sub">Optional notes to help you describe symptoms at your visit. You choose what to include in your summary.</span>
-          </span>
+      </section>
+    }
+    @if (started()) {
+      <section class="block" aria-labelledby="visit-title">
+        <div class="block-head">
+          <h2 id="visit-title">For your next visit</h2>
+          <a class="see-all" routerLink="/tabs/health">Review</a>
+        </div>
+        @if (visitGoal()) {
+          <p class="prompt">Your main concern for your next doctor’s visit: {{ visitGoal() }}</p>
+        }
+        <a class="card-row" routerLink="/health/questions" [queryParams]="{ from: 'today' }">
+          <span class="card-text"
+            ><span class="card-title"
+              >{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} to ask</span
+            ><span class="card-sub">{{
+              pendingQuestions()[0]?.text || 'Save what you want your clinician to help with.'
+            }}</span></span
+          >
           <span class="chev" aria-hidden="true">›</span>
         </a>
-      }
-    </section>
-  }
+        @if (next().kind !== 'summary') {
+          <a class="card-row" routerLink="/health/summary">
+            <span class="card-text"
+              ><span class="card-title">Review what I’ll bring</span
+              ><span class="card-sub"
+                >Your priorities, report details, questions and optional symptom notes, ready to share or print.</span
+              ></span
+            >
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
+        }
+        @if (lastVisit(); as visit) {
+          <a class="card-row" routerLink="/health/visit"
+            ><span class="card-text"
+              ><span class="card-title">What happened at my last visit</span
+              ><span class="card-sub">{{
+                visit.followUp || visit.nextSteps || 'Review your saved conversation and follow-up.'
+              }}</span></span
+            ><span class="chev" aria-hidden="true">›</span></a
+          >
+        }
+      </section>
+    }
 
-  @if (lead() === 'diagnosis' && hasRecords()) {
-    <ng-container *ngTemplateOutlet="dxRows"></ng-container>
-  }
-
-  <!-- Every area stays one tap away, with less weight than the lead. -->
-  @for (area of supporting(); track area) {
-    @switch (area) {
-      @case ('diagnosis') {
-        @if (hasRecords()) {
-          <ng-container *ngTemplateOutlet="dxRows"></ng-container>
+    @if (started()) {
+      <section class="block" aria-labelledby="checkin-title">
+        @if (todayEntry(); as e) {
+          <!-- A compact confirmation, then at most two useful next steps. Doing nothing else is fine. -->
+          <div class="checkin-card" [attr.role]="justCheckedIn() ? 'status' : null">
+            <div class="checkin-head">
+              <h2 id="checkin-title">{{ justCheckedIn() ? 'Today’s check-in saved' : 'Today’s check-in' }}</h2>
+              <a class="edit-link" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }"
+                >Edit</a
+              >
+            </div>
+            @if (impactOf(e); as impact) {
+              <p class="checkin-impact">{{ impact }}</p>
+            }
+            @if (partsOf(e).length) {
+              <p class="checkin-parts">{{ partsOf(e).join(' · ') }}</p>
+            }
+            @if (e.treatmentChange) {
+              <p class="checkin-parts">Treatment change: {{ e.treatmentChange }}</p>
+            }
+            <a class="edit-link" routerLink="/health/summary">Review this in my appointment summary</a>
+            <p class="checkin-parts">You choose the period and whether to share your check-ins.</p>
+          </div>
+          @if (support().length) {
+            <h2 class="support-title" id="support-title">What would help right now?</h2>
+            @for (a of support(); track a.id) {
+              <a class="card-row" [routerLink]="a.route" [queryParams]="a.queryParams" (click)="useSupport(a.id)">
+                <span class="card-text">
+                  <span class="card-title">{{ a.title }}</span>
+                  <span class="card-sub">{{ a.body }}</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            }
+          }
         } @else {
-          <section class="block">
-            <button type="button" class="card-row" (click)="record()">
+          <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">
+            <span class="card-text">
+              <span class="card-title" id="checkin-title">How was today?</span>
+              <span class="card-sub"
+                >Optional notes to help you describe symptoms at your visit. You choose what to include in your
+                summary.</span
+              >
+            </span>
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
+        }
+      </section>
+    }
+
+    @if (lead() === 'diagnosis' && hasRecords()) {
+      <ng-container *ngTemplateOutlet="dxRows"></ng-container>
+    }
+
+    <!-- Every area stays one tap away, with less weight than the lead. -->
+    @for (area of supporting(); track area) {
+      @switch (area) {
+        @case ('diagnosis') {
+          @if (hasRecords()) {
+            <ng-container *ngTemplateOutlet="dxRows"></ng-container>
+          } @else {
+            <section class="block">
+              <button type="button" class="card-row" (click)="record()">
+                <span class="card-text">
+                  <span class="card-title">Start with what you know</span>
+                  <span class="card-sub">Record your diagnosis. A report helps, but isn’t required.</span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </button>
+            </section>
+          }
+        }
+        @case ('food') {
+          <section class="block" aria-labelledby="food-title">
+            <h2 id="food-title">Food choices</h2>
+            <a class="card-row" routerLink="/tabs/learn">
               <span class="card-text">
-                <span class="card-title">Start with what you know</span>
-                <span class="card-sub">Record your diagnosis. A report helps, but isn’t required.</span>
+                <span class="card-title">Explore food questions</span>
+                <span class="card-sub">Dairy, soy, and other foods you’re unsure about.</span>
               </span>
               <span class="chev" aria-hidden="true">›</span>
-            </button>
-          </section>
-        }
-      }
-      @case ('food') {
-        <section class="block" aria-labelledby="food-title">
-          <h2 id="food-title">Food choices</h2>
-          <a class="card-row" routerLink="/tabs/learn">
-            <span class="card-text">
-              <span class="card-title">Explore food questions</span>
-              <span class="card-sub">Dairy, soy, and other foods you’re unsure about.</span>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
-          <a class="card-row" routerLink="/tabs/tab2">
-            <span class="card-text">
-              <span class="card-title">{{ hasPlan() ? 'See my meal plan' : 'Plan my meals' }}</span>
-              <span class="card-sub">Meals that fit how you eat, your allergies and your time.</span>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
-        </section>
-      }
-      @case ('appointment') {
-        <!-- Once she's started, "For your next visit" above already covers this. -->
-        @if (!started()) {
-          <section class="block">
-            <a class="card-row" routerLink="/tabs/health">
+            </a>
+            <a class="card-row" routerLink="/tabs/tab2">
               <span class="card-text">
-                <span class="card-title">Prepare for your next visit</span>
-                <span class="card-sub">
-                  {{ questionCount()
-                  ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved so far.'
-                  : 'Save what you want to ask. Add an appointment date whenever you’re ready.' }}
-                </span>
+                <span class="card-title">{{ hasPlan() ? 'See my meal plan' : 'Plan my meals' }}</span>
+                <span class="card-sub">Meals that fit how you eat, your allergies and your time.</span>
               </span>
               <span class="chev" aria-hidden="true">›</span>
             </a>
           </section>
+        }
+        @case ('appointment') {
+          <!-- Once she's started, "For your next visit" above already covers this. -->
+          @if (!started()) {
+            <section class="block">
+              <a class="card-row" routerLink="/tabs/health">
+                <span class="card-text">
+                  <span class="card-title">Prepare for your next visit</span>
+                  <span class="card-sub">
+                    {{
+                      questionCount()
+                        ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved so far.'
+                        : 'Save what you want to ask. Add an appointment date whenever you’re ready.'
+                    }}
+                  </span>
+                </span>
+                <span class="chev" aria-hidden="true">›</span>
+              </a>
+            </section>
+          }
         }
       }
     }
-  }
 
-  @if (hasPlan()) {
-    <div class="band">
-      <section class="block meals" aria-labelledby="meals-title">
-        <h2 id="meals-title">Today’s meals</h2>
-        @if (todaysMeals().length) {
-          <ul class="meal-strip">
-            @for (meal of todaysMeals(); track meal) {
-              <li>
-                <button type="button" class="meal" (click)="openMeal(meal)">
-                  <app-meal-image class="meal-img" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image>
-                  <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
-                  <span class="meal-name">{{ meal.name }}</span>
-                </button>
-              </li>
-            }
-          </ul>
-        } @else {
-          <div class="empty">
-            <p>Nothing planned today.</p>
-            <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">See my plan</button>
-          </div>
+    @if (hasPlan()) {
+      <div class="band">
+        <section class="block meals" aria-labelledby="meals-title">
+          <h2 id="meals-title">Today’s meals</h2>
+          @if (todaysMeals().length) {
+            <ul class="meal-strip">
+              @for (meal of todaysMeals(); track meal) {
+                <li>
+                  <button type="button" class="meal" (click)="openMeal(meal)">
+                    <app-meal-image
+                      class="meal-img"
+                      [name]="meal.name"
+                      [imageUrl]="meal.imageUrl"
+                      [mealType]="meal.mealType"
+                    ></app-meal-image>
+                    <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
+                    <span class="meal-name">{{ meal.name }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="empty">
+              <p>Nothing planned today.</p>
+              <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">See my plan</button>
+            </div>
+          }
+        </section>
+      </div>
+    }
+  </main>
+
+  <ng-template #dxRows>
+    <section class="block" aria-labelledby="dx-title">
+      <div class="block-head">
+        <h2 id="dx-title">Your diagnosis</h2>
+        <a class="see-all" routerLink="/tabs/health">See all</a>
+      </div>
+      <ul class="rows">
+        @for (f of findings().slice(0, 3); track f.key) {
+          <li>
+            <a class="row expandable" [routerLink]="['/health/record', f.key]" [queryParams]="{ from: 'today' }">
+              <span class="row-text">
+                <span class="row-name">{{ defs[f.key].label }}</span>
+                <app-finding-status [finding]="f"></app-finding-status>
+              </span>
+              <span class="chev" aria-hidden="true">›</span>
+            </a>
+          </li>
         }
-      </section>
-    </div>
-  }
-</main>
-
-<ng-template #dxRows>
-  <section class="block" aria-labelledby="dx-title">
-    <div class="block-head">
-      <h2 id="dx-title">Your diagnosis</h2>
-      <a class="see-all" routerLink="/tabs/health">See all</a>
-    </div>
-    <ul class="rows">
-      @for (f of findings().slice(0, 3); track f.key) {
-        <li>
-          <a class="row expandable" [routerLink]="['/health/record', f.key]" [queryParams]="{ from: 'today' }">
-            <span class="row-text">
-              <span class="row-name">{{ defs[f.key].label }}</span>
-              <app-finding-status [finding]="f"></app-finding-status>
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
-        </li>
-      }
-    </ul>
-  </section>
-</ng-template>
+      </ul>
+    </section>
+  </ng-template>
 </ion-content>

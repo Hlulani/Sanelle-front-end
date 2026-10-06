@@ -3,7 +3,11 @@ import { MealResponse } from '../core/models/meal.model';
 
 /** How far ahead to shop. Past days are never included. */
 export type ShoppingWindow = 'three' | 'week' | 'all';
-export const WINDOW_LABELS: Record<ShoppingWindow, string> = { three: 'Next 3 days', week: 'This week', all: 'Whole plan' };
+export const WINDOW_LABELS: Record<ShoppingWindow, string> = {
+  three: 'Next 3 days',
+  week: 'This week',
+  all: 'Whole plan',
+};
 export const WINDOW_SUBTITLES: Record<ShoppingWindow, string> = {
   three: 'For the next 3 days',
   week: 'For the next 7 days',
@@ -34,13 +38,24 @@ export interface MealIngredients {
 }
 
 /** The planned meals from today (or the plan's first day, if later) within the window. */
-export function slotsInWindow(plan: GenerateMealPlanResponse, window: ShoppingWindow, todayIso: string): PlannedMealSlot[] {
+export function slotsInWindow(
+  plan: GenerateMealPlanResponse,
+  window: ShoppingWindow,
+  todayIso: string,
+): PlannedMealSlot[] {
   const upcoming = plan.daysPlan.filter((d) => d.date >= todayIso).sort((a, b) => a.date.localeCompare(b.date));
   const days = window === 'all' ? upcoming : upcoming.slice(0, window === 'three' ? 3 : 7);
   const slots: PlannedMealSlot[] = [];
   for (const d of days) {
     for (const m of d.meals) {
-      if (m.mealId) slots.push({ key: `${d.date}|${m.mealType}|${m.mealId}`, date: d.date, mealType: m.mealType, mealId: m.mealId, name: m.name });
+      if (m.mealId)
+        slots.push({
+          key: `${d.date}|${m.mealType}|${m.mealId}`,
+          date: d.date,
+          mealType: m.mealType,
+          mealId: m.mealId,
+          name: m.name,
+        });
     }
   }
   return slots;
@@ -104,13 +119,53 @@ export function groupForIngredient(name: string): string {
   if (has(['chicken', 'beef', 'pork', 'turkey', 'lamb', 'bacon', 'sausage'])) return 'Meat';
   if (has(['salmon', 'tuna', 'shrimp', 'prawn', 'fish', 'cod', 'tilapia'])) return 'Seafood';
   if (has(['egg'])) return 'Eggs';
-  if (has(['apple', 'banana', 'berry', 'berries', 'orange', 'lemon', 'lime', 'grape', 'pear', 'mango', 'pineapple', 'avocado'])) return 'Produce';
-  if (has(['spinach', 'kale', 'lettuce', 'cabbage', 'broccoli', 'carrot', 'tomato', 'pepper', 'onion', 'garlic', 'zucchini', 'mushroom', 'cucumber', 'potato', 'sweet potato'])) return 'Produce';
+  if (
+    has([
+      'apple',
+      'banana',
+      'berry',
+      'berries',
+      'orange',
+      'lemon',
+      'lime',
+      'grape',
+      'pear',
+      'mango',
+      'pineapple',
+      'avocado',
+    ])
+  )
+    return 'Produce';
+  if (
+    has([
+      'spinach',
+      'kale',
+      'lettuce',
+      'cabbage',
+      'broccoli',
+      'carrot',
+      'tomato',
+      'pepper',
+      'onion',
+      'garlic',
+      'zucchini',
+      'mushroom',
+      'cucumber',
+      'potato',
+      'sweet potato',
+    ])
+  )
+    return 'Produce';
   if (has(['rice', 'pasta', 'bread', 'oats', 'quinoa', 'flour', 'tortilla'])) return 'Grains';
   if (has(['bean', 'lentil', 'chickpea', 'peas'])) return 'Legumes';
-  if (has(['almond', 'cashew', 'walnut', 'peanut', 'pecan', 'nut', 'seed', 'chia', 'flax', 'pumpkin seed', 'sunflower'])) return 'Nuts & Seeds';
-  if (has(['oil', 'olive', 'coconut oil', 'vinegar', 'soy sauce', 'tamari', 'mustard', 'ketchup', 'mayo'])) return 'Condiments';
-  if (has(['salt', 'pepper', 'cumin', 'paprika', 'turmeric', 'ginger', 'cinnamon', 'spice', 'herb'])) return 'Spices & Herbs';
+  if (
+    has(['almond', 'cashew', 'walnut', 'peanut', 'pecan', 'nut', 'seed', 'chia', 'flax', 'pumpkin seed', 'sunflower'])
+  )
+    return 'Nuts & Seeds';
+  if (has(['oil', 'olive', 'coconut oil', 'vinegar', 'soy sauce', 'tamari', 'mustard', 'ketchup', 'mayo']))
+    return 'Condiments';
+  if (has(['salt', 'pepper', 'cumin', 'paprika', 'turmeric', 'ginger', 'cinnamon', 'spice', 'herb']))
+    return 'Spices & Herbs';
   if (has(['sugar', 'honey', 'maple'])) return 'Sweeteners';
   return 'Other';
 }

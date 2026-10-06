@@ -24,7 +24,20 @@ import { addDays, localIsoDate, parseLocalDate } from '../shared/calendar-date';
 
 type View = 'aisle' | 'meal';
 
-const GROUP_ORDER = ['Produce', 'Meat', 'Seafood', 'Eggs', 'Dairy', 'Grains', 'Legumes', 'Nuts & Seeds', 'Condiments', 'Spices & Herbs', 'Sweeteners', 'Other'];
+const GROUP_ORDER = [
+  'Produce',
+  'Meat',
+  'Seafood',
+  'Eggs',
+  'Dairy',
+  'Grains',
+  'Legumes',
+  'Nuts & Seeds',
+  'Condiments',
+  'Spices & Herbs',
+  'Sweeteners',
+  'Other',
+];
 
 @Component({
   selector: 'app-tab3',

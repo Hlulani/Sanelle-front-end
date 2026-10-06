@@ -1,14 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  IonItem,
-  IonInput,
-  IonButton,
-  IonText,
-  IonIcon,
-  IonSpinner
-} from '@ionic/angular/standalone';
+import { IonItem, IonInput, IonButton, IonText, IonIcon, IonSpinner } from '@ionic/angular/standalone';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
@@ -17,16 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-register-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonItem,
-    IonInput,
-    IonButton,
-    IonText,
-    IonIcon,
-    IonSpinner
-  ],
+  imports: [CommonModule, FormsModule, IonItem, IonInput, IonButton, IonText, IonIcon, IonSpinner],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.scss'],
 })
@@ -70,19 +54,20 @@ export class RegisterFormComponent {
 
     this.isLoading.set(true);
 
-    this.auth.register(this.email, this.username, this.password).pipe(
-      switchMap(() => this.auth.login(this.email, this.password))
-    ).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        // Replace the form in history, so going back can't land on it while signed in.
-        this.router.navigateByUrl('/onboarding', { replaceUrl: true });
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        this.applyServerError(err);
-      },
-    });
+    this.auth
+      .register(this.email, this.username, this.password)
+      .pipe(switchMap(() => this.auth.login(this.email, this.password)))
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          // Replace the form in history, so going back can't land on it while signed in.
+          this.router.navigateByUrl('/onboarding', { replaceUrl: true });
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.applyServerError(err);
+        },
+      });
   }
 
   private applyServerError(err: { status?: number; error?: { message?: string } }): void {
@@ -106,7 +91,7 @@ export class RegisterFormComponent {
     this.error.set(message);
   }
 
-togglePasswordVisibility() {
+  togglePasswordVisibility() {
     this.isPasswordVisible.set(!this.isPasswordVisible());
   }
 

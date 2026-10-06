@@ -22,14 +22,20 @@ describe('form validators', () => {
   });
 
   it('needs at least one field with more than spaces', () => {
-    const group = new FormGroup({ a: new FormControl('  '), b: new FormControl('') }, { validators: anyFilled('a', 'b') });
+    const group = new FormGroup(
+      { a: new FormControl('  '), b: new FormControl('') },
+      { validators: anyFilled('a', 'b') },
+    );
     expect(group.errors).toEqual({ anyFilled: { names: ['a', 'b'] } });
     group.patchValue({ b: 'note' });
     expect(group.errors).toBeNull();
   });
 
   it('compares two fields', () => {
-    const group = new FormGroup({ p: new FormControl('one'), q: new FormControl('two') }, { validators: matching('p', 'q') });
+    const group = new FormGroup(
+      { p: new FormControl('one'), q: new FormControl('two') },
+      { validators: matching('p', 'q') },
+    );
     expect(group.errors).toEqual({ matching: { first: 'p', second: 'q' } });
     group.patchValue({ q: 'one' });
     expect(group.errors).toBeNull();

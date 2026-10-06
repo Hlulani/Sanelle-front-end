@@ -4,8 +4,15 @@ import type { SanelleApp } from './sanelle-app';
 export const SAMPLE_REPORT = {
   count: { question: 'How many fibroids does your report mention?', field: 'Number of fibroids', value: '2' },
   largestSize: { question: 'How big is the largest one?', field: 'Size of the largest fibroid', value: '4.1 cm' },
-  location: { question: 'Where are they, in your report’s words?', field: 'Where the fibroids are located', value: 'intramural, posterior wall' },
-  cavity: { question: 'Does your report say whether the uterine cavity is affected?', suggested: 'Is my uterine cavity affected?' },
+  location: {
+    question: 'Where are they, in your report’s words?',
+    field: 'Where the fibroids are located',
+    value: 'intramural, posterior wall',
+  },
+  cavity: {
+    question: 'Does your report say whether the uterine cavity is affected?',
+    suggested: 'Is my uterine cavity affected?',
+  },
   figo: { question: 'Does your report give a FIGO type?', field: 'FIGO type stated in the report', value: 'FIGO 4' },
 };
 

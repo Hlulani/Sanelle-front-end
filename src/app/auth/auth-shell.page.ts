@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 
-import {
-  IonContent,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
-} from '@ionic/angular/standalone';
+import { IonContent, IonSegment, IonSegmentButton, IonLabel } from '@ionic/angular/standalone';
 
 import { RegisterFormComponent } from './components/register/register-form.component';
 import { LoginFormComponent } from './components/login/login-form.component';
@@ -17,14 +12,7 @@ import { AuthService } from '../core/auth/auth.service';
   selector: 'app-auth-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonContent,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
-    RegisterFormComponent,
-    LoginFormComponent
-],
+  imports: [IonContent, IonSegment, IonSegmentButton, IonLabel, RegisterFormComponent, LoginFormComponent],
   templateUrl: './auth-shell.page.html',
   styleUrls: ['./auth-shell.page.scss'],
 })
@@ -34,9 +22,7 @@ export class AuthShellPage {
 
   private route = inject(ActivatedRoute);
 
-  mode = signal<'register' | 'login'>(
-    this.route.snapshot.queryParamMap.get('mode') === 'login' ? 'login' : 'register'
-  );
+  mode = signal<'register' | 'login'>(this.route.snapshot.queryParamMap.get('mode') === 'login' ? 'login' : 'register');
 
   constructor() {
     // The page can be reused, e.g. after logging out, so follow the requested tab each time.

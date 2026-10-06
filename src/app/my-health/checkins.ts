@@ -39,18 +39,27 @@ export function impactLine(e: SymptomEntry): string | null {
 /** The symptoms recorded in one entry, e.g. ["Heavy bleeding", "Pain 6/10"]. "None" levels are left out. */
 export function symptomParts(e: SymptomEntry): string[] {
   const parts: string[] = [];
-  if (e.bleeding !== undefined) parts.push(e.bleeding === 'none' ? 'No bleeding' : `${BLEEDING_LABELS[e.bleeding]} bleeding`);
+  if (e.bleeding !== undefined)
+    parts.push(e.bleeding === 'none' ? 'No bleeding' : `${BLEEDING_LABELS[e.bleeding]} bleeding`);
   if (e.pain !== undefined) parts.push(`Pain ${e.pain}/10`);
   if (e.bloating !== undefined && e.bloating !== 'none') parts.push(`${LEVEL_LABELS[e.bloating]} pressure or bloating`);
   if (e.fatigue !== undefined && e.fatigue !== 'none') parts.push(`${LEVEL_LABELS[e.fatigue]} tiredness`);
   return parts;
 }
 
-type Concern = { key: 'tiredness' | 'bleeding' | 'pain' | 'bloating'; label: string; present: (e: SymptomEntry) => boolean };
+type Concern = {
+  key: 'tiredness' | 'bleeding' | 'pain' | 'bloating';
+  label: string;
+  present: (e: SymptomEntry) => boolean;
+};
 
 const CONCERNS: Concern[] = [
   { key: 'tiredness', label: 'tiredness', present: (e) => !!e.fatigue && e.fatigue !== 'none' },
-  { key: 'bleeding', label: 'heavy or very heavy bleeding', present: (e) => e.bleeding === 'heavy' || e.bleeding === 'very-heavy' },
+  {
+    key: 'bleeding',
+    label: 'heavy or very heavy bleeding',
+    present: (e) => e.bleeding === 'heavy' || e.bleeding === 'very-heavy',
+  },
   { key: 'bloating', label: 'pressure or bloating', present: (e) => !!e.bloating && e.bloating !== 'none' },
 ];
 
@@ -80,7 +89,9 @@ export function observations(window: SymptomEntry[]): string[] {
   if (pain.length) {
     const min = Math.min(...pain);
     const max = Math.max(...pain);
-    lines.push(`Pain was recorded on ${pain.length} of your ${n} check-ins, ${min === max ? `at ${min}` : `from ${min} to ${max}`} out of 10.`);
+    lines.push(
+      `Pain was recorded on ${pain.length} of your ${n} check-ins, ${min === max ? `at ${min}` : `from ${min} to ${max}`} out of 10.`,
+    );
   }
 
   const impactRecorded = window.filter((e) => e.affected !== undefined);
@@ -100,4 +111,3 @@ function mostCommonImpact(days: SymptomEntry[]): { area: ImpactArea; count: numb
   }
   return best;
 }
-

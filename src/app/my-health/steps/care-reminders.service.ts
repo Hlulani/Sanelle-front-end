@@ -3,9 +3,13 @@ import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { CareTask } from '../diagnosis.model';
 
-type CareNotifications = Pick<typeof LocalNotifications, 'getPending' | 'cancel' | 'schedule' | 'requestPermissions' | 'checkPermissions'>;
+type CareNotifications = Pick<
+  typeof LocalNotifications,
+  'getPending' | 'cancel' | 'schedule' | 'requestPermissions' | 'checkPermissions'
+>;
 export const CARE_NOTIFICATIONS = new InjectionToken<CareNotifications>('Care notifications', {
-  providedIn: 'root', factory: () => ({
+  providedIn: 'root',
+  factory: () => ({
     getPending: () => LocalNotifications.getPending(),
     cancel: (options) => LocalNotifications.cancel(options),
     schedule: (options) => LocalNotifications.schedule(options),
@@ -43,10 +47,16 @@ export class CareReminders {
     if (generation !== this.generation) return;
     await this.cancelPending();
     if ((await this.notifications.checkPermissions()).display !== 'granted' || generation !== this.generation) return;
-    const notifications = tasks.filter((task) => !task.completedAt && task.reminderAt && new Date(task.reminderAt).getTime() > Date.now())
-      .sort((a, b) => a.reminderAt!.localeCompare(b.reminderAt!)).slice(0, 60).map((task, index) => ({
-        id: 200_000 + index, title: 'A next step you saved', body: 'Open Sanelle to review your agreed next step.',
-        schedule: { at: new Date(task.reminderAt!), allowWhileIdle: true }, extra: { sanelleCareTask: task.id },
+    const notifications = tasks
+      .filter((task) => !task.completedAt && task.reminderAt && new Date(task.reminderAt).getTime() > Date.now())
+      .sort((a, b) => a.reminderAt!.localeCompare(b.reminderAt!))
+      .slice(0, 60)
+      .map((task, index) => ({
+        id: 200_000 + index,
+        title: 'A next step you saved',
+        body: 'Open Sanelle to review your agreed next step.',
+        schedule: { at: new Date(task.reminderAt!), allowWhileIdle: true },
+        extra: { sanelleCareTask: task.id },
       }));
     if (notifications.length) await this.notifications.schedule({ notifications });
     if (generation !== this.generation) await this.cancelPending();

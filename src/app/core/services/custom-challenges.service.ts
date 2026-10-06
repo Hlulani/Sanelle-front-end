@@ -99,9 +99,10 @@ export class CustomChallengesService {
         onSuccess(challenge);
       },
       error: (err) => {
-        const message = err?.status === 404
-          ? "That code doesn't match a challenge. Double-check it and try again."
-          : 'Could not join that challenge. Please try again.';
+        const message =
+          err?.status === 404
+            ? "That code doesn't match a challenge. Double-check it and try again."
+            : 'Could not join that challenge. Please try again.';
         onError(message);
       },
     });

@@ -26,16 +26,24 @@ export class VisitPage implements OnInit {
   readonly status = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
-  readonly form = new FormGroup({
-    date: new FormControl(this.today, { nonNullable: true, validators: [Validators.required, calendarDate(), notAfter(() => this.today)] }),
-    discussion: new FormControl('', { nonNullable: true }),
-    nextSteps: new FormControl('', { nonNullable: true }),
-    followUp: new FormControl('', { nonNullable: true }),
-  }, { validators: anyFilled('discussion', 'nextSteps', 'followUp') });
+  readonly form = new FormGroup(
+    {
+      date: new FormControl(this.today, {
+        nonNullable: true,
+        validators: [Validators.required, calendarDate(), notAfter(() => this.today)],
+      }),
+      discussion: new FormControl('', { nonNullable: true }),
+      nextSteps: new FormControl('', { nonNullable: true }),
+      followUp: new FormControl('', { nonNullable: true }),
+    },
+    { validators: anyFilled('discussion', 'nextSteps', 'followUp') },
+  );
 
   constructor() {
     // Choosing a date opens that visit's saved notes, or a blank page for a new one.
-    this.form.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((date) => this.showVisitOn(date));
+    this.form.controls.date.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((date) => this.showVisitOn(date));
   }
 
   async ngOnInit() {
@@ -69,8 +77,15 @@ export class VisitPage implements OnInit {
     const { date, discussion, nextSteps, followUp } = this.form.getRawValue();
     this.saving.set(true);
     try {
-      await this.repo.saveVisit({ date, discussion: discussion.trim(), nextSteps: nextSteps.trim(), followUp: followUp.trim() });
-      this.status.set('Visit notes saved in My health. Choose them in your summary when you want to bring them next time.');
+      await this.repo.saveVisit({
+        date,
+        discussion: discussion.trim(),
+        nextSteps: nextSteps.trim(),
+        followUp: followUp.trim(),
+      });
+      this.status.set(
+        'Visit notes saved in My health. Choose them in your summary when you want to bring them next time.',
+      );
     } catch {
       this.error.set('Could not save your visit notes. Please try again.');
     } finally {
@@ -80,7 +95,10 @@ export class VisitPage implements OnInit {
 
   private showVisitOn(date: string) {
     const visit = this.record().visits?.find((v) => v.date === date);
-    this.form.patchValue({ discussion: visit?.discussion ?? '', nextSteps: visit?.nextSteps ?? '', followUp: visit?.followUp ?? '' }, { emitEvent: false });
+    this.form.patchValue(
+      { discussion: visit?.discussion ?? '', nextSteps: visit?.nextSteps ?? '', followUp: visit?.followUp ?? '' },
+      { emitEvent: false },
+    );
     this.status.set(null);
     this.error.set(null);
   }
