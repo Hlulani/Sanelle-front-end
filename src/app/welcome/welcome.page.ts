@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'app-welcome',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [IonContent],
   templateUrl: './welcome.page.html',

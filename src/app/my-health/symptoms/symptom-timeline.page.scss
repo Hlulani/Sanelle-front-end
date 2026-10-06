@@ -2,8 +2,8 @@
   --background: var(--sn-canvas);
 }
 
-.timeline .obs,
-.timeline .empty { margin-top: 1.5rem; }
+/* The first card overlaps the header; any after it sit below with room between. */
+.timeline .sn-card + .sn-card { margin-top: 1.5rem; }
 
 .obs {
   h2 { font: 800 1.0625rem/1.3 var(--sn-body); }
@@ -98,8 +98,8 @@
   color: var(--sn-muted);
 }
 
-.empty p:first-child {
-  font-weight: 800;
+.empty h2 {
+  font: 800 1.125rem/1.3 var(--sn-body);
 }
 
 .actions {

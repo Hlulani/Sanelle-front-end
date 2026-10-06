@@ -6,13 +6,13 @@
       <p class="sn-head-note">{{ coverage() }}</p>
     </header>
 
-    <section class="sn-card">
-      <h2>Bring what you’ve noticed</h2>
-      <p>Your entries help you describe symptoms and their impact at your visit. Review them here, then choose the period to include in your summary.</p>
-      <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my appointment summary</a>
-    </section>
-
     @if (entries().length) {
+      <section class="sn-card">
+        <h2>Bring what you’ve noticed</h2>
+        <p>Choose the period to include in your appointment summary.</p>
+        <a class="sn-btn sn-btn--outline" routerLink="/health/summary">Review my appointment summary</a>
+      </section>
+
       @if (observations().length) {
         <section class="sn-card obs" aria-labelledby="obs-title">
           <h2 id="obs-title">What your check-ins show</h2>
@@ -58,20 +58,21 @@
           }
         </ol>
       </section>
+
+      <section class="actions">
+        <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'history' }">
+          {{ loggedToday() ? 'Edit today’s check-in' : 'Check in today' }}
+        </a>
+      </section>
     } @else {
       <section class="sn-card empty">
-        <p>No check-ins in the last {{ span() }} days.</p>
-        <p class="unknown">Check-ins are optional. If you add some, Sanelle counts what you recorded for your appointment summary.</p>
+        <h2>Nothing recorded in the last {{ span() }} days</h2>
+        <p class="unknown">Check-ins are optional. Record what you want to remember, and Sanelle counts it for your summary.</p>
+        <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'history' }">Check in today</a>
         @if (span() === 14) {
           <button type="button" class="span" (click)="toggleSpan()">Look at 30 days</button>
         }
       </section>
     }
-
-    <section class="actions">
-      <a class="sn-btn sn-btn--brand" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'history' }">
-        {{ loggedToday() ? 'Edit today’s check-in' : 'Check in today' }}
-      </a>
-    </section>
   </main>
 </ion-content>

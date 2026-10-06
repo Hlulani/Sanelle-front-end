@@ -220,6 +220,9 @@ ion-tab-button {
   font-family: var(--sn-body);
   font-weight: 700;
   --ripple-color: var(--sn-brand-deep);
+
+  /* Ionic's 10px default is too small to read at a glance. */
+  ion-label { font-size: 0.75rem; }
 }
 
 /* ---------- Shared screen layout (My health and later screens) ---------- */
@@ -241,6 +244,11 @@ ion-tab-button {
   h1 { font-size: 2rem; }
   .sn-head-note { color: var(--sn-on-brand-muted); font-size: 0.9375rem; }
   .sn-btn--quiet { color: var(--sn-on-brand); justify-self: start; margin-left: -0.25rem; }
+}
+
+/* The deep bottom edge is room for a card that overlaps it; without one it's just empty colour. */
+.sn-head:not(:has(+ .sn-card, + .page-wrap)) {
+  padding-bottom: 1.75rem;
 }
 
 /*

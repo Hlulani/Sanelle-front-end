@@ -7,16 +7,15 @@ test.describe('Understanding my diagnosis', () => {
 
     await recordSampleReport(app);
 
-    const summary = await app.diagnosis.summary();
-    expect(summary.recorded).toBe('4: Fibroids, Largest, Location, FIGO type');
-    expect(summary.notRecorded).toBe('1: Uterine cavity');
-    expect(summary.questions).toBe('1');
+    const results = await app.diagnosis.results();
+    expect(results.recorded).toEqual(['Fibroids', 'Largest', 'Location', 'FIGO type']);
+    expect(results.missing).toEqual([{ label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: true }]);
 
     await app.diagnosis.seeQuestions();
     await expect(page.locator('ol.list')).toContainText(SAMPLE_REPORT.cavity.suggested);
   });
 
-  test('she can leave a detail unknown without adding its question', async ({ app }) => {
+  test('a detail left unknown without its question can still be asked from the results', async ({ app, page }) => {
     const r = SAMPLE_REPORT;
     await app.today.startDiagnosis();
     await app.diagnosis.record(r.count);
@@ -25,8 +24,11 @@ test.describe('Understanding my diagnosis', () => {
     await app.diagnosis.leaveUnknown(r.cavity.question, r.cavity.suggested, false);
     await app.diagnosis.record(r.figo, 'Save');
 
-    const summary = await app.diagnosis.summary();
-    expect(summary.notRecorded).toBe('1: Uterine cavity');
-    expect(summary.questions).toBe('0');
+    const results = await app.diagnosis.results();
+    expect(results.missing).toEqual([{ label: 'Uterine cavity', question: SAMPLE_REPORT.cavity.suggested, saved: false }]);
+
+    await app.diagnosis.saveQuestionFor('Uterine cavity');
+    await app.diagnosis.seeQuestions();
+    await expect(page.locator('ol.list')).toContainText(SAMPLE_REPORT.cavity.suggested);
   });
 });

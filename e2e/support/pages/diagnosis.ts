@@ -2,6 +2,12 @@ import { expect } from '@playwright/test';
 import { type } from '../screen';
 import { ScreenObject } from './screen-object';
 
+export interface Gap {
+  label: string;
+  question: string;
+  saved: boolean;
+}
+
 export interface Detail {
   question: string;
   field: string;
@@ -29,17 +35,27 @@ export class DiagnosisFlow extends ScreenObject {
     await this.button(save, true).tap();
   }
 
-  async summary(): Promise<{ recorded: string; notRecorded: string; questions: string }> {
+  /** The results screen: what the report says, and each gap with its question. */
+  async results(): Promise<{ recorded: string[]; missing: Gap[] }> {
     await this.arrive(this.heading('Here’s what you have so far'));
-    const line = (title: RegExp) => this.page.locator('.line').filter({ has: this.page.getByRole('heading', { name: title }) });
-    const read = async (title: RegExp) => ({
-      count: (await line(title).locator('.num').innerText()).trim(),
-      names: (await line(title).locator('.names').innerText()).trim(),
-    });
-    const recorded = await read(/^Recorded$/);
-    const notRecorded = await read(/^Not recorded$/);
-    const questions = await read(/for your appointment$/);
-    return { recorded: `${recorded.count}: ${recorded.names}`, notRecorded: `${notRecorded.count}: ${notRecorded.names}`, questions: questions.count };
+    const recorded = await this.page.locator('.facts .fact-label').allInnerTexts();
+    const missing: Gap[] = [];
+    for (const gap of await this.page.locator('.gaps > li').all()) {
+      const ask = (await gap.locator('.ask').innerText()).trim();
+      missing.push({
+        label: (await gap.locator('.fact-label').innerText()).trim(),
+        saved: ask.startsWith('Question saved'),
+        question: ask.replace(/^(Question saved|You could ask)\s*/, '').replace(/^“|”$/g, ''),
+      });
+    }
+    return { recorded: recorded.map((r) => r.trim()), missing };
+  }
+
+  /** Saves a gap's question straight from the results screen. */
+  async saveQuestionFor(label: string): Promise<void> {
+    const gap = this.page.locator('.gaps > li').filter({ has: this.page.getByText(label, { exact: true }) });
+    await gap.getByRole('button', { name: 'Save this question' }).tap();
+    await expect(gap.getByText('Question saved')).toBeVisible();
   }
 
   /** Leaves the results screen for Today. */

@@ -133,7 +133,7 @@
 
 
 
-.pref-chip.active { background: var(--app-primary); border-color: transparent; color: #ffffff; box-shadow: none; }
+.pref-chip.active, .pref-chip[aria-pressed="true"] { background: var(--sn-brand); border-color: transparent; color: var(--sn-on-brand); box-shadow: none; }
 
 .primary-btn {
   --background: var(--app-primary);
@@ -714,8 +714,7 @@
 .plan-intro, .preview-banner { margin-bottom: 1.5rem; }
 .plan-link { border: 0; background: none; color: var(--sn-brand); font: 800 1rem var(--sn-body); cursor: pointer; min-height: var(--sn-tap); text-align: left; }
 .planner-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; border: 0; background: var(--sn-surface); padding: 1.25rem; color: var(--sn-ink); font: 800 1.125rem var(--sn-body); text-align: left; cursor: pointer; }
-.setup-steps { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem; }.setup-steps .pref-chip { font-size: .875rem; }
-.pref-chip[aria-pressed="true"] { background: var(--sn-brand); color: var(--sn-on-brand); border-color: var(--sn-brand); }
+.setup-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .375rem; margin-bottom: .75rem; }.setup-steps .pref-chip { justify-content: center; padding-inline: .5rem; }
 .setup-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
 .setup-next { margin-top: 1.25rem; }.setup-actions { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; margin-top: 1.25rem; }
 .start-choice { margin-top: 1rem; }

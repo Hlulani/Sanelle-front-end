@@ -142,3 +142,10 @@
   font-size: 0.875rem;
   color: var(--sn-muted);
 }
+
+.records-link {
+  justify-self: start;
+  min-height: var(--sn-tap);
+  display: inline-flex;
+  align-items: center;
+}

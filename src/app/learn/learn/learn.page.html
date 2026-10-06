@@ -5,8 +5,19 @@
       <p class="sn-head-note">Understand what you’ve read and turn your concerns into questions for care.</p>
     </header>
 
-    <section class="sn-section" aria-labelledby="trusted-title"><h2 id="trusted-title">Start with trusted reading</h2><p>Published patient information from the NHS. Links open the original source. Food guidance is general; these resources do not create a personal treatment or diet plan.</p>
-      @for (resource of resources; track resource.url) { <article class="sn-card resource"><h3>{{ resource.title }}</h3><p>{{ resource.description }}</p><a class="sn-btn sn-btn--brand" [href]="resource.url" target="_blank" rel="noopener noreferrer">Read on {{ resource.publisher }} ↗</a><button type="button" class="resource-question" (click)="saveQuestion(resource.question)">Save a question about this for my visit</button></article> }
+    <section class="sn-section" aria-labelledby="trusted-title"><h2 id="trusted-title">Start with trusted reading</h2><p class="section-note">Patient information published by the NHS. General guidance, not a personal treatment or diet plan.</p>
+      <div class="resources">
+        @for (resource of resources; track resource.url) {
+          <article class="resource">
+            <h3>{{ resource.title }}</h3>
+            <p>{{ resource.description }}</p>
+            <div class="resource-actions">
+              <a class="resource-link" [href]="resource.url" target="_blank" rel="noopener noreferrer">Read on {{ resource.publisher }} <span aria-hidden="true">↗</span><span class="visually-hidden">(opens the original page)</span></a>
+              <button type="button" class="resource-question" (click)="saveQuestion(resource.question)">Save a question about this for my visit</button>
+            </div>
+          </article>
+        }
+      </div>
     </section>
     @if (error()) { <p role="alert">{{ error() }}</p> }
     @if (saved()) { <p class="saved" role="status">Saved to your next-visit questions. <a routerLink="/health/questions">Review my questions</a></p> }

@@ -4,7 +4,7 @@ import { recordSampleReport, SAMPLE_REPORT } from './support/sample-report';
 test.describe('Preparing for the appointment', () => {
   test('the summary brings her concern, questions and report together', async ({ app }) => {
     await recordSampleReport(app);
-    await app.diagnosis.summary();
+    await app.diagnosis.results();
     await app.diagnosis.done();
 
     await app.summary.open();

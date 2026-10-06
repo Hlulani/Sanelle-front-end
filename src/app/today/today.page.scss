@@ -67,13 +67,6 @@
   color: var(--sn-muted);
 }
 
-.meta {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--sn-brand);
-}
-
 /* The lead card's heading is the one place besides page titles that keeps the rounded face. */
 .q {
   font-family: var(--sn-display);
@@ -118,6 +111,19 @@
   cursor: pointer;
 
   &:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 3px; }
+}
+
+/* Rows in the same section read as one list: joined, with a divider, not a stack of cards. */
+.card-row + .card-row {
+  margin-top: -0.625rem;
+  border-top: 1px solid var(--sn-line);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.card-row:has(+ .card-row) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .card-text {
@@ -203,6 +209,12 @@
 }
 
 .secondary {
+  appearance: none;
+  border: 0;
+  background: none;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,10 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
 import { FINDINGS, FINDING_KEYS, HealthReport } from '../diagnosis.model';
 
-@Component({ selector: 'app-reports', standalone: true, imports: [RouterLink, IonContent], templateUrl: './reports.page.html', styleUrls: ['./reports.page.scss'] })
+@Component({ selector: 'app-reports', changeDetection: ChangeDetectionStrategy.OnPush, standalone: true, imports: [RouterLink, IonContent], templateUrl: './reports.page.html', styleUrls: ['./reports.page.scss'] })
 export class ReportsPage {
   private repo = inject(HealthRepository);
   readonly record = this.repo.record;

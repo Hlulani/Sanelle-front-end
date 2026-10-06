@@ -2,30 +2,43 @@
   <main class="sn-page sn-screen">
     <header class="sn-head">
       <h1>Here’s what you have so far</h1>
+      <p class="sn-head-note">What your report says, what it leaves open, and what to ask.</p>
     </header>
 
-    <section class="sn-card" aria-label="Your diagnosis so far">
-      <div class="line">
-        <p class="num">{{ recorded().length }}</p>
-        <div>
-          <h2>Recorded</h2>
-          <p class="names">{{ recorded().length ? recorded().join(', ') : 'Nothing yet' }}</p>
-        </div>
-      </div>
-      <div class="line">
-        <p class="num muted">{{ notRecorded().length }}</p>
-        <div>
-          <h2>Not recorded</h2>
-          <p class="names">{{ notRecorded().length ? notRecorded().join(', ') : 'Nothing missing' }}</p>
-        </div>
-      </div>
-      <div class="line">
-        <p class="num">{{ questionCount() }}</p>
-        <div>
-          <h2>{{ questionCount() === 1 ? 'Question' : 'Questions' }} for your appointment</h2>
-          <p class="names">Blanks become questions, so nothing is lost.</p>
-        </div>
-      </div>
+    <section class="sn-card" aria-labelledby="known-title">
+      <h2 id="known-title" class="group-title">From your report</h2>
+      @if (known().length) {
+        <ul class="facts">
+          @for (f of known(); track f.key) {
+            <li>
+              <span class="fact-label">{{ f.label }}</span>
+              <app-finding-status [finding]="f.finding"></app-finding-status>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Nothing recorded yet. Every detail below can still become a question.</p>
+      }
+
+      @if (missing().length) {
+        <h2 class="group-title">Not recorded</h2>
+        <ul class="gaps">
+          @for (m of missing(); track m.key) {
+            <li>
+              <p class="gap-head">
+                <span class="fact-label">{{ m.label }}</span>
+                <span class="sn-status sn-status--unknown">Not recorded</span>
+              </p>
+              @if (m.saved) {
+                <p class="ask"><span class="ask-label">Question saved</span>“{{ m.question }}”</p>
+              } @else {
+                <p class="ask"><span class="ask-label">You could ask</span>“{{ m.question }}”</p>
+                <button type="button" class="sn-btn sn-btn--quiet save-ask" (click)="ask(m)">Save this question</button>
+              }
+            </li>
+          }
+        </ul>
+      }
     </section>
 
     <section class="actions">

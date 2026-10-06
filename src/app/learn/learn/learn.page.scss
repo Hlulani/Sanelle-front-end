@@ -82,5 +82,14 @@
   border-radius: 0.875rem;
   padding: 0.75rem 1rem;
 }
-.resource { margin: 0; gap: .75rem; }.resource h3 { font-size: 1.125rem; }
-.resource-question { border: 0; background: none; color: var(--sn-brand); font: 800 1rem var(--sn-body); min-height: var(--sn-tap); cursor: pointer; text-align: left; }
+/* The NHS pages read as one list: title, one line, and two quiet actions each. */
+.resources { background: var(--sn-surface); border-radius: 1.25rem; padding: 0 1.125rem; }
+.resource { display: grid; gap: .375rem; padding: 1rem 0; border-bottom: 1px solid var(--sn-line); }
+.resource:last-child { border-bottom: 0; }
+.resource h3 { font: 800 1.0625rem/1.3 var(--sn-body); }
+.resource p { color: var(--sn-muted); font-size: .9375rem; }
+.resource-actions { display: grid; }
+.resource-link, .resource-question { display: flex; align-items: center; gap: .25rem; min-height: var(--sn-tap); color: var(--sn-brand); font: 800 1rem var(--sn-body); text-decoration: none; }
+.resource-question { border: 0; background: none; padding: 0; cursor: pointer; text-align: left; color: var(--sn-muted); font-weight: 700; }
+.resource-link:focus-visible, .resource-question:focus-visible { outline: 3px solid var(--sn-ink); outline-offset: 2px; border-radius: .375rem; }
+.section-note { color: var(--sn-muted); font-size: .9375rem; }

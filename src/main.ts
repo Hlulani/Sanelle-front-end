@@ -22,7 +22,8 @@ registerAppIcons();
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    // Page transitions are movement for its own sake; skip them for people who ask for less motion.
+    provideIonicAngular({ animated: !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches }),
     provideHttpClient(withInterceptors([authInterceptor])),
     // Hydrates AuthService's in-memory token cache and the last-generated meal
     // plan from Preferences before the router/first tab renders — otherwise a

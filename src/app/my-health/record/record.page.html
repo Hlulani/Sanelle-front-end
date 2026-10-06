@@ -55,7 +55,7 @@
             </div>
           }
         }
-        <details class="source-details" [open]="!inFlow || step() === 1">
+        <details class="source-details" [open]="!inFlow">
           <summary>Source: {{ sourceChoices[source] }}{{ source === 'entered-from-report' && reportDate ? ' · ' + reportDate : '' }} · Edit details</summary>
         <div class="sn-field">
           <span>Where did you get this information?</span>

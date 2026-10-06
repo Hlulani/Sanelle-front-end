@@ -5,7 +5,7 @@
       [(ngModel)]="email"
       name="email"
       type="email"
-      placeholder="Email Address"
+      placeholder="Email address"
       required>
     </ion-input>
   </ion-item>
@@ -23,10 +23,16 @@
 </div>
 
 <ion-button expand="block" (click)="submit()" [disabled]="loading()" class="main-submit-btn">
-  <span *ngIf="!loading()">{{ mode === 'login' ? 'Log in' : 'Create account' }}</span>
-  <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
+  @if (!loading()) {
+    <span>{{ mode === 'login' ? 'Log in' : 'Create account' }}</span>
+  }
+  @if (loading()) {
+    <ion-spinner name="crescent"></ion-spinner>
+  }
 </ion-button>
 
-<ion-text color="danger" *ngIf="error()">
-  <p class="error">{{ error() }}</p>
-</ion-text>
+@if (error()) {
+  <ion-text color="danger">
+    <p class="error">{{ error() }}</p>
+  </ion-text>
+}
