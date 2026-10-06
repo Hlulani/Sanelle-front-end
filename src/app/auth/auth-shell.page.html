@@ -16,8 +16,12 @@
       </ion-segment>
 
       <div class="form-area">
-        <app-register-form *ngIf="mode() === 'register'"></app-register-form>
-        <app-login-form *ngIf="mode() === 'login'"></app-login-form>
+        @if (mode() === 'register') {
+          <app-register-form></app-register-form>
+        }
+        @if (mode() === 'login') {
+          <app-login-form></app-login-form>
+        }
       </div>
     </section>
   </main>

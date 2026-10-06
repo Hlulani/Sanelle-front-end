@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../health-repository';
@@ -20,6 +20,7 @@ export function dayLabel(iso: string, today = new Date()): string {
  */
 @Component({
   selector: 'app-symptom-timeline',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, IonContent],
   templateUrl: './symptom-timeline.page.html',

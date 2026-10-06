@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
@@ -17,6 +17,7 @@ import { localIsoDate } from '../../shared/calendar-date';
 /** One day's check-in. Every section is optional; tapping a selected choice clears it. */
 @Component({
   selector: 'app-symptom-log',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [FormsModule, IonContent],
   templateUrl: './symptom-log.page.html',

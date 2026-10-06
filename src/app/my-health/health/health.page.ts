@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
@@ -11,6 +11,7 @@ import { localIsoDate } from '../../shared/calendar-date';
 
 @Component({
   selector: 'app-health',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, FormsModule, IonContent, FindingStatusComponent],
   templateUrl: './health.page.html',
@@ -23,6 +24,7 @@ export class HealthPage {
   readonly activeReport = computed(() => this.repo.record().reports?.find((r) => r.id === this.repo.record().activeReportId));
   readonly openSteps = computed(() => (this.repo.record().tasks ?? []).filter((task) => !task.completedAt));
   readonly rows = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.repo.record(), k)));
+  readonly hasFindings = this.repo.hasAnyFinding;
   readonly unknownCount = computed(() => this.rows().filter((f) => f.completeness.state === 'unknown').length);
   /** Part-way through the diagnosis questions: offer to pick up where she stopped. */
   readonly partial = computed(() => {
@@ -36,7 +38,7 @@ export class HealthPage {
   readonly lastVisit = computed(() => this.repo.record().visits?.[0] ?? null);
   readonly checkinCount = computed(() => checkinsInWindow(this.repo.record().symptoms ?? [], 30).length);
   readonly saveError = signal<string | null>(null);
-  visitGoal = '';
+  readonly visitGoal = signal('');
   readonly appointment = computed(() => this.repo.record().appointment);
   /** The latest check-in and coverage, instead of a strip of empty days. */
   readonly todayIso = localIsoDate();
@@ -50,11 +52,11 @@ export class HealthPage {
 
   async ionViewWillEnter() {
     await this.repo.load();
-    this.visitGoal = this.repo.record().visitGoal ?? '';
+    this.visitGoal.set(this.repo.record().visitGoal ?? '');
   }
 
   async saveGoal() {
-    await this.saveChange(() => this.repo.setVisitGoal(this.visitGoal));
+    await this.saveChange(() => this.repo.setVisitGoal(this.visitGoal()));
   }
 
   private async saveChange(change: () => Promise<void>) {

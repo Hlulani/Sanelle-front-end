@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+
 import {
   IonContent,
   IonButton,
@@ -23,18 +23,18 @@ import {
 
 @Component({
   selector: 'app-account',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   templateUrl: 'account.page.html',
   styleUrls: ['account.page.scss'],
   imports: [
-    CommonModule,
     RouterLink,
-          IonContent,
+    IonContent,
     IonButton,
-        IonIcon,
+    IonIcon,
     IonSpinner,
-    IonToggle,
-  ],
+    IonToggle
+],
 })
 export class AccountPage implements OnInit {
   private health = inject(HealthRepository);

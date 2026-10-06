@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -16,6 +16,7 @@ import {
  */
 @Component({
   selector: 'app-onboarding',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [IonContent],
   templateUrl: './onboarding.page.html',

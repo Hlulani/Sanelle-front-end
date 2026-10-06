@@ -10,8 +10,8 @@ export class SignInScreen extends ScreenObject {
 
   /** Signs in and waits for Today. */
   async as(account: TestAccount): Promise<void> {
-    await type(this.page.locator('input[name="email"]'), account.email);
-    await type(this.page.locator('input[name="password"]'), account.password);
+    await type(this.field('email'), account.email);
+    await type(this.field('password'), account.password);
     await this.page.locator('ion-button.main-submit-btn').tap();
     await this.arrive(this.heading(`Hi ${account.username}`));
   }
@@ -28,10 +28,10 @@ export class RegisterScreen extends ScreenObject {
   }
 
   async register(account: TestAccount): Promise<void> {
-    await type(this.page.locator('input[name="email"]'), account.email);
-    await type(this.page.locator('input[name="username"]'), account.username);
-    await type(this.page.locator('input[name="password"]'), account.password);
-    await type(this.page.locator('input[name="confirmPassword"]'), account.password);
+    await type(this.field('email'), account.email);
+    await type(this.field('username'), account.username);
+    await type(this.field('password'), account.password);
+    await type(this.field('confirmPassword'), account.password);
     await this.page.locator('ion-button.main-submit-btn').tap();
     await this.arrive(this.heading('What would you like help with?'));
   }

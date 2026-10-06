@@ -1,5 +1,5 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { MealService } from '../../core/services/meal.service';
@@ -30,8 +30,9 @@ type MealsState = { state: 'loading' } | { state: 'error' } | { state: 'ready'; 
 
 @Component({
   selector: 'app-food-clarity',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, IonContent, MealImageComponent],
+  imports: [IonContent, MealImageComponent],
   templateUrl: './food-clarity.page.html',
   styleUrls: ['./food-clarity.page.scss'],
 })

@@ -7,22 +7,25 @@
     <div class="profile-card">
       <div class="avatar">{{ initial() }}</div>
       <div class="profile-name">{{ username() }}</div>
-      <div class="profile-email" *ngIf="email()">{{ email() }}</div>
+      @if (email()) {
+        <div class="profile-email">{{ email() }}</div>
+      }
     </div>
 
     <div class="section">
       <div class="section-title" id="help-title">What you’d like help with</div>
       <div class="focus-chips" role="group" aria-labelledby="help-title">
-        <button
-          *ngFor="let c of helpChoices"
-          type="button"
-          class="focus-chip"
-          [attr.aria-pressed]="focus().includes(c.value)"
-          (click)="toggleFocus(c.value)"
-        >
-          <span class="focus-tick" aria-hidden="true">{{ focus().includes(c.value) ? '✓' : '' }}</span>
-          {{ c.label }}
-        </button>
+        @for (c of helpChoices; track c) {
+          <button
+            type="button"
+            class="focus-chip"
+            [attr.aria-pressed]="focus().includes(c.value)"
+            (click)="toggleFocus(c.value)"
+            >
+            <span class="focus-tick" aria-hidden="true">{{ focus().includes(c.value) ? '✓' : '' }}</span>
+            {{ c.label }}
+          </button>
+        }
       </div>
       <p class="focus-hint">Today shows these first.</p>
     </div>
@@ -50,7 +53,9 @@
           (ionChange)="toggleNotifications($event.detail.checked)"
         ></ion-toggle>
       </div>
-      <p class="error-text" *ngIf="notificationError()">{{ notificationError() }}</p>
+      @if (notificationError()) {
+        <p class="error-text">{{ notificationError() }}</p>
+      }
     </div>
 
     <div class="section"><div class="section-title">Your health records</div><p class="focus-hint">Saved on this device. Keep a backup before changing phones or clearing app storage.</p><a class="sn-btn sn-btn--brand" routerLink="/health/backup">Back up or restore my records</a></div>
@@ -62,12 +67,18 @@
         color="danger"
         [disabled]="isDeleting()"
         (click)="confirmDeleteAccount()"
-      >
-        <ion-spinner *ngIf="isDeleting()" name="crescent"></ion-spinner>
-        <span *ngIf="!isDeleting()">Delete account</span>
+        >
+        @if (isDeleting()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+        @if (!isDeleting()) {
+          <span>Delete account</span>
+        }
       </ion-button>
       <p class="danger-hint">This permanently deletes your account and cannot be undone.</p>
-      <p class="error-text" *ngIf="error()">{{ error() }}</p>
+      @if (error()) {
+        <p class="error-text">{{ error() }}</p>
+      }
     </div>
   </div>
 </ion-content>

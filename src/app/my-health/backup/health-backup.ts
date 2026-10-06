@@ -3,6 +3,9 @@ import { CareTask, FINDING_KEYS, Finding, FindingKey, HealthRecord, HealthReport
 const FORMAT = 'sanelle-health-backup';
 const ITERATIONS = 210_000;
 const MAX_BYTES = 15 * 1024 * 1024;
+/** Backups are only as strong as their passphrase; shorter ones are refused. */
+export const MIN_PASSPHRASE_LENGTH = 12;
+
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('This backup contains invalid health records.');
   return value as Record<string, unknown>;
@@ -115,7 +118,7 @@ async function keyFor(password: string, salt: Uint8Array<ArrayBuffer>): Promise<
   return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: ITERATIONS, hash: 'SHA-256' }, material, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
 }
 export async function encryptBackup(record: HealthRecord, password: string): Promise<string> {
-  if (password.length < 12) throw new Error('Use a backup passphrase with at least 12 characters.');
+  if (password.length < MIN_PASSPHRASE_LENGTH) throw new Error(`Use a backup passphrase with at least ${MIN_PASSPHRASE_LENGTH} characters.`);
   const salt = crypto.getRandomValues(new Uint8Array(16)); const iv = crypto.getRandomValues(new Uint8Array(12));
   const payload = JSON.stringify({ record: validateHealthRecord(record), exportedAt: new Date().toISOString() });
   if (payload.length > 10 * 1024 * 1024) throw new Error('These records exceed the backup size limit. Your records are still saved on this device.');

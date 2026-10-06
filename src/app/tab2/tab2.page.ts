@@ -1,5 +1,6 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import {
   IonHeader,
   IonToolbar,
@@ -68,11 +69,11 @@ import { MEAL_TYPE_LABELS, MealType } from '../core/models/meal.model';
 
 @Component({
   selector: 'app-tab2',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     RouterLink,
     InitialAvatarComponent,
@@ -94,10 +95,11 @@ import { MEAL_TYPE_LABELS, MealType } from '../core/models/meal.model';
     IonIcon,
     IonSpinner,
     IonInput,
-    IonTextarea,
-  ],
+    IonTextarea
+],
 })
 export class Tab2Page implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private mealPlansService = inject(MealPlansService);
   private foodRestrictions = inject(FoodRestrictionsService);
   private authService = inject(AuthService);
@@ -138,7 +140,7 @@ export class Tab2Page implements OnInit {
     });
 
 
-    this.planStore.plan$.subscribe((plan) => {
+    this.planStore.plan$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((plan) => {
       const previous = this.selectedDay()?.date;
       this.plan.set(plan);
       if (plan) {

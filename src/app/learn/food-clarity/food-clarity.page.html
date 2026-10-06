@@ -1,136 +1,162 @@
 <ion-content [fullscreen]="true" class="fc">
-  <main class="sn-page" *ngIf="topic as t; else unavailable">
-    <header class="head">
-      <button type="button" class="sn-back" (click)="back()">Learn</button>
-      <p class="you">You read online:</p>
-      <h1>{{ t.title }}</h1>
-      <span class="sn-demo-label draft-tag" *ngIf="t.review.state === 'draft'">Draft · not reviewed</span>
-    </header>
-
-    <section class="answer" aria-label="Short answer">
-      <p class="answer-label">Short answer</p>
-      <p class="answer-headline">{{ t.answer.headline }}</p>
-      <p class="answer-detail">{{ t.answer.detail }}</p>
-    </section>
-
-    <section class="block" aria-labelledby="outcomes-title">
-      <h2 id="outcomes-title">What it looked at</h2>
-      <ul class="outcomes">
-        <li *ngFor="let f of t.findings" [class.is-open]="open() === f.outcome">
-          <button
-            *ngIf="f.studyIds.length; else plainRow"
-            type="button"
-            class="row expandable"
-            [attr.aria-expanded]="open() === f.outcome"
-            (click)="toggle(f)"
-          >
-            <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
-            <span
-              class="sn-status"
-              [class.sn-status--reported]="f.verdict !== 'none-found'"
-              [class.sn-status--unknown]="f.verdict === 'none-found'"
-              >{{ verdictLabels[f.verdict] }}</span
-            >
-            <span class="chev" aria-hidden="true">{{ open() === f.outcome ? '–' : '+' }}</span>
-          </button>
-          <ng-template #plainRow>
-            <div class="row">
-              <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
-              <span class="sn-status sn-status--unknown">{{ verdictLabels[f.verdict] }}</span>
-            </div>
-          </ng-template>
-
-          <div class="detail" *ngIf="open() === f.outcome">
-            <p class="detail-summary">{{ f.summary }}</p>
-            <ul class="studies">
-              <li *ngFor="let s of studiesFor(f)">
+  @if (topic; as t) {
+    <main class="sn-page">
+      <header class="head">
+        <button type="button" class="sn-back" (click)="back()">Learn</button>
+        <p class="you">You read online:</p>
+        <h1>{{ t.title }}</h1>
+        @if (t.review.state === 'draft') {
+          <span class="sn-demo-label draft-tag">Draft · not reviewed</span>
+        }
+      </header>
+      <section class="answer" aria-label="Short answer">
+        <p class="answer-label">Short answer</p>
+        <p class="answer-headline">{{ t.answer.headline }}</p>
+        <p class="answer-detail">{{ t.answer.detail }}</p>
+      </section>
+      <section class="block" aria-labelledby="outcomes-title">
+        <h2 id="outcomes-title">What it looked at</h2>
+        <ul class="outcomes">
+          @for (f of t.findings; track f) {
+            <li [class.is-open]="open() === f.outcome">
+              @if (f.studyIds.length) {
                 <button
                   type="button"
-                  class="study-head"
-                  [attr.aria-expanded]="openStudy() === s.id"
-                  (click)="toggleStudy(s)"
-                >
-                  <span class="study-label">{{ s.label }}</span>
-                  <span class="study-key">{{ s.keyFinding }}</span>
-                </button>
-                <dl class="study-more" *ngIf="openStudy() === s.id">
-                  <div><dt>Type</dt><dd>{{ designLabels[s.design] }}</dd></div>
-                  <div><dt>Who</dt><dd>{{ s.population }}</dd></div>
-                  <div><dt>Limits</dt><dd><ul><li *ngFor="let l of s.limitations">{{ l }}</li></ul></dd></div>
-                </dl>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-      <p class="hint">“No studies found” isn’t the same as “no effect”.</p>
-    </section>
-
-    <section class="block" aria-labelledby="practical-title">
-      <h2 id="practical-title">What you can do</h2>
-      <ul class="practical">
-        <li *ngFor="let p of t.practical">{{ p }}</li>
-      </ul>
-    </section>
-
-    <div class="band">
-    <section class="block" *ngIf="t.relatedFood" aria-labelledby="meals-title">
-      <h2 id="meals-title">{{ relatedHeading() }}</h2>
-      @if (hiddenForAllergy()) {
-        <p class="hint">You’ve listed this as an allergy, so these meals aren’t shown.</p>
-      } @else {
-      <ng-container [ngSwitch]="meals().state">
-        <p *ngSwitchCase="'loading'" class="hint" role="status">Loading meals…</p>
-
-        <div *ngSwitchCase="'error'" class="error" role="alert">
-          <p>Couldn’t load meals.</p>
-          <button type="button" class="sn-btn sn-btn--brand" (click)="loadMeals()">Try again</button>
-        </div>
-
-        <ng-container *ngSwitchCase="'ready'">
-          <ul class="meal-strip" *ngIf="$any(meals()).meals.length; else noMeals">
-            <li *ngFor="let m of $any(meals()).meals">
-              <button type="button" class="meal" (click)="openMeal(m)">
-                <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
-                <span class="meal-name">{{ m.name }}</span>
-                <span class="meal-meta" *ngIf="m.prepTimeMinutes">{{ m.prepTimeMinutes }} min</span>
-              </button>
+                  class="row expandable"
+                  [attr.aria-expanded]="open() === f.outcome"
+                  (click)="toggle(f)"
+                  >
+                  <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
+                  <span
+                    class="sn-status"
+                    [class.sn-status--reported]="f.verdict !== 'none-found'"
+                    [class.sn-status--unknown]="f.verdict === 'none-found'"
+                    >{{ verdictLabels[f.verdict] }}</span
+                    >
+                    <span class="chev" aria-hidden="true">{{ open() === f.outcome ? '–' : '+' }}</span>
+                  </button>
+                } @else {
+                  <div class="row">
+                    <span class="row-name">{{ outcomeLabels[f.outcome] }}</span>
+                    <span class="sn-status sn-status--unknown">{{ verdictLabels[f.verdict] }}</span>
+                  </div>
+                }
+                @if (open() === f.outcome) {
+                  <div class="detail">
+                    <p class="detail-summary">{{ f.summary }}</p>
+                    <ul class="studies">
+                      @for (s of studiesFor(f); track s) {
+                        <li>
+                          <button
+                            type="button"
+                            class="study-head"
+                            [attr.aria-expanded]="openStudy() === s.id"
+                            (click)="toggleStudy(s)"
+                            >
+                            <span class="study-label">{{ s.label }}</span>
+                            <span class="study-key">{{ s.keyFinding }}</span>
+                          </button>
+                          @if (openStudy() === s.id) {
+                            <dl class="study-more">
+                              <div><dt>Type</dt><dd>{{ designLabels[s.design] }}</dd></div>
+                              <div><dt>Who</dt><dd>{{ s.population }}</dd></div>
+                              <div><dt>Limits</dt><dd><ul>@for (l of s.limitations; track l) {
+                              <li>{{ l }}</li>
+                            }</ul></dd></div>
+                          </dl>
+                        }
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
             </li>
-          </ul>
-          <ng-template #noMeals><p class="hint">No matching meals right now.</p></ng-template>
-        </ng-container>
-      </ng-container>
-      }
-    </section>
-
-    <section class="block sources">
-      <button
-        type="button"
-        class="row expandable"
-        [attr.aria-expanded]="sourcesOpen()"
-        (click)="sourcesOpen.set(!sourcesOpen())"
-      >
-        <span class="row-name">Sources ({{ t.studies.length + (t.otherSources?.length ?? 0) }})</span>
-        <span class="row-meta">Researched {{ researchedLabel() }}</span>
-        <span class="chev" aria-hidden="true">{{ sourcesOpen() ? '–' : '+' }}</span>
-      </button>
-      <ol *ngIf="sourcesOpen()">
-        <li *ngFor="let s of t.studies">
-          <a [href]="s.url" target="_blank" rel="noopener">{{ s.citation }}</a>
-        </li>
-        <li *ngFor="let o of t.otherSources">
-          {{ o.label }}: <a [href]="o.url" target="_blank" rel="noopener">{{ o.citation }}</a>
-        </li>
-      </ol>
-    </section>
-    </div>
-  </main>
-
-  <ng-template #unavailable>
+          }
+        </ul>
+        <p class="hint">“No studies found” isn’t the same as “no effect”.</p>
+      </section>
+      <section class="block" aria-labelledby="practical-title">
+        <h2 id="practical-title">What you can do</h2>
+        <ul class="practical">
+          @for (p of t.practical; track p) {
+            <li>{{ p }}</li>
+          }
+        </ul>
+      </section>
+      <div class="band">
+        @if (t.relatedFood) {
+          <section class="block" aria-labelledby="meals-title">
+            <h2 id="meals-title">{{ relatedHeading() }}</h2>
+            @if (hiddenForAllergy()) {
+              <p class="hint">You’ve listed this as an allergy, so these meals aren’t shown.</p>
+            } @else {
+              @switch (meals().state) {
+                @case ('loading') {
+                  <p class="hint" role="status">Loading meals…</p>
+                }
+                @case ('error') {
+                  <div class="error" role="alert">
+                    <p>Couldn’t load meals.</p>
+                    <button type="button" class="sn-btn sn-btn--brand" (click)="loadMeals()">Try again</button>
+                  </div>
+                }
+                @case ('ready') {
+                  @if ($any(meals()).meals.length) {
+                    <ul class="meal-strip">
+                      @for (m of $any(meals()).meals; track m) {
+                        <li>
+                          <button type="button" class="meal" (click)="openMeal(m)">
+                            <app-meal-image class="meal-img" [name]="m.name" [imageUrl]="m.imageUrl" [mealType]="m.mealType"></app-meal-image>
+                            <span class="meal-name">{{ m.name }}</span>
+                            @if (m.prepTimeMinutes) {
+                              <span class="meal-meta">{{ m.prepTimeMinutes }} min</span>
+                            }
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <p class="hint">No matching meals right now.</p>
+                  }
+                }
+              }
+            }
+          </section>
+        }
+        <section class="block sources">
+          <button
+            type="button"
+            class="row expandable"
+            [attr.aria-expanded]="sourcesOpen()"
+            (click)="sourcesOpen.set(!sourcesOpen())"
+            >
+            <span class="row-name">Sources ({{ t.studies.length + (t.otherSources?.length ?? 0) }})</span>
+            <span class="row-meta">Researched {{ researchedLabel() }}</span>
+            <span class="chev" aria-hidden="true">{{ sourcesOpen() ? '–' : '+' }}</span>
+          </button>
+          @if (sourcesOpen()) {
+            <ol>
+              @for (s of t.studies; track s) {
+                <li>
+                  <a [href]="s.url" target="_blank" rel="noopener">{{ s.citation }}</a>
+                </li>
+              }
+              @for (o of t.otherSources; track o) {
+                <li>
+                  {{ o.label }}: <a [href]="o.url" target="_blank" rel="noopener">{{ o.citation }}</a>
+                </li>
+              }
+            </ol>
+          }
+        </section>
+      </div>
+    </main>
+  } @else {
     <main class="sn-page unavailable">
       <button type="button" class="sn-back" (click)="back()">Learn</button>
       <h1>Not available yet</h1>
       <p>This topic is waiting for review.</p>
     </main>
-  </ng-template>
+  }
+
 </ion-content>

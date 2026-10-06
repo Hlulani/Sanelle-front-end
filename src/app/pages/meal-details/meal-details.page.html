@@ -3,18 +3,21 @@
   <div class="topbar">
     <button type="button" class="sn-back" (click)="back()">Back</button>
   </div>
-  <ng-container *ngIf="meal; else notReady">
+  @if (meal(); as meal) {
     <section class="hero has-image">
       <app-meal-image class="hero-image" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType" [eager]="true" (imageLoaded)="heroPhoto.set($event)"></app-meal-image>
       <div class="hero-body">
         <h1>{{ meal.name }}</h1>
         <div class="meta-row">
-          <span class="meta-chip" *ngIf="meal.prepTimeMinutes">{{ meal.prepTimeMinutes }} min</span>
-          <span class="meta-chip" *ngFor="let dt of meal.dietaryTags">{{ dt }}</span>
+          @if (meal.prepTimeMinutes) {
+            <span class="meta-chip">{{ meal.prepTimeMinutes }} min</span>
+          }
+          @for (dt of meal.dietaryTags; track dt) {
+            <span class="meta-chip">{{ dt }}</span>
+          }
         </div>
       </div>
     </section>
-
     @if (heroPhoto(); as photo) {
       <details class="photo-credit">
         <summary>{{ photo.match === 'ingredient' ? 'Ingredient photo' : photo.match === 'exact' ? 'Photo credits' : 'Serving suggestion · Photo credits' }}</summary>
@@ -22,72 +25,86 @@
         <p>Photo: <a [href]="photo.source" target="_blank" rel="noopener noreferrer">{{ photo.credit }}</a> · <a [href]="photo.licenseUrl" target="_blank" rel="noopener noreferrer">{{ photo.license }}</a>. Resized for display.</p>
       </details>
     }
-
-    <section class="content-card" *ngIf="meal.colorPalette">
-      <h2>On the plate</h2>
-      <p class="muted-text">{{ meal.colorPalette }}</p>
-    </section>
-
-    <section class="content-card" *ngIf="meal.whyItHelps">
-      <h2>Why it helps</h2>
-      <p>{{ meal.whyItHelps }}</p>
-    </section>
-
-    <section class="content-card" *ngIf="meal.ingredients?.length">
-      <div class="ingredients-header">
-        <h2>Ingredients</h2>
-        <div class="servings-stepper">
-          <button type="button" (click)="decreaseServings()" [disabled]="servings() <= 1" aria-label="Fewer people">
-            <ion-icon name="remove-outline"></ion-icon>
-          </button>
-          <span class="servings-value">
-            <ion-icon name="people-outline"></ion-icon>
-            {{ servings() }} {{ servings() === 1 ? 'person' : 'people' }}
-          </span>
-          <button type="button" (click)="increaseServings()" [disabled]="servings() >= 12" aria-label="More people">
-            <ion-icon name="add-outline"></ion-icon>
-          </button>
+    @if (meal.colorPalette) {
+      <section class="content-card">
+        <h2>On the plate</h2>
+        <p class="muted-text">{{ meal.colorPalette }}</p>
+      </section>
+    }
+    @if (meal.whyItHelps) {
+      <section class="content-card">
+        <h2>Why it helps</h2>
+        <p>{{ meal.whyItHelps }}</p>
+      </section>
+    }
+    @if (meal.ingredients?.length) {
+      <section class="content-card">
+        <div class="ingredients-header">
+          <h2>Ingredients</h2>
+          <div class="servings-stepper">
+            <button type="button" (click)="decreaseServings()" [disabled]="servings() <= 1" aria-label="Fewer people">
+              <ion-icon name="remove-outline"></ion-icon>
+            </button>
+            <span class="servings-value">
+              <ion-icon name="people-outline"></ion-icon>
+              {{ servings() }} {{ servings() === 1 ? 'person' : 'people' }}
+            </span>
+            <button type="button" (click)="increaseServings()" [disabled]="servings() >= 12" aria-label="More people">
+              <ion-icon name="add-outline"></ion-icon>
+            </button>
+          </div>
         </div>
-      </div>
-      <ul class="ingredient-list">
-        <li *ngFor="let ing of scaledIngredients()">
-          <span class="ing-amount">{{ ing.amount }}</span>
-          <span class="ing-name">{{ ing.name }}</span>
-        </li>
-      </ul>
-    </section>
-
-    <section class="content-card" *ngIf="hasSwapNotes()">
-      <h2>Swaps &amp; storage</h2>
-      <p *ngIf="meal.vegetableSubstitutes">{{ meal.vegetableSubstitutes }}</p>
-      <p *ngIf="meal.freshOrFrozen">{{ meal.freshOrFrozen }}</p>
-    </section>
-
+        <ul class="ingredient-list">
+          @for (ing of scaledIngredients(); track ing) {
+            <li>
+              <span class="ing-amount">{{ ing.amount }}</span>
+              <span class="ing-name">{{ ing.name }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+    @if (hasSwapNotes()) {
+      <section class="content-card">
+        <h2>Swaps &amp; storage</h2>
+        @if (meal.vegetableSubstitutes) {
+          <p>{{ meal.vegetableSubstitutes }}</p>
+        }
+        @if (meal.freshOrFrozen) {
+          <p>{{ meal.freshOrFrozen }}</p>
+        }
+      </section>
+    }
     <div class="cook-cta">
       <ion-button
         expand="block"
         class="cook-btn"
         [disabled]="!meal.instructions.length"
         (click)="startCooking()"
-      >
+        >
         <ion-icon name="restaurant-outline" slot="start"></ion-icon>
         {{ isCooked() ? 'Cook it again' : 'Start cooking' }}
       </ion-button>
-      <div class="cooked-badge" *ngIf="isCooked()">
-        <ion-icon name="checkmark-circle"></ion-icon>
-        Marked as cooked
+      @if (isCooked()) {
+        <div class="cooked-badge">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          Marked as cooked
+        </div>
+      }
+    </div>
+  } @else {
+    @if (isLoading()) {
+      <div class="ion-text-center ion-padding">
+        <p>Loading recipe...</p>
       </div>
-    </div>
-  </ng-container>
+    }
+    @if (!isLoading() && error()) {
+      <div class="ion-text-center ion-padding">
+        <p>{{ error() }}</p>
+      </div>
+    }
+  }
 
-  <ng-template #notReady>
-    <div class="ion-text-center ion-padding" *ngIf="isLoading">
-      <p>Loading recipe...</p>
-    </div>
-    <div class="ion-text-center ion-padding" *ngIf="!isLoading && error">
-      <p>{{ error }}</p>
-    </div>
-  </ng-template>
 </ion-content>
 
 <ion-modal [isOpen]="cookModeOpen()" (didDismiss)="closeCookMode()">

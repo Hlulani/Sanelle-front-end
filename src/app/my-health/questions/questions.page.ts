@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ export const STARTER_QUESTIONS = [
 
 @Component({
   selector: 'app-questions',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [FormsModule, IonContent, RouterLink],
   templateUrl: './questions.page.html',

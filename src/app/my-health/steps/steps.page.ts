@@ -1,6 +1,6 @@
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { CareTask } from '../diagnosis.model';
@@ -8,8 +8,18 @@ import { HealthRepository } from '../health-repository';
 import { CareReminders } from './care-reminders.service';
 import { addDays, localIsoDate } from '../../shared/calendar-date';
 import { saveFile } from '../../shared/files/save-file';
+import { calendarDate, notBlank } from '../../shared/forms/validators';
 
-@Component({ selector: 'app-steps', standalone: true, imports: [FormsModule, RouterLink, IonContent], templateUrl: './steps.page.html', styleUrls: ['./steps.page.scss'] })
+/** A device reminder, when asked for, needs a real time that hasn't passed yet. */
+function reminderInFuture(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    if (!group.get('reminder')?.value) return null;
+    const at = new Date(group.get('reminderAt')?.value ?? '').getTime();
+    return Number.isNaN(at) || at <= Date.now() ? { reminderInFuture: true } : null;
+  };
+}
+
+@Component({ selector: 'app-steps', standalone: true, imports: [ReactiveFormsModule, RouterLink, IonContent], templateUrl: './steps.page.html', styleUrls: ['./steps.page.scss'], changeDetection: ChangeDetectionStrategy.OnPush })
 export class StepsPage implements OnInit {
   private repo = inject(HealthRepository);
   private route = inject(ActivatedRoute);
@@ -21,43 +31,54 @@ export class StepsPage implements OnInit {
   readonly status = signal('');
   readonly error = signal('');
   readonly removing = signal<string | null>(null);
-  id: string | undefined;
-  title = '';
-  dueDate = '';
-  reminderAt = '';
-  visitDate = '';
-  reminder = false;
+  /** The saved step being edited, if any. */
+  readonly editingId = signal<string | undefined>(undefined);
+  /** The visit an agreed step came from; not shown in the form. */
+  private visitDate = '';
   readonly today = localIsoDate();
+  readonly form = new FormGroup({
+    title: new FormControl('', { nonNullable: true, validators: [notBlank()] }),
+    dueDate: new FormControl('', { nonNullable: true, validators: [calendarDate()] }),
+    reminder: new FormControl(false, { nonNullable: true }),
+    reminderAt: new FormControl('', { nonNullable: true }),
+  }, { validators: reminderInFuture() });
 
   async ngOnInit() {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const title = params.get('title');
-      if (title) { this.reset(); this.title = title; this.visitDate = params.get('visit') ?? ''; }
+      if (title) { this.reset(); this.form.patchValue({ title }); this.visitDate = params.get('visit') ?? ''; }
     });
     await this.repo.load();
     this.ready.set(true);
   }
   overdue(task: CareTask) { return !task.completedAt && !!task.dueDate && task.dueDate < this.today; }
   edit(task: CareTask) {
-    this.id = task.id; this.title = task.title; this.dueDate = task.dueDate ?? ''; this.visitDate = task.visitDate ?? '';
-    this.reminder = !!task.reminderAt;
-    this.reminderAt = task.reminderAt ? localDateTime(new Date(task.reminderAt)) : '';
+    this.editingId.set(task.id);
+    this.visitDate = task.visitDate ?? '';
+    this.form.setValue({
+      title: task.title,
+      dueDate: task.dueDate ?? '',
+      reminder: !!task.reminderAt,
+      reminderAt: task.reminderAt ? localDateTime(new Date(task.reminderAt)) : '',
+    });
     this.status.set('Editing this step.');
   }
-  reset() { this.id = undefined; this.title = ''; this.dueDate = ''; this.reminderAt = ''; this.reminder = false; this.visitDate = ''; }
+  reset() { this.editingId.set(undefined); this.visitDate = ''; this.form.reset(); }
   async save() {
     if (!this.ready() || this.busy()) return;
     this.error.set('');
-    if (!this.title.trim()) { this.error.set('Add the step you want to remember.'); return; }
-    if (this.reminder && (!this.reminderAt || new Date(this.reminderAt).getTime() <= Date.now() || isNaN(new Date(this.reminderAt).getTime()))) {
-      this.error.set('Choose a reminder time in the future.'); return;
-    }
+    this.form.updateValueAndValidity(); // the reminder rule depends on the time now
+    if (this.form.controls.title.invalid) { this.error.set('Add the step you want to remember.'); return; }
+    if (this.form.controls.dueDate.invalid) { this.error.set('Choose a real date, or leave it empty.'); return; }
+    if (this.form.hasError('reminderInFuture')) { this.error.set('Choose a reminder time in the future.'); return; }
+    const { title, dueDate, reminder, reminderAt } = this.form.getRawValue();
     this.busy.set(true);
     try {
-      if (this.reminder && this.reminders.available && !await this.reminders.enable()) throw new Error('Allow notifications in device settings, or save this step without a reminder.');
-      const prior = this.tasks().find((task) => task.id === this.id);
-      await this.repo.saveTask({ id: this.id, title: this.title, dueDate: this.dueDate || undefined, visitDate: this.visitDate || undefined,
-        reminderAt: this.reminder ? new Date(this.reminderAt).toISOString() : undefined, completedAt: prior?.completedAt });
+      if (reminder && this.reminders.available && !await this.reminders.enable()) throw new Error('Allow notifications in device settings, or save this step without a reminder.');
+      const id = this.editingId();
+      const prior = this.tasks().find((task) => task.id === id);
+      await this.repo.saveTask({ id, title: title.trim(), dueDate: dueDate || undefined, visitDate: this.visitDate || undefined,
+        reminderAt: reminder ? new Date(reminderAt).toISOString() : undefined, completedAt: prior?.completedAt });
       await this.syncReminders(); this.reset();
       this.status.set('Next step saved. You can find it in My health and Today.');
     } catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not save this step. Please try again.'); }

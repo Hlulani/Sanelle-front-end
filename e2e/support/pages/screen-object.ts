@@ -17,6 +17,11 @@ export abstract class ScreenObject {
     return this.page.getByRole('link', { name, exact });
   }
 
+  /** A named form field. On short screens Ionic clones the focused input to keep it above the keyboard. */
+  protected field(name: string): Locator {
+    return this.page.locator(`input[name="${name}"]:not(.cloned-input)`);
+  }
+
   protected arrive(landmark: Locator): Promise<void> {
     return arrive(this.page, landmark);
   }

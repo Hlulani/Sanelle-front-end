@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -23,6 +23,7 @@ import { MEAL_TYPE_LABELS } from '../core/models/meal.model';
 
 @Component({
   selector: 'app-today',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, RouterLink, IonContent, MealImageComponent, FindingStatusComponent],
   templateUrl: './today.page.html',

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonModal } from '@ionic/angular/standalone';
@@ -19,6 +19,7 @@ interface ReviewRow {
 
 @Component({
   selector: 'app-report',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, FormsModule, IonContent, IonModal],
   templateUrl: './report.page.html',

@@ -176,7 +176,7 @@
           <span class="visually-hidden">Notes for the appointment</span>
           <textarea [(ngModel)]="notes" (blur)="saveNotes()" placeholder="e.g. Symptoms disrupt my sleep, or something I want to explain at my visit"></textarea>
         </label>
-        <p class="print-only notes-print">{{ notes || 'None.' }}</p>
+        <p class="print-only notes-print">{{ notes() || 'None.' }}</p>
       </section>
 
       <p class="disclaimer">{{ summary().disclaimer }}</p>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   IonTabs,
   IonTabBar,
@@ -11,6 +11,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-tabs',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,

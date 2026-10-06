@@ -1,5 +1,6 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { IonContent, IonButton, IonCheckbox } from '@ionic/angular/standalone';
 import { PlanStoreService } from '../core/services/plan-store.service';
 import { MealService } from '../core/services/meal.service';
@@ -27,11 +28,13 @@ const GROUP_ORDER = ['Produce', 'Meat', 'Seafood', 'Eggs', 'Dairy', 'Grains', 'L
 
 @Component({
   selector: 'app-tab3',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [CommonModule, IonContent, IonButton, IonCheckbox],
+  imports: [IonContent, IonButton, IonCheckbox],
 })
 export class Tab3Page implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private planStore = inject(PlanStoreService);
   private mealService = inject(MealService);
   private authService = inject(AuthService);
@@ -61,7 +64,7 @@ export class Tab3Page implements OnInit {
   readonly subtitle = computed(() => WINDOW_SUBTITLES[this.window()]);
 
   ngOnInit() {
-    this.planStore.plan$.subscribe((plan) => {
+    this.planStore.plan$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((plan) => {
       this.plan.set(plan);
       this.checkedItems.set(new Set());
       if (plan) this.loadMissingMeals();

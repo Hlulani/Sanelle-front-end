@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonButtons,
@@ -20,9 +20,9 @@ import { MealImageComponent } from '../../shared/components/meal-image/meal-imag
 
 @Component({
   selector: 'app-meal-details',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     IonHeader,
     IonToolbar,
     IonButtons,
@@ -31,8 +31,8 @@ import { MealImageComponent } from '../../shared/components/meal-image/meal-imag
     MealImageComponent,
     IonButton,
     IonIcon,
-    IonModal,
-  ],
+    IonModal
+],
   templateUrl: './meal-details.page.html',
   styleUrls: ['./meal-details.page.scss'],
 })
@@ -44,9 +44,9 @@ export class MealDetailsPage implements OnInit {
   private authService = inject(AuthService);
   mealProgress = inject(MealProgressService);
 
-  meal: MealResponse | null = null;
-  isLoading = true;
-  error: string | null = null;
+  readonly meal = signal<MealResponse | null>(null);
+  readonly isLoading = signal(true);
+  readonly error = signal<string | null>(null);
 
   /** The plan date this meal was opened from, if any — lets "finish cooking" mark it cooked. */
   private planDate: string | null = null;
@@ -68,8 +68,8 @@ export class MealDetailsPage implements OnInit {
     this.planDate = this.route.snapshot.queryParamMap?.get('date') ?? null;
 
     if (!id || !this.authService.hasValidToken()) {
-      this.isLoading = false;
-      this.error = 'Unable to load this meal.';
+      this.isLoading.set(false);
+      this.error.set('Unable to load this meal.');
       return;
     }
 
@@ -77,19 +77,19 @@ export class MealDetailsPage implements OnInit {
 
     this.mealService.getMealById(id).subscribe({
       next: (data) => {
-        this.meal = data;
-        this.isLoading = false;
+        this.meal.set(data);
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error fetching meal', err);
-        this.error = 'Could not load this recipe. Please try again.';
-        this.isLoading = false;
+        this.error.set('Could not load this recipe. Please try again.');
+        this.isLoading.set(false);
       },
     });
   }
 
   hasSwapNotes(): boolean {
-    return !!this.meal?.vegetableSubstitutes || !!this.meal?.freshOrFrozen;
+    return !!this.meal()?.vegetableSubstitutes || !!this.meal()?.freshOrFrozen;
   }
 
   increaseServings(): void {
@@ -102,19 +102,20 @@ export class MealDetailsPage implements OnInit {
 
   scaledIngredients(): Ingredient[] {
     const multiplier = this.servings();
-    return (this.meal?.ingredients ?? []).map((ing) => ({
+    return (this.meal()?.ingredients ?? []).map((ing) => ({
       name: ing.name,
       amount: scaleIngredientAmount(ing.amount, multiplier),
     }));
   }
 
   isCooked(): boolean {
-    if (!this.meal || !this.planDate) return false;
-    return this.mealProgress.isCooked(this.planDate, this.meal.id);
+    const meal = this.meal();
+    if (!meal || !this.planDate) return false;
+    return this.mealProgress.isCooked(this.planDate, meal.id);
   }
 
   startCooking(): void {
-    if (!this.meal?.instructions?.length) return;
+    if (!this.meal()?.instructions?.length) return;
     this.currentStep.set(0);
     this.cookModeOpen.set(true);
   }
@@ -124,7 +125,7 @@ export class MealDetailsPage implements OnInit {
   }
 
   totalSteps(): number {
-    return this.meal?.instructions?.length ?? 0;
+    return this.meal()?.instructions?.length ?? 0;
   }
 
   isLastStep(): boolean {
@@ -132,7 +133,7 @@ export class MealDetailsPage implements OnInit {
   }
 
   currentInstruction(): string {
-    return this.meal?.instructions?.[this.currentStep()] ?? '';
+    return this.meal()?.instructions?.[this.currentStep()] ?? '';
   }
 
   progressPercent(): number {
@@ -154,8 +155,9 @@ export class MealDetailsPage implements OnInit {
   }
 
   private finishCooking(): void {
-    if (this.meal && this.planDate && !this.isCooked()) {
-      this.mealProgress.toggleCooked(this.planDate, this.meal.id);
+    const meal = this.meal();
+    if (meal && this.planDate && !this.isCooked()) {
+      this.mealProgress.toggleCooked(this.planDate, meal.id);
     }
     this.cookModeOpen.set(false);
   }

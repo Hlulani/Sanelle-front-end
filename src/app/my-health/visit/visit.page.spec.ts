@@ -37,8 +37,7 @@ describe('After your visit', () => {
     await page.ngOnInit();
     await page.save();
     expect(saveVisit).not.toHaveBeenCalled();
-    page.discussion = 'Something to remember';
-    page.date = '9999-01-01';
+    page.form.patchValue({ discussion: 'Something to remember', date: '9999-01-01' });
     await page.save();
     expect(saveVisit).not.toHaveBeenCalled();
     expect(page.error()).toContain('already happened');
@@ -47,12 +46,11 @@ describe('After your visit', () => {
   it('retains a draft after a failed save and confirms only a successful retry', async () => {
     const page = TestBed.runInInjectionContext(() => new VisitPage());
     await page.ngOnInit();
-    page.discussion = 'Discussed symptoms';
-    page.nextSteps = 'Arrange follow-up';
+    page.form.patchValue({ discussion: 'Discussed symptoms', nextSteps: 'Arrange follow-up' });
     saveVisit.and.rejectWith(new Error('Storage unavailable'));
     await page.save();
     expect(page.status()).toBeNull();
-    expect(page.discussion).toBe('Discussed symptoms');
+    expect(page.form.controls.discussion.value).toBe('Discussed symptoms');
     expect(page.saving()).toBeFalse();
     saveVisit.and.resolveTo();
     await page.save();

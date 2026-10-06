@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { forkJoin, of } from 'rxjs';
@@ -18,6 +18,7 @@ const TYPES = (['BREAKFAST', 'LUNCH', 'DINNER'] as const).map((type) => ({ type,
  */
 @Component({
   selector: 'app-quick-meals',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, IonContent, MealImageComponent],
   templateUrl: './quick-meals.page.html',

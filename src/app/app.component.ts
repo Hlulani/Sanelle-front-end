@@ -1,9 +1,10 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })

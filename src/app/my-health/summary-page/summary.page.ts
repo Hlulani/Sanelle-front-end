@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
@@ -10,6 +10,7 @@ import { buildSummary, summaryAsText } from '../summary';
 
 @Component({
   selector: 'app-summary',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, FormsModule, IonContent],
   templateUrl: './summary.page.html',
@@ -18,8 +19,8 @@ import { buildSummary, summaryAsText } from '../summary';
 export class SummaryPage {
   private repo = inject(HealthRepository);
   private router = inject(Router);
-  @ViewChild('concernInput') private concernInput?: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('concernAction') private concernAction?: ElementRef<HTMLButtonElement>;
+  private readonly concernInput = viewChild<ElementRef<HTMLTextAreaElement>>('concernInput');
+  private readonly concernAction = viewChild<ElementRef<HTMLButtonElement>>('concernAction');
 
   readonly summary = computed(() => buildSummary(this.repo.record()));
   readonly missingFindings = computed(() => FINDING_KEYS
@@ -39,11 +40,11 @@ export class SummaryPage {
   readonly concernError = signal('');
   readonly concernStatus = signal('');
   concernDraft = '';
-  notes = '';
+  readonly notes = signal('');
 
   async ionViewWillEnter() {
     await this.repo.load();
-    this.notes = this.repo.record().summaryNotes;
+    this.notes.set(this.repo.record().summaryNotes);
   }
 
   back() {
@@ -57,7 +58,7 @@ export class SummaryPage {
       await this.repo.load();
       this.concernDraft = this.repo.record().visitGoal ?? '';
       this.editingConcern.set(true);
-      setTimeout(() => this.concernInput?.nativeElement.focus(), 0);
+      setTimeout(() => this.concernInput()?.nativeElement.focus(), 0);
     } catch { this.concernError.set('Could not open your saved concern. Please try again.'); }
     finally { this.savingConcern.set(false); }
   }
@@ -81,7 +82,7 @@ export class SummaryPage {
 
   private closeConcern() {
     this.editingConcern.set(false); this.concernDraft = ''; this.concernError.set('');
-    setTimeout(() => this.concernAction?.nativeElement.focus(), 0);
+    setTimeout(() => this.concernAction()?.nativeElement.focus(), 0);
   }
 
   ionViewWillLeave() { this.closeConcern(); }
@@ -104,7 +105,7 @@ export class SummaryPage {
   }
 
   saveNotes() {
-    return this.saveChange(() => this.repo.setSummaryNotes(this.notes));
+    return this.saveChange(() => this.repo.setSummaryNotes(this.notes()));
   }
 
   private async saveChange(change: () => Promise<void>): Promise<boolean> {
@@ -121,7 +122,7 @@ export class SummaryPage {
   /** Sharing is always started by the person; nothing is sent automatically. */
   async share() {
     if (!await this.saveNotes()) return;
-    const text = summaryAsText(buildSummary({ ...this.repo.record(), summaryNotes: this.notes }));
+    const text = summaryAsText(buildSummary({ ...this.repo.record(), summaryNotes: this.notes() }));
     try {
       const { value: canShare } = await Share.canShare();
       if (canShare) {

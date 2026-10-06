@@ -19,360 +19,390 @@
     @if (error()) { <p class="plan-message error-text" role="alert">{{ error() }}</p> }
     @if (planStatus()) { <p class="plan-message" role="status">{{ planStatus() }}</p> }
     @if (undoPlan() && !previewPlan()) { <button type="button" class="pref-chip" [disabled]="savingPlan()" (click)="undoChange()">Undo last plan change</button> }
-    @if (!plan() && !previewPlan()) { <section class="sn-card plan-intro"><h2>A few choices, then your meals</h2><p>Start with a week. Preview the meals, swap anything you don’t want, then save and shop.</p><a routerLink="/nourish/quick" class="plan-link">Just need something easy today? Find quick meals</a></section> }
+    @if (!plan() && !previewPlan()) { <section class="sn-card plan-intro"><p>Choose your week and what you eat, preview the meals, then save and shop.</p><a routerLink="/nourish/quick" class="plan-link">Just need something easy today? Find quick meals</a></section> }
     @if (ended() && !previewPlan()) { <section class="sn-card"><h2>Your saved plan has ended</h2><p>You can still open its recipes. Start a new plan when you’re ready.</p><button class="sn-btn sn-btn--brand" type="button" (click)="openPreferences()">Plan my next meals</button></section> }
     @if (previewPlan()) { <section class="sn-card preview-banner"><h2>Check your new plan</h2><p>{{ preferenceSummary(previewPlan()?.preferences) }}</p><p>Your saved plan will change only when you choose “Use this plan”. You can swap recipes first.</p><button type="button" class="sn-btn sn-btn--brand" [disabled]="savingPlan()" (click)="acceptPreview()">{{ savingPlan() ? 'Saving…' : 'Use this plan' }}</button><button type="button" class="sn-btn sn-btn--quiet" [disabled]="savingPlan()" (click)="discardPreview()">{{ plan() ? 'Keep my current plan' : 'Adjust my choices' }}</button></section> }
 
-    <section class="plan-preview" *ngIf="displayPlan() as plan">
-      <div class="section-row">
-        <h2>{{ previewPlan() ? 'Preview meals' : 'Your meals' }}</h2>
-        <button type="button" class="sn-btn sn-btn--apricot groceries-btn" [disabled]="!!previewPlan()" (click)="goToGroceryList()">
-          <ion-icon name="cart-outline" aria-hidden="true"></ion-icon>
-          Groceries
-        </button>
-      </div>
-
-      <div class="sn-segment plan-view" role="group" aria-label="Meal plan view"><button type="button" [attr.aria-pressed]="planView() === 'day'" (click)="planView.set('day')">Day</button><button type="button" [attr.aria-pressed]="planView() === 'week'" (click)="planView.set('week')">Week</button></div>
-      <div class="day-navigation"><button type="button" class="pref-chip" aria-label="Previous day" [disabled]="selectedDayIndex() === 0" (click)="previousDay()">‹</button><strong>{{ selectedDay() ? dayTitle(selectedDay()!.date) : 'Choose a day' }}</strong><button type="button" class="pref-chip" aria-label="Next day" [disabled]="selectedDayIndex() >= plan.daysPlan.length - 1" (click)="nextDay()">›</button></div>
-      <div class="day-pills" role="group" aria-label="Days in this week"><button type="button" *ngFor="let item of dayWindow()" class="day-pill" [class.active]="selectedDayIndex() === item.index" [attr.aria-pressed]="selectedDayIndex() === item.index" [attr.aria-label]="dayTitle(item.day.date)" (click)="selectDay(item.index)"><span class="day-pill-top">{{ dayPillTop(item.day.date) }}</span><span class="day-pill-bottom">{{ dayPillBottom(item.day.date) }}</span></button></div>
-      @if (previewPlan()) { <p class="meal-why">Save this plan to make its grocery list.</p> }
-      @if (planView() === 'week') { <div class="week-list">@for (item of dayWindow(); track item.day.date) { <article class="sn-card"><button type="button" class="week-day" (click)="selectDay(item.index); planView.set('day')">{{ dayTitle(item.day.date) }} ›</button>@for (meal of item.day.meals; track meal.mealType) { <button class="week-meal" type="button" (click)="openMealDetails(meal.mealId, item.day.date)"><app-meal-image class="week-meal-photo" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image><span class="week-meal-text"><span>{{ mealTypeLabel(meal.mealType) }}</span><strong>{{ meal.name }}</strong><span>{{ meal.prepTimeMinutes ? meal.prepTimeMinutes + ' min' : 'Open recipe' }}</span></span></button> }@empty { <p>No recipes matched these choices for this day.</p> }</article> }</div> }
-
-      <p class="unfilled-note" *ngIf="restrictionsChanged()" role="note">
-        You changed your allergies or foods you don’t eat after making this plan. Make a new plan so every meal follows them.
-      </p>
-
-      <p class="unfilled-note" *ngIf="unfilledLabel() as u" role="note">
-        No {{ u.toLowerCase() }} recipes match your choices, so those slots are empty. Try “Any” for prep time or what you eat.
-      </p>
-
-      @if (planView() === 'day') {
-      <div class="meal-cards" *ngIf="selectedDay() as day">
-        <div class="meal-card" *ngFor="let meal of day.meals">
-          <div class="meal-card-media">
-            <app-meal-image class="plan-meal-photo" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image>
-            <span [class]="mealTypeClass(meal.mealType)">{{ mealTypeLabel(meal.mealType) }}</span>
-            <button
-              type="button"
-              class="cooked-toggle"
-              *ngIf="!previewPlan()"
-              [disabled]="savingPlan()"
-              [class.cooked]="mealProgress.isCooked(day.date, meal.mealId)"
-              [attr.aria-pressed]="mealProgress.isCooked(day.date, meal.mealId)"
-              [attr.aria-label]="mealProgress.isCooked(day.date, meal.mealId) ? 'Mark ' + meal.name + ' as not cooked' : 'Mark ' + meal.name + ' as cooked'"
-              (click)="mealProgress.toggleCooked(day.date, meal.mealId)"
-            >
-              <ion-icon [name]="mealProgress.isCooked(day.date, meal.mealId) ? 'checkmark-circle' : 'ellipse-outline'" aria-hidden="true"></ion-icon>
-            </button>
-          </div>
-
-          <div class="meal-card-body">
-            <h3 class="meal-name">{{ meal.name }}</h3>
-            <p class="meal-time">{{ meal.prepTimeMinutes ? meal.prepTimeMinutes + ' minutes to prepare' : 'Preparation time in recipe' }}</p>
-
-            <div class="meal-highlights">
-              <span class="highlight-chip" *ngFor="let highlight of mealHighlights(meal)">{{ highlight }}</span>
-            </div>
-
-            <p class="meal-why" *ngIf="meal.reasons?.length">
-              <span class="why-label">Why this meal:</span> {{ meal.reasons!.join(' · ') }}
-            </p>
-
-            <div class="meal-card-actions">
-              <ion-button class="meal-swap" size="small" fill="outline" [disabled]="savingPlan()" (click)="openSwap(meal)">
-                Swap
-              </ion-button>
-              <ion-button class="meal-view" size="small" fill="clear" (click)="openMealDetails(meal.mealId, day.date)">
-                View recipe
-              </ion-button>
-            </div>
-          </div>
+    @if (displayPlan(); as plan) {
+      <section class="plan-preview">
+        <div class="section-row">
+          <h2>{{ previewPlan() ? 'Preview meals' : 'Your meals' }}</h2>
+          <button type="button" class="sn-btn sn-btn--apricot groceries-btn" [disabled]="!!previewPlan()" (click)="goToGroceryList()">
+            <ion-icon name="cart-outline" aria-hidden="true"></ion-icon>
+            Groceries
+          </button>
         </div>
-        @if (!day.meals.length) { <p class="sn-card">No recipes matched these choices. Adjust prep time or eating style; keep your allergy exclusions.</p> }
-      </div>
-      }
-      @if (!previewPlan()) { <button type="button" class="sn-btn sn-btn--apricot plan-adjust" (click)="openPreferences()">Plan another week or change my choices</button> }
-    </section>
+        <div class="sn-segment plan-view" role="group" aria-label="Meal plan view"><button type="button" [attr.aria-pressed]="planView() === 'day'" (click)="planView.set('day')">Day</button><button type="button" [attr.aria-pressed]="planView() === 'week'" (click)="planView.set('week')">Week</button></div>
+        <div class="day-navigation"><button type="button" class="pref-chip" aria-label="Previous day" [disabled]="selectedDayIndex() === 0" (click)="previousDay()">‹</button><strong>{{ selectedDay() ? dayTitle(selectedDay()!.date) : 'Choose a day' }}</strong><button type="button" class="pref-chip" aria-label="Next day" [disabled]="selectedDayIndex() >= plan.daysPlan.length - 1" (click)="nextDay()">›</button></div>
+        <div class="day-pills" role="group" aria-label="Days in this week">@for (item of dayWindow(); track item) {
+          <button type="button" class="day-pill" [class.active]="selectedDayIndex() === item.index" [attr.aria-pressed]="selectedDayIndex() === item.index" [attr.aria-label]="dayTitle(item.day.date)" (click)="selectDay(item.index)"><span class="day-pill-top">{{ dayPillTop(item.day.date) }}</span><span class="day-pill-bottom">{{ dayPillBottom(item.day.date) }}</span></button>
+        }</div>
+        @if (previewPlan()) { <p class="meal-why">Save this plan to make its grocery list.</p> }
+        @if (planView() === 'week') { <div class="week-list">@for (item of dayWindow(); track item.day.date) { <article class="sn-card"><button type="button" class="week-day" (click)="selectDay(item.index); planView.set('day')">{{ dayTitle(item.day.date) }} ›</button>@for (meal of item.day.meals; track meal.mealType) { <button class="week-meal" type="button" (click)="openMealDetails(meal.mealId, item.day.date)"><app-meal-image class="week-meal-photo" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image><span class="week-meal-text"><span>{{ mealTypeLabel(meal.mealType) }}</span><strong>{{ meal.name }}</strong><span>{{ meal.prepTimeMinutes ? meal.prepTimeMinutes + ' min' : 'Open recipe' }}</span></span></button> }@empty { <p>No recipes matched these choices for this day.</p> }</article> }</div> }
+        @if (restrictionsChanged()) {
+          <p class="unfilled-note" role="note">
+            You changed your allergies or foods you don’t eat after making this plan. Make a new plan so every meal follows them.
+          </p>
+        }
+        @if (unfilledLabel(); as u) {
+          <p class="unfilled-note" role="note">
+            No {{ u.toLowerCase() }} recipes match your choices, so those slots are empty. Try “Any” for prep time or what you eat.
+          </p>
+        }
+        @if (planView() === 'day') {
+          @if (selectedDay(); as day) {
+            <div class="meal-cards">
+              @for (meal of day.meals; track meal) {
+                <div class="meal-card">
+                  <div class="meal-card-media">
+                    <app-meal-image class="plan-meal-photo" [name]="meal.name" [imageUrl]="meal.imageUrl" [mealType]="meal.mealType"></app-meal-image>
+                    <span [class]="mealTypeClass(meal.mealType)">{{ mealTypeLabel(meal.mealType) }}</span>
+                    @if (!previewPlan()) {
+                      <button
+                        type="button"
+                        class="cooked-toggle"
+                        [disabled]="savingPlan()"
+                        [class.cooked]="mealProgress.isCooked(day.date, meal.mealId)"
+                        [attr.aria-pressed]="mealProgress.isCooked(day.date, meal.mealId)"
+                        [attr.aria-label]="mealProgress.isCooked(day.date, meal.mealId) ? 'Mark ' + meal.name + ' as not cooked' : 'Mark ' + meal.name + ' as cooked'"
+                        (click)="mealProgress.toggleCooked(day.date, meal.mealId)"
+                        >
+                        <ion-icon [name]="mealProgress.isCooked(day.date, meal.mealId) ? 'checkmark-circle' : 'ellipse-outline'" aria-hidden="true"></ion-icon>
+                      </button>
+                    }
+                  </div>
+                  <div class="meal-card-body">
+                    <h3 class="meal-name">{{ meal.name }}</h3>
+                    <p class="meal-time">{{ meal.prepTimeMinutes ? meal.prepTimeMinutes + ' minutes to prepare' : 'Preparation time in recipe' }}</p>
+                    <div class="meal-highlights">
+                      @for (highlight of mealHighlights(meal); track highlight) {
+                        <span class="highlight-chip">{{ highlight }}</span>
+                      }
+                    </div>
+                    @if (meal.reasons?.length) {
+                      <p class="meal-why">
+                        <span class="why-label">Why this meal:</span> {{ meal.reasons!.join(' · ') }}
+                      </p>
+                    }
+                    <div class="meal-card-actions">
+                      <ion-button class="meal-swap" size="small" fill="outline" [disabled]="savingPlan()" (click)="openSwap(meal)">
+                        Swap
+                      </ion-button>
+                      <ion-button class="meal-view" size="small" fill="clear" (click)="openMealDetails(meal.mealId, day.date)">
+                        View recipe
+                      </ion-button>
+                    </div>
+                  </div>
+                </div>
+              }
+              @if (!day.meals.length) { <p class="sn-card">No recipes matched these choices. Adjust prep time or eating style; keep your allergy exclusions.</p> }
+            </div>
+          }
+        }
+        @if (!previewPlan()) { <button type="button" class="sn-btn sn-btn--apricot plan-adjust" (click)="openPreferences()">Plan another week or change my choices</button> }
+      </section>
+    }
 
     <ion-card class="planner-card">
       <button type="button" class="planner-toggle" [attr.aria-expanded]="preferencesOpen()" (click)="preferencesOpen() ? preferencesOpen.set(false) : openPreferences()">{{ plan() ? 'Plan another set of meals' : 'Make my first plan' }} <span aria-hidden="true">{{ preferencesOpen() ? '−' : '+' }}</span></button>
 
-      <ion-card-content *ngIf="preferencesOpen()">
-        <div class="setup-steps" role="group" aria-label="Plan setup steps"><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'schedule'" (click)="settingsStep.set('schedule')">1 · My week</button><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'food'" (click)="settingsStep.set('food')">2 · My food</button><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'review'" (click)="settingsStep.set('review')">3 · Check</button></div>
-        <fieldset class="setup-fields" [disabled]="!ready() || isLoading() || savingPlan() || foodSaving()">
-        @if (settingsStep() === 'schedule') {
-        <h2 class="section-title">Meals a day</h2>
-
-        <div class="chip-row">
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="fastingStyle() === 'NO_FASTING_3_MEALS'"
-            [attr.aria-pressed]="fastingStyle() === 'NO_FASTING_3_MEALS'"
-            (click)="fastingStyle.set('NO_FASTING_3_MEALS')"
-          >
-            <ion-icon name="restaurant-outline"></ion-icon>
-            <span>3 meals</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="fastingStyle() === 'FASTING_16_8'"
-            [attr.aria-pressed]="fastingStyle() === 'FASTING_16_8'"
-            (click)="fastingStyle.set('FASTING_16_8')"
-          >
-            <ion-icon name="hourglass-outline"></ion-icon>
-            <span>2 meals</span>
-          </button>
-        </div>
-
-        <h2 class="section-title">How many days?</h2><div class="chip-row" role="group" aria-label="Plan duration">@for (days of [7, 14, 30]; track days) { <button type="button" class="pref-chip" [attr.aria-pressed]="duration() === days" (click)="setDuration(days)">{{ days }} days</button> }</div>
-        <label class="sn-field start-choice"><span>Start date</span><input type="date" [min]="today" [ngModel]="planStartDate()" (ngModelChange)="startDateISO.set($event)" /></label><p class="meal-why">Plan dates: {{ planRangeLabel() }}</p><p class="meal-why">Two meals schedules lunch and dinner. Three meals includes breakfast too.</p>
-        <button type="button" class="sn-btn sn-btn--brand setup-next" (click)="settingsStep.set('food')">Next: food choices</button>
-        }
-        @if (settingsStep() === 'food') {
-        <h2 class="section-title">What you eat</h2>
-
-        <div class="chip-row">
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="proteinPreference() === 'ANY'"
-            [attr.aria-pressed]="proteinPreference() === 'ANY'"
-            (click)="setProteinPreference('ANY')"
-          >
-            <ion-icon name="apps-outline"></ion-icon>
-            <span>Any</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="proteinPreference() === 'PESCATARIAN'"
-            [attr.aria-pressed]="proteinPreference() === 'PESCATARIAN'"
-            (click)="setProteinPreference('PESCATARIAN')"
-          >
-            <ion-icon name="fish-outline"></ion-icon>
-            <span>Pescatarian</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="proteinPreference() === 'VEGETARIAN'"
-            [attr.aria-pressed]="proteinPreference() === 'VEGETARIAN'"
-            (click)="setProteinPreference('VEGETARIAN')"
-          >
-            <ion-icon name="leaf-outline"></ion-icon>
-            <span>Vegetarian</span>
-          </button>
-          <button
-            type="button"
-            class="pref-chip"
-            [class.active]="proteinPreference() === 'VEGAN'"
-            [attr.aria-pressed]="proteinPreference() === 'VEGAN'"
-            (click)="setProteinPreference('VEGAN')"
-          >
-            <ion-icon name="nutrition-outline"></ion-icon>
-            <span>Vegan</span>
-          </button>
-        </div>
-
-        <h2 class="section-title">Prep time</h2>
-
-        <div class="chip-row">
-          <button
-            *ngFor="let o of prepOptions"
-            type="button"
-            class="pref-chip"
-            [class.active]="maxPrepMinutes() === o.value"
-            [attr.aria-pressed]="maxPrepMinutes() === o.value"
-            (click)="maxPrepMinutes.set(o.value)"
-          >
-            <span>{{ o.value === null ? 'Any' : 'Up to ' + o.label }}</span>
-          </button>
-        </div>
-
-        <h2 class="section-title">Allergies</h2>
-        <div class="chip-row">
-          <button
-            *ngFor="let a of allergens"
-            type="button"
-            class="pref-chip"
-            [class.active]="hasAllergy(a.code)"
-            [attr.aria-pressed]="hasAllergy(a.code)"
-            (click)="toggleAllergy(a.code)"
-          >
-            <span>{{ a.label }}</span>
-          </button>
-        </div>
-
-        <h2 class="section-title">Foods you don’t eat</h2>
-        <form class="dislike-form" (submit)="$event.preventDefault(); addDislike()">
-          <input
-            class="dislike-input"
-            type="text"
-            name="newDislike"
-            [(ngModel)]="newDislike"
-            placeholder="e.g. mushrooms"
-            aria-label="Add a food you don’t eat"
-          />
-          <button type="submit" class="pref-chip">Add</button>
-        </form>
-        <div class="chip-row" *ngIf="restrictions().dislikes.length">
-          <button
-            *ngFor="let d of restrictions().dislikes"
-            type="button"
-            class="pref-chip active"
-            (click)="removeDislike(d)"
-            [attr.aria-label]="'Remove ' + d"
-          >
-            <span>{{ d }} ✕</span>
-          </button>
-        </div>
-
-        <p class="allergy-note" *ngIf="restrictions().allergies.length">
-          We leave out meals with these allergens, including ingredients that may contain them, like stock or granola. Always check labels and packaging.
-        </p>
-
-        <div class="setup-actions"><button type="button" class="sn-btn sn-btn--quiet" (click)="settingsStep.set('schedule')">Back</button><button type="button" class="sn-btn sn-btn--brand" (click)="settingsStep.set('review')">Next: check my choices</button></div>
-        }
-        @if (settingsStep() === 'review') {
-          <h2 class="section-title">Ready to preview?</h2><p>{{ duration() }} days · {{ planRangeLabel() }}</p><p>{{ preferenceSummary() }}</p><p>Allergies: {{ allergySummary() }}</p><p>Foods left out: {{ restrictions().dislikes.join(', ') || 'None selected' }}</p><p class="meal-why">Recipes are chosen to match your preferences. You can swap them before saving the plan.</p><div class="setup-actions"><button type="button" class="sn-btn sn-btn--quiet" (click)="settingsStep.set('food')">Back</button><button type="button" class="sn-btn sn-btn--brand" (click)="generatePlan()" [disabled]="isLoading()">{{ isLoading() ? 'Preparing meals…' : 'Preview my meals' }}</button></div>
-        }
-        </fieldset>
-      </ion-card-content>
+      @if (preferencesOpen()) {
+        <ion-card-content>
+          <div class="setup-steps" role="group" aria-label="Plan setup steps"><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'schedule'" (click)="settingsStep.set('schedule')">1 · My week</button><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'food'" (click)="settingsStep.set('food')">2 · My food</button><button class="pref-chip" type="button" [attr.aria-pressed]="settingsStep() === 'review'" (click)="settingsStep.set('review')">3 · Check</button></div>
+          <fieldset class="setup-fields" [disabled]="!ready() || isLoading() || savingPlan() || foodSaving()">
+            @if (settingsStep() === 'schedule') {
+              <h2 class="section-title">Meals a day</h2>
+              <div class="chip-row">
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="fastingStyle() === 'NO_FASTING_3_MEALS'"
+                  [attr.aria-pressed]="fastingStyle() === 'NO_FASTING_3_MEALS'"
+                  (click)="fastingStyle.set('NO_FASTING_3_MEALS')"
+                  >
+                  <ion-icon name="restaurant-outline"></ion-icon>
+                  <span>3 meals</span>
+                </button>
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="fastingStyle() === 'FASTING_16_8'"
+                  [attr.aria-pressed]="fastingStyle() === 'FASTING_16_8'"
+                  (click)="fastingStyle.set('FASTING_16_8')"
+                  >
+                  <ion-icon name="hourglass-outline"></ion-icon>
+                  <span>2 meals</span>
+                </button>
+              </div>
+              <h2 class="section-title">How many days?</h2><div class="chip-row" role="group" aria-label="Plan duration">@for (days of [7, 14, 30]; track days) { <button type="button" class="pref-chip" [attr.aria-pressed]="duration() === days" (click)="setDuration(days)">{{ days }} days</button> }</div>
+              <label class="sn-field start-choice"><span>Start date</span><input type="date" [min]="today" [ngModel]="planStartDate()" (ngModelChange)="startDateISO.set($event)" /></label><p class="meal-why">Plan dates: {{ planRangeLabel() }}</p><p class="meal-why">Two meals schedules lunch and dinner. Three meals includes breakfast too.</p>
+              <button type="button" class="sn-btn sn-btn--brand setup-next" (click)="settingsStep.set('food')">Next: food choices</button>
+            }
+            @if (settingsStep() === 'food') {
+              <h2 class="section-title">What you eat</h2>
+              <div class="chip-row">
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="proteinPreference() === 'ANY'"
+                  [attr.aria-pressed]="proteinPreference() === 'ANY'"
+                  (click)="setProteinPreference('ANY')"
+                  >
+                  <ion-icon name="apps-outline"></ion-icon>
+                  <span>Any</span>
+                </button>
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="proteinPreference() === 'PESCATARIAN'"
+                  [attr.aria-pressed]="proteinPreference() === 'PESCATARIAN'"
+                  (click)="setProteinPreference('PESCATARIAN')"
+                  >
+                  <ion-icon name="fish-outline"></ion-icon>
+                  <span>Pescatarian</span>
+                </button>
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="proteinPreference() === 'VEGETARIAN'"
+                  [attr.aria-pressed]="proteinPreference() === 'VEGETARIAN'"
+                  (click)="setProteinPreference('VEGETARIAN')"
+                  >
+                  <ion-icon name="leaf-outline"></ion-icon>
+                  <span>Vegetarian</span>
+                </button>
+                <button
+                  type="button"
+                  class="pref-chip"
+                  [class.active]="proteinPreference() === 'VEGAN'"
+                  [attr.aria-pressed]="proteinPreference() === 'VEGAN'"
+                  (click)="setProteinPreference('VEGAN')"
+                  >
+                  <ion-icon name="nutrition-outline"></ion-icon>
+                  <span>Vegan</span>
+                </button>
+              </div>
+              <h2 class="section-title">Prep time</h2>
+              <div class="chip-row">
+                @for (o of prepOptions; track o) {
+                  <button
+                    type="button"
+                    class="pref-chip"
+                    [class.active]="maxPrepMinutes() === o.value"
+                    [attr.aria-pressed]="maxPrepMinutes() === o.value"
+                    (click)="maxPrepMinutes.set(o.value)"
+                    >
+                    <span>{{ o.value === null ? 'Any' : 'Up to ' + o.label }}</span>
+                  </button>
+                }
+              </div>
+              <h2 class="section-title">Allergies</h2>
+              <div class="chip-row">
+                @for (a of allergens; track a) {
+                  <button
+                    type="button"
+                    class="pref-chip"
+                    [class.active]="hasAllergy(a.code)"
+                    [attr.aria-pressed]="hasAllergy(a.code)"
+                    (click)="toggleAllergy(a.code)"
+                    >
+                    <span>{{ a.label }}</span>
+                  </button>
+                }
+              </div>
+              <h2 class="section-title">Foods you don’t eat</h2>
+              <form class="dislike-form" (submit)="$event.preventDefault(); addDislike()">
+                <input
+                  class="dislike-input"
+                  type="text"
+                  name="newDislike"
+                  [(ngModel)]="newDislike"
+                  placeholder="e.g. mushrooms"
+                  aria-label="Add a food you don’t eat"
+                  />
+                <button type="submit" class="pref-chip">Add</button>
+              </form>
+              @if (restrictions().dislikes.length) {
+                <div class="chip-row">
+                  @for (d of restrictions().dislikes; track d) {
+                    <button
+                      type="button"
+                      class="pref-chip active"
+                      (click)="removeDislike(d)"
+                      [attr.aria-label]="'Remove ' + d"
+                      >
+                      <span>{{ d }} ✕</span>
+                    </button>
+                  }
+                </div>
+              }
+              @if (restrictions().allergies.length) {
+                <p class="allergy-note">
+                  We leave out meals with these allergens, including ingredients that may contain them, like stock or granola. Always check labels and packaging.
+                </p>
+              }
+              <div class="setup-actions"><button type="button" class="sn-btn sn-btn--quiet" (click)="settingsStep.set('schedule')">Back</button><button type="button" class="sn-btn sn-btn--brand" (click)="settingsStep.set('review')">Next: check my choices</button></div>
+            }
+            @if (settingsStep() === 'review') {
+              <h2 class="section-title">Ready to preview?</h2><p>{{ duration() }} days · {{ planRangeLabel() }}</p><p>{{ preferenceSummary() }}</p><p>Allergies: {{ allergySummary() }}</p><p>Foods left out: {{ restrictions().dislikes.join(', ') || 'None selected' }}</p><p class="meal-why">Recipes are chosen to match your preferences. You can swap them before saving the plan.</p><div class="setup-actions"><button type="button" class="sn-btn sn-btn--quiet" (click)="settingsStep.set('food')">Back</button><button type="button" class="sn-btn sn-btn--brand" (click)="generatePlan()" [disabled]="isLoading()">{{ isLoading() ? 'Preparing meals…' : 'Preview my meals' }}</button></div>
+            }
+          </fieldset>
+        </ion-card-content>
+      }
     </ion-card>
 
     @if (plan() && !previewPlan()) { <section class="community-entry"><button type="button" class="plan-link" [attr.aria-expanded]="communityOpen()" (click)="openCommunity()">Optional cooking challenges {{ communityOpen() ? '−' : '+' }}</button><p class="meal-why">For when you want company or a personal goal. Cooking every planned meal is optional.</p></section> }
     @if (communityOpen() && !previewPlan()) {
-    <section class="challenges-section" *ngIf="plan()">
-      <div class="section-row">
-        <h2>Try a Challenge</h2>
-      </div>
-
-      <div class="challenge-row">
-        <div class="challenge-card" *ngFor="let challenge of challenges()">
-          <div class="challenge-icon">
-            <ion-icon [name]="challenge.icon"></ion-icon>
+      @if (plan()) {
+        <section class="challenges-section">
+          <div class="section-row">
+            <h2>Try a Challenge</h2>
           </div>
-
-          <div class="challenge-participants" *ngIf="challengeParticipants(challenge) as count">
-            <ion-icon name="people-outline"></ion-icon>
-            <strong>{{ count }}</strong>&nbsp;{{ count === 1 ? 'person' : 'people' }} doing this with you
-          </div>
-
-          <div class="challenge-title">{{ challenge.title }}</div>
-          <div class="challenge-desc">{{ challenge.description }}</div>
-
-          <ng-container *ngIf="challengesService.isJoined(challenge.id) as joined">
-            <ng-container *ngIf="challengeProgress(challenge) as progress">
-              <div class="challenge-progress">
-                <div class="challenge-progress-bar">
-                  <div
-                    class="challenge-progress-fill"
-                    [style.width.%]="(progress.current / progress.target) * 100"
-                  ></div>
+          <div class="challenge-row">
+            @for (challenge of challenges(); track challenge) {
+              <div class="challenge-card">
+                <div class="challenge-icon">
+                  <ion-icon [name]="challenge.icon"></ion-icon>
                 </div>
-                <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+                @if (challengeParticipants(challenge); as count) {
+                  <div class="challenge-participants">
+                    <ion-icon name="people-outline"></ion-icon>
+                    <strong>{{ count }}</strong>&nbsp;{{ count === 1 ? 'person' : 'people' }} doing this with you
+                  </div>
+                }
+                <div class="challenge-title">{{ challenge.title }}</div>
+                <div class="challenge-desc">{{ challenge.description }}</div>
+                @if (challengesService.isJoined(challenge.id); as joined) {
+                  @if (challengeProgress(challenge); as progress) {
+                    <div class="challenge-progress">
+                      <div class="challenge-progress-bar">
+                        <div
+                          class="challenge-progress-fill"
+                          [style.width.%]="(progress.current / progress.target) * 100"
+                        ></div>
+                      </div>
+                      <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+                    </div>
+                    @if (progress.completed) {
+                      <div class="challenge-status">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Completed
+                      </div>
+                    }
+                    @if (progress.expired) {
+                      <div class="challenge-status expired">
+                        Challenge ended
+                      </div>
+                    }
+                    @if (!progress.completed && !progress.expired) {
+                      <div class="challenge-status">
+                        {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+                      </div>
+                    }
+                    <ion-button
+                      expand="block"
+                      size="small"
+                      fill="outline"
+                      (click)="progress.completed || progress.expired ? resetChallenge(challenge) : leaveChallenge(challenge)"
+                      >
+                      {{ progress.completed || progress.expired ? 'Reset' : 'Leave challenge' }}
+                    </ion-button>
+                  }
+                }
+                @if (!challengesService.isJoined(challenge.id)) {
+                  <ion-button
+                    expand="block"
+                    size="small"
+                    class="challenge-join-btn"
+                    (click)="joinChallenge(challenge)"
+                    >
+                    Join
+                  </ion-button>
+                }
               </div>
-
-              <div class="challenge-status" *ngIf="progress.completed">
-                <ion-icon name="checkmark-circle"></ion-icon>
-                Completed
-              </div>
-              <div class="challenge-status expired" *ngIf="progress.expired">
-                Challenge ended
-              </div>
-              <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
-                {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
-              </div>
-
-              <ion-button
-                expand="block"
-                size="small"
-                fill="outline"
-                (click)="progress.completed || progress.expired ? resetChallenge(challenge) : leaveChallenge(challenge)"
-              >
-                {{ progress.completed || progress.expired ? 'Reset' : 'Leave challenge' }}
-              </ion-button>
-            </ng-container>
-          </ng-container>
-
-          <ion-button
-            *ngIf="!challengesService.isJoined(challenge.id)"
-            expand="block"
-            size="small"
-            class="challenge-join-btn"
-            (click)="joinChallenge(challenge)"
-          >
-            Join
-          </ion-button>
-        </div>
-      </div>
-    </section>
-
-    <section class="custom-challenges-section" *ngIf="plan()">
-      <div class="section-row">
-        <h2>Your Challenges</h2>
-      </div>
-
-      <div class="custom-challenge-row" *ngIf="customChallenges().length">
-        <div class="custom-challenge-card" *ngFor="let challenge of customChallenges()">
-          <div class="custom-challenge-header">
-            <div class="custom-challenge-title">{{ challenge.name }}</div>
-            <span class="custom-challenge-owner-badge" *ngIf="challenge.isCreator">Yours</span>
+            }
           </div>
-          <div class="custom-challenge-desc" *ngIf="challenge.description">{{ challenge.description }}</div>
+        </section>
+      }
 
-          <div class="member-strip" *ngIf="membersFor(challenge.id).length">
-            <app-initial-avatar
-              *ngFor="let member of membersFor(challenge.id).slice(0, 5)"
-              [name]="member.username"
-              [size]="28"
-              class="member-avatar"
-            ></app-initial-avatar>
-            <div class="member-overflow" *ngIf="extraMemberCount(challenge.id) > 0">
-              +{{ extraMemberCount(challenge.id) }}
-            </div>
+      @if (plan()) {
+        <section class="custom-challenges-section">
+          <div class="section-row">
+            <h2>Your Challenges</h2>
           </div>
-
-          <ng-container *ngIf="customChallengeProgress(challenge) as progress">
-            <div class="challenge-progress">
-              <div class="challenge-progress-bar">
-                <div
-                  class="challenge-progress-fill"
-                  [style.width.%]="(progress.current / progress.target) * 100"
-                ></div>
-              </div>
-              <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+          @if (customChallenges().length) {
+            <div class="custom-challenge-row">
+              @for (challenge of customChallenges(); track challenge) {
+                <div class="custom-challenge-card">
+                  <div class="custom-challenge-header">
+                    <div class="custom-challenge-title">{{ challenge.name }}</div>
+                    @if (challenge.isCreator) {
+                      <span class="custom-challenge-owner-badge">Yours</span>
+                    }
+                  </div>
+                  @if (challenge.description) {
+                    <div class="custom-challenge-desc">{{ challenge.description }}</div>
+                  }
+                  @if (membersFor(challenge.id).length) {
+                    <div class="member-strip">
+                      @for (member of membersFor(challenge.id).slice(0, 5); track member) {
+                        <app-initial-avatar
+                          [name]="member.username"
+                          [size]="28"
+                          class="member-avatar"
+                        ></app-initial-avatar>
+                      }
+                      @if (extraMemberCount(challenge.id) > 0) {
+                        <div class="member-overflow">
+                          +{{ extraMemberCount(challenge.id) }}
+                        </div>
+                      }
+                    </div>
+                  }
+                  @if (customChallengeProgress(challenge); as progress) {
+                    <div class="challenge-progress">
+                      <div class="challenge-progress-bar">
+                        <div
+                          class="challenge-progress-fill"
+                          [style.width.%]="(progress.current / progress.target) * 100"
+                        ></div>
+                      </div>
+                      <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+                    </div>
+                    @if (progress.completed) {
+                      <div class="challenge-status">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Completed
+                      </div>
+                    }
+                    @if (progress.expired) {
+                      <div class="challenge-status expired">Challenge ended</div>
+                    }
+                    @if (!progress.completed && !progress.expired) {
+                      <div class="challenge-status">
+                        {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+                      </div>
+                    }
+                  }
+                  <ion-button expand="block" size="small" fill="outline" (click)="shareChallenge(challenge)">
+                    <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+                    Share invite
+                  </ion-button>
+                </div>
+              }
             </div>
-
-            <div class="challenge-status" *ngIf="progress.completed">
-              <ion-icon name="checkmark-circle"></ion-icon>
-              Completed
-            </div>
-            <div class="challenge-status expired" *ngIf="progress.expired">Challenge ended</div>
-            <div class="challenge-status" *ngIf="!progress.completed && !progress.expired">
-              {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
-            </div>
-          </ng-container>
-
-          <ion-button expand="block" size="small" fill="outline" (click)="shareChallenge(challenge)">
-            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
-            Share invite
-          </ion-button>
-        </div>
-      </div>
-
-      <div class="custom-challenge-actions">
-        <ion-button expand="block" fill="outline" size="small" (click)="openCreateModal()">
-          <ion-icon name="add" slot="start"></ion-icon>
-          Create a challenge
-        </ion-button>
-        <ion-button expand="block" fill="clear" size="small" (click)="openJoinModal()">
-          Have an invite code?
-        </ion-button>
-      </div>
-    </section>
+          }
+          <div class="custom-challenge-actions">
+            <ion-button expand="block" fill="outline" size="small" (click)="openCreateModal()">
+              <ion-icon name="add" slot="start"></ion-icon>
+              Create a challenge
+            </ion-button>
+            <ion-button expand="block" fill="clear" size="small" (click)="openJoinModal()">
+              Have an invite code?
+            </ion-button>
+          </div>
+        </section>
+      }
     }
 
   </div>
@@ -416,28 +446,35 @@
           </div>
         </div>
 
-        <ion-list *ngIf="!swapLoading() && swapOptions().length">
-          <ion-list-header>Suggested alternatives</ion-list-header>
+        @if (!swapLoading() && swapOptions().length) {
+          <ion-list>
+            <ion-list-header>Suggested alternatives</ion-list-header>
+            @for (option of swapOptions(); track option) {
+              <article class="swap-item">
+                <app-meal-image class="swap-meal-photo" [name]="option.name" [imageUrl]="option.imageUrl" [mealType]="swapMeal()?.mealType"></app-meal-image>
+                <div class="swap-meal-text">
+                  <h3>{{ option.name }}</h3>
+                  <p>{{ option.meta }}</p>
+                </div>
+                <ion-button class="swap-action" fill="outline" [disabled]="savingPlan()" (click)="applySwap(option)">Use this meal</ion-button>
+              </article>
+            }
+          </ion-list>
+        }
 
-          <article *ngFor="let option of swapOptions()" class="swap-item">
-            <app-meal-image class="swap-meal-photo" [name]="option.name" [imageUrl]="option.imageUrl" [mealType]="swapMeal()?.mealType"></app-meal-image>
-            <div class="swap-meal-text">
-              <h3>{{ option.name }}</h3>
-              <p>{{ option.meta }}</p>
-            </div>
-            <ion-button class="swap-action" fill="outline" [disabled]="savingPlan()" (click)="applySwap(option)">Use this meal</ion-button>
-          </article>
-        </ion-list>
-
-        <div class="swap-state" *ngIf="swapLoading()">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Finding alternatives...</p>
-        </div>
+        @if (swapLoading()) {
+          <div class="swap-state">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Finding alternatives...</p>
+          </div>
+        }
 
         @if (swapError()) { <div class="swap-state" role="alert"><p>{{ swapError() }}</p><button class="sn-btn sn-btn--brand" type="button" (click)="retrySwap()">Try again</button></div> }
-        <div class="swap-state" *ngIf="!swapError() && !swapLoading() && !swapOptions().length">
-          <p>No other {{ swapMeal()?.mealType?.toLowerCase() }} options match your current preferences yet.</p>
-        </div>
+        @if (!swapError() && !swapLoading() && !swapOptions().length) {
+          <div class="swap-state">
+            <p>No other {{ swapMeal()?.mealType?.toLowerCase() }} options match your current preferences yet.</p>
+          </div>
+        }
       </ion-content>
     </ng-template>
   </ion-modal>
@@ -453,102 +490,108 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="create-challenge-content">
-        <div class="create-success" *ngIf="createdChallenge() as created">
-          <div class="invite-code-display">{{ created.inviteCode }}</div>
-          <p class="invite-hint">Share this code so others can join "{{ created.name }}".</p>
-          <ion-button expand="block" class="primary-btn" (click)="shareChallenge(created)">
-            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
-            Share invite
-          </ion-button>
-          <ion-button expand="block" fill="clear" (click)="closeCreateModal()">Done</ion-button>
-        </div>
-
-        <div class="create-form" *ngIf="!createdChallenge()">
-          <ion-item lines="none" class="custom-input">
-            <ion-input
-              [(ngModel)]="newChallengeName"
-              name="challengeName"
-              placeholder="Give it a fun name..."
-              [maxlength]="100"
-            ></ion-input>
-          </ion-item>
-
-          <ion-item lines="none" class="custom-input ion-margin-top">
-            <ion-textarea
-              [(ngModel)]="newChallengeDescription"
-              name="challengeDescription"
-              placeholder="What's this challenge about? (optional)"
-              [autoGrow]="true"
-              [maxlength]="280"
-            ></ion-textarea>
-          </ion-item>
-
-          <h2 class="section-title">What counts as progress?</h2>
-          <div class="chip-row">
-            <button
-              type="button"
-              class="pref-chip"
-              [class.active]="newChallengeType() === 'meals-in-period'"
-              (click)="newChallengeType.set('meals-in-period')"
-            >
-              <span>Total meals</span>
-            </button>
-            <button
-              type="button"
-              class="pref-chip"
-              [class.active]="newChallengeType() === 'days-in-period'"
-              (click)="newChallengeType.set('days-in-period')"
-            >
-              <span>Consistency</span>
-            </button>
-            <button
-              type="button"
-              class="pref-chip"
-              [class.active]="newChallengeType() === 'streak'"
-              (click)="newChallengeType.set('streak')"
-            >
-              <span>Streak</span>
-            </button>
+        @if (createdChallenge(); as created) {
+          <div class="create-success">
+            <div class="invite-code-display">{{ created.inviteCode }}</div>
+            <p class="invite-hint">Share this code so others can join "{{ created.name }}".</p>
+            <ion-button expand="block" class="primary-btn" (click)="shareChallenge(created)">
+              <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+              Share invite
+            </ion-button>
+            <ion-button expand="block" fill="clear" (click)="closeCreateModal()">Done</ion-button>
           </div>
+        }
 
-          <div class="number-inputs-row">
-            <ion-item lines="none" class="custom-input number-input">
+        @if (!createdChallenge()) {
+          <div class="create-form">
+            <ion-item lines="none" class="custom-input">
               <ion-input
-                type="number"
-                [(ngModel)]="newChallengeTarget"
-                name="challengeTarget"
-                [label]="isStreakType() ? 'Days in a row' : 'Target'"
-                labelPlacement="stacked"
-                min="1"
+                [(ngModel)]="newChallengeName"
+                name="challengeName"
+                placeholder="Give it a fun name..."
+                [maxlength]="100"
               ></ion-input>
             </ion-item>
-
-            <ion-item lines="none" class="custom-input number-input" *ngIf="!isStreakType()">
-              <ion-input
-                type="number"
-                [(ngModel)]="newChallengeDuration"
-                name="challengeDuration"
-                label="Over how many days"
-                labelPlacement="stacked"
-                min="1"
-              ></ion-input>
+            <ion-item lines="none" class="custom-input ion-margin-top">
+              <ion-textarea
+                [(ngModel)]="newChallengeDescription"
+                name="challengeDescription"
+                placeholder="What's this challenge about? (optional)"
+                [autoGrow]="true"
+                [maxlength]="280"
+              ></ion-textarea>
             </ion-item>
+            <h2 class="section-title">What counts as progress?</h2>
+            <div class="chip-row">
+              <button
+                type="button"
+                class="pref-chip"
+                [class.active]="newChallengeType() === 'meals-in-period'"
+                (click)="newChallengeType.set('meals-in-period')"
+                >
+                <span>Total meals</span>
+              </button>
+              <button
+                type="button"
+                class="pref-chip"
+                [class.active]="newChallengeType() === 'days-in-period'"
+                (click)="newChallengeType.set('days-in-period')"
+                >
+                <span>Consistency</span>
+              </button>
+              <button
+                type="button"
+                class="pref-chip"
+                [class.active]="newChallengeType() === 'streak'"
+                (click)="newChallengeType.set('streak')"
+                >
+                <span>Streak</span>
+              </button>
+            </div>
+            <div class="number-inputs-row">
+              <ion-item lines="none" class="custom-input number-input">
+                <ion-input
+                  type="number"
+                  [(ngModel)]="newChallengeTarget"
+                  name="challengeTarget"
+                  [label]="isStreakType() ? 'Days in a row' : 'Target'"
+                  labelPlacement="stacked"
+                  min="1"
+                ></ion-input>
+              </ion-item>
+              @if (!isStreakType()) {
+                <ion-item lines="none" class="custom-input number-input">
+                  <ion-input
+                    type="number"
+                    [(ngModel)]="newChallengeDuration"
+                    name="challengeDuration"
+                    label="Over how many days"
+                    labelPlacement="stacked"
+                    min="1"
+                  ></ion-input>
+                </ion-item>
+              }
+            </div>
+            <ion-button
+              expand="block"
+              class="primary-btn"
+              [disabled]="creatingChallenge()"
+              (click)="submitCreateChallenge()"
+              >
+              @if (creatingChallenge()) {
+                <ion-spinner name="crescent"></ion-spinner>
+              }
+              @if (!creatingChallenge()) {
+                <span>Create challenge</span>
+              }
+            </ion-button>
+            @if (createError()) {
+              <ion-text color="danger">
+                <p class="error-text">{{ createError() }}</p>
+              </ion-text>
+            }
           </div>
-
-          <ion-button
-            expand="block"
-            class="primary-btn"
-            [disabled]="creatingChallenge()"
-            (click)="submitCreateChallenge()"
-          >
-            <ion-spinner *ngIf="creatingChallenge()" name="crescent"></ion-spinner>
-            <span *ngIf="!creatingChallenge()">Create challenge</span>
-          </ion-button>
-
-          <ion-text color="danger" *ngIf="createError()">
-            <p class="error-text">{{ createError() }}</p>
-          </ion-text>
-        </div>
+        }
       </ion-content>
     </ng-template>
   </ion-modal>
@@ -581,14 +624,20 @@
           class="primary-btn"
           [disabled]="joiningChallenge()"
           (click)="submitJoinCode()"
-        >
-          <ion-spinner *ngIf="joiningChallenge()" name="crescent"></ion-spinner>
-          <span *ngIf="!joiningChallenge()">Join challenge</span>
+          >
+          @if (joiningChallenge()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          }
+          @if (!joiningChallenge()) {
+            <span>Join challenge</span>
+          }
         </ion-button>
 
-        <ion-text color="danger" *ngIf="joinError()">
-          <p class="error-text">{{ joinError() }}</p>
-        </ion-text>
+        @if (joinError()) {
+          <ion-text color="danger">
+            <p class="error-text">{{ joinError() }}</p>
+          </ion-text>
+        }
       </ion-content>
     </ng-template>
   </ion-modal>

@@ -6,31 +6,31 @@
       <p class="sn-head-note">Keep what was discussed and agreed, so you can return to it later.</p>
     </header>
 
-    <form class="sn-card" (submit)="$event.preventDefault(); save()">
+    <form class="sn-card" [formGroup]="form" (ngSubmit)="save()">
       <fieldset class="visit-fields" [disabled]="!ready() || saving()">
       <p class="purpose">Keep your notes about what your clinician said. You can choose which visit notes to include in the summary you bring next time.</p>
       <label class="sn-field">
         <span>Visit date</span>
-        <input type="date" name="date" [max]="today" [ngModel]="date" (ngModelChange)="selectDate($event)" />
+        <input type="date" formControlName="date" [max]="today" />
       </label>
       <label class="sn-field">
         <span>What we discussed</span>
-        <textarea name="discussion" [(ngModel)]="discussion" placeholder="What did you learn or want to remember?"></textarea>
+        <textarea formControlName="discussion" placeholder="What did you learn or want to remember?"></textarea>
       </label>
       <label class="sn-field">
         <span>Next steps agreed with my clinician</span>
-        <textarea name="nextSteps" [(ngModel)]="nextSteps" placeholder="Copy what was recommended, in your own words"></textarea>
+        <textarea formControlName="nextSteps" placeholder="Copy what was recommended, in your own words"></textarea>
       </label>
       <label class="sn-field">
         <span>Follow-up to remember</span>
-        <textarea name="followUp" [(ngModel)]="followUp" placeholder="e.g. arrange another appointment, or ask about an unanswered question"></textarea>
+        <textarea formControlName="followUp" placeholder="e.g. arrange another appointment, or ask about an unanswered question"></textarea>
       </label>
       <p class="purpose">Have answers to your questions? <a routerLink="/health/questions">Record them in your question list</a>. Unanswered questions stay ready for your next visit.</p>
       @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
       @if (status()) { <p class="saved" role="status">{{ status() }}</p> }
       <button type="submit" class="sn-btn sn-btn--brand" [disabled]="!ready() || saving()">{{ saving() ? 'Saving…' : 'Save visit notes' }}</button>
       <a class="sn-btn sn-btn--outline" routerLink="/health/summary">See my summary</a>
-      @if (status()) { <a class="sn-btn sn-btn--apricot" routerLink="/health/steps" [queryParams]="{ title: nextSteps || followUp, visit: date }">Make an agreed step trackable</a><p class="purpose">Check the wording, add a date if you want, and mark it complete when done.</p> }
+      @if (status()) { <a class="sn-btn sn-btn--apricot" routerLink="/health/steps" [queryParams]="{ title: form.value.nextSteps || form.value.followUp, visit: form.value.date }">Make an agreed step trackable</a><p class="purpose">Check the wording, add a date if you want, and mark it complete when done.</p> }
       </fieldset>
     </form>
 

@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import {
   IonItem,
@@ -14,17 +14,17 @@ import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-login-form',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     IonItem,
     IonInput,
     IonButton,
     IonText,
     IonSpinner,
-    IonIcon,
-  ],
+    IonIcon
+],
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
 })

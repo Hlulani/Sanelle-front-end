@@ -1,5 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
+
 import {
   IonContent,
   IonSegment,
@@ -15,16 +15,16 @@ import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'app-auth-shell',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     IonContent,
     IonSegment,
     IonSegmentButton,
     IonLabel,
     RegisterFormComponent,
-    LoginFormComponent,
-  ],
+    LoginFormComponent
+],
   templateUrl: './auth-shell.page.html',
   styleUrls: ['./auth-shell.page.scss'],
 })
