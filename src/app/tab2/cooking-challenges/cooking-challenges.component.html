@@ -1,0 +1,279 @@
+<section class="challenges-section">
+  <div class="section-row">
+    <h2>Try a Challenge</h2>
+  </div>
+  <div class="challenge-row">
+    @for (challenge of challenges(); track challenge) {
+      <div class="challenge-card">
+        <div class="challenge-icon">
+          <ion-icon [name]="challenge.icon"></ion-icon>
+        </div>
+        @if (participants(challenge); as count) {
+          <div class="challenge-participants">
+            <ion-icon name="people-outline"></ion-icon>
+            <strong>{{ count }}</strong
+            >&nbsp;{{ count === 1 ? 'person' : 'people' }} doing this with you
+          </div>
+        }
+        <div class="challenge-title">{{ challenge.title }}</div>
+        <div class="challenge-desc">{{ challenge.description }}</div>
+        @if (builtIn.isJoined(challenge.id); as joined) {
+          @if (progressOf(challenge); as progress) {
+            <div class="challenge-progress">
+              <div class="challenge-progress-bar">
+                <div class="challenge-progress-fill" [style.width.%]="(progress.current / progress.target) * 100"></div>
+              </div>
+              <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+            </div>
+            @if (progress.completed) {
+              <div class="challenge-status">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Completed
+              </div>
+            }
+            @if (progress.expired) {
+              <div class="challenge-status expired">Challenge ended</div>
+            }
+            @if (!progress.completed && !progress.expired) {
+              <div class="challenge-status">
+                {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+              </div>
+            }
+            <ion-button
+              expand="block"
+              size="small"
+              fill="outline"
+              (click)="progress.completed || progress.expired ? restart(challenge) : leave(challenge)"
+            >
+              {{ progress.completed || progress.expired ? 'Reset' : 'Leave challenge' }}
+            </ion-button>
+          }
+        }
+        @if (!builtIn.isJoined(challenge.id)) {
+          <ion-button expand="block" size="small" class="challenge-join-btn" (click)="join(challenge)">
+            Join
+          </ion-button>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<section class="custom-challenges-section">
+  <div class="section-row">
+    <h2>Your Challenges</h2>
+  </div>
+  @if (customChallenges().length) {
+    <div class="custom-challenge-row">
+      @for (challenge of customChallenges(); track challenge) {
+        <div class="custom-challenge-card">
+          <div class="custom-challenge-header">
+            <div class="custom-challenge-title">{{ challenge.name }}</div>
+            @if (challenge.isCreator) {
+              <span class="custom-challenge-owner-badge">Yours</span>
+            }
+          </div>
+          @if (challenge.description) {
+            <div class="custom-challenge-desc">{{ challenge.description }}</div>
+          }
+          @if (membersOf(challenge.id).length) {
+            <div class="member-strip">
+              @for (member of membersOf(challenge.id).slice(0, 5); track member) {
+                <app-initial-avatar [name]="member.username" [size]="28" class="member-avatar"></app-initial-avatar>
+              }
+              @if (extraMembers(challenge.id) > 0) {
+                <div class="member-overflow">+{{ extraMembers(challenge.id) }}</div>
+              }
+            </div>
+          }
+          @if (customProgress(challenge); as progress) {
+            <div class="challenge-progress">
+              <div class="challenge-progress-bar">
+                <div class="challenge-progress-fill" [style.width.%]="(progress.current / progress.target) * 100"></div>
+              </div>
+              <span class="challenge-progress-label">{{ progress.current }}/{{ progress.target }}</span>
+            </div>
+            @if (progress.completed) {
+              <div class="challenge-status">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Completed
+              </div>
+            }
+            @if (progress.expired) {
+              <div class="challenge-status expired">Challenge ended</div>
+            }
+            @if (!progress.completed && !progress.expired) {
+              <div class="challenge-status">
+                {{ progress.daysRemaining }} day{{ progress.daysRemaining === 1 ? '' : 's' }} left
+              </div>
+            }
+          }
+          <ion-button expand="block" size="small" fill="outline" (click)="share(challenge)">
+            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+            Share invite
+          </ion-button>
+        </div>
+      }
+    </div>
+  }
+  <div class="custom-challenge-actions">
+    <ion-button expand="block" fill="outline" size="small" (click)="openCreate()">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Create a challenge
+    </ion-button>
+    <ion-button expand="block" fill="clear" size="small" (click)="openJoin()"> Have an invite code? </ion-button>
+  </div>
+</section>
+
+<ion-modal [isOpen]="createModalOpen()" (didDismiss)="createModalOpen.set(false)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ created() ? 'Challenge created!' : 'Create a challenge' }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="createModalOpen.set(false)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="create-challenge-content">
+      @if (created(); as created) {
+        <div class="create-success">
+          <div class="invite-code-display">{{ created.inviteCode }}</div>
+          <p class="invite-hint">Share this code so others can join "{{ created.name }}".</p>
+          <ion-button expand="block" class="primary-btn" (click)="share(created)">
+            <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+            Share invite
+          </ion-button>
+          <ion-button expand="block" fill="clear" (click)="createModalOpen.set(false)">Done</ion-button>
+        </div>
+      }
+
+      @if (!created()) {
+        <div class="create-form">
+          <ion-item lines="none" class="custom-input">
+            <ion-input
+              [(ngModel)]="newName"
+              name="challengeName"
+              placeholder="Give it a fun name..."
+              [maxlength]="100"
+            ></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="custom-input ion-margin-top">
+            <ion-textarea
+              [(ngModel)]="newDescription"
+              name="challengeDescription"
+              placeholder="What's this challenge about? (optional)"
+              [autoGrow]="true"
+              [maxlength]="280"
+            ></ion-textarea>
+          </ion-item>
+          <h2 class="section-title">What counts as progress?</h2>
+          <div class="chip-row">
+            <button
+              type="button"
+              class="pref-chip"
+              [class.active]="newType() === 'meals-in-period'"
+              (click)="newType.set('meals-in-period')"
+            >
+              <span>Total meals</span>
+            </button>
+            <button
+              type="button"
+              class="pref-chip"
+              [class.active]="newType() === 'days-in-period'"
+              (click)="newType.set('days-in-period')"
+            >
+              <span>Consistency</span>
+            </button>
+            <button
+              type="button"
+              class="pref-chip"
+              [class.active]="newType() === 'streak'"
+              (click)="newType.set('streak')"
+            >
+              <span>Streak</span>
+            </button>
+          </div>
+          <div class="number-inputs-row">
+            <ion-item lines="none" class="custom-input number-input">
+              <ion-input
+                type="number"
+                [(ngModel)]="newTarget"
+                name="challengeTarget"
+                [label]="isStreak() ? 'Days in a row' : 'Target'"
+                labelPlacement="stacked"
+                min="1"
+              ></ion-input>
+            </ion-item>
+            @if (!isStreak()) {
+              <ion-item lines="none" class="custom-input number-input">
+                <ion-input
+                  type="number"
+                  [(ngModel)]="newDuration"
+                  name="challengeDuration"
+                  label="Over how many days"
+                  labelPlacement="stacked"
+                  min="1"
+                ></ion-input>
+              </ion-item>
+            }
+          </div>
+          <ion-button expand="block" class="primary-btn" [disabled]="creating()" (click)="submitCreate()">
+            @if (creating()) {
+              <ion-spinner name="crescent"></ion-spinner>
+            }
+            @if (!creating()) {
+              <span>Create challenge</span>
+            }
+          </ion-button>
+          @if (createError()) {
+            <ion-text color="danger">
+              <p class="error-text">{{ createError() }}</p>
+            </ion-text>
+          }
+        </div>
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-modal [isOpen]="joinModalOpen()" (didDismiss)="joinModalOpen.set(false)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Enter a code</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="joinModalOpen.set(false)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="join-code-content">
+      <p class="join-hint">Got an invite code from a friend? Enter it below to join their challenge.</p>
+
+      <ion-item lines="none" class="custom-input">
+        <ion-input
+          [(ngModel)]="joinCode"
+          name="joinCode"
+          placeholder="e.g. HARV4X2Q"
+          [maxlength]="16"
+          class="invite-code-input"
+        ></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" class="primary-btn" [disabled]="joining()" (click)="submitJoin()">
+        @if (joining()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+        @if (!joining()) {
+          <span>Join challenge</span>
+        }
+      </ion-button>
+
+      @if (joinError()) {
+        <ion-text color="danger">
+          <p class="error-text">{{ joinError() }}</p>
+        </ion-text>
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>

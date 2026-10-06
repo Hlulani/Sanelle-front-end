@@ -1,0 +1,87 @@
+@use '../nourish-shared';
+
+.planner-card {
+  margin-top: 18px;
+  border-radius: 20px;
+  box-shadow: var(--app-shadow-sm);
+  background: var(--sn-surface);
+}
+
+.planner-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 0;
+  background: var(--sn-surface);
+  padding: 1.25rem;
+  color: var(--sn-ink);
+  font: 800 1.125rem var(--sn-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.setup-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.375rem;
+  margin-bottom: 0.75rem;
+}
+
+.setup-steps .pref-chip {
+  justify-content: center;
+  padding-inline: 0.5rem;
+}
+
+.setup-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.setup-next {
+  margin-top: 1.25rem;
+}
+
+.setup-actions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.start-choice {
+  margin-top: 1rem;
+}
+
+.dislike-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.dislike-input {
+  font: inherit;
+  color: var(--sn-ink);
+  background: var(--sn-surface);
+  border: 1.5px solid var(--sn-line);
+  border-radius: 999px;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+
+  &:focus-visible {
+    outline: 3px solid var(--sn-brand);
+    outline-offset: 1px;
+  }
+}
+
+.allergy-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  color: var(--sn-ink);
+  background: var(--sn-blush);
+  border-radius: 0.875rem;
+  padding: 0.75rem 1rem;
+}
