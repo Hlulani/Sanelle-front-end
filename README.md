@@ -109,13 +109,16 @@ Open http://localhost:4200 in Chrome, set DevTools to an iPhone size, and create
 ## Scripts
 
 ```bash
-npm start          # dev server on :4200
-npm run build      # production build to www/ (no draft content)
-npm run watch      # development build with file watching
-npm test           # unit tests (Karma/Jasmine)
-npm run e2e        # end-to-end tests (Playwright)
-npm run lint       # ESLint
+npm start            # dev server on :4200
+npm run build        # production build to www/ (no draft content); needs SANELLE_API_ORIGIN
+npm run watch        # development build with file watching
+npm test             # unit tests (Karma/Jasmine)
+npm run e2e          # end-to-end tests (Playwright)
+npm run lint         # ESLint
+npm run format       # format with Prettier (CI runs npm run format:check)
 ```
+
+CI (`.github/workflows/ci.yml`) runs formatting, lint, unit tests and the production build on every push and pull request, then the end-to-end tests against the backend checked out from its own repository.
 
 ### End-to-end tests
 
@@ -128,21 +131,29 @@ npm run e2e                     # report: e2e/.output/report
 
 It reuses the dev server on :4200 and the backend on :8080 if they're running, and otherwise starts them. The backend is expected next to this repo (`../sanelle-back-end`); set `SANELLE_BACKEND_DIR` if it lives elsewhere, and start its database first (`docker compose up -d db`).
 
-Before a production build, set the real API domain in `src/environments/environment.prod.ts`; it still contains placeholders (`YOUR-PROD-DOMAIN`).
+### Production builds and the API address
+
+A production build has no built-in API address; it refuses to run until you give it one:
+
+```bash
+SANELLE_API_ORIGIN=https://api.example.com npm run build
+```
+
+It must be `https://`, or `http://` on a local or emulator address for device testing, for example `http://localhost:8080` (iOS Simulator) or `http://10.0.2.2:8080` (Android Emulator). Don't release a build made against a local address.
 
 ## Running on a phone (Capacitor)
 
 The repo includes `ios/` and `android/` projects. After any frontend change:
 
 ```bash
-npm run build
+SANELLE_API_ORIGIN=http://localhost:8080 npm run build   # or your deployed API
 npx cap sync
 npx cap open ios        # Xcode (macOS)
 npx cap open android    # Android Studio
 ```
 
-- **iOS Simulator:** needs full Xcode (`xcodebuild -version`). Open `ios/App/App.xcodeproj` directly; plugins use Swift Package Manager, so there's no workspace or CocoaPods step. Pick a simulator and press ⌘R. Debug builds call `http://localhost:8080`, which the simulator can reach.
-- **Android Emulator:** create a device in Android Studio's Device Manager and press Run. The emulator can't reach your computer's `localhost`; use `http://10.0.2.2:8080` in `environment.ts` when testing against a local backend.
+- **iOS Simulator:** needs full Xcode (`xcodebuild -version`). Open `ios/App/App.xcodeproj` directly; plugins use Swift Package Manager, so there's no workspace or CocoaPods step. Pick a simulator and press ⌘R. Build with `SANELLE_API_ORIGIN=http://localhost:8080` to use a local backend, which the simulator can reach.
+- **Android Emulator:** create a device in Android Studio's Device Manager and press Run. The emulator can't reach your computer's `localhost`; build with `SANELLE_API_ORIGIN=http://10.0.2.2:8080` to use a local backend.
 - **Meal and next-step reminders** work in the native builds. Browser users can download next-step calendar files. Next-step reminders use generic notification text and are cleared on logout.
 - **Save/share files:** Filesystem and Share are registered in both native projects. iOS includes the required file timestamp and UserDefaults privacy manifest. Physical-device verification remains necessary.
 

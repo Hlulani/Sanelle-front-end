@@ -38,6 +38,10 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
+    // CI runs Chrome headless inside a container, where its sandbox can't start.
+    customLaunchers: {
+      ChromeHeadlessCI: { base: 'ChromeHeadless', flags: ['--no-sandbox'] },
+    },
     singleRun: false,
     restartOnFileChange: true
   });
