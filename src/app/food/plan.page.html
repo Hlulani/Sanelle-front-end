@@ -33,13 +33,13 @@
             <p class="eyebrow">Your meal planner</p>
             <h2>Plan enough to make the week easier</h2>
             <p>
-              Choose the time period, then change or clear any day. Monthly plans are organised by week so groceries
-              stay practical.
+              One main meal a day. Choose the time period, then change or clear any day. Monthly plans group groceries
+              by week.
             </p>
           </div>
           <div class="plan-count">
             <strong>{{ mealDays() }}</strong
-            ><span>meals planned</span>
+            ><span>main meals</span>
             @if (plan() && !isDraft()) {
               <span class="made-count">{{ preparedCount() }} of {{ mealDays() }} made</span>
             }
