@@ -29,6 +29,7 @@ export function coverageLine(count: number, days: number): string {
 
 /** What affected daily life, said plainly. It leads an entry because it's what matters most to people. */
 export function impactLine(e: SymptomEntry): string | null {
+  if (e.dailyImpact !== undefined) return e.dailyImpact;
   if (e.affected === undefined) return null;
   if (!e.affected.length) return 'Didn’t get in the way of sleep, work or daily activities';
   const names = e.affected.map((a) => IMPACT_LABELS[a]);
@@ -44,6 +45,10 @@ export function symptomParts(e: SymptomEntry): string[] {
   if (e.pain !== undefined) parts.push(`Pain ${e.pain}/10`);
   if (e.bloating !== undefined && e.bloating !== 'none') parts.push(`${LEVEL_LABELS[e.bloating]} pressure or bloating`);
   if (e.fatigue !== undefined && e.fatigue !== 'none') parts.push(`${LEVEL_LABELS[e.fatigue]} tiredness`);
+  if (e.observedSymptoms?.includes('Bleeding') && e.bleeding === undefined) parts.push('Bleeding');
+  if (e.observedSymptoms?.includes('Pain') && e.pain === undefined) parts.push('Pain');
+  if (e.observedSymptoms?.includes('Pelvic pressure') && e.bloating === undefined) parts.push('Pelvic pressure');
+  if (e.observedSymptoms?.includes('Low energy') && e.fatigue === undefined) parts.push('Low energy');
   return parts;
 }
 

@@ -1,0 +1,25 @@
+@if (fromDetails) {
+  <app-report-details class="sheet-background" inert />
+} @else {
+  <app-health class="sheet-background" inert />
+}
+<div class="figma">
+  <div class="modal-wrap" appDialogFocus role="dialog" aria-modal="true" aria-labelledby="suggestion-title">
+    <button class="backdrop" (click)="close()" aria-label="Dismiss suggested question"></button>
+    <div class="sheet suggestion-sheet">
+      <button class="icon-button sheet-close" (click)="close()" aria-label="Close">
+        <svg figmaIcon="close"></svg>
+      </button>
+      <p class="eyebrow">Suggested from your report</p>
+      <h2 id="suggestion-title">Would you like to save this question?</h2>
+      <p>Nothing is added automatically. Edit it so it sounds like you, save it, or dismiss it.</p>
+      <label class="question-editor">Question<textarea [(ngModel)]="text"></textarea></label>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      <button class="primary wide" [disabled]="saving() || !text.trim()" (click)="save()">
+        Add to my next doctor’s visit</button
+      ><button class="dismiss-action" (click)="close()">Not now</button>
+    </div>
+  </div>
+</div>

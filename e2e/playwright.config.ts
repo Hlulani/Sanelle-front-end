@@ -15,16 +15,26 @@ export default defineConfig({
   testMatch: '*.spec.ts',
   outputDir: './.output/results',
   fullyParallel: true,
+  workers: 2,
   retries: process.env['CI'] ? 1 : 0,
-  timeout: 90_000,
+  timeout: 60_000,
   expect: { timeout: 15_000 },
+  snapshotPathTemplate:
+    '{testDir}/../docs/validation/figma-prototype-entry-2026-10-08/reference-viewports/{projectName}/{arg}{ext}',
+
   reporter: [['list'], ['html', { outputFolder: './.output/report', open: 'never' }]],
   use: {
     baseURL: APP_URL,
+    actionTimeout: 15_000,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    timezoneId: 'Europe/Vienna',
   },
   projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Pixel 7'], viewport: PHONE },
+    },
     {
       name: 'iphone',
       // WebKit with touch and an iPhone user agent, so Ionic renders the app's iOS look.

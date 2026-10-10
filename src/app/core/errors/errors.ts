@@ -17,19 +17,18 @@ export function messageFor(error: unknown, fallback: string): string {
   return error instanceof UserFacingError ? error.message : fallback;
 }
 
-/** The backend's error reply: its HTTP status and, when it sent one, its message. */
+/** The backend's error reply: its HTTP status and, when it sent them, its code and message. */
 export interface ApiError {
   status: number;
+  /** A stable reason such as "EMAIL_TAKEN" or "EMAIL_NOT_VERIFIED". */
+  code: string | null;
   message: string | null;
 }
 
-/** Reads the backend's error reply ({ status, message, ... }); null for anything that isn't one. */
+/** Reads the backend's error reply ({ status, code, message, ... }); null for anything that isn't one. */
 export function apiError(error: unknown): ApiError | null {
   if (!(error instanceof HttpErrorResponse)) return null;
-  const body: unknown = error.error;
-  const message =
-    body && typeof body === 'object' && typeof (body as { message?: unknown }).message === 'string'
-      ? (body as { message: string }).message
-      : null;
-  return { status: error.status, message };
+  const body = (error.error && typeof error.error === 'object' ? error.error : {}) as Record<string, unknown>;
+  const text = (value: unknown) => (typeof value === 'string' ? value : null);
+  return { status: error.status, code: text(body['code']), message: text(body['message']) };
 }

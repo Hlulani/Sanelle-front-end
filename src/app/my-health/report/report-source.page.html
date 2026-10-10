@@ -1,0 +1,43 @@
+<ion-content
+  ><app-figma-report-frame [stage]="1" (closed)="close()">
+    <section class="scan-step">
+      <p class="eyebrow">Add the report you have</p>
+      <h1>How would you like to add it?</h1>
+      <p>
+        Use clear, complete pages. You’ll check every captured detail against the original before anything is saved.
+      </p>
+      <div class="source-options">
+        <button (click)="cameraReady()">
+          <svg figmaIcon="health" />
+          <div><strong>Take photos</strong><span>Capture one page at a time</span></div>
+          <svg figmaIcon="arrow" />
+        </button>
+        <label
+          ><svg figmaIcon="plus" />
+          <div><strong>Choose photos or a PDF</strong><span>Select files already on this device</span></div>
+          <svg figmaIcon="arrow" /><input
+            type="file"
+            accept="image/*,.pdf,application/pdf"
+            multiple
+            (change)="chooseReport($event)"
+        /></label>
+        <button (click)="manual()">
+          <svg figmaIcon="visit" />
+          <div><strong>Enter details manually</strong><span>Useful if the report is not available</span></div>
+          <svg figmaIcon="arrow" />
+        </button>
+      </div>
+      <button class="sample-scan" (click)="previewSample()">Preview with Thandi’s sample report</button>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      <div class="scan-privacy">
+        <svg figmaIcon="info" />
+        <p>
+          Your report may contain identifying information. Reading happens on this device. Files aren’t uploaded or
+          saved; only the details you check are kept.
+        </p>
+      </div>
+    </section>
+  </app-figma-report-frame></ion-content
+>

@@ -1,0 +1,74 @@
+@if (fromFood) {
+  <app-food class="sheet-background" inert />
+} @else if (origin === 'health') {
+  <app-health class="sheet-background" inert />
+} @else if (origin === 'details') {
+  <app-report-details class="sheet-background" inert />
+} @else {
+  <app-today class="sheet-background" inert />
+}
+<div class="figma">
+  <div class="modal-wrap" appDialogFocus role="dialog" aria-modal="true" aria-labelledby="claim-title">
+    <button class="backdrop" (click)="back()" aria-label="Close evidence view"></button>
+    <div class="sheet claim-sheet">
+      <div class="sheet-handle"></div>
+      <button class="icon-button sheet-close" (click)="back()" aria-label="Close"><svg figmaIcon="close" /></button>
+      <p class="eyebrow">Evidence, made readable</p>
+      @if (entry(); as e) {
+        <h2 id="claim-title">{{ e.claimId === 'C17' ? 'Can a specific diet shrink fibroids?' : e.title }}</h2>
+        <p class="fine-print">
+          A research summary from the published catalog. The catalog is not an exhaustive or clinically approved review.
+        </p>
+        <div class="evidence-answer">
+          <span>Short answer</span><strong>{{ e.explanation }}</strong>
+        </div>
+        <h3>What we can say</h3>
+        <p>{{ e.findings }}</p>
+        <h3>Where the evidence falls short</h3>
+        <p>{{ e.limitations }}</p>
+        @if (e.outcomes?.length) {
+          <details class="evidence-disclosure">
+            <summary>Outcomes kept separate</summary>
+            @for (o of e.outcomes; track o.kind) {
+              <p>
+                <strong>{{ outcomeLabels[o.kind] }}</strong> {{ o.text }}
+              </p>
+            }
+          </details>
+        }
+        <details class="evidence-disclosure">
+          <summary>Sources and limitations</summary>
+          <p><strong>Who the research was about:</strong> {{ e.population }}</p>
+          <p><strong>What it measured:</strong> {{ e.outcome }}</p>
+          <ul class="citation-list">
+            @for (s of e.sources; track s.id) {
+              <li>
+                <span>{{ s.id }}</span
+                ><a [href]="s.url" target="_blank" rel="noopener noreferrer">{{ s.label }}</a
+                ><small>{{ s.type }} · {{ s.depth }}</small>
+              </li>
+            }
+          </ul>
+          <p>{{ e.limitations }}</p>
+        </details>
+        <details class="evidence-disclosure research-method">
+          <summary>How Sanelle handles research</summary>
+          <p>{{ e.reviewer }}</p>
+          <p>
+            Research summary updated {{ e.reviewDate }} · version {{ e.version }} · research up to
+            {{ e.researchCutoff }}.
+          </p>
+          <span>The wider review is still in progress and is not an exhaustive or clinically approved review.</span>
+        </details>
+        @if (e.practicalTake) {
+          <h3>A practical take</h3>
+          <p>{{ e.practicalTake }}</p>
+        }
+      } @else {
+        <h2 id="claim-title">This explanation isn’t available</h2>
+        <p>It may be under review. Try again later.</p>
+      }
+      <button class="primary wide" (click)="back()">Done reading</button>
+    </div>
+  </div>
+</div>

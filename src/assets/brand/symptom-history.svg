@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-labelledby="title desc">
+  <title id="title">Thirty-day symptom observation window</title>
+  <desc id="desc">Thirty dots show recorded bleeding categories and days without entries.</desc>
+  <rect width="720" height="180" fill="#FFFFFF"/>
+  <text x="24" y="34" font-family="Fredoka, sans-serif" font-size="22" fill="#301B23">Current 30-day window</text>
+  <text x="696" y="34" text-anchor="end" font-family="Nunito Sans, sans-serif" font-size="13" font-weight="800" fill="#74203F">8 days recorded</text>
+  <g transform="translate(28 70)">
+    <circle cx="0" cy="0" r="7" fill="#E3DEDB"/><circle cx="23" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="46" cy="0" r="7" fill="#F2B37E"/><circle cx="69" cy="0" r="7" fill="#74203F"/>
+    <circle cx="92" cy="0" r="7" fill="#E3DEDB"/><circle cx="115" cy="0" r="7" fill="#F6E1E3" stroke="#EFA8B8"/>
+    <circle cx="138" cy="0" r="7" fill="#E3DEDB"/><circle cx="161" cy="0" r="7" fill="#52152D"/>
+    <circle cx="184" cy="0" r="7" fill="#E3DEDB"/><circle cx="207" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="230" cy="0" r="7" fill="#F2B37E"/><circle cx="253" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="276" cy="0" r="7" fill="#E3DEDB"/><circle cx="299" cy="0" r="7" fill="#74203F"/>
+    <circle cx="322" cy="0" r="7" fill="#E3DEDB"/><circle cx="345" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="368" cy="0" r="7" fill="#E3DEDB"/><circle cx="391" cy="0" r="7" fill="#DCEBE2"/>
+    <circle cx="414" cy="0" r="7" fill="#E3DEDB"/><circle cx="437" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="460" cy="0" r="7" fill="#E3DEDB"/><circle cx="483" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="506" cy="0" r="7" fill="#E3DEDB"/><circle cx="529" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="552" cy="0" r="7" fill="#E3DEDB"/><circle cx="575" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="598" cy="0" r="7" fill="#E3DEDB"/><circle cx="621" cy="0" r="7" fill="#E3DEDB"/>
+    <circle cx="644" cy="0" r="7" fill="#E3DEDB"/><circle cx="667" cy="0" r="7" fill="#E3DEDB"/>
+  </g>
+  <text x="24" y="124" font-family="Nunito Sans, sans-serif" font-size="12" fill="#74636A">Days without a check-in are unknown, not symptom-free.</text>
+  <circle cx="28" cy="151" r="5" fill="#74203F"/><text x="40" y="155" font-family="Nunito Sans, sans-serif" font-size="10" fill="#74636A">Heavy</text>
+  <circle cx="103" cy="151" r="5" fill="#F2B37E"/><text x="115" y="155" font-family="Nunito Sans, sans-serif" font-size="10" fill="#74636A">Moderate</text>
+  <circle cx="195" cy="151" r="5" fill="#E3DEDB"/><text x="207" y="155" font-family="Nunito Sans, sans-serif" font-size="10" fill="#74636A">No entry</text>
+</svg>

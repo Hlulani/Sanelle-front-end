@@ -1,0 +1,57 @@
+<ion-content
+  ><app-figma-report-frame [stage]="2" (closed)="back()">
+    <section class="scan-step capture-step">
+      <input #camera type="file" accept="image/*" capture="environment" hidden (change)="add($event)" />
+      <input #retakeInput type="file" accept="image/*" capture="environment" hidden (change)="retake($event)" />
+      <p class="eyebrow">Page {{ pages().length || 1 }}</p>
+      <h1>Keep the whole page inside the frame</h1>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      @for (p of pages(); track p.id; let i = $index; let last = $last) {
+        <div class="camera-frame">
+          <div class="camera-corners"></div>
+          <img [src]="p.url" [alt]="'Page ' + (i + 1)" />
+        </div>
+        @if (!p.quality) {
+          <p class="capture-feedback" role="status">Checking the photo…</p>
+        } @else if (problems(p.quality).length) {
+          @for (m of problems(p.quality); track m) {
+            <p class="capture-feedback" role="status">
+              <svg figmaIcon="info" /><span>{{ m }}</span>
+            </p>
+          }
+        } @else {
+          <div class="capture-feedback">
+            <svg figmaIcon="check" /><span
+              >Photo check complete. Check that the whole page is visible and readable.</span
+            >
+          </div>
+        }
+        <div class="capture-actions">
+          <button (click)="startRetake(p.id, retakeInput)">Retake</button
+          ><button
+            [disabled]="i === 0"
+            (click)="draft.move(p.id, -1)"
+            [attr.aria-label]="'Move page ' + (i + 1) + ' up'"
+          >
+            ↑</button
+          ><button [disabled]="last" (click)="draft.move(p.id, 1)" [attr.aria-label]="'Move page ' + (i + 1) + ' down'">
+            ↓</button
+          ><button (click)="draft.remove(p.id)">Remove</button>
+        </div>
+      } @empty {
+        <div class="camera-frame">
+          <div class="camera-corners"></div>
+          <button class="primary" (click)="camera.click()">Take a photo</button>
+        </div>
+      }
+      <div class="capture-actions">
+        <button (click)="camera.click()">Add another page</button
+        ><button class="primary" [disabled]="!pages().length" (click)="use()">
+          Use {{ pages().length }} page{{ pages().length === 1 ? '' : 's' }}
+        </button>
+      </div>
+    </section>
+  </app-figma-report-frame></ion-content
+>

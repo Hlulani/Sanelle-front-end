@@ -1,3 +1,4 @@
+import { symptomStats, detailLines } from './symptoms/symptom-stats';
 import { checkinsInWindow, coverageLine, impactLine, observations, symptomParts } from './checkins';
 import { SymptomEntry } from './diagnosis.model';
 
@@ -62,5 +63,37 @@ describe('impact on its own', () => {
       { date: '2', pain: 3 },
     ]);
     expect(lines).toContain('Sleep was affected on 1 of your 2 check-ins.');
+  });
+});
+
+describe('source symptom choices', () => {
+  it('prints the exact observations and impact without inventing numerical scores', () => {
+    const entry: SymptomEntry = {
+      date: '2026-10-08',
+      observedSymptoms: ['Pain', 'Low energy', 'Bleeding', 'Pelvic pressure'],
+      dailyImpact: 'Changed my plans',
+    };
+    expect(symptomParts(entry)).toEqual(['Bleeding', 'Pain', 'Pelvic pressure', 'Low energy']);
+    expect(impactLine(entry)).toBe('Changed my plans');
+  });
+});
+
+describe('categorical observation denominators', () => {
+  it('keeps categorical selections separate from numerical severity and unknown fields', () => {
+    const stats = symptomStats(
+      [
+        { date: '2026-10-08', observedSymptoms: ['Pain'], dailyImpact: 'Changed my plans' },
+        { date: '2026-10-07', bleeding: 'heavy' },
+      ],
+      '2026-10-08',
+    );
+    expect(stats.recordedDays).toBe(2);
+    expect(stats.missingDays).toBe(28);
+    expect(stats.pain.answered).toBe(0);
+    expect(stats.pain.min).toBeNull();
+    expect(stats.bleeding.answered).toBe(1);
+    expect(stats.selections).toEqual([{ symptom: 'Pain', count: 1 }]);
+    expect(stats.dailyImpacts).toEqual([{ impact: 'Changed my plans', count: 1 }]);
+    expect(detailLines(stats).join(' ')).toContain('1 check-in with a daily-impact answer');
   });
 });

@@ -3,97 +3,76 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Preferences } from '@capacitor/preferences';
 import { firstValueFrom } from 'rxjs';
-
 import { AuthService } from './auth.service';
-import { FocusPreferencesService } from '../services/focus-preferences.service';
+import { ProfileService } from '../profile/profile.service';
+import { FoodProfileService } from '../../food/food-profile.service';
 
-/** An unsigned token with the claims the app reads; the signature isn't checked client-side. */
 function tokenFor(email: string): string {
   const b64 = (o: object) => btoa(JSON.stringify(o)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
   return `${b64({ alg: 'none' })}.${b64({ sub: email, exp: Math.floor(Date.now() / 1000) + 3600 })}.sig`;
 }
-
-describe('AuthService onboarding and diet, per account', () => {
+describe('Account setup and personal records', () => {
   let auth: AuthService;
   let http: HttpTestingController;
-
   beforeEach(async () => {
     await Preferences.clear();
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
     auth = TestBed.inject(AuthService);
     http = TestBed.inject(HttpTestingController);
   });
-
   afterEach(() => http.verify());
-
   async function login(email: string) {
-    const done = firstValueFrom(auth.login(email, 'pw'));
+    const done = firstValueFrom(auth.login(email, 'password'));
     http
       .expectOne((r) => r.url.endsWith('/auth/login'))
       .flush({ accessToken: tokenFor(email), refreshToken: tokenFor(email) });
     await done;
   }
-
   async function register(email: string) {
-    const done = firstValueFrom(auth.register(email, 'name', 'pw'));
-    http.expectOne((r) => r.url.endsWith('/auth/register')).flush({});
+    const done = firstValueFrom(auth.register({ name: 'Name', email, password: 'password', termsAccepted: true }));
+    http.expectOne((r) => r.url.endsWith('/auth/register')).flush({ email, verificationRequired: true });
     await done;
   }
-
-  it('starts a new account at onboarding, even if the previous account had finished it', async () => {
+  it('registration creates no session and a new account starts at onboarding', async () => {
+    await register('new@example.test');
+    expect(auth.hasValidToken()).toBeFalse();
+    await login('new@example.test');
+    expect(auth.hasCompletedOnboarding()).toBeFalse();
+  });
+  it('remembers completed onboarding only for that account', async () => {
+    await register('first@example.test');
     await login('first@example.test');
-    auth.setOnboardingCompleted(true);
+    auth.setOnboardingCompleted();
+    await Promise.resolve();
+    auth.logout();
+    await login('first@example.test');
     expect(auth.hasCompletedOnboarding()).toBeTrue();
-
     await register('second@example.test');
     await login('second@example.test');
-
     expect(auth.hasCompletedOnboarding()).toBeFalse();
   });
-
-  it('doesn’t ask an account that finished onboarding again after logging out', async () => {
-    await register('me@example.test');
-    await login('me@example.test');
-    auth.setOnboardingCompleted(true);
-    await new Promise((r) => setTimeout(r));
-
-    auth.logout();
-    await login('me@example.test');
-
-    expect(auth.hasCompletedOnboarding()).toBeTrue();
-  });
-
-  it('keeps sending a new account to onboarding until it is finished', async () => {
-    await register('new@example.test');
-    await login('new@example.test');
-    auth.logout();
-    await login('new@example.test');
-
-    expect(auth.hasCompletedOnboarding()).toBeFalse();
-  });
-
-  it('keeps each account’s help choices separate', async () => {
-    const prefs = TestBed.inject(FocusPreferencesService);
+  it('separates profile choices when switching accounts and restores them on return', async () => {
+    const profile = TestBed.inject(ProfileService);
     await login('first@example.test');
-    await prefs.saveFocus(['food', 'diagnosis']);
-    expect(prefs.focus()).toEqual(['diagnosis', 'food']);
-
+    await profile.save({ priorities: ['food', 'diagnosis'], name: 'First' });
     await login('second@example.test');
-    expect(await prefs.loadFocus()).toEqual([]);
-
+    await profile.load();
+    expect(profile.profile().priorities).toEqual([]);
     await login('first@example.test');
-    expect(await prefs.loadFocus()).toEqual(['diagnosis', 'food']);
+    await profile.load();
+    expect(profile.profile().priorities).toEqual(['diagnosis', 'food']);
+    expect(profile.name()).toBe('First');
   });
-
-  it('keeps each account’s diet separate', async () => {
-    const prefs = TestBed.inject(FocusPreferencesService);
-    await login('fish@example.test');
-    await prefs.saveDiet('PESCATARIAN');
-
-    await login('other@example.test');
-    expect(await prefs.loadDiet()).toBeNull();
-
-    await login('fish@example.test');
-    expect(await prefs.loadDiet()).toBe('PESCATARIAN');
+  it('separates dietary requirements between accounts', async () => {
+    const food = TestBed.inject(FoodProfileService);
+    await login('first@example.test');
+    await food.load();
+    await food.saveRequirements({ ...food.profile(), dietaryPattern: 'VEGAN' });
+    await login('second@example.test');
+    await food.load();
+    expect(food.profile().dietaryPattern).toBe('ANY');
+    await login('first@example.test');
+    await food.load();
+    expect(food.profile().dietaryPattern).toBe('VEGAN');
   });
 });

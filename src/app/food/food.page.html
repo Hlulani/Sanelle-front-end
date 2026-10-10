@@ -1,0 +1,55 @@
+<ion-content
+  ><app-figma-frame active="food" title="Food, without the fear" label="Food">
+    @if (error()) {
+      <p class="form-error" role="alert">{{ error() }}</p>
+      <button class="secondary" (click)="load()">Try again</button>
+    }
+    <app-food-paths />
+    @if (!loading() && !error() && options().length === 0) {
+      <div class="report-empty">
+        <strong>No compatible meals are available yet.</strong>
+        <p>Review your requirements or try finding a meal.</p>
+        <button (click)="requirements()">Review my food requirements</button>
+      </div>
+    }
+    @if (feature(); as o) {
+      <app-flexible-recipe [id]="o.meal.mealId" />
+    }
+    <section class="meal-alternatives">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Choose by real constraints</p>
+          <h2>Other meals that may fit</h2>
+        </div>
+      </div>
+      <div class="meal-alternative-grid">
+        @for (o of alternatives(); track o.meal.mealId) {
+          <article>
+            <app-meal-image [name]="o.meal.name" [imageUrl]="o.meal.imageUrl" />
+            <div>
+              <span>{{ o.meal.prepTimeMinutes !== null ? o.meal.prepTimeMinutes + ' min' : 'Time not recorded' }}</span>
+              <h3>{{ o.meal.name }}</h3>
+              <p>{{ o.why.join(' · ') || 'Fits your stated requirements' }}</p>
+              <button (click)="recipe(o.meal.mealId)">Plan this meal</button>
+            </div>
+          </article>
+        }
+      </div>
+      <p class="photo-credit">Food photography via Unsplash. Photo credits are listed in the asset manifest.</p>
+    </section>
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Saved evidence</p>
+        <h2>Claims worth unpacking</h2>
+      </div>
+    </div>
+    <button class="claim-row" (click)="onClaim()">
+      <div class="claim-label">Food<br /><span>Growth</span></div>
+      <div>
+        <strong>Can a specific diet shrink fibroids?</strong>
+        <p>No whole-food regimen that removes fibroids was established in this bounded review.</p>
+      </div>
+      <svg figmaIcon="arrow"></svg></button
+    ><button class="text-action" (click)="requirements()">
+      My food requirements <svg figmaIcon="arrow" /></button></app-figma-frame
+></ion-content>

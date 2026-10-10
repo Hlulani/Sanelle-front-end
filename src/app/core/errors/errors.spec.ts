@@ -17,9 +17,10 @@ describe('errors', () => {
       status: 409,
       error: { status: 409, message: 'Username already taken: thandi' },
     });
-    expect(apiError(conflict)).toEqual({ status: 409, message: 'Username already taken: thandi' });
+    expect(apiError(conflict)).toEqual({ status: 409, code: null, message: 'Username already taken: thandi' });
     expect(apiError(new HttpErrorResponse({ status: 0, error: new ProgressEvent('error') }))).toEqual({
       status: 0,
+      code: null,
       message: null,
     });
     expect(apiError(new Error('not http'))).toBeNull();

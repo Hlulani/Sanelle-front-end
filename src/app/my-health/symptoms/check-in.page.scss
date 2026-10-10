@@ -1,0 +1,43 @@
+.date {
+  max-width: 14rem;
+}
+
+.part {
+  display: grid;
+  gap: 10px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--sn-line);
+
+  h2 {
+    font: 800 1.0625rem/1.3 var(--sn-body);
+  }
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.num {
+  min-height: 44px;
+  border: 1.5px solid var(--sn-line);
+  border-radius: var(--sn-radius-control);
+  background: var(--sn-white);
+  font: 800 1rem/1 var(--sn-body);
+  color: var(--sn-ink);
+
+  &[aria-pressed='true'] {
+    background: var(--sn-berry);
+    border-color: var(--sn-berry);
+    color: var(--sn-white);
+  }
+}
+
+.more {
+  margin-top: 8px;
+}
+
+.private {
+  margin-top: 16px;
+}

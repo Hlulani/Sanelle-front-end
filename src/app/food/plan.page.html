@@ -1,0 +1,232 @@
+<ion-content
+  ><app-figma-frame active="food" title="Food, without the fear" label="Food">
+    <app-food-paths active="plan" />
+    <section class="meal-plan-builder">
+      <header class="meal-plan-head">
+        <div>
+          <p class="eyebrow">Your meal planner</p>
+          <h2>Plan enough to make the week easier</h2>
+          <p>
+            Choose the time period, then change or clear any day. Monthly plans are organised by week so groceries stay
+            practical.
+          </p>
+        </div>
+        <div class="plan-count">
+          <strong>{{ mealDays() }}</strong
+          ><span>meals planned</span>
+        </div>
+      </header>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+        <button class="secondary" (click)="make()">Try again</button>
+      }
+      @if (notice()) {
+        <p class="prep-note" role="status">{{ notice() }}</p>
+        @if (canUndoSwap()) {
+          <button class="text-action" (click)="undoSwap()">Undo swap</button>
+        }
+      }
+      @if (busy()) {
+        <p role="status">Finding meals…</p>
+      }
+      @if (!reviewed()) {
+        <p class="form-error">
+          Your food requirements need your review. <a routerLink="/food/requirements">Check them before planning</a>.
+        </p>
+      }
+      @if (requirementsChanged()) {
+        <p class="form-error" role="status">
+          Your requirements changed after this plan was made. Check each recipe against your current requirements, or
+          make a new plan before cooking.
+        </p>
+      }
+      <div class="horizon-tabs" role="tablist" aria-label="Meal plan duration">
+        @for (h of horizons; track h.days) {
+          <button
+            role="tab"
+            [attr.aria-selected]="horizon() === h.days"
+            [class.selected]="horizon() === h.days"
+            [disabled]="busy()"
+            (click)="duration(h.days)"
+          >
+            {{ h.label }}
+          </button>
+        }
+      </div>
+      @if (plan(); as p) {
+        <div class="plan-calendar" [class.compact]="p.horizon > 7">
+          @for (d of p.days; track d.date; let i = $index) {
+            <button
+              [class.selected]="selectedDay()?.date === d.date"
+              [class.prepared]="!!d.preparedAt"
+              [attr.aria-label]="'Day ' + (i + 1) + ': ' + (d.meal?.name || 'No meal planned')"
+              (click)="select(d)"
+            >
+              <span>Day {{ i + 1 }}</span>
+              @if (d.meal; as m) {
+                <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" /><strong>{{ m.name }}</strong
+                ><small
+                  >{{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded'
+                  }}{{ d.preparedAt ? ' · Prep done' : '' }}</small
+                >
+              } @else {
+                <div class="open-day"><svg figmaIcon="plus" /><small>No meal planned</small></div>
+              }
+            </button>
+          }
+        </div>
+        @if (selectedDay(); as d) {
+          <div class="day-editor">
+            <div class="day-editor-head">
+              <div>
+                <p class="eyebrow">{{ long(d.date) }}</p>
+                <h3>{{ d.meal?.name || 'Choose a meal' }}</h3>
+              </div>
+              @if (d.meal) {
+                <button [disabled]="busy() || isDraft()" (click)="togglePrepared(d)">
+                  {{ d.preparedAt ? 'Undo prep' : 'Mark prep done' }}
+                </button>
+              }
+            </div>
+            <div class="meal-choice-list">
+              @for (o of sourceChoices(); track o.meal.mealId) {
+                <button [class.selected]="d.meal?.mealId === o.meal.mealId" (click)="chooseDayMeal(o)">
+                  <app-meal-image [name]="o.meal.name" [imageUrl]="o.meal.imageUrl" /><span
+                    ><strong>{{ o.meal.name }}</strong
+                    ><small
+                      >{{ o.meal.prepTimeMinutes !== null ? o.meal.prepTimeMinutes + ' min' : 'Time not recorded' }} ·
+                      {{ o.why.join(' · ') || 'Fits your requirements' }}</small
+                    ></span
+                  >
+                  @if (d.meal?.mealId === o.meal.mealId) {
+                    <svg figmaIcon="check" />
+                  }
+                </button>
+              }
+              <button class="no-plan" [class.selected]="!d.meal" (click)="leaveOpen(d)">
+                <span><strong>Leave this day open</strong><small>No meal or grocery items added</small></span>
+              </button>
+            </div>
+            <button class="text-action" (click)="swap(d)">Swap this meal <svg figmaIcon="arrow" /></button>
+            @if (d.meal; as m) {
+              <button class="text-action" [routerLink]="['/food/recipe', m.mealId]" [queryParams]="{ date: d.date }">
+                See the flexible recipe <svg figmaIcon="arrow" />
+              </button>
+            }
+          </div>
+        }
+        <div class="plan-groceries">
+          <div>
+            <p class="eyebrow">Grocery window</p>
+            <h3>{{ p.horizon > 7 ? 'Week ' + (week() + 1) + ' of your plan' : 'Your ' + p.horizon + '-day plan' }}</h3>
+            <p>For longer plans, create one list at a time rather than buying a month of fresh ingredients.</p>
+            @if (weeks().length > 1) {
+              <div class="grocery-weeks">
+                @for (w of weeks(); track w.index) {
+                  <button [class.selected]="week() === w.index" (click)="week.set(w.index)">
+                    Week {{ w.index + 1 }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+          <ul>
+            @for (item of list().items; track item.key) {
+              <li>
+                <span>{{ item.name }}</span
+                ><strong>{{ groceryAmounts(item.amounts) }}</strong>
+              </li>
+            }
+          </ul>
+        </div>
+        <button class="primary wide" [disabled]="busy() || !reviewed()" (click)="savePlan()">
+          <svg figmaIcon="check" />Save {{ p.horizon === 30 ? 'monthly' : p.horizon + '-day' }} plan
+        </button>
+        <p class="fine-print">
+          Meal plans support preparation and shopping. A planned or prepared meal is not treated as proof that it was
+          eaten or that it affected fibroids.
+        </p>
+      }
+      <details class="evidence-disclosure">
+        <summary>Planning preferences</summary>
+        <div class="answer-form">
+          <label>Start date<input type="date" name="startDate" [(ngModel)]="startDate" [min]="today" /></label
+          ><label
+            >People to cook for<input
+              type="number"
+              name="servings"
+              min="1"
+              max="12"
+              [ngModel]="servings()"
+              (ngModelChange)="servings.set($event)" /></label
+          ><label
+            >Time for cooking<select [ngModel]="maxPrep()" (ngModelChange)="maxPrep.set($event)">
+              @for (t of prepChoices; track t.label) {
+                <option [ngValue]="t.value">{{ t.label }}</option>
+              }
+            </select></label
+          >
+          <fieldset>
+            <legend>Days to leave open</legend>
+            <div class="chip-choices">
+              @for (d of weekdays; track d.day) {
+                <button [class.selected]="openDays().includes(d.day)" (click)="toggleOpenDay(d.day)">
+                  {{ d.label }}
+                </button>
+              }
+            </div>
+          </fieldset>
+          <label class="confirm-check"
+            ><input type="checkbox" [ngModel]="batch()" (ngModelChange)="batch.set($event)" /><span
+              >Cook once, eat twice when a recipe suits leftovers</span
+            ></label
+          ><button class="secondary" [disabled]="busy() || !reviewed()" (click)="make()">
+            Update planning preferences
+          </button>
+        </div>
+      </details>
+    </section>
+    @if (sourceChoices()[0]; as o) {
+      <app-flexible-recipe [id]="o.meal.mealId" [showShopping]="false" />
+    }
+    @if (plan()) {
+      <section class="shopping-section">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Editable list</p>
+            <h2>Shopping for this week</h2>
+          </div>
+        </div>
+        <p class="muted">Tick what you already have. The remaining items stay on your list.</p>
+        <div class="shopping-list">
+          @for (item of shoppingItems(); track item.key) {
+            <label
+              ><input
+                [attr.aria-label]="'Already have ' + item.name"
+                type="checkbox"
+                [checked]="item.have"
+                (change)="item.have ? notHave(item) : have(item)" /><span>{{ item.name }}</span
+              ><button type="button" (click)="removeItem(item)" [attr.aria-label]="'Remove ' + item.name">
+                <svg figmaIcon="close" [size]="16" /></button
+            ></label>
+          }
+        </div>
+        @if (list().removed.length) {
+          <details class="source-details">
+            <summary>Removed items</summary>
+            @for (item of list().removed; track item.key) {
+              <p>{{ item.name }} <button class="text-action" (click)="restore(item)">Restore</button></p>
+            }
+          </details>
+        }
+        <div class="shopping-add">
+          <input [(ngModel)]="newItem" placeholder="Add another item" aria-label="Add another item" /><button
+            (click)="addItem()"
+            aria-label="Add grocery item"
+          >
+            <svg figmaIcon="plus" />
+          </button>
+        </div>
+      </section>
+    }</app-figma-frame
+></ion-content>

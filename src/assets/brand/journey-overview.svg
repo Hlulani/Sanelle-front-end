@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Sanelle top-level user journey</title>
+  <desc id="desc">Account and onboarding lead to Today, which connects report, symptoms, food and appointment journeys.</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="#74203F"/></marker></defs>
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <text x="50" y="50" font-family="Fredoka" font-size="30" fill="#301B23">Sanelle user-journey overview</text>
+  <g font-family="Nunito Sans" text-anchor="middle">
+    <g transform="translate(50 100)"><rect width="170" height="70" rx="8" fill="#74203F"/><text x="85" y="34" fill="#FFFFFF" font-size="15" font-weight="800">Account</text><text x="85" y="53" fill="#EAD5DC" font-size="11">AUTH-01 → AUTH-05</text></g>
+    <g transform="translate(280 100)"><rect width="170" height="70" rx="8" fill="#F6E1E3"/><text x="85" y="34" fill="#301B23" font-size="15" font-weight="800">Onboarding</text><text x="85" y="53" fill="#74636A" font-size="11">ONB-01 → ONB-05</text></g>
+    <g transform="translate(515 100)"><rect width="170" height="70" rx="8" fill="#F2B37E"/><text x="85" y="34" fill="#301B23" font-size="15" font-weight="800">Today</text><text x="85" y="53" fill="#6E3C2C" font-size="11">TOD-01 → TOD-03</text></g>
+    <path d="M220 135H280M450 135H515" stroke="#74203F" stroke-width="3" marker-end="url(#arrow)"/>
+    <g transform="translate(80 305)"><rect width="190" height="85" rx="8" fill="#F7F5F2" stroke="#74203F"/><text x="95" y="34" fill="#301B23" font-size="16" font-weight="800">Report + diagnosis</text><text x="95" y="58" fill="#74636A" font-size="11">RPT-01 → HLT-03</text></g>
+    <g transform="translate(345 305)"><rect width="190" height="85" rx="8" fill="#F7F5F2" stroke="#74203F"/><text x="95" y="34" fill="#301B23" font-size="16" font-weight="800">Symptoms + insights</text><text x="95" y="58" fill="#74636A" font-size="11">SYM-01 → SYM-04</text></g>
+    <g transform="translate(610 305)"><rect width="190" height="85" rx="8" fill="#F7F5F2" stroke="#74203F"/><text x="95" y="34" fill="#301B23" font-size="16" font-weight="800">Food</text><text x="95" y="58" fill="#74636A" font-size="11">FOOD-01 → FOOD-04</text></g>
+    <g transform="translate(875 305)"><rect width="190" height="85" rx="8" fill="#F7F5F2" stroke="#74203F"/><text x="95" y="34" fill="#301B23" font-size="16" font-weight="800">Appointment</text><text x="95" y="58" fill="#74636A" font-size="11">APT-01 → APT-03</text></g>
+    <path d="M600 170V235H175V305M600 235H440V305M600 235H705V305M600 235H970V305" fill="none" stroke="#74203F" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M270 347H345M535 347H875M800 347H875" stroke="#F2B37E" stroke-width="3" marker-end="url(#arrow)"/>
+    <g transform="translate(425 490)"><rect width="350" height="64" rx="8" fill="#3B1725"/><text x="175" y="29" fill="#FFFFFF" font-size="15" font-weight="800">Internal evidence catalog</text><text x="175" y="48" fill="#EAB9C9" font-size="11">Separate role-gated workspace · EVC-01 → EVC-02</text></g>
+    <path d="M600 390V490" stroke="#74203F" stroke-width="3" stroke-dasharray="7 7" marker-end="url(#arrow)"/>
+  </g>
+</svg>

@@ -1,52 +1,14 @@
-/* Sanelle brand tokens, fonts and shared components */
+@use 'sass:meta';
+/* Sanelle design system: tokens, fonts and shared components */
 @use './theme/sanelle';
-
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Global styles for the entire Ionic app.
- */
+@use './assets/fonts/figma/fonts.css';
 
 /* Core CSS required for Ionic components */
 @import '@ionic/angular/css/core.css';
-
-/* Basic Ionic CSS */
 @import '@ionic/angular/css/normalize.css';
 @import '@ionic/angular/css/structure.css';
 @import '@ionic/angular/css/typography.css';
 @import '@ionic/angular/css/display.css';
-
-/* Optional Ionic utilities */
-@import '@ionic/angular/css/padding.css';
-@import '@ionic/angular/css/float-elements.css';
-@import '@ionic/angular/css/text-alignment.css';
-@import '@ionic/angular/css/text-transformation.css';
-@import '@ionic/angular/css/flex-utils.css';
-
-/* Dark mode palette */
-@import '@ionic/angular/css/palettes/dark.system.css';
-
-/* ─────────────────────────────────────────────
-   App-specific UI styles (SAFE)
-   ───────────────────────────────────────────── */
-
-.app-card {
-  background: var(--app-surface);
-  border: 1px solid var(--app-border);
-  border-radius: var(--app-radius);
-  box-shadow: var(--app-shadow);
-}
-
-.app-chip {
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 12px;
-  background: var(--app-muted);
-}
-
-/* ─────────────────────────────────────────────
-   Ionic layout sanity defaults (DO NOT TOUCH)
-   ───────────────────────────────────────────── */
 
 html,
 body {
@@ -57,10 +19,8 @@ body {
 }
 
 :root {
-  --app-font-body: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --app-font-heading: 'Fredoka', 'Nunito Sans', system-ui, sans-serif;
-  /* Ionic's own components (segments, alerts, back buttons, date pickers) use Sanelle's font too. */
-  --ion-font-family: var(--app-font-body);
+  /* Ionic's own components (alerts, date pickers) use Sanelle's font too. */
+  --ion-font-family: var(--sn-body);
 }
 
 /* Native controls don't inherit the page font by default. */
@@ -71,112 +31,45 @@ select {
   font-family: inherit;
 }
 
-body,
-ion-content,
-ion-label,
-ion-text,
-ion-input,
-ion-textarea,
-ion-button,
-ion-item {
-  font-family: var(--app-font-body);
+body {
+  font-family: var(--sn-body);
+  color: var(--sn-ink);
 }
 
-/*
- * One type rule across the app: the rounded Fredoka only for page titles (h1), the wordmark and
- * Today's lead card. Every other heading, label and control uses Nunito Sans.
- */
+/* Fredoka for screen titles only; everything people read at length uses Nunito Sans. */
 h1,
-ion-title,
-.main-title {
-  font-family: var(--app-font-heading);
+ion-title {
+  font-family: var(--sn-display);
   font-weight: 600;
 }
 
 h2,
 h3,
-h4,
-h5,
-h6,
-ion-card-title,
-.section-title {
-  font-family: var(--app-font-body);
+h4 {
+  font-family: var(--sn-body);
   font-weight: 800;
 }
 
-/* Let Ionic manage scrolling correctly */
 ion-content::part(scroll) {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.custom-input {
-  --background: var(--sn-surface);
-  --border-radius: 0.875rem;
-  --padding-start: 0.875rem;
-  --min-height: 3rem;
-  margin-bottom: 0.75rem;
-  border: 1.5px solid var(--sn-line);
-  border-radius: 0.875rem;
-  font-size: 1rem;
-
-  &.item-has-focus {
-    border-color: var(--sn-brand);
-  }
-
-  ion-icon {
-    font-size: 1.125rem;
-    color: var(--sn-muted);
-    margin-right: 0.75rem;
-  }
-}
-
-.main-submit-btn {
-  --background: var(--sn-brand);
-  --background-activated: var(--sn-brand-deep);
-  --color: var(--sn-on-brand);
-  --border-radius: 1rem;
-  --box-shadow: none;
-  height: 3.25rem;
-  margin-top: 1.25rem;
-  font: 700 1.0625rem/1 var(--sn-body);
-  text-transform: none;
-}
-
-/* Older screens' toolbars and headings in the brand. */
 ion-toolbar {
-  --background: var(--sn-brand);
-  --color: var(--sn-on-brand);
-  --border-width: 0;
-  --min-height: 3.5rem;
+  --background: var(--sn-white);
+  --color: var(--sn-ink);
+  --border-width: 0 0 1px;
+  --border-color: var(--sn-line);
+  --min-height: 56px;
 }
 
-ion-toolbar ion-title {
-  font-family: var(--sn-display);
-  font-weight: 600;
-}
-
-ion-toolbar ion-back-button,
 ion-toolbar ion-button {
-  --color: var(--sn-on-brand);
+  --color: var(--sn-berry);
 }
 
 ion-header::after {
   display: none;
 }
 
-ion-checkbox {
-  --checkbox-background-checked: var(--sn-brand);
-  --border-color-checked: var(--sn-brand);
-}
-
-ion-segment {
-  --background: var(--sn-blush);
-}
-
-ion-segment-button {
-  --indicator-color: var(--sn-brand);
-  --color: var(--sn-brand);
-  --color-checked: var(--sn-on-brand);
-  font-weight: 700;
-}
+/* Supplied Figma Make styles follow Ionic resets. */
+@include meta.load-css('./app/shared/design/figma/prototype');

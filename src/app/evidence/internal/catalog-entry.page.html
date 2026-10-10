@@ -1,0 +1,117 @@
+<ion-content
+  ><div class="figma">
+    @if (entry(); as e) {
+      <div class="catalog-shell">
+        <header class="catalog-header">
+          <div><span>Internal workspace</span><strong>Sanelle evidence catalog</strong></div>
+          <button (click)="onExit()">Return to patient app</button>
+        </header>
+        <main class="catalog-main">
+          <button class="catalog-back" (click)="allEntries()">← All evidence entries</button>
+          <div class="catalog-detail-head">
+            <div>
+              <div class="catalog-meta">
+                <span>{{ e.id }}</span
+                ><span [class]="`catalog-status ${e.status.toLowerCase().replace(' ', '-')}`">{{
+                  labels[e.status]
+                }}</span>
+              </div>
+              <h1>{{ e.title }}</h1>
+              <p>{{ e.explanation }}</p>
+            </div>
+          </div>
+          @if (e.status !== 'published') {
+            <div class="internal-warning">
+              <svg figmaIcon="info"></svg>
+              <p>
+                <strong>Not available in the patient experience.</strong>
+                @if (e.status === 'withdrawn') {
+                  This entry remains here for audit history only.
+                } @else {
+                  It must complete review before its explanation can be published.
+                }
+              </p>
+            </div>
+          }
+          <div class="catalog-detail-grid">
+            <section>
+              <h2>Evidence appraisal</h2>
+              <dl class="catalog-fields">
+                <div>
+                  <dt>Relevant study population</dt>
+                  <dd>{{ e.population }}</dd>
+                </div>
+                <div>
+                  <dt>Specific outcome addressed</dt>
+                  <dd>{{ e.outcome }}</dd>
+                </div>
+                <div>
+                  <dt>Findings</dt>
+                  <dd>{{ e.findings }}</dd>
+                </div>
+                <div>
+                  <dt>Limitations and uncertainty</dt>
+                  <dd>{{ e.limitations }}</dd>
+                </div>
+              </dl>
+              <h2>Linked sources</h2>
+              <ul class="citation-list">
+                @for (s of e.sources; track s.id) {
+                  <li>
+                    <span>Source</span><a [href]="s.url" target="_blank" rel="noopener noreferrer">{{ s.label }}</a
+                    ><small>{{ s.type }} · {{ s.depth }}</small>
+                  </li>
+                }
+              </ul>
+            </section>
+            <aside>
+              <section class="catalog-side-section">
+                <h3>Review record</h3>
+                <dl>
+                  <div>
+                    <dt>Reviewer</dt>
+                    <dd>{{ e.reviewer }}</dd>
+                  </div>
+                  <div>
+                    <dt>Review date</dt>
+                    <dd>{{ e.reviewDate }}</dd>
+                  </div>
+                  <div>
+                    <dt>Content version</dt>
+                    <dd>{{ e.version }}</dd>
+                  </div>
+                  <div>
+                    <dt>Research cutoff</dt>
+                    <dd>{{ e.researchCutoff }}</dd>
+                  </div>
+                </dl>
+              </section>
+              <section class="catalog-side-section impact-listing">
+                <h3>Used by</h3>
+                <p>An update would affect:</p>
+                @for (feature of e.usedBy; track $index) {
+                  <span>{{ feature }}</span>
+                }
+              </section>
+              <section class="catalog-side-section">
+                <h3>Review history</h3>
+                <ol>
+                  @for (item of e.history; track $index) {
+                    <li>{{ item.date }} · {{ labels[item.status] }} · {{ item.by }} · {{ item.note }}</li>
+                  }
+                </ol>
+              </section>
+            </aside>
+          </div>
+        </main>
+      </div>
+    } @else {
+      <div class="catalog-shell">
+        <main class="catalog-main">
+          <h1>Entry not found</h1>
+          <button class="catalog-back" (click)="allEntries()">← All evidence entries</button>
+        </main>
+      </div>
+    }
+  </div></ion-content
+>

@@ -44,6 +44,7 @@ export abstract class AccountRecordStore<T> {
     }
     const key = this.keyFor(email);
     if (this.loadedFor === key && this.loading) return this.loading;
+    if (this.loadedFor !== key) this.state.set(this.empty());
     this.loadedFor = key;
     this.loading = (async () => {
       const record = this.read(await this.store.get(key));

@@ -1,21 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { ApiService, LoginResponse } from '../services/api.service';
-import { PlanStoreService } from '../services/plan-store.service';
-import { MealProgressService } from '../services/meal-progress.service';
-import { ChallengesService } from '../services/challenges.service';
-import { CustomChallengesService } from '../services/custom-challenges.service';
+import { ApiService, LoginResponse, RegisterRequest } from '../services/api.service';
 import { firstValueFrom, from, map, switchMap, tap } from 'rxjs';
-import { CareReminders } from '../../my-health/steps/care-reminders.service';
-import { accountKey, normalizeEmail } from '../storage/account-key';
+import { CareReminders } from '../../my-health/care-reminders.service';
+import { accountKey } from '../storage/account-key';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private api = inject(ApiService);
-  private planStore = inject(PlanStoreService);
-  private mealProgress = inject(MealProgressService);
-  private challenges = inject(ChallengesService);
-  private customChallenges = inject(CustomChallengesService);
   private careReminders = inject(CareReminders);
 
   private readonly TOKEN_KEY = 'access_token';
@@ -23,7 +15,6 @@ export class AuthService {
   /** Device-wide flag from before onboarding was tracked per account; only cleaned up now. */
   private readonly LEGACY_ONBOARDING_KEY = 'onboarding_completed';
   private readonly ONBOARDING_KEY_PREFIX = 'onboarding_completed.';
-  private readonly LAST_USER_KEY = 'last_active_user_email';
 
   // In-memory cache so token reads stay synchronous (guards/interceptor rely on
   // this) while the values themselves live in Preferences, not raw localStorage.
@@ -54,38 +45,35 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.api.login(email, password).pipe(
+    return this.startSession(this.api.login(email, password));
+  }
+
+  /** The emailed verification link signs the person in. */
+  verifyEmail(token: string) {
+    return this.startSession(this.api.verifyEmail(token));
+  }
+
+  private startSession(request: ReturnType<ApiService['login']>) {
+    return request.pipe(
       tap((res: LoginResponse) => {
         this.storeTokens(res.accessToken, res.refreshToken);
-        void this.clearLocalDataIfDifferentUser();
       }),
       // Guards read the onboarding state synchronously, so it must be loaded before anyone navigates.
       switchMap((res) => from(this.loadOnboardingState()).pipe(map(() => res))),
     );
   }
 
-  register(email: string, username: string, password: string) {
-    return this.api.register(email, username, password).pipe(
-      tap((res: Partial<LoginResponse>) => {
-        // A new account can never legitimately inherit another account's
-        // locally-cached plan/progress, whatever device state led here.
-        this.planStore.setPlan(null);
-        this.mealProgress.clear();
-        this.challenges.clear();
-        this.customChallenges.clear();
-        void Preferences.set({ key: this.LAST_USER_KEY, value: normalizeEmail(email) });
-        if (res?.accessToken && res?.refreshToken) {
-          this.storeTokens(res.accessToken, res.refreshToken);
-        }
-      }),
-      // A new account always starts at onboarding, whoever used this device before.
-      switchMap((res) =>
-        from(Preferences.set({ key: this.onboardingKey(email), value: 'false' })).pipe(
-          tap(() => (this.onboardingCompleted = false)),
-          map(() => res),
+  /** Creates an unverified account. A new account always starts at onboarding once verified. */
+  register(req: RegisterRequest) {
+    return this.api
+      .register(req)
+      .pipe(
+        switchMap((res) =>
+          from(Preferences.set({ key: this.onboardingKey(res.email || req.email), value: 'false' })).pipe(
+            map(() => res),
+          ),
         ),
-      ),
-    );
+      );
   }
 
   deleteAccount() {
@@ -100,32 +88,8 @@ export class AuthService {
     void Preferences.remove({ key: this.TOKEN_KEY });
     void Preferences.remove({ key: this.REFRESH_KEY });
     void Preferences.remove({ key: this.LEGACY_ONBOARDING_KEY });
-    // Deliberately NOT clearing plan/progress/challenge data here — logging
-    // out (including an automatic one after a failed token refresh, e.g. the
-    // backend being briefly unreachable) isn't the same thing as switching
-    // accounts. The same user logging back in should see their plan exactly
-    // as they left it. Cross-account leakage is guarded at login() instead,
-    // by comparing identities — see clearLocalDataIfDifferentUser().
-  }
-
-  /**
-   * Clears locally-cached plan/progress/challenge data if the account that
-   * just logged in isn't the same one this device's cached data belongs to.
-   * Must run after storeTokens() so getUserEmail() reflects the new session.
-   */
-  private async clearLocalDataIfDifferentUser(): Promise<void> {
-    const email = this.getUserEmail();
-    if (!email) return;
-    const normalized = normalizeEmail(email);
-
-    const { value: lastEmail } = await Preferences.get({ key: this.LAST_USER_KEY });
-    if (lastEmail && lastEmail !== normalized) {
-      this.planStore.setPlan(null);
-      this.mealProgress.clear();
-      this.challenges.clear();
-      this.customChallenges.clear();
-    }
-    void Preferences.set({ key: this.LAST_USER_KEY, value: normalized });
+    // Records stay on the device, encrypted per account, so logging out never deletes them and
+    // another account signing in never sees them.
   }
 
   getAccessToken(): string | null {
@@ -242,6 +206,26 @@ export class AuthService {
   /** The `username` claim the backend embeds in the access token. */
   getUsername(): string | null {
     return this.claim('username');
+  }
+
+  /** The name given at registration. */
+  getDisplayName(): string | null {
+    return this.claim('name');
+  }
+
+  /** The internal evidence catalogue is only for accounts the server names as editors. */
+  isEvidenceEditor(): boolean {
+    const token = this.getAccessToken();
+    const roles = token ? this.decodeJwtPayload(token)?.['roles'] : undefined;
+    return Array.isArray(roles) && roles.includes('EVIDENCE_EDITOR');
+  }
+  async verifyEvidenceEditor(): Promise<boolean> {
+    try {
+      const user = await firstValueFrom(this.api.currentUser());
+      return user.roles.includes('EVIDENCE_EDITOR');
+    } catch {
+      return false;
+    }
   }
 
   private claim(name: string): string | null {

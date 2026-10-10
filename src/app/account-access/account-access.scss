@@ -1,0 +1,60 @@
+/* Shared by the account screens: a narrow single column with the logo at the top. */
+:host {
+  display: contents;
+}
+
+.access {
+  max-width: 30rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.access-logo {
+  margin: 8px 0 24px;
+}
+
+.password-row {
+  position: relative;
+
+  input {
+    padding-right: 76px;
+  }
+  button {
+    position: absolute;
+    right: 4px;
+    bottom: 2px;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--sn-berry);
+    font: 800 0.875rem/1 var(--sn-body);
+    padding: 0 12px;
+    cursor: pointer;
+  }
+}
+
+.points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+
+  li {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+  }
+  .num {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--sn-blush);
+    color: var(--sn-berry);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 0.875rem;
+  }
+}

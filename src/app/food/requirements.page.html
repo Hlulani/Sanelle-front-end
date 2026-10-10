@@ -1,0 +1,175 @@
+<ion-content>
+  <app-figma-frame active="food" title="Your food requirements" label="Before you plan"
+    ><div class="visit-paper source-extension">
+      <div class="section-title"><a class="text-action" routerLink="/tabs/food">Food</a></div>
+      <header class="section-title source-extension-heading">
+        <p class="eyebrow">Before you plan</p>
+        <h1>Your food requirements</h1>
+        <p class="source-extension-intro">Safety first, then what you’d like. Skip anything that doesn’t apply.</p>
+      </header>
+      @if (!reviewed()) {
+        <p class="save-notice unknown-note">Needs your review: check these before your first plan.</p>
+      }
+
+      <h2 class="group">Never in my meals</h2>
+      <p class="fine-print">These decide which meals can appear at all. They always override favourites.</p>
+
+      <section class="part" aria-labelledby="allergy-title">
+        <h3 id="allergy-title">Allergies</h3>
+        <div class="chip-choices" role="group" aria-labelledby="allergy-title">
+          @for (a of allergens; track a.code) {
+            <button
+              type="button"
+              class="source-choice"
+              [attr.aria-pressed]="allergies().includes(a.code)"
+              [class.selected]="allergies().includes(a.code)"
+              (click)="toggle(allergies, a.code)"
+            >
+              {{ a.label }}
+            </button>
+          }
+        </div>
+        @if (allergies().length) {
+          <p class="fine-print allergy">
+            Recipes that list {{ allergyWords() }}, or ingredients that may contain them, are left out. Check product
+            labels and cross-contamination information. Sanelle cannot guarantee that packaged ingredients or
+            preparation environments are allergen-free.
+          </p>
+        }
+      </section>
+
+      <section class="part" aria-labelledby="strict-title">
+        <h3 id="strict-title">Foods I strictly avoid</h3>
+        <app-word-list
+          label="Add a food you strictly avoid"
+          name="strict"
+          placeholder="e.g. mushrooms"
+          [(words)]="strict"
+        ></app-word-list>
+      </section>
+
+      <section class="part" aria-labelledby="pattern-title">
+        <h3 id="pattern-title">Dietary pattern</h3>
+        <div class="chip-choices" role="radiogroup" aria-labelledby="pattern-title">
+          @for (p of patterns; track p.value) {
+            <button
+              type="button"
+              role="radio"
+              class="source-choice"
+              [attr.aria-checked]="pattern() === p.value"
+              [class.selected]="pattern() === p.value"
+              (click)="pattern.set(p.value)"
+            >
+              {{ p.label }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="part" aria-labelledby="cultural-title">
+        <h3 id="cultural-title">Religious or cultural requirements</h3>
+        <div class="chip-choices" role="group" aria-labelledby="cultural-title">
+          @for (c of cultural; track c.rule) {
+            <button
+              type="button"
+              class="source-choice"
+              [attr.aria-pressed]="rules().includes(c.rule)"
+              [class.selected]="rules().includes(c.rule)"
+              (click)="toggle(rules, c.rule)"
+            >
+              {{ c.label }}
+            </button>
+          }
+        </div>
+        @for (c of cultural; track c.rule) {
+          @if (c.note && rules().includes(c.rule)) {
+            <p class="fine-print">{{ c.note }}</p>
+          }
+        }
+      </section>
+
+      <h2 class="group">What I’d like</h2>
+      <p class="fine-print">These only change which meals come first.</p>
+
+      <section class="part" aria-labelledby="intol-title">
+        <h3 id="intol-title">Intolerances</h3>
+        <p class="fine-print">Meals with these are flagged and shown last, not removed.</p>
+        <app-word-list
+          label="Add an intolerance"
+          name="intolerance"
+          placeholder="e.g. lactose, onion"
+          [(words)]="intolerances"
+        ></app-word-list>
+      </section>
+
+      <section class="part" aria-labelledby="dislike-title">
+        <h3 id="dislike-title">Foods I dislike</h3>
+        <app-word-list
+          label="Add a food you dislike"
+          name="dislike"
+          placeholder="e.g. coriander"
+          [(words)]="dislikes"
+        ></app-word-list>
+      </section>
+
+      <section class="part" aria-labelledby="like-title">
+        <h3 id="like-title">Foods I like, and what makes cooking easier</h3>
+        <app-word-list
+          label="Add a food you like"
+          name="like"
+          placeholder="e.g. chickpeas"
+          [(words)]="likes"
+        ></app-word-list>
+        <div class="chip-choices" role="group" aria-labelledby="like-title">
+          @for (n of needs; track n.value) {
+            <button
+              type="button"
+              class="source-choice"
+              [attr.aria-pressed]="practical().includes(n.value)"
+              [class.selected]="practical().includes(n.value)"
+              (click)="toggle(practical, n.value)"
+            >
+              {{ n.label }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="part" aria-labelledby="house-title">
+        <h3 id="house-title">Household</h3>
+        <div class="stepper">
+          <button
+            type="button"
+            class="step"
+            (click)="changeHousehold(-1)"
+            [disabled]="household() <= 1"
+            aria-label="Fewer people"
+          >
+            −
+          </button>
+          <span aria-live="polite"
+            ><strong>{{ household() }}</strong> {{ household() === 1 ? 'person' : 'people' }}</span
+          >
+          <button
+            type="button"
+            class="step"
+            (click)="changeHousehold(1)"
+            [disabled]="household() >= 12"
+            aria-label="More people"
+          >
+            +
+          </button>
+        </div>
+        <p class="fine-print">Shopping amounts are scaled for this many people.</p>
+      </section>
+
+      <p class="fine-print">Settings for one plan only, like open days or a time limit, come next.</p>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      <div class="review-actions">
+        <button type="button" class="primary" [disabled]="saving()" (click)="save()">Confirm and plan meals</button>
+      </div>
+    </div></app-figma-frame
+  >
+</ion-content>

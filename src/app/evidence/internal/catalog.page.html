@@ -1,0 +1,131 @@
+<ion-content
+  ><div class="figma">
+    <div class="catalog-shell">
+      <header class="catalog-header">
+        <div><span>Internal workspace</span><strong>Sanelle evidence catalog</strong></div>
+        <button (click)="onExit()">Return to patient app</button>
+      </header>
+      <main class="catalog-main">
+        <div class="catalog-title">
+          <div>
+            <p class="eyebrow">Medical explanation governance</p>
+            <h1>Evidence entries</h1>
+            <p>
+              Maintain the reviewed explanations used across Sanelle. This is a published-research workspace, not user
+              data or an exhaustive clinical review.
+            </p>
+          </div>
+          <button class="catalog-new" (click)="openDraft()">Open draft example <svg figmaIcon="arrow"></svg></button>
+        </div>
+        <section class="library-scope">
+          <div class="library-scope-copy">
+            <p class="eyebrow">Research library snapshot · 6 October 2026</p>
+            <h2>Substantial reading, with the gaps kept visible</h2>
+            <p>
+              The source library tracks publications, reading depth, claim mappings, and unresolved verification work.
+              Counts are publications—not independent studies—and the wider review remains in progress.
+            </p>
+          </div>
+          <div class="scope-visual" aria-label="Research library coverage summary">
+            <div>
+              <span [style]="{ width: '81%' }"></span><b>63</b>
+              <p>full main-text result or review readings</p>
+            </div>
+            <div>
+              <span [style]="{ width: '72%' }"></span><b>56</b>
+              <p>original full-text inclusions</p>
+            </div>
+            <div>
+              <span [style]="{ width: '56%' }"></span><b>44</b>
+              <p>claim-to-evidence rows across 14 topics</p>
+            </div>
+            <div class="scope-total">
+              <strong>78</strong>
+              <p>publications in the reading ledger, with mixed reading depths</p>
+            </div>
+          </div>
+          <div class="scope-cautions">
+            <span><b>12</b> selected originals remain incomplete</span
+            ><span><b>14</b> report groups carry metadata warnings</span
+            ><span><b>1</b> analyst; no independent adjudication claimed</span>
+          </div>
+        </section>
+        <p class="prototype-entry-note">
+          <svg figmaIcon="info" [size]="17"></svg> The entries below are versioned product records linked to the
+          research library. Published research summaries are distinguished from independently approved clinical content.
+        </p>
+        <div class="catalog-summary">
+          <div>
+            <strong>{{ all.length }}</strong
+            ><span>Total entries</span>
+          </div>
+          <div>
+            <strong>{{ count('published') }}</strong
+            ><span>Published</span>
+          </div>
+          <div>
+            <strong>{{ count('in-review') }}</strong
+            ><span>In review</span>
+          </div>
+          <div>
+            <strong>{{ count('withdrawn') }}</strong
+            ><span>Withdrawn</span>
+          </div>
+        </div>
+        <div class="catalog-tools">
+          <input
+            name="search"
+            [ngModel]="search()"
+            (ngModelChange)="search.set($event)"
+            placeholder="Search title, ID, or explanation"
+            aria-label="Search evidence entries"
+          /><select name="topic" [ngModel]="topic()" (ngModelChange)="topic.set($event)" aria-label="Filter by topic">
+            <option [ngValue]="null">All topics</option>
+            @for (t of topics; track t.value) {
+              <option [ngValue]="t.value">{{ t.label }}</option>
+            }</select
+          ><select
+            name="status"
+            [ngModel]="status()"
+            (ngModelChange)="status.set($event)"
+            aria-label="Filter by status"
+          >
+            <option [ngValue]="null">All statuses</option>
+            @for (s of statuses; track s.value) {
+              <option [ngValue]="s.value">{{ s.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="catalog-table">
+          <div class="catalog-row catalog-columns">
+            <span>Entry</span><span>Topic</span><span>Status</span><span>Version</span><span>Used by</span>
+          </div>
+          @for (entry of entries(); track $index) {
+            <button class="catalog-row" (click)="setSelectedId(entry.id)">
+              <span
+                ><b>{{ entry.title }}</b
+                ><small>{{ entry.id }}</small></span
+              ><span>{{ topicLabels[entry.topic] }}</span
+              ><span
+                ><i [class]="`catalog-status ${entry.status.toLowerCase().replace(' ', '-')}`">{{
+                  labels[entry.status]
+                }}</i></span
+              ><span>{{ entry.version }}</span
+              ><span
+                >{{ entry.usedBy.length }} feature{{ entry.usedBy.length === 1 ? '' : 's' }}
+                <svg figmaIcon="arrow" [size]="16"></svg
+              ></span>
+            </button>
+          }
+          @if (entries().length === 0) {
+            <div class="catalog-empty">
+              <strong>No entries match these filters.</strong>
+              <p>Clear a filter or try a different search term.</p>
+              <button class="catalog-new" (click)="clear()">Clear filters</button>
+            </div>
+          }
+        </div>
+      </main>
+    </div>
+  </div></ion-content
+>

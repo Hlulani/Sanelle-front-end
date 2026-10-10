@@ -1,3 +1,4 @@
+import { FigmaFrameComponent } from '../../shared/design/figma/figma-frame.component';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -13,7 +14,7 @@ import {
 } from './health-backup';
 import { HealthRecord } from '../diagnosis.model';
 import { saveFile } from '../../shared/files/save-file';
-import { CareReminders } from '../steps/care-reminders.service';
+import { CareReminders } from '../care-reminders.service';
 import { localIsoDate } from '../../shared/calendar-date';
 import { matching } from '../../shared/forms/validators';
 import { UserFacingError, messageFor } from '../../core/errors/errors';
@@ -21,9 +22,8 @@ import { UserFacingError, messageFor } from '../../core/errors/errors';
 @Component({
   selector: 'app-backup',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, IonContent],
+  imports: [FigmaFrameComponent, ReactiveFormsModule, RouterLink, IonContent],
   templateUrl: './backup.page.html',
-  styleUrls: ['./backup.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackupPage {

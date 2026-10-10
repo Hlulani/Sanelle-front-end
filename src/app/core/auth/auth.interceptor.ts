@@ -10,6 +10,9 @@ const PUBLIC_AUTH_PATHS = [
   '/api/v1/auth/register',
   '/api/v1/auth/refresh',
   '/api/v1/auth/logout',
+  '/api/v1/auth/verify-email',
+  '/api/v1/auth/verification/resend',
+  '/api/v1/auth/password-reset',
 ];
 
 export function isPublicAuthRequest(url: string): boolean {
@@ -33,7 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return from(auth.restoreSession()).pipe(
           switchMap((restored) => {
             if (!restored) {
-              router.navigateByUrl('/auth?mode=login');
+              router.navigateByUrl('/login');
               return throwError(() => err);
             }
 

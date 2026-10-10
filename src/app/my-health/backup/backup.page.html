@@ -1,89 +1,93 @@
 <ion-content [fullscreen]="true"
-  ><main class="sn-page sn-screen">
-    <header class="sn-head">
-      <a class="sn-back" routerLink="/tabs/health">My health</a>
-      <h1>Keep a backup</h1>
-      <p class="sn-head-note">Bring your health records with you if you change phones or browsers.</p>
-    </header>
-    <section class="sn-card">
-      <h2>Your records live on this device</h2>
-      <p>Signing in on another device does not bring them across. Clearing app or browser storage can remove them.</p>
-      <p>
-        A backup includes report findings and history, questions and answers, check-ins, visit notes, next steps and
-        summary choices. Original report files and meal plans are not included.
-      </p>
-    </section>
-    <form class="sn-card" [formGroup]="exportForm" (ngSubmit)="export()">
-      <h2>Save an encrypted backup</h2>
-      <p>
-        Choose a separate passphrase of at least {{ minLength }} characters. You will need it to restore the file;
-        Sanelle cannot recover it.
-      </p>
-      <fieldset [disabled]="busy()">
-        <label class="sn-field"
-          ><span>Backup passphrase</span
-          ><input formControlName="password" type="password" autocomplete="new-password" /></label
-        ><label class="sn-field"
-          ><span>Repeat backup passphrase</span
-          ><input formControlName="repeat" type="password" autocomplete="new-password" /></label
-        ><button class="sn-btn sn-btn--brand" type="submit">{{ busy() ? 'Working…' : 'Save encrypted backup' }}</button>
-      </fieldset>
-    </form>
-    <form class="sn-card" [formGroup]="restoreForm" (ngSubmit)="unlock()">
-      <h2>Restore a backup</h2>
-      <p>First unlock the file and review what is inside. Nothing is replaced until you confirm.</p>
-      <fieldset [disabled]="busy()">
-        <input #backupInput type="file" accept="application/json,.json" hidden (change)="selectFile($event)" /><button
-          class="sn-btn sn-btn--apricot"
-          type="button"
-          (click)="backupInput.click()"
-        >
-          Choose backup file
-        </button>
-        @if (file(); as chosen) {
-          <p>{{ chosen.name }}</p>
-        }
-        <label class="sn-field"
-          ><span>Passphrase for this backup</span
-          ><input formControlName="passphrase" type="password" autocomplete="off" /></label
-        ><button class="sn-btn sn-btn--brand" type="submit" [disabled]="!file() || restoreForm.invalid">
-          Unlock and review
-        </button>
-      </fieldset>
-    </form>
-    @if (preview(); as backup) {
-      <section class="sn-card">
-        <h2>Check before restoring</h2>
-        <p>Backup created {{ backup.exportedAt }}</p>
+  ><app-figma-frame active="health" title="Keep a backup" label="Your records"
+    ><div class="visit-paper source-extension">
+      <header class="section-title source-extension-heading">
+        <a class="text-action" routerLink="/tabs/health">My health</a>
+        <h1>Keep a backup</h1>
+        <p class="source-extension-intro">Bring your health records with you if you change phones or browsers.</p>
+      </header>
+      <section class="paper-section">
+        <h2>Your records live on this device</h2>
+        <p>Signing in on another device does not bring them across. Clearing app or browser storage can remove them.</p>
         <p>
-          {{ backup.record.reports?.length || 0 }} reports · {{ backup.record.questions.length }} questions ·
-          {{ backup.record.symptoms.length }} check-ins · {{ backup.record.visits?.length || 0 }} visits ·
-          {{ backup.record.tasks?.length || 0 }} next steps
+          A backup includes report findings and history, questions and answers, check-ins, visit notes, next steps and
+          summary choices. Original report files and meal plans are not included.
         </p>
-        <p>
-          This replaces the health records currently saved for <strong>{{ email() }}</strong> on this device. Save a
-          backup of your current records first if you want to keep them.
-        </p>
-        <label class="toggle"
-          ><input type="checkbox" [formControl]="restoreConfirmed" /><span
-            >I want to replace this account’s health records with this backup.</span
-          ></label
-        ><button
-          class="sn-btn sn-btn--brand"
-          type="button"
-          [disabled]="!restoreConfirmed.value || busy()"
-          (click)="restore()"
-        >
-          Restore these records
-        </button>
       </section>
-    }
-    @if (error()) {
-      <p class="error" role="alert">{{ error() }}</p>
-    }
-    @if (status()) {
-      <p role="status">{{ status() }}</p>
-      <a class="sn-btn sn-btn--apricot" routerLink="/tabs/health">Review My health</a>
-    }
-  </main></ion-content
+      <form class="paper-section" [formGroup]="exportForm" (ngSubmit)="export()">
+        <h2>Save an encrypted backup</h2>
+        <p>
+          Choose a separate passphrase of at least {{ minLength }} characters. You will need it to restore the file;
+          Sanelle cannot recover it.
+        </p>
+        <fieldset [disabled]="busy()">
+          <label class="source-field answer-form"
+            ><span>Backup passphrase</span
+            ><input formControlName="password" type="password" autocomplete="new-password" /></label
+          ><label class="source-field answer-form"
+            ><span>Repeat backup passphrase</span
+            ><input formControlName="repeat" type="password" autocomplete="new-password" /></label
+          ><button class="primary sn-btn--brand" type="submit">
+            {{ busy() ? 'Working…' : 'Save encrypted backup' }}
+          </button>
+        </fieldset>
+      </form>
+      <form class="paper-section" [formGroup]="restoreForm" (ngSubmit)="unlock()">
+        <h2>Restore a backup</h2>
+        <p>First unlock the file and review what is inside. Nothing is replaced until you confirm.</p>
+        <fieldset [disabled]="busy()">
+          <input #backupInput type="file" accept="application/json,.json" hidden (change)="selectFile($event)" /><button
+            class="primary sn-btn--apricot"
+            type="button"
+            (click)="backupInput.click()"
+          >
+            Choose backup file
+          </button>
+          @if (file(); as chosen) {
+            <p>{{ chosen.name }}</p>
+          }
+          <label class="source-field answer-form"
+            ><span>Passphrase for this backup</span
+            ><input formControlName="passphrase" type="password" autocomplete="off" /></label
+          ><button class="primary sn-btn--brand" type="submit" [disabled]="!file() || restoreForm.invalid">
+            Unlock and review
+          </button>
+        </fieldset>
+      </form>
+      @if (preview(); as backup) {
+        <section class="paper-section">
+          <h2>Check before restoring</h2>
+          <p>Backup created {{ backup.exportedAt }}</p>
+          <p>
+            {{ backup.record.reports?.length || 0 }} reports · {{ backup.record.questions.length }} questions ·
+            {{ backup.record.symptoms.length }} check-ins · {{ backup.record.visits?.length || 0 }} visits ·
+            {{ backup.record.tasks?.length || 0 }} next steps
+          </p>
+          <p>
+            This replaces the health records currently saved for <strong>{{ email() }}</strong> on this device. Save a
+            backup of your current records first if you want to keep them.
+          </p>
+          <label class="toggle"
+            ><input type="checkbox" [formControl]="restoreConfirmed" /><span
+              >I want to replace this account’s health records with this backup.</span
+            ></label
+          ><button
+            class="primary sn-btn--brand"
+            type="button"
+            [disabled]="!restoreConfirmed.value || busy()"
+            (click)="restore()"
+          >
+            Restore these records
+          </button>
+        </section>
+      }
+      @if (error()) {
+        <p class="error" role="alert">{{ error() }}</p>
+      }
+      @if (status()) {
+        <p role="status">{{ status() }}</p>
+        <a class="primary sn-btn--apricot" routerLink="/tabs/health">Review My health</a>
+      }
+    </div></app-figma-frame
+  ></ion-content
 >

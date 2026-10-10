@@ -1,103 +1,200 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/auth/auth-guard';
-import { AuthShellPage } from './auth/auth-shell.page';
+import { authGuard, evidenceEditorGuard, signedOutGuard } from './core/auth/auth-guard';
 
+/**
+ * Routes follow the handoff's screen IDs. Patient navigation has four destinations (Today, Food,
+ * My health, Appointment); the evidence catalogue is a separate, role-gated workspace.
+ */
 export const routes: Routes = [
-  {
-    path: 'health/steps',
-    loadComponent: () => import('./my-health/steps/steps.page').then((m) => m.StepsPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/reports',
-    loadComponent: () => import('./my-health/reports/reports.page').then((m) => m.ReportsPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/backup',
-    loadComponent: () => import('./my-health/backup/backup.page').then((m) => m.BackupPage),
-    canActivate: [authGuard],
-  },
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-  { path: 'welcome', loadComponent: () => import('./welcome/welcome.page').then((m) => m.WelcomePage) },
-  { path: 'auth', component: AuthShellPage },
-  {
-    path: 'health/report',
-    loadComponent: () => import('./my-health/report/report.page').then((m) => m.ReportPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/record/:key',
-    loadComponent: () => import('./my-health/record/record.page').then((m) => m.RecordPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'nourish/quick',
-    loadComponent: () => import('./nourish/quick-meals/quick-meals.page').then((m) => m.QuickMealsPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/recorded',
-    loadComponent: () => import('./my-health/recorded/recorded.page').then((m) => m.RecordedPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/questions',
-    loadComponent: () => import('./my-health/questions/questions.page').then((m) => m.QuestionsPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/symptoms',
-    loadComponent: () => import('./my-health/symptoms/symptom-timeline.page').then((m) => m.SymptomTimelinePage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/symptoms/log/:date',
-    loadComponent: () => import('./my-health/symptoms/symptom-log.page').then((m) => m.SymptomLogPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/visit',
-    loadComponent: () => import('./my-health/visit/visit.page').then((m) => m.VisitPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'health/summary',
-    loadComponent: () => import('./my-health/summary-page/summary.page').then((m) => m.SummaryPage),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'learn/:id',
-    loadComponent: () => import('./learn/food-clarity/food-clarity.page').then((m) => m.FoodClarityPage),
-    canActivate: [authGuard],
-  },
 
-  // Put meal-details BEFORE ** and (optionally) guard it
+  // Journey 1: account (AUTH-01 to AUTH-05)
   {
-    path: 'meal-details/:id',
-    loadComponent: () => import('./pages/meal-details/meal-details.page').then((m) => m.MealDetailsPage),
+    path: 'welcome',
+    canActivate: [signedOutGuard],
+    loadComponent: () => import('./account-access/welcome.page').then((m) => m.WelcomePage),
+  },
+  {
+    path: 'register',
+    canActivate: [signedOutGuard],
+    loadComponent: () => import('./account-access/register.page').then((m) => m.RegisterPage),
+  },
+  {
+    path: 'check-email',
+    loadComponent: () => import('./account-access/check-email.page').then((m) => m.CheckEmailPage),
+  },
+  {
+    path: 'login',
+    canActivate: [signedOutGuard],
+    loadComponent: () => import('./account-access/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./account-access/reset-password.page').then((m) => m.ResetPasswordPage),
+  },
+  {
+    path: 'verify-email',
+    loadComponent: () => import('./account-access/verify-email.page').then((m) => m.VerifyEmailPage),
+  },
+  { path: 'terms', loadComponent: () => import('./account-access/terms.page').then((m) => m.TermsPage) },
+  // Older links.
+  { path: 'auth', redirectTo: 'login' },
+
+  // Journey 2: onboarding (ONB-01 to ONB-05)
+  {
+    path: 'onboarding',
     canActivate: [authGuard],
+    loadComponent: () => import('./onboarding/onboarding.page').then((m) => m.OnboardingPage),
   },
 
   {
     path: 'tabs',
-    loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
     canActivate: [authGuard],
+    loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
     children: [
       { path: 'today', loadComponent: () => import('./today/today.page').then((m) => m.TodayPage) },
-      { path: 'health', loadComponent: () => import('./my-health/health/health.page').then((m) => m.HealthPage) },
-      { path: 'tab2', loadComponent: () => import('./tab2/tab2.page').then((m) => m.Tab2Page) },
-      { path: 'tab3', loadComponent: () => import('./tab3/tab3.page').then((m) => m.Tab3Page) },
-      { path: 'learn', loadComponent: () => import('./learn/learn/learn.page').then((m) => m.LearnPage) },
-      { path: 'account', loadComponent: () => import('./account/account.page').then((m) => m.AccountPage) },
+      { path: 'food', loadComponent: () => import('./food/food.page').then((m) => m.FoodPage) },
+      { path: 'health', loadComponent: () => import('./my-health/health.page').then((m) => m.HealthPage) },
+      {
+        path: 'appointment',
+        loadComponent: () => import('./appointment/appointment.page').then((m) => m.AppointmentPage),
+      },
       { path: '', redirectTo: 'today', pathMatch: 'full' },
     ],
   },
 
   {
-    path: 'onboarding',
-    loadComponent: () => import('./auth/components/onboarding/onboarding.page').then((m) => m.OnboardingPage),
+    path: 'account',
     canActivate: [authGuard],
+    loadComponent: () => import('./account/account.page').then((m) => m.AccountPage),
   },
+
+  // Journeys 4 and 5: report and diagnosis (RPT-01 to RPT-04, HLT-02, HLT-03)
+  {
+    path: 'health/report/new',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/report-source.page').then((m) => m.ReportSourcePage),
+  },
+  {
+    path: 'health/report/capture',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/report-capture.page').then((m) => m.ReportCapturePage),
+  },
+  {
+    path: 'health/report/check',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/report-check.page').then((m) => m.ReportCheckPage),
+  },
+  {
+    path: 'health/report/:id/saved',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/report-saved.page').then((m) => m.ReportSavedPage),
+  },
+  {
+    path: 'health/details',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/report-details.page').then((m) => m.ReportDetailsPage),
+  },
+  {
+    path: 'health/question/:key',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/suggested-question.page').then((m) => m.SuggestedQuestionPage),
+  },
+  {
+    path: 'health/reports',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/report/reports.page').then((m) => m.ReportsPage),
+  },
+
+  // Journey 6: symptoms (SYM-01 to SYM-04)
+  {
+    path: 'health/check-in/:date',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/symptoms/check-in.page').then((m) => m.CheckInPage),
+  },
+  {
+    path: 'health/symptoms',
+    canActivate: [authGuard],
+    data: { healthView: 'symptoms' },
+    loadComponent: () => import('./my-health/health.page').then((m) => m.HealthPage),
+  },
+  {
+    path: 'health/symptoms/summary',
+    canActivate: [authGuard],
+    data: { healthView: 'symptoms' },
+    loadComponent: () => import('./my-health/health.page').then((m) => m.HealthPage),
+  },
+  {
+    path: 'health/results',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/symptoms/results.page').then((m) => m.ResultsPage),
+  },
+  {
+    path: 'health/backup',
+    canActivate: [authGuard],
+    loadComponent: () => import('./my-health/backup/backup.page').then((m) => m.BackupPage),
+  },
+  {
+    path: 'learn/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./evidence/evidence-explanation.page').then((m) => m.EvidenceExplanationPage),
+  },
+
+  // Journey 8: appointment (APT-02, APT-03)
+  {
+    path: 'appointment/answer/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./appointment/record-answer.page').then((m) => m.RecordAnswerPage),
+  },
+  {
+    path: 'appointment/next-step',
+    canActivate: [authGuard],
+    loadComponent: () => import('./appointment/next-step.page').then((m) => m.NextStepPage),
+  },
+
+  // Journey 7: food (FOOD-01A to FOOD-04)
+  {
+    path: 'food/requirements',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/requirements.page').then((m) => m.RequirementsPage),
+  },
+  {
+    path: 'food/plan',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/plan.page').then((m) => m.PlanPage),
+  },
+  {
+    path: 'food/swap/:date',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/swap.page').then((m) => m.SwapPage),
+  },
+  {
+    path: 'food/find',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/find-meal.page').then((m) => m.FindMealPage),
+  },
+  {
+    path: 'food/recipe/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/recipe.page').then((m) => m.RecipePage),
+  },
+  {
+    path: 'food/claims',
+    canActivate: [authGuard],
+    loadComponent: () => import('./food/food-claims.page').then((m) => m.FoodClaimsPage),
+  },
+
+  // Journey 9: internal evidence catalogue (EVC-01, EVC-02)
+  {
+    path: 'internal/evidence',
+    canActivate: [evidenceEditorGuard],
+    loadComponent: () => import('./evidence/internal/catalog.page').then((m) => m.CatalogPage),
+  },
+  {
+    path: 'internal/evidence/:id',
+    canActivate: [evidenceEditorGuard],
+    loadComponent: () => import('./evidence/internal/catalog-entry.page').then((m) => m.CatalogEntryPage),
+  },
+
   { path: '**', redirectTo: 'welcome' },
 ];

@@ -39,3 +39,97 @@ describe('Encrypted health backups', () => {
     await expectAsync(encryptBackup(record(), 'short')).toBeRejected();
   });
 });
+
+describe('Redesigned record backup compatibility', () => {
+  it('restores source symptom selections, daily impact and the question associated with a next step', async () => {
+    const original = record();
+    original.symptoms = [
+      { date: '2026-10-08', observedSymptoms: ['Pain', 'Low energy'], dailyImpact: 'Changed my plans' },
+    ];
+    original.tasks![0].questionId = 'q1';
+    const restored = (
+      await decryptBackup(await encryptBackup(original, 'a long private passphrase'), 'a long private passphrase')
+    ).record;
+    expect(restored.symptoms[0].observedSymptoms).toEqual(['Pain', 'Low energy']);
+    expect(restored.symptoms[0].dailyImpact).toBe('Changed my plans');
+    expect(restored.symptoms[0].pain).toBeUndefined();
+    expect(restored.symptoms[0].fatigue).toBeUndefined();
+    expect(restored.symptoms[0].affected).toBeUndefined();
+    expect(restored.tasks![0].questionId).toBe('q1');
+  });
+  it('rejects unsupported symptom selections and impact values rather than silently discarding them', () => {
+    expect(() =>
+      validateHealthRecord({ ...record(), symptoms: [{ date: '2026-10-08', observedSymptoms: ['Unknown'] }] }),
+    ).toThrow();
+    expect(() =>
+      validateHealthRecord({ ...record(), symptoms: [{ date: '2026-10-08', dailyImpact: 'Unknown' }] }),
+    ).toThrow();
+  });
+  it('preserves checking status, reported units/pages, question history and exact clinical results', async () => {
+    const original = record();
+    original.reports = [
+      {
+        id: 'r1',
+        title: 'My scan',
+        source: 'pdf',
+        status: 'needs-checking',
+        pageCount: 2,
+        savedAt: '2026-10-08T09:00:00Z',
+        findings: {
+          largestSize: {
+            key: 'largestSize',
+            completeness: { state: 'present', value: '41 × 38' },
+            unit: 'mm',
+            sourcePage: 2,
+            needsChecking: true,
+            originalWording: 'measures 41 × 38 mm',
+          },
+        },
+      },
+    ];
+    original.questions[0] = {
+      ...original.questions[0],
+      status: 'open',
+      history: [
+        { at: '2026-10-08T09:00:00Z', status: 'unresolved', note: 'No answer yet', visitDate: '2026-10-08' },
+        { at: '2026-10-08T09:05:00Z', status: 'open', note: 'Carried forward' },
+      ],
+    };
+    original.results = [
+      {
+        id: 'lab1',
+        name: 'Haemoglobin',
+        value: '10.2',
+        unit: 'g/dL',
+        testDate: '2026-10-07',
+        source: 'Lab report',
+        savedAt: '2026-10-08T09:00:00Z',
+      },
+    ];
+    const restored = (
+      await decryptBackup(await encryptBackup(original, 'a long private passphrase'), 'a long private passphrase')
+    ).record;
+    expect(restored.reports![0].status).toBe('needs-checking');
+    expect(restored.reports![0].findings.largestSize?.unit).toBe('mm');
+    expect(restored.reports![0].findings.largestSize?.sourcePage).toBe(2);
+    expect(restored.reports![0].findings.largestSize?.needsChecking).toBeTrue();
+    expect(JSON.parse(JSON.stringify(restored.questions[0].history))).toEqual(original.questions[0].history);
+    expect(restored.results).toEqual(original.results);
+  });
+  it('rejects unsupported report status and question-history states', () => {
+    expect(() =>
+      validateHealthRecord({
+        ...record(),
+        reports: [
+          { id: 'r1', title: 'Bad', savedAt: '2026-10-08T00:00:00Z', status: 'medically-approved', findings: {} },
+        ],
+      }),
+    ).toThrow();
+    expect(() =>
+      validateHealthRecord({
+        ...record(),
+        questions: [{ ...record().questions[0], history: [{ at: '2026-10-08T00:00:00Z', status: 'deleted' }] }],
+      }),
+    ).toThrow();
+  });
+});

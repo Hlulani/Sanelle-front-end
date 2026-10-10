@@ -1,0 +1,41 @@
+<ion-content
+  ><app-figma-frame active="health" title="Your health" label="My health">
+    <section class="report-library">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Your source documents</p>
+          <h2>Reports</h2>
+        </div>
+        <a routerLink="/health/report/new"><svg figmaIcon="plus" /> Add report</a>
+      </div>
+      @for (r of reports(); track r.id) {
+        <a
+          class="report-list-item"
+          [routerLink]="status(r) === 'checked' ? '/health/details' : '/health/report/check'"
+          [queryParams]="status(r) === 'checked' ? { report: r.id } : { id: r.id }"
+        >
+          <div class="report-page-thumb">
+            <i></i><i></i><b>{{ r.pageCount || '—' }}</b>
+          </div>
+          <div>
+            <strong>{{ r.title }}</strong
+            ><span>{{ sourceLabel(r) }}{{ r.reportDate ? ' · ' + r.reportDate : '' }}</span>
+          </div>
+          <em [class.checked]="status(r) === 'checked'"
+            >{{ status(r) === 'checked' ? 'Checked' : 'Needs checking'
+            }}{{ current() === r.id ? ' · current' : '' }}</em
+          ><svg figmaIcon="arrow" />
+        </a>
+        @if (status(r) === 'checked' && current() !== r.id) {
+          <button class="text-action" [disabled]="busy()" (click)="use(r)">Use for my next visit</button>
+        }
+      } @empty {
+        <div class="report-empty">
+          <strong>No report files saved yet.</strong>
+          <p>Take photos, choose images, upload a PDF, or enter details manually.</p>
+          <a class="primary" routerLink="/health/report/new">Add your first report</a>
+        </div>
+      }
+    </section></app-figma-frame
+  ></ion-content
+>

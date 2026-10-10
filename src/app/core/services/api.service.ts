@@ -1,77 +1,71 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { MealResponse } from '../models/meal.model';
 
 export interface UserResponse {
   id: string;
   email: string;
   username: string;
+  name: string;
+  emailVerified: boolean;
+  roles: string[];
 }
+
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
   user: UserResponse;
 }
 
-export type RegisterResponse = LoginResponse;
+export interface RegistrationResponse {
+  email: string;
+  verificationRequired: boolean;
+}
+
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
 }
 
 export interface RegisterRequest {
+  name: string;
   email: string;
-  username: string;
   password: string;
+  termsAccepted: boolean;
 }
 
-export interface CustomChallengeResponse {
-  id: string;
-  name: string;
-  description: string | null;
-  type: 'meals-in-period' | 'days-in-period' | 'streak';
-  targetCount: number;
-  durationDays: number;
-  inviteCode: string;
-  createdByUserId: string;
-  createdByUsername: string | null;
-  createdAt: string;
-  isCreator: boolean;
-}
-
-export interface ChallengeMemberResponse {
-  userId: string;
-  username: string;
-  joinedAt: string;
-}
-
-export interface CreateCustomChallengeRequest {
-  name: string;
-  description?: string;
-  type: 'meals-in-period' | 'days-in-period' | 'streak';
-  targetCount: number;
-  durationDays: number;
-}
-
+/** The account endpoints. Health records never go through here: they stay on the device. */
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
   private readonly API_URL = environment.apiBaseUrl;
 
   login(email: string, password: string) {
-    return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, {
-      email,
-      password,
-    });
+    return this.http.post<LoginResponse>(`${this.API_URL}/auth/login`, { email, password });
   }
 
-  register(email: string, username: string, password: string) {
-    return this.http.post<RegisterResponse>(`${this.API_URL}/auth/register`, { email, username, password });
+  /** Creates an unverified account and emails a verification link. No session yet. */
+  register(req: RegisterRequest) {
+    return this.http.post<RegistrationResponse>(`${this.API_URL}/auth/register`, req);
   }
 
-  getRecommended() {
-    return this.http.get<MealResponse[]>(`${this.API_URL}/meals`);
+  /** The emailed link proves the address and signs the person in. */
+  verifyEmail(token: string) {
+    return this.http.post<LoginResponse>(`${this.API_URL}/auth/verify-email`, { token });
+  }
+
+  /** Always accepted, whether or not an account exists. */
+  resendVerification(email: string) {
+    return this.http.post<void>(`${this.API_URL}/auth/verification/resend`, { email });
+  }
+
+  /** Always accepted, whether or not an account exists. */
+  requestPasswordReset(email: string) {
+    return this.http.post<void>(`${this.API_URL}/auth/password-reset/request`, { email });
+  }
+
+  confirmPasswordReset(token: string, password: string) {
+    return this.http.post<void>(`${this.API_URL}/auth/password-reset/confirm`, { token, password });
   }
 
   refresh(refreshToken: string) {
@@ -81,35 +75,7 @@ export class ApiService {
   deleteAccount() {
     return this.http.delete<void>(`${this.API_URL}/auth/me`);
   }
-
-  joinChallenge(challengeId: string) {
-    return this.http.post<void>(`${this.API_URL}/challenges/${encodeURIComponent(challengeId)}/join`, {});
-  }
-
-  leaveChallenge(challengeId: string) {
-    return this.http.delete<void>(`${this.API_URL}/challenges/${encodeURIComponent(challengeId)}/join`);
-  }
-
-  getChallengeCounts(challengeIds: string[]) {
-    const params = new HttpParams().set('ids', challengeIds.join(','));
-    return this.http.get<Record<string, number>>(`${this.API_URL}/challenges/counts`, { params });
-  }
-
-  createCustomChallenge(req: CreateCustomChallengeRequest) {
-    return this.http.post<CustomChallengeResponse>(`${this.API_URL}/custom-challenges`, req);
-  }
-
-  joinCustomChallengeByCode(inviteCode: string) {
-    return this.http.post<CustomChallengeResponse>(`${this.API_URL}/custom-challenges/join`, { inviteCode });
-  }
-
-  getMyCustomChallenges() {
-    return this.http.get<CustomChallengeResponse[]>(`${this.API_URL}/custom-challenges/mine`);
-  }
-
-  getCustomChallengeMembers(challengeId: string) {
-    return this.http.get<ChallengeMemberResponse[]>(
-      `${this.API_URL}/custom-challenges/${encodeURIComponent(challengeId)}/members`,
-    );
+  currentUser() {
+    return this.http.get<UserResponse>(`${this.API_URL}/auth/me`);
   }
 }

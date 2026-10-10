@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="260" viewBox="0 0 800 260" role="img" aria-labelledby="title desc">
+  <title id="title">Treatment outcomes are separate</title>
+  <desc id="desc">Four columns distinguish symptoms, fibroid measures, durability, and reproductive outcomes.</desc>
+  <rect width="800" height="260" fill="#F6E1E3"/>
+  <text x="28" y="39" font-family="Fredoka, sans-serif" font-size="24" fill="#301B23">Keep treatment outcomes separate</text>
+  <g transform="translate(28 70)">
+    <rect width="176" height="155" fill="#FFFFFF"/><text x="16" y="27" font-family="Fredoka" font-size="13" fill="#74203F">01</text><text x="16" y="58" font-family="Fredoka" font-size="18" fill="#301B23">Symptoms</text><text x="16" y="84" font-family="Nunito Sans" font-size="12" fill="#74636A">Bleeding, pain, pressure</text><text x="16" y="103" font-family="Nunito Sans" font-size="12" fill="#74636A">and daily impact</text>
+    <rect x="188" width="176" height="155" fill="#FFFFFF"/><text x="204" y="27" font-family="Fredoka" font-size="13" fill="#74203F">02</text><text x="204" y="58" font-family="Fredoka" font-size="18" fill="#301B23">Measures</text><text x="204" y="84" font-family="Nunito Sans" font-size="12" fill="#74636A">Volume, number, location</text>
+    <rect x="376" width="176" height="155" fill="#FFFFFF"/><text x="392" y="27" font-family="Fredoka" font-size="13" fill="#74203F">03</text><text x="392" y="58" font-family="Fredoka" font-size="18" fill="#301B23">Durability</text><text x="392" y="84" font-family="Nunito Sans" font-size="12" fill="#74636A">Repeat treatment and</text><text x="392" y="103" font-family="Nunito Sans" font-size="12" fill="#74636A">follow-up time</text>
+    <rect x="564" width="180" height="155" fill="#FFFFFF"/><text x="580" y="27" font-family="Fredoka" font-size="13" fill="#74203F">04</text><text x="580" y="58" font-family="Fredoka" font-size="18" fill="#301B23">Reproduction</text><text x="580" y="84" font-family="Nunito Sans" font-size="12" fill="#74636A">Separate populations and</text><text x="580" y="103" font-family="Nunito Sans" font-size="12" fill="#74636A">denominators required</text>
+  </g>
+</svg>

@@ -1,0 +1,60 @@
+<ion-content
+  ><app-figma-frame active="health" title="Your health" label="My health">
+    @if (report(); as r) {
+      <section class="report-library">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Your source documents</p>
+            <h2>Reports</h2>
+          </div>
+          <button routerLink="/health/report/new"><svg figmaIcon="plus" /> Add report</button>
+        </div>
+        <button
+          class="report-list-item"
+          [routerLink]="checked() ? '/health/details' : '/health/report/check'"
+          [queryParams]="checked() ? { report: r.id } : { id: r.id }"
+        >
+          <div class="report-page-thumb">
+            <i></i><i></i><b>{{ r.pageCount || '—' }}</b>
+          </div>
+          <div>
+            <strong>{{ r.title }}</strong
+            ><span>{{ r.reportDate || r.savedAt.slice(0, 10) }}</span>
+          </div>
+          <em [class.checked]="checked()">{{ checked() ? 'Checked' : 'Needs checking' }}</em
+          ><svg figmaIcon="arrow" />
+        </button>
+      </section>
+      <div class="unknown-note">
+        <svg figmaIcon="info" />
+        <p>
+          {{
+            checked()
+              ? 'Its details are now in My health and your appointment summary.'
+              : 'Details still need checking. They won’t be used until you’ve compared them with the report.'
+          }}
+        </p>
+      </div>
+      <div class="extraction-review">
+        <div>
+          <span>Recorded</span><strong>{{ recorded().join(', ') || 'Nothing yet' }}</strong>
+        </div>
+        <div>
+          <span>Not recorded</span><strong>{{ missing().join(', ') || 'Nothing' }}</strong>
+        </div>
+      </div>
+      <button
+        class="primary wide"
+        [routerLink]="checked() ? '/health/details' : '/health/report/check'"
+        [queryParams]="checked() ? { report: r.id } : { id: r.id }"
+      >
+        {{ checked() ? 'Review report details' : 'Continue checking' }}
+      </button>
+      <button class="secondary wide" routerLink="/tabs/today">Back to Today</button>
+    } @else {
+      <div class="report-empty">
+        <strong>Report not found</strong><button routerLink="/tabs/health">Go to My health</button>
+      </div>
+    }
+  </app-figma-frame></ion-content
+>

@@ -1,0 +1,340 @@
+<ion-content>
+  <div class="onboarding">
+    <header class="onboarding-header">
+      <div class="brand"><span class="brand-mark">s</span><span>sanelle</span></div>
+      <span class="onboarding-eyebrow">{{ progressLabel() }}</span>
+    </header>
+    <div class="onboarding-progress" aria-hidden="true">
+      <i [style.width.%]="step() <= 5 ? (step() - 1) * 25 : 100"></i>
+    </div>
+    <main class="onboarding-main" [attr.data-screen-id]="screenId">
+      @if (step() === 1) {
+        <section class="welcome-step">
+          <div class="onboarding-photo">
+            <img [src]="photo.src" [alt]="photo.alt" /><span>Start with what matters to you</span>
+          </div>
+          <p class="eyebrow">Your companion after a fibroid diagnosis</p>
+          <h1>Less confusion.<br />More clarity for your next step.</h1>
+          <p>
+            Sanelle brings your diagnosis details, food questions, symptoms, and appointment notes into one calm place.
+          </p>
+          <label class="onboarding-label" for="first-name">What should we call you?</label>
+          <input
+            id="first-name"
+            aria-label="First name"
+            name="name"
+            [(ngModel)]="name"
+            placeholder="Your first name"
+            autocomplete="given-name"
+          />
+          @if (error()) {
+            <p class="form-error" role="alert">{{ error() }}</p>
+          }
+          <button class="primary wide" type="button" [disabled]="saving() || !name.trim()" (click)="next()">
+            Start setting up Sanelle
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M14 7l5 5-5 5" />
+            </svg>
+          </button>
+          <button class="demo-link" type="button" [disabled]="saving()" (click)="loadThandi()">
+            Preview with Thandi’s demo details
+          </button>
+          <p class="privacy-copy">
+            You can skip optional questions and update anything later. Your health details are stored only on this
+            device.
+          </p>
+        </section>
+      } @else {
+        <section class="onboarding-step">
+          <p class="eyebrow">{{ eyebrow }}</p>
+          <h1>{{ title }}</h1>
+          <p class="step-description">{{ lead }}</p>
+          <div class="step-body">
+            @switch (step()) {
+              @case (2) {
+                <div class="onboarding-choices" role="group" aria-label="Priorities">
+                  @for (c of priorityChoices; track c.value) {
+                    <button
+                      type="button"
+                      [class.selected]="priorities().includes(c.value)"
+                      [attr.aria-pressed]="priorities().includes(c.value)"
+                      (click)="toggle(priorities, c.value)"
+                    >
+                      @if (priorities().includes(c.value)) {
+                        <svg
+                          width="17"
+                          height="17"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="m5 12 4 4L19 6" />
+                        </svg>
+                      }
+                      <span>{{ c.label }}</span>
+                    </button>
+                  }
+                </div>
+              }
+              @case (3) {
+                <div class="diagnosis-form">
+                  <label
+                    ><span>Number of fibroids <small>Optional</small></span
+                    ><input
+                      name="count"
+                      [ngModel]="count"
+                      (ngModelChange)="setCount($event)"
+                      inputmode="numeric"
+                      placeholder="Not recorded"
+                  /></label>
+                  <label
+                    ><span>Largest recorded size <small>Optional</small></span>
+                    <div class="unit-input">
+                      <input
+                        name="size"
+                        [ngModel]="size"
+                        (ngModelChange)="setSize($event)"
+                        inputmode="decimal"
+                        placeholder="Not recorded"
+                      /><b aria-hidden="true">cm</b>
+                    </div></label
+                  >
+                </div>
+                <div class="onboarding-unknowns">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 11v5M12 8h.01" />
+                  </svg>
+                  <div>
+                    <strong>Details to look for later</strong>
+                    <p>
+                      Location, FIGO type and whether a fibroid affects the uterine cavity. It is okay not to know these
+                      yet.
+                    </p>
+                  </div>
+                </div>
+              }
+              @case (4) {
+                <fieldset class="onboarding-group">
+                  <legend>Symptoms you may want to track</legend>
+                  <div class="chip-choices">
+                    @for (c of symptomChoices; track c.value) {
+                      <button
+                        type="button"
+                        [class.selected]="trackSymptoms().includes(c.value)"
+                        [attr.aria-pressed]="trackSymptoms().includes(c.value)"
+                        (click)="toggle(trackSymptoms, c.value)"
+                      >
+                        @if (trackSymptoms().includes(c.value)) {
+                          <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="m5 12 4 4L19 6" />
+                          </svg>
+                        }
+                        <span>{{ c.label }}</span>
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      [class.selected]="noSymptoms()"
+                      [attr.aria-pressed]="noSymptoms()"
+                      (click)="noSymptoms.set(!noSymptoms())"
+                    >
+                      @if (noSymptoms()) {
+                        <svg
+                          width="17"
+                          height="17"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="m5 12 4 4L19 6" />
+                        </svg>
+                      }
+                      <span>No symptoms right now</span>
+                    </button>
+                  </div>
+                </fieldset>
+                <fieldset class="onboarding-group">
+                  <legend>What would make food planning easier?</legend>
+                  <div class="chip-choices">
+                    @for (c of foodChoices; track c.value) {
+                      @if (c.value === 'ingredient-swaps') {
+                        <button
+                          type="button"
+                          [class.selected]="cookingForOthers()"
+                          [attr.aria-pressed]="cookingForOthers()"
+                          (click)="cookingForOthers.set(!cookingForOthers())"
+                        >
+                          @if (cookingForOthers()) {
+                            <svg
+                              width="17"
+                              height="17"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="m5 12 4 4L19 6" />
+                            </svg>
+                          }
+                          <span>Cooking for others</span>
+                        </button>
+                      }
+                      <button
+                        type="button"
+                        [class.selected]="foodNeeds().includes(c.value)"
+                        [attr.aria-pressed]="foodNeeds().includes(c.value)"
+                        (click)="toggle(foodNeeds, c.value)"
+                      >
+                        @if (foodNeeds().includes(c.value)) {
+                          <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="m5 12 4 4L19 6" />
+                          </svg>
+                        }
+                        <span>{{ c.label }}</span>
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      [class.selected]="foodClaimHelp()"
+                      [attr.aria-pressed]="foodClaimHelp()"
+                      (click)="foodClaimHelp.set(!foodClaimHelp())"
+                    >
+                      @if (foodClaimHelp()) {
+                        <svg
+                          width="17"
+                          height="17"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="m5 12 4 4L19 6" />
+                        </svg>
+                      }
+                      <span>Understanding food claims</span>
+                    </button>
+                  </div>
+                </fieldset>
+              }
+              @case (5) {
+                <label class="date-field"
+                  ><span>Appointment date <small>Optional</small></span
+                  ><input
+                    type="date"
+                    name="appointment"
+                    [min]="today"
+                    [(ngModel)]="appointmentDate"
+                    (click)="openDatePicker($event)"
+                /></label>
+                <button class="demo-link" type="button" [disabled]="saving()" (click)="withoutDate()">
+                  I don't have a date
+                </button>
+              }
+              @case (6) {
+                <section class="setup-summary">
+                  <p class="eyebrow">Your setup</p>
+                  <h2>Sanelle will start with</h2>
+                  <dl>
+                    <div>
+                      <dt>Priorities</dt>
+                      <dd>{{ prioritySummary }}</dd>
+                    </div>
+                    <div>
+                      <dt>Recorded diagnosis</dt>
+                      <dd>{{ diagnosisSummary }}</dd>
+                    </div>
+                    <div>
+                      <dt>Appointment</dt>
+                      <dd>{{ appointmentDate ? appointmentLabel : 'No date added' }}</dd>
+                    </div>
+                  </dl>
+                </section>
+                <p class="consent-note">
+                  <strong>Important:</strong> Sanelle supports organisation and understanding. It does not diagnose,
+                  prescribe treatment, or replace your healthcare professional.
+                </p>
+              }
+            }
+          </div>
+          @if (error()) {
+            <p class="form-error" role="alert">{{ error() }}</p>
+          }
+          <div class="step-actions">
+            <button class="back-button" type="button" [disabled]="saving()" (click)="back()">Back</button>
+            <button class="primary" type="button" [disabled]="saving()" (click)="next()">
+              {{ step() === 6 ? 'Open Sanelle' : step() === 5 ? 'Finish setup' : 'Continue' }}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M14 7l5 5-5 5" />
+              </svg>
+            </button>
+          </div>
+        </section>
+      }
+    </main>
+  </div>
+</ion-content>

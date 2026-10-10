@@ -1,331 +1,149 @@
-<ion-content [fullscreen]="true" class="today">
-  <main class="sn-page">
-    <header class="head">
-      <a class="profile" routerLink="/tabs/account" aria-label="Account">
-        <span aria-hidden="true">{{ (name() || 'A').charAt(0).toUpperCase() }}</span>
-      </a>
-      <p class="date">{{ dateLabel }}</p>
-      <h1>{{ name() ? 'Hi ' + name() : 'Today' }}</h1>
-    </header>
-
-    <!-- The one primary action, led by what she said she wants help with. -->
-    <section class="next" aria-labelledby="next-q">
-      @if (!started()) {
-        <p class="context">{{ contextLine() }}</p>
-      }
-      @if (daysToAppointment() !== null) {
-        <p class="when">
-          {{
-            daysToAppointment() === 0
-              ? 'Appointment today'
-              : 'Appointment in ' + daysToAppointment() + (daysToAppointment() === 1 ? ' day' : ' days')
-          }}
-        </p>
-      }
-      @switch (next().kind) {
-        @case ('start') {
-          <h2 class="q" id="next-q">Start with what you know</h2>
-          <p class="prompt">
-            Record what your scan report says. Anything it leaves out can become a question for your doctor.
-          </p>
-          <a class="sn-btn sn-btn--brand" routerLink="/health/report">Take a photo or choose my report</a>
-          <button type="button" class="secondary" (click)="record()">Enter details myself</button>
-        }
-        @case ('continue') {
-          @if (progress(); as pr) {
-            <h2 class="q" id="next-q">Carry on with your diagnosis</h2>
-            <p class="prompt">{{ pr.answered }} of {{ pr.total }} answered. Blanks are fine.</p>
-            <button type="button" class="sn-btn sn-btn--brand" (click)="record(pr.nextKey)">Carry on</button>
+<ion-content
+  ><app-figma-frame active="today" [title]="'Good morning, ' + (name() || 'there')">
+    @if (firstUse()) {
+      <section class="intent-panel">
+        <button class="icon-button dismiss" (click)="onCloseIntent()" aria-label="Skip this question">
+          <svg figmaIcon="close"></svg>
+        </button>
+        <p class="eyebrow light">New here? Start with one thing</p>
+        <h2>What brought you to Sanelle today?</h2>
+        <div class="intent-grid">
+          @for (label of intentLabels; track $index; let i = $index) {
+            <button (click)="chooseIntent(label)">
+              <span>{{ i + 1 }}</span
+              >{{ label }}<svg figmaIcon="arrow"></svg>
+            </button>
           }
-        }
-        @case ('food') {
-          <h2 class="q" id="next-q">Check what you’ve read about food</h2>
-          <p class="prompt">
-            See what the research says about common food claims, then plan meals that fit how you eat.
-          </p>
-          @if (foodExamples.length) {
-            <ul class="examples" aria-label="Example questions">
-              @for (e of foodExamples; track e.id) {
-                <li>
-                  <a class="example" [routerLink]="['/learn', e.id]">{{ e.text }}</a>
-                </li>
-              }
-            </ul>
-          }
-          <a class="sn-btn sn-btn--brand" routerLink="/tabs/learn">Explore food questions</a>
-          <a class="secondary" routerLink="/tabs/tab2">{{ hasPlan() ? 'See my meal plan' : 'Plan my meals' }}</a>
-        }
-        @case ('appointment') {
-          <h2 class="q" id="next-q">Prepare for your next visit</h2>
-          <p class="prompt">
-            {{
-              questionCount()
-                ? questionCount() +
-                  (questionCount() === 1 ? ' question' : ' questions') +
-                  ' saved. Add more whenever something comes up.'
-                : 'Save what you want to ask. Add an appointment date whenever you’re ready.'
-            }}
-          </p>
-          <a class="sn-btn sn-btn--brand" routerLink="/tabs/health">See my visit preparation</a>
-          <a class="secondary" routerLink="/health/questions" [queryParams]="{ from: 'today' }">Prepare my questions</a>
-        }
-        @case ('ask') {
-          @if (ask(); as a) {
-            <p class="prompt">{{ defs[a.key].label }} isn’t recorded. Ask:</p>
-            <h2 class="q" id="next-q">{{ a.question }}</h2>
-            <button type="button" class="sn-btn sn-btn--brand" (click)="saveQuestion(a)">Save question</button>
-          }
-        }
-        @default {
-          <h2 class="q" id="next-q">
-            {{
-              questionCount()
-                ? questionCount() +
-                  (questionCount() === 1 ? ' question ready' : ' questions ready') +
-                  ' for your next doctor’s visit'
-                : 'Prepare for your next doctor’s visit'
-            }}
-          </h2>
-          <p class="prompt">Review the questions and notes you want to bring to your doctor.</p>
-          <a class="sn-btn sn-btn--brand" routerLink="/health/summary">Review my visit summary</a>
-        }
-      }
-      @if (justSaved()) {
-        <p class="saved-note" role="status">Saved: “{{ justSaved() }}”</p>
-      }
-    </section>
-
-    @if (openSteps().length) {
-      <section class="block">
-        <div class="block-head">
-          <h2>My next steps</h2>
-          <a class="see-all" routerLink="/health/steps">See all</a>
         </div>
-        @for (task of openSteps().slice(0, 2); track task.id) {
-          <a class="card-row" routerLink="/health/steps"
-            ><span class="card-text"
-              ><span class="card-title">{{ task.title }}</span
-              ><span class="card-sub"
-                >{{
-                  task.dueDate
-                    ? (task.dueDate < todayIso ? 'Date has passed · ' : 'Planned for ') + task.dueDate
-                    : 'No date set'
-                }}
-                · Open to update or mark done</span
-              ></span
-            ><span class="chev" aria-hidden="true">›</span></a
-          >
-        }
+        <button class="skip-link" (click)="onCloseIntent()">I’d rather look around</button>
       </section>
     }
-    @if (started()) {
-      <section class="block" aria-labelledby="visit-title">
-        <div class="block-head">
-          <h2 id="visit-title">For your next visit</h2>
-          <a class="see-all" routerLink="/tabs/health">Review</a>
+    @if (!firstUse()) {
+      <section class="today-next">
+        <div class="today-next-icon"><svg [figmaIcon]="sourceNext().icon" [size]="24"></svg></div>
+        <div>
+          <p class="eyebrow light">{{ sourceNext().eyebrow }}</p>
+          <h2>{{ sourceNext().title }}</h2>
+          <p>{{ sourceNext().text }}</p>
+          <button (click)="openNext()">{{ sourceNext().action }} <svg figmaIcon="arrow"></svg></button>
         </div>
-        @if (visitGoal()) {
-          <p class="prompt">Your main concern for your next doctor’s visit: {{ visitGoal() }}</p>
-        }
-        <a class="card-row" routerLink="/health/questions" [queryParams]="{ from: 'today' }">
-          <span class="card-text"
-            ><span class="card-title"
-              >{{ questionCount() }} {{ questionCount() === 1 ? 'question' : 'questions' }} to ask</span
-            ><span class="card-sub">{{
-              pendingQuestions()[0]?.text || 'Save what you want your clinician to help with.'
-            }}</span></span
-          >
-          <span class="chev" aria-hidden="true">›</span>
-        </a>
-        @if (next().kind !== 'summary') {
-          <a class="card-row" routerLink="/health/summary">
-            <span class="card-text"
-              ><span class="card-title">Review what I’ll bring</span
-              ><span class="card-sub"
-                >Your priorities, report details, questions and optional symptom notes, ready to share or print.</span
-              ></span
+      </section>
+    }
+    @if (!firstUse()) {
+      <section class="activity-line">
+        <p class="eyebrow">Your recent activity</p>
+        <div>
+          @for (a of activity(); track $index) {
+            <span
+              ><i></i
+              ><b
+                ><a [routerLink]="a.route" [queryParams]="a.queryParams ?? {}">{{ a.title }}</a></b
+              ><small>{{ a.detail }}</small></span
             >
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
-        }
-        @if (lastVisit(); as visit) {
-          <a class="card-row" routerLink="/health/visit"
-            ><span class="card-text"
-              ><span class="card-title">What happened at my last visit</span
-              ><span class="card-sub">{{
-                visit.followUp || visit.nextSteps || 'Review your saved conversation and follow-up.'
-              }}</span></span
-            ><span class="chev" aria-hidden="true">›</span></a
-          >
-        }
+          }
+          @if (!activity().length) {
+            <p>Nothing recorded yet. Actions you take will appear here.</p>
+          }
+        </div>
       </section>
     }
-
-    @if (started()) {
-      <section class="block" aria-labelledby="checkin-title">
-        @if (todayEntry(); as e) {
-          <!-- A compact confirmation, then at most two useful next steps. Doing nothing else is fine. -->
-          <div class="checkin-card" [attr.role]="justCheckedIn() ? 'status' : null">
-            <div class="checkin-head">
-              <h2 id="checkin-title">{{ justCheckedIn() ? 'Today’s check-in saved' : 'Today’s check-in' }}</h2>
-              <a class="edit-link" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }"
-                >Edit</a
-              >
-            </div>
-            @if (impactOf(e); as impact) {
-              <p class="checkin-impact">{{ impact }}</p>
-            }
-            @if (partsOf(e).length) {
-              <p class="checkin-parts">{{ partsOf(e).join(' · ') }}</p>
-            }
-            @if (e.treatmentChange) {
-              <p class="checkin-parts">Treatment change: {{ e.treatmentChange }}</p>
-            }
-            <a class="edit-link" routerLink="/health/summary">Review this in my appointment summary</a>
-            <p class="checkin-parts">You choose the period and whether to share your check-ins.</p>
-          </div>
-          @if (support().length) {
-            <h2 class="support-title" id="support-title">What would help right now?</h2>
-            @for (a of support(); track a.id) {
-              <a class="card-row" [routerLink]="a.route" [queryParams]="a.queryParams" (click)="useSupport(a.id)">
-                <span class="card-text">
-                  <span class="card-title">{{ a.title }}</span>
-                  <span class="card-sub">{{ a.body }}</span>
-                </span>
-                <span class="chev" aria-hidden="true">›</span>
-              </a>
-            }
-          }
-        } @else {
-          <a class="card-row" [routerLink]="['/health/symptoms/log', todayIso]" [queryParams]="{ from: 'today' }">
-            <span class="card-text">
-              <span class="card-title" id="checkin-title">How was today?</span>
-              <span class="card-sub"
-                >Optional notes to help you describe symptoms at your visit. You choose what to include in your
-                summary.</span
-              >
-            </span>
-            <span class="chev" aria-hidden="true">›</span>
-          </a>
-        }
-      </section>
-    }
-
-    @if (lead() === 'diagnosis' && hasRecords()) {
-      <ng-container *ngTemplateOutlet="dxRows"></ng-container>
-    }
-
-    <!-- Every area stays one tap away, with less weight than the lead. -->
-    @for (area of supporting(); track area) {
-      @switch (area) {
-        @case ('diagnosis') {
-          @if (hasRecords()) {
-            <ng-container *ngTemplateOutlet="dxRows"></ng-container>
+    <section class="diagnosis-strip">
+      <div class="diagnosis-copy">
+        <p class="eyebrow">Your recorded diagnosis</p>
+        <h2>
+          @if (profileView.fibroidCount) {
+            {{ `${profileView.fibroidCount} fibroids` }}
           } @else {
-            <section class="block">
-              <button type="button" class="card-row" (click)="record()">
-                <span class="card-text">
-                  <span class="card-title">Start with what you know</span>
-                  <span class="card-sub">Record your diagnosis. A report helps, but isn’t required.</span>
-                </span>
-                <span class="chev" aria-hidden="true">›</span>
-              </button>
-            </section>
+            Fibroid diagnosis
           }
-        }
-        @case ('food') {
-          <section class="block" aria-labelledby="food-title">
-            <h2 id="food-title">Food choices</h2>
-            <a class="card-row" routerLink="/tabs/learn">
-              <span class="card-text">
-                <span class="card-title">Explore food questions</span>
-                <span class="card-sub">Dairy, soy, and other foods you’re unsure about.</span>
-              </span>
-              <span class="chev" aria-hidden="true">›</span>
-            </a>
-            <a class="card-row" routerLink="/tabs/tab2">
-              <span class="card-text">
-                <span class="card-title">{{ hasPlan() ? 'See my meal plan' : 'Plan my meals' }}</span>
-                <span class="card-sub">Meals that fit how you eat, your allergies and your time.</span>
-              </span>
-              <span class="chev" aria-hidden="true">›</span>
-            </a>
-          </section>
-        }
-        @case ('appointment') {
-          <!-- Once she's started, "For your next visit" above already covers this. -->
-          @if (!started()) {
-            <section class="block">
-              <a class="card-row" routerLink="/tabs/health">
-                <span class="card-text">
-                  <span class="card-title">Prepare for your next visit</span>
-                  <span class="card-sub">
-                    {{
-                      questionCount()
-                        ? questionCount() + (questionCount() === 1 ? ' question' : ' questions') + ' saved so far.'
-                        : 'Save what you want to ask. Add an appointment date whenever you’re ready.'
-                    }}
-                  </span>
-                </span>
-                <span class="chev" aria-hidden="true">›</span>
-              </a>
-            </section>
+          @if (profileView.largestSize) {
+            <span>· largest {{ profileView.largestSize }}</span>
           }
-        }
-      }
-    }
-
-    @if (hasPlan()) {
-      <div class="band">
-        <section class="block meals" aria-labelledby="meals-title">
-          <h2 id="meals-title">Today’s meals</h2>
-          @if (todaysMeals().length) {
-            <ul class="meal-strip">
-              @for (meal of todaysMeals(); track meal) {
-                <li>
-                  <button type="button" class="meal" (click)="openMeal(meal)">
-                    <app-meal-image
-                      class="meal-img"
-                      [name]="meal.name"
-                      [imageUrl]="meal.imageUrl"
-                      [mealType]="meal.mealType"
-                    ></app-meal-image>
-                    <span class="meal-type">{{ mealTypeLabels[meal.mealType] }}</span>
-                    <span class="meal-name">{{ meal.name }}</span>
-                  </button>
-                </li>
-              }
-            </ul>
-          } @else {
-            <div class="empty">
-              <p>Nothing planned today.</p>
-              <button type="button" class="sn-btn sn-btn--brand" (click)="planMeals()">See my plan</button>
-            </div>
-          }
-        </section>
+        </h2>
+        <p>
+          <strong>{{ design.missing().length }} details are not recorded yet</strong>
+        </p>
       </div>
-    }
-  </main>
-
-  <ng-template #dxRows>
-    <section class="block" aria-labelledby="dx-title">
-      <div class="block-head">
-        <h2 id="dx-title">Your diagnosis</h2>
-        <a class="see-all" routerLink="/tabs/health">See all</a>
-      </div>
-      <ul class="rows">
-        @for (f of findings().slice(0, 3); track f.key) {
-          <li>
-            <a class="row expandable" [routerLink]="['/health/record', f.key]" [queryParams]="{ from: 'today' }">
-              <span class="row-text">
-                <span class="row-name">{{ defs[f.key].label }}</span>
-                <app-finding-status [finding]="f"></app-finding-status>
-              </span>
-              <span class="chev" aria-hidden="true">›</span>
-            </a>
-          </li>
-        }
-      </ul>
+      <button class="circle-arrow" (click)="go('health')" aria-label="Review diagnosis">
+        <svg figmaIcon="arrow"></svg>
+      </button>
     </section>
-  </ng-template>
-</ion-content>
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Food for real life</p>
+        <h2>Cook once, feel sorted</h2>
+      </div>
+      <button (click)="go('food')">Explore food <svg figmaIcon="arrow"></svg></button>
+    </div>
+    <article class="meal-feature">
+      <img [src]="mealImage" alt="A colourful bowl of grains and roasted vegetables" />
+      <div class="meal-overlay">
+        <div class="pill">Easy batch lunch</div>
+        <h2>Roast veg & herby grain bowls</h2>
+        <div class="meta">
+          <span><svg figmaIcon="clock"></svg> 35 min</span><span><svg figmaIcon="people"></svg> 4 servings</span>
+        </div>
+        <button (click)="go('food')">See the flexible recipe <svg figmaIcon="arrow"></svg></button>
+      </div>
+    </article>
+    <div class="two-column">
+      @if (latestCheckIn) {
+        <section class="checkin-result">
+          <div class="checkin-result-head">
+            <div>
+              <p class="eyebrow">Today’s check-in</p>
+              <h2>Here’s what you recorded</h2>
+            </div>
+            <span><svg figmaIcon="check" [size]="16"></svg> Saved</span>
+          </div>
+          <dl>
+            <div>
+              <dt>Symptoms</dt>
+              <dd>
+                @if (latestCheckIn.symptoms.length) {
+                  {{ latestCheckIn.symptoms.join(', ') }}
+                } @else {
+                  No symptoms selected
+                }
+              </dd>
+            </div>
+            @if (latestCheckIn.symptoms.includes('Bleeding')) {
+              <div>
+                <dt>Bleeding</dt>
+                <dd>{{ latestCheckIn.bleeding }}</dd>
+              </div>
+            }
+            <div>
+              <dt>Effect on your day</dt>
+              <dd>{{ latestCheckIn.impact }}</dd>
+            </div>
+            <div>
+              <dt>Recorded</dt>
+              <dd>{{ latestCheckIn.recordedAt }}</dd>
+            </div>
+          </dl>
+          <p class="checkin-destination">
+            <svg figmaIcon="visit" [size]="18"></svg> This is now in <strong>Symptoms & daily life</strong> and your
+            appointment summary.
+          </p>
+          <div class="checkin-actions">
+            <button (click)="openLog()">Edit this check-in</button
+            ><button (click)="onViewSymptoms()">See symptom history <svg figmaIcon="arrow"></svg></button>
+          </div>
+        </section>
+      } @else {
+        <section class="action-block blush">
+          <p class="eyebrow">Symptoms & daily life</p>
+          <h2>Record what changed today</h2>
+          <p>Save symptoms alongside what they stopped, delayed, or changed in your day.</p>
+          <button class="text-action" (click)="openLog()">Start a check-in <svg figmaIcon="arrow"></svg></button>
+        </section>
+      }
+      <section class="action-block apricot">
+        <div class="action-icon"><svg figmaIcon="info"></svg></div>
+        <p class="eyebrow">Claim check</p>
+        <h2>“Can food shrink fibroids?”</h2>
+        <p>Separate incidence research, measured growth and treatment claims.</p>
+        <button class="text-action" (click)="openClaim()">Read the evidence <svg figmaIcon="arrow"></svg></button>
+      </section></div></app-figma-frame
+></ion-content>

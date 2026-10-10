@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="64" viewBox="0 0 220 64" role="img" aria-labelledby="title">
+  <title id="title">Sanelle</title>
+  <rect width="220" height="64" fill="none"/>
+  <path d="M10 30C10 13 27 5 42 11c13 5 17 23 8 34-9 12-29 13-37 1-3-4-4-10-3-16Z" fill="#74203F"/>
+  <text x="30" y="42" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="31" font-weight="600" fill="#F7F5F2">s</text>
+  <text x="66" y="42" font-family="Fredoka, sans-serif" font-size="34" font-weight="600" fill="#74203F">sanelle</text>
+</svg>

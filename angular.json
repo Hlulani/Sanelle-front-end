@@ -92,8 +92,8 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/app/learn/topics.drafts.ts",
-                  "with": "src/app/learn/topics.drafts.prod.ts"
+                  "replace": "src/app/evidence/food-topics.drafts.ts",
+                  "with": "src/app/evidence/food-topics.drafts.prod.ts"
                 }
               ],
               "outputHashing": "all"

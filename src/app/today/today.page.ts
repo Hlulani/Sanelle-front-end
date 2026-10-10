@@ -1,190 +1,221 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
-import { AuthService } from '../core/auth/auth.service';
-import { PlanStoreService } from '../core/services/plan-store.service';
-import { MealPlanItem } from '../core/services/meal-plans.service';
 import { HealthRepository } from '../my-health/health-repository';
-import {
-  FINDINGS,
-  FINDING_KEYS,
-  FindingKey,
-  findingOrUnknown,
-  unansweredQuestions,
-} from '../my-health/diagnosis.model';
-import { FocusPreferencesService } from '../core/services/focus-preferences.service';
-import { contextLine, diagnosisStep, leadArea, nextStep, supportingAreas } from './next-step';
-import { SupportId, supportActions } from './checkin-support';
-import { SupportUsedService } from './support-used.service';
+import { MealPlanStore } from '../food/meal-plan.store';
+import { PRIORITIES, Priority, ProfileService } from '../core/profile/profile.service';
+import { FigmaFrameComponent } from '../shared/design/figma/figma-frame.component';
+import { FigmaIconComponent } from '../shared/design/figma/figma-icon.component';
+import { PatientDesignState } from '../shared/design/figma/patient-design-state.service';
+import { CareReminders } from '../my-health/care-reminders.service';
+import { localIsoDate } from '../shared/calendar-date';
 import { impactLine, symptomParts } from '../my-health/checkins';
-import { SymptomEntry } from '../my-health/diagnosis.model';
-import { FindingStatusComponent } from '../my-health/finding-status.component';
-import { EvidenceTopicsService } from '../learn/evidence-topics.service';
-import { CareReminders } from '../my-health/steps/care-reminders.service';
-import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
-import { daysBetween, localIsoDate } from '../shared/calendar-date';
-import { MEAL_TYPE_LABELS } from '../core/models/meal.model';
+import { dayName, nextStep, recentActivity, whenLabel } from './today-state';
 
+interface Intent {
+  priority: Priority;
+  title: string;
+  hint: string;
+  route: string;
+}
+
+const INTENTS: Record<Priority, Intent> = {
+  diagnosis: {
+    priority: 'diagnosis',
+    title: 'Understand my scan',
+    hint: 'Add your report and see what it says',
+    route: '/tabs/health',
+  },
+  food: { priority: 'food', title: 'Figure out food', hint: 'Plan meals or find one for today', route: '/tabs/food' },
+  symptoms: {
+    priority: 'symptoms',
+    title: 'Log how I feel',
+    hint: 'A short check-in for today',
+    route: `/health/check-in/today`,
+  },
+  appointment: {
+    priority: 'appointment',
+    title: 'Prepare for a visit',
+    hint: 'Questions and a summary to take with you',
+    route: '/tabs/appointment',
+  },
+};
+
+/**
+ * TOD-01 on first use: what she wants to do now. Afterwards TOD-02: one next step from what she
+ * saved, then TOD-03: what she did and where it went.
+ */
 @Component({
   selector: 'app-today',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, RouterLink, IonContent, MealImageComponent, FindingStatusComponent],
+  imports: [IonContent, RouterLink, FigmaFrameComponent, FigmaIconComponent],
   templateUrl: './today.page.html',
-  styleUrls: ['./today.page.scss'],
 })
 export class TodayPage implements OnInit {
-  private auth = inject(AuthService);
-  private planStore = inject(PlanStoreService);
-  private router = inject(Router);
-  private topics = inject(EvidenceTopicsService);
-  private reminders = inject(CareReminders);
-  private health = inject(HealthRepository);
-  private focusPreferences = inject(FocusPreferencesService);
-  private route = inject(ActivatedRoute);
-  private supportUsed = inject(SupportUsedService);
+  readonly design = inject(PatientDesignState);
+  readonly mealImage = 'assets/photos/figma-meal.jpg';
+  readonly fixedIntents = Object.values(INTENTS);
+  readonly intentLabels = Object.values(INTENTS).map((i) => i.title);
+  get profileView() {
+    return { fibroidCount: this.design.count(), largestSize: this.design.size() };
+  }
+  get latestCheckIn() {
+    return this.design.latestView();
+  }
+  get savedReport() {
+    return this.design.savedReport();
+  }
+  get hasMealPlan() {
+    return !!this.plans.plan();
+  }
+  readonly sourceNext = computed(() => {
+    const n = this.next();
+    const item = {
+      eyebrow: 'Choose what helps',
+      title: 'What would be useful today?',
+      text: 'Start with your report, food, symptoms, or an appointment question.',
+      action: 'Review my health',
+      icon: 'home',
+      route: '/tabs/health',
+      params: {} as Record<string, string>,
+    };
+    if (n.kind === 'appointment')
+      return {
+        ...item,
+        eyebrow: 'Coming up',
+        title: 'Prepare for your appointment',
+        text: `Your appointment is saved for ${n.date}. Review your questions and health summary.`,
+        action: 'Review appointment summary',
+        icon: 'visit',
+        route: '/tabs/appointment',
+      };
+    if (n.kind === 'review')
+      return {
+        ...item,
+        eyebrow: 'Follow-up',
+        title: n.title,
+        text: `Review ${n.date}.`,
+        action: 'See my next steps',
+        icon: 'visit',
+        route: '/tabs/appointment',
+      };
+    if (n.kind === 'report')
+      return {
+        ...item,
+        eyebrow: 'Unfinished report',
+        title: 'Finish checking what Sanelle captured',
+        text: `${n.report.title} is saved, but its extracted details still need your confirmation.`,
+        action: 'Check report details',
+        icon: 'health',
+        route: '/health/report/check',
+        params: { id: n.report.id },
+      };
+    if (n.kind === 'checkin') {
+      const e = this.design.checkin(n.entry);
+      return {
+        ...item,
+        eyebrow: 'Your latest check-in',
+        title: e.symptoms.join(', ') || 'Check-in saved',
+        text: `${e.impact}. Add another check-in only if something changed.`,
+        action: 'See symptom history',
+        icon: 'health',
+        route: '/health/symptoms',
+      };
+    }
+    if (n.kind === 'meal')
+      return {
+        ...item,
+        eyebrow: 'Your saved meal',
+        title: n.day?.meal?.name ?? 'No meal planned today',
+        text: 'Your servings, substitutions and shopping list are ready.',
+        action: 'Open meal plan',
+        icon: 'food',
+        route: '/food/plan',
+      };
+    return item;
+  });
+  onCloseIntent() {
+    void this.choose(null);
+  }
+  chooseIntent(label: string) {
+    void this.choose(this.fixedIntents.find((i) => i.title === label) ?? null);
+  }
+  go(screen: string) {
+    void this.router.navigateByUrl('/tabs/' + (screen === 'visit' ? 'appointment' : screen));
+  }
+  openLog() {
+    void this.router.navigateByUrl('/health/check-in/today');
+  }
+  onViewSymptoms() {
+    void this.router.navigateByUrl('/health/symptoms');
+  }
+  openClaim() {
+    void this.router.navigate(['/learn/C17'], { queryParams: { from: 'today' } });
+  }
+  openNext() {
+    const n = this.sourceNext();
+    void this.router.navigate([n.route], { queryParams: n.params });
+  }
+  private readonly router = inject(Router);
+  private readonly health = inject(HealthRepository);
+  private readonly plans = inject(MealPlanStore);
+  private readonly profile = inject(ProfileService);
+  private readonly reminders = inject(CareReminders);
 
-  private readonly plan = toSignal(this.planStore.plan$, { initialValue: null });
-
-  readonly defs = FINDINGS;
-  readonly mealTypeLabels = MEAL_TYPE_LABELS;
-  /** At most two neutral example questions, only for topics that exist in this build. */
-  readonly foodExamples = [
-    { id: 'dairy', text: 'Do I need to avoid dairy?' },
-    { id: 'soy', text: 'What does research say about soy?' },
-  ].filter((e) => !!this.topics.get(e.id));
-  readonly justSaved = signal<string | null>(null);
-
+  readonly today = localIsoDate();
   readonly dateLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(
     new Date(),
   );
+  readonly name = this.profile.name;
+  readonly initial = computed(() => (this.name() || 'S').charAt(0).toUpperCase());
+  readonly firstUse = computed(() => !this.profile.profile().firstUseDone);
 
-  readonly findings = computed(() => FINDING_KEYS.map((k) => findingOrUnknown(this.health.record(), k)));
-  readonly hasRecords = this.health.hasAnyFinding;
-
-  /** Days until the appointment, or null if none is set (or it has passed). */
-  readonly daysToAppointment = computed(() => {
-    const date = this.health.record().appointment.date;
-    if (!date) return null;
-    const days = daysBetween(localIsoDate(), date);
-    return days >= 0 ? days : null;
-  });
-
-  /** The single next action at the top of Today, led by what someone wants help with. */
-  readonly next = computed(() => nextStep(this.health.record(), this.focusPreferences.focus()));
-
-  readonly ask = computed(() => {
-    const n = this.next();
-    return n.kind === 'ask' ? n : null;
-  });
-
-  readonly progress = computed(() => {
-    const n = this.next();
-    return n.kind === 'continue' ? n : null;
-  });
-
-  readonly lead = computed(() => leadArea(this.focusPreferences.focus()));
-  readonly supporting = computed(() => supportingAreas(this.focusPreferences.focus()));
-  readonly contextLine = computed(() => contextLine(this.focusPreferences.focus()));
-  /** The diagnosis entry when it isn't the lead: start, carry on, or nothing (rows show instead). */
-  readonly diagnosisEntry = computed(() => diagnosisStep(this.health.record()));
-
-  readonly pendingQuestions = computed(() => unansweredQuestions(this.health.record()));
-  readonly openSteps = computed(() =>
-    (this.health.record().tasks ?? [])
-      .filter((task) => !task.completedAt)
-      .sort((a, b) => (a.dueDate || '9999').localeCompare(b.dueDate || '9999')),
-  );
-  readonly questionCount = computed(() => this.pendingQuestions().length);
-  readonly visitGoal = computed(() => this.health.record().visitGoal ?? '');
-  readonly lastVisit = computed(() => this.health.record().visits?.[0] ?? null);
-  readonly todayIso = localIsoDate();
-  readonly todayEntry = computed(
-    () => (this.health.record().symptoms ?? []).find((s) => s.date === this.todayIso) ?? null,
-  );
-  /** True right after saving today's check-in, for the "saved" confirmation. */
-  readonly justCheckedIn = signal(false);
-  readonly support = computed(() => {
-    const entry = this.todayEntry();
-    if (!entry) return [];
-    return supportActions({
-      entry,
-      questions: this.health.record().questions,
-      focus: this.focusPreferences.focus(),
-      usedToday: this.supportUsed.used(),
-    });
-  });
-
-  readonly todaysMeals = computed<MealPlanItem[]>(() => {
-    const plan = this.plan();
-    if (!plan) return [];
-    const today = localIsoDate();
-    return plan.daysPlan.find((d) => d.date === today)?.meals ?? [];
-  });
-
-  readonly hasPlan = computed(() => !!this.plan());
-
-  /** Anything recorded, planned or logged. Until then Today only shows where to begin. */
-  readonly started = computed(() => {
-    const r = this.health.record();
-    return (
-      this.hasRecords() ||
-      r.questions.length > 0 ||
-      !!r.appointment.date ||
-      !!r.visitGoal ||
-      !!r.visits?.length ||
-      (r.symptoms ?? []).length > 0 ||
-      this.hasPlan()
+  /** Her priorities first, in the fixed order; then the rest. */
+  readonly intents = computed(() => {
+    const chosen = this.profile.profile().priorities;
+    return [...PRIORITIES.filter((p) => chosen.includes(p)), ...PRIORITIES.filter((p) => !chosen.includes(p))].map(
+      (p) => INTENTS[p],
     );
   });
 
+  readonly next = computed(() => nextStep(this.health.record(), this.plans.plan(), this.today));
+  readonly activity = computed(() => recentActivity(this.health.record(), this.plans.plan()));
+  readonly shortcuts = computed(() => this.intents().filter((i) => !this.isLead(i.priority)));
+
   ngOnInit() {
-    void this.planStore.init();
+    void this.ionViewWillEnter();
+  }
+  async ionViewWillEnter() {
+    await Promise.all([this.health.load(), this.plans.load(), this.profile.load()]);
+    void this.reminders.reconcile(this.health.record().tasks ?? []).catch(() => undefined);
   }
 
-  ionViewWillEnter() {
-    void this.health
-      .load()
-      .then(() => this.reminders.reconcile(this.health.record().tasks ?? []))
-      .catch(() => undefined);
-    void this.focusPreferences.loadFocus();
-    void this.supportUsed.load(this.todayIso);
-    this.justCheckedIn.set(this.route.snapshot.queryParamMap.get('checkin') === this.todayIso);
+  async choose(intent: Intent | null) {
+    await this.profile.save({ firstUseDone: true }).catch(() => undefined);
+    if (intent) void this.router.navigateByUrl(intent.route);
   }
 
-  impactOf(e: SymptomEntry): string | null {
-    return impactLine(e);
+  when(days: number) {
+    return whenLabel(days);
   }
 
-  partsOf(e: SymptomEntry): string[] {
-    return symptomParts(e);
+  day(iso: string) {
+    return dayName(iso);
   }
 
-  useSupport(id: SupportId) {
-    void this.supportUsed.markUsed(id, this.todayIso);
+  checkinSummary(entry: Parameters<typeof symptomParts>[0]): string {
+    return [impactLine(entry), ...symptomParts(entry)].filter(Boolean).join(' · ') || 'A note';
   }
 
-  name(): string {
-    return this.auth.getUsername() || '';
-  }
-
-  /** Starts, or picks up, the diagnosis questions; "Finish later" brings her back here. */
-  record(key: FindingKey = 'count') {
-    this.router.navigate(['/health/record', key], { queryParams: { flow: 1, from: 'today' } });
-  }
-
-  async saveQuestion(step: { key: FindingKey; question: string }) {
-    await this.health.addQuestion(step.question, step.key);
-    this.justSaved.set(step.question);
-  }
-
-  openMeal(meal: MealPlanItem) {
-    this.router.navigate(['/meal-details', meal.mealId]);
-  }
-
-  planMeals() {
-    this.router.navigateByUrl('/tabs/tab2');
+  /** The lead card already covers this destination. */
+  private isLead(priority: Priority): boolean {
+    const kind = this.next().kind;
+    return (
+      (priority === 'appointment' && (kind === 'appointment' || kind === 'review')) ||
+      (priority === 'diagnosis' && kind === 'report') ||
+      (priority === 'symptoms' && kind === 'checkin') ||
+      (priority === 'food' && kind === 'meal')
+    );
   }
 }

@@ -249,4 +249,42 @@ describe('HealthRepository', () => {
     await repo.load();
     expect(repo.record().questions.map((q) => q.text)).toEqual(['Kept?']);
   });
+  it('saves an answer and next step atomically and retries without duplicate history', async () => {
+    let repo = freshRepo();
+    await repo.addQuestion('What next?');
+    const id = repo.record().questions[0].id;
+    const store = TestBed.inject(EncryptedStore);
+    const write = spyOn(store, 'set').and.rejectWith(new Error('Storage unavailable'));
+    await expectAsync(
+      repo.saveQuestionOutcome(id, 'answered', 'A blood test', '2026-10-08', { title: 'Book the test' }),
+    ).toBeRejected();
+    expect(repo.record().questions[0].history).toBeUndefined();
+    expect(repo.record().tasks ?? []).toEqual([]);
+    write.and.callThrough();
+    await repo.saveQuestionOutcome(id, 'answered', 'A blood test', '2026-10-08', { title: 'Book the test' });
+    expect(write).toHaveBeenCalledTimes(2);
+    repo = freshRepo();
+    await repo.load();
+    expect(repo.record().questions[0].history?.length).toBe(1);
+    expect(repo.record().tasks?.[0].questionId).toBe(id);
+    expect(repo.record().tasks?.[0].title).toBe('Book the test');
+  });
+
+  it('preserves selected symptom categories without assigning severity or blank-field answers', async () => {
+    let repo = freshRepo();
+    await repo.saveSymptoms({
+      date: '2026-10-08',
+      observedSymptoms: ['Pain', 'Low energy'],
+      dailyImpact: 'Changed my plans',
+    });
+    repo = freshRepo();
+    await repo.load();
+    const entry = repo.record().symptoms[0];
+    expect(entry.observedSymptoms).toEqual(['Pain', 'Low energy']);
+    expect(entry.dailyImpact).toBe('Changed my plans');
+    expect(entry.bleeding).toBeUndefined();
+    expect(entry.pain).toBeUndefined();
+    expect(entry.fatigue).toBeUndefined();
+    expect(entry.affected).toBeUndefined();
+  });
 });

@@ -1,0 +1,97 @@
+@if (error()) {
+  <p class="form-error" role="alert">{{ error() }}</p>
+  <button class="secondary" (click)="load()">Try again</button>
+}
+@if (loading()) {
+  <p role="status">Loading your recipe…</p>
+}
+@if (meal(); as m) {
+  <section class="planner" id="meal-planner">
+    <div class="planner-image"><app-meal-image [name]="m.name" [imageUrl]="m.imageUrl ?? null" [eager]="true" /></div>
+    <div class="planner-content">
+      <p class="eyebrow">A flexible recipe</p>
+      <h2>{{ m.name }}</h2>
+      <p class="muted">{{ m.freshOrFrozen || 'A mix-and-match meal with simple substitutions.' }}</p>
+      <div class="selection-reason">
+        <svg figmaIcon="check" [size]="17" /><span
+          >{{ option()?.why?.join(' · ') || 'Matched against your saved food requirements.' }} This is a practical
+          match, not a treatment recommendation.</span
+        >
+      </div>
+      @if (conflict(); as c) {
+        @if (c.state !== 'clear') {
+          <p class="form-error">Needs your review. {{ c.lines.join(' ') }}</p>
+        }
+      }
+      <div class="meal-stage" aria-label="Meal progress">
+        <button [class.selected]="stage === 'plan'" (click)="stage = 'plan'">1. Plan</button
+        ><button [class.selected]="stage === 'cook'" (click)="stage = 'cook'">2. Prepare</button>
+      </div>
+      @if (stage === 'cook') {
+        <div class="prep-note">
+          <strong>Ready to prepare?</strong>
+          <p>
+            {{
+              m.prepTimeMinutes !== null && m.prepTimeMinutes !== undefined
+                ? 'Set aside ' + m.prepTimeMinutes + ' minutes.'
+                : 'Preparation time is not recorded.'
+            }}
+          </p>
+          <ol>
+            @for (line of m.instructions; track $index) {
+              <li>{{ line }}</li>
+            }
+          </ol>
+        </div>
+      }
+      <div class="serving-row">
+        <span>Servings</span>
+        <div class="stepper">
+          <button aria-label="Fewer servings" [disabled]="servings() <= 1" (click)="servings.update(decrease)">−</button
+          ><strong>{{ servings() }}</strong
+          ><button aria-label="More servings" [disabled]="servings() >= 12" (click)="servings.update(increase)">
+            +
+          </button>
+        </div>
+      </div>
+      @for (i of m.ingredients; track $index) {
+        <div class="swap">
+          <div>
+            <strong>{{ i.name }}</strong
+            ><span>{{ amount(i.amount) }}</span>
+          </div>
+          <button (click)="dislike(i.name)">Not this ingredient</button>
+        </div>
+      }
+      @if (m.vegetableSubstitutes) {
+        <div class="prep-note">
+          <strong>Simple substitutions</strong>
+          <p>{{ m.vegetableSubstitutes }}</p>
+          <p>Recheck your requirements when changing an ingredient.</p>
+        </div>
+      }
+      @if (stage === 'plan') {
+        <button class="primary wide" [disabled]="saving() || !option()" (click)="use()">
+          <svg figmaIcon="cart" />{{ date ? 'Use this meal for this day' : 'Save this meal and shopping list' }}
+        </button>
+      }
+      <button class="text-action" [disabled]="saving()" (click)="favourite()">
+        {{ profile().favourites.includes(m.id) ? 'Remove favourite' : 'Save as favourite' }}
+      </button>
+      <details class="evidence-disclosure">
+        <summary>Why this meal appears here</summary>
+        <p>
+          Selection uses your saved practical preferences, preparation time, servings, and substitutions. It does not
+          use a claim that this recipe changes fibroids.
+        </p>
+        <span>No claim that this meal treats fibroids is used in the selection.</span>
+      </details>
+      @if (notice()) {
+        <p role="status">{{ notice() }}</p>
+      }
+    </div>
+  </section>
+  @if (showShopping) {
+    <app-recipe-shopping [meal]="m" />
+  }
+}

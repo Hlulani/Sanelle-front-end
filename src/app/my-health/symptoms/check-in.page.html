@@ -1,0 +1,52 @@
+@if (fromHealth) {
+  <app-health class="sheet-background" inert />
+} @else {
+  <app-today class="sheet-background" inert />
+}
+<div class="figma">
+  <div class="modal-wrap" appDialogFocus role="dialog" aria-modal="true" aria-labelledby="log-title">
+    <button class="backdrop" (click)="close()" aria-label="Close symptom log"></button>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <button class="icon-button sheet-close" (click)="close()" aria-label="Close">
+        <svg figmaIcon="close"></svg>
+      </button>
+      <p class="eyebrow">A quick check-in</p>
+      <h2 id="log-title">What showed up today?</h2>
+      <p>Select anything you noticed. This isn’t a test and you can leave things blank.</p>
+      <div class="choice-grid">
+        @for (choice of choices; track $index) {
+          <button [class]="symptoms().includes(choice) ? 'selected' : ''" (click)="toggle(choice)">
+            @if (symptoms().includes(choice)) {
+              <svg figmaIcon="check" [size]="17"></svg>
+            }
+            {{ choice }}
+          </button>
+        }
+      </div>
+      @if (symptoms().includes('Bleeding')) {
+        <label class="field-label">How would you describe the bleeding?</label>
+        <div class="bleeding-scale">
+          @for (level of bleedingLevelLabels; track $index) {
+            <button [class]="bleeding === level ? 'selected' : ''" (click)="setBleeding(level)">
+              <i></i><span>{{ level }}</span>
+            </button>
+          }
+        </div>
+        <p class="scale-note">
+          These are your own categories. Sanelle does not convert them into millilitres or a diagnosis.
+        </p>
+      }
+      <label class="field-label">How did it affect your day?</label>
+      <div class="impact-list">
+        @for (item of impacts; track $index) {
+          <button [class]="impact === item ? 'selected' : ''" (click)="setImpact(item)"><i></i>{{ item }}</button>
+        }
+      </div>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      <button class="primary wide" [disabled]="saving() || !ready()" (click)="save()">Save today’s check-in</button>
+    </div>
+  </div>
+</div>

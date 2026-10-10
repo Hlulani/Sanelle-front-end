@@ -82,6 +82,16 @@ function findings(value: unknown): HealthRecord['findings'] {
       f.source = finding['source'] as Finding['source'];
     }
     f.originalWording = optional(finding['originalWording']);
+    f.unit = optional(finding['unit']);
+    if (finding['sourcePage'] !== undefined) {
+      if (!Number.isInteger(finding['sourcePage']) || Number(finding['sourcePage']) < 1)
+        throw new UserFacingError('Invalid source page in backup.');
+      f.sourcePage = Number(finding['sourcePage']);
+    }
+    if (finding['needsChecking'] !== undefined) {
+      if (typeof finding['needsChecking'] !== 'boolean') throw new UserFacingError('Invalid checking state.');
+      f.needsChecking = finding['needsChecking'];
+    }
     f.reportDate = optionalDate(finding['reportDate']);
     f.updatedAt = finding['updatedAt'] === undefined ? undefined : timestamp(finding['updatedAt']);
     return { ...out, [key]: f };
@@ -111,6 +121,21 @@ export function validateHealthRecord(value: unknown): HealthRecord {
         findingKey: key as FindingKey | undefined,
         origin: q['origin'],
         answer: optional(q['answer']),
+        sourceLabel: optional(q['sourceLabel']),
+        status: q['status'] === undefined ? undefined : questionState(q['status']),
+        history:
+          q['history'] === undefined
+            ? undefined
+            : list(q['history']).map((value) => {
+                const h = object(value);
+                return {
+                  at: timestamp(h['at']),
+                  status: questionState(h['status']),
+                  answer: optional(h['answer']),
+                  note: optional(h['note']),
+                  visitDate: optionalDate(h['visitDate']),
+                };
+              }),
         createdAt: timestamp(q['createdAt']),
       };
     }),
@@ -121,6 +146,21 @@ export function validateHealthRecord(value: unknown): HealthRecord {
         notes: optional(s['notes']),
         treatmentChange: optional(s['treatmentChange']),
       };
+      if (s['observedSymptoms'] !== undefined)
+        entry.observedSymptoms = list(s['observedSymptoms']).map((value) => {
+          if (!['Bleeding', 'Pelvic pressure', 'Pain', 'Low energy'].includes(String(value)))
+            throw new UserFacingError('Invalid symptom selection.');
+          return value as NonNullable<SymptomEntry['observedSymptoms']>[number];
+        });
+      if (s['dailyImpact'] !== undefined) {
+        if (
+          !['No change', 'Slowed me down', 'Changed my plans', 'Couldn’t do usual activities'].includes(
+            String(s['dailyImpact']),
+          )
+        )
+          throw new UserFacingError('Invalid daily impact.');
+        entry.dailyImpact = s['dailyImpact'] as SymptomEntry['dailyImpact'];
+      }
       if (s['bleeding'] !== undefined) {
         if (!['none', 'spotting', 'light', 'moderate', 'heavy', 'very-heavy'].includes(String(s['bleeding'])))
           throw new UserFacingError('Invalid bleeding entry.');
@@ -170,6 +210,7 @@ export function validateHealthRecord(value: unknown): HealthRecord {
       const t = object(value);
       return {
         id: id(t['id']),
+        questionId: t['questionId'] === undefined ? undefined : id(t['questionId']),
         title: text(t['title'], 500),
         createdAt: timestamp(t['createdAt']),
         dueDate: optionalDate(t['dueDate']),
@@ -181,12 +222,38 @@ export function validateHealthRecord(value: unknown): HealthRecord {
   if (r['reports'] !== undefined)
     result.reports = list(r['reports']).map((value): HealthReport => {
       const report = object(value);
+      const source = report['source'];
+      const status = report['status'];
+      if (source !== undefined && !['camera', 'photos', 'pdf', 'manual'].includes(String(source)))
+        throw new UserFacingError('Invalid report source.');
+      if (status !== undefined && !['checked', 'needs-checking'].includes(String(status)))
+        throw new UserFacingError('Invalid report state.');
+      const pageCount = report['pageCount'];
+      if (pageCount !== undefined && (!Number.isInteger(pageCount) || Number(pageCount) < 1))
+        throw new UserFacingError('Invalid report page count.');
       return {
         id: id(report['id']),
         title: text(report['title'], 500),
         reportDate: optionalDate(report['reportDate']),
         savedAt: timestamp(report['savedAt']),
         findings: findings(report['findings']),
+        source: source as HealthReport['source'],
+        status: status as HealthReport['status'],
+        pageCount: pageCount as number | undefined,
+        checkedAt: report['checkedAt'] === undefined ? undefined : timestamp(report['checkedAt']),
+      };
+    });
+  if (r['results'] !== undefined)
+    result.results = list(r['results']).map((value) => {
+      const v = object(value);
+      return {
+        id: id(v['id']),
+        name: text(v['name']),
+        value: text(v['value']),
+        unit: text(v['unit']),
+        testDate: optionalDate(v['testDate']),
+        source: text(v['source']),
+        savedAt: timestamp(v['savedAt']),
       };
     });
   if (r['activeReportId'] !== undefined) {
@@ -198,11 +265,16 @@ export function validateHealthRecord(value: unknown): HealthRecord {
   for (const key of ['summaryQuestionIds', 'summaryAnswerIds', 'summarySymptomDates', 'summaryVisitDates'] as const) {
     if (r[key] !== undefined) result[key] = list(r[key]).map((v) => (key.endsWith('Dates') ? date(v) : id(v)));
   }
-  for (const records of [result.questions, result.tasks ?? [], result.reports ?? []]) {
+  for (const records of [result.questions, result.tasks ?? [], result.reports ?? [], result.results ?? []]) {
     if (new Set(records.map((entry) => entry.id)).size !== records.length)
       throw new UserFacingError('Duplicate records in backup.');
   }
   return result;
+}
+function questionState(value: unknown): NonNullable<AppointmentQuestion['status']> {
+  if (!['open', 'answered', 'unresolved'].includes(String(value)))
+    throw new UserFacingError('Invalid question status.');
+  return value as NonNullable<AppointmentQuestion['status']>;
 }
 function encode(bytes: Uint8Array): string {
   let binary = '';

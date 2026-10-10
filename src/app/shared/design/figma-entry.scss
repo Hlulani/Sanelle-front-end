@@ -1,0 +1,812 @@
+/* Visual rules copied from the actual Figma Make project, scoped to entry screens. */
+:host {
+  display: flex;
+  flex-direction: column;
+  --berry: #74203f;
+  --berry-dark: #52152d;
+  --cream: #f7f5f2;
+  --blush: #f6e1e3;
+  --apricot: #f2b37e;
+  --ink: #301b23;
+  --muted: #74636a;
+  --line: #dfd1cb;
+  font-family: 'Figma Nunito Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-synthesis: none;
+  color: var(--ink);
+  -webkit-font-smoothing: auto;
+  text-rendering: auto;
+}
+ion-content {
+  --background: var(--berry);
+  --color: var(--ink);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  border: 0 solid;
+}
+button,
+input,
+fieldset {
+  margin: 0;
+}
+button,
+input {
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: transparent;
+  border-radius: 0;
+}
+button {
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+h1,
+h2,
+h3,
+.brand {
+  font-family: 'Figma Fredoka', sans-serif;
+}
+h1 {
+  font-size: clamp(2rem, 8vw, 3.3rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin-bottom: 0.55rem;
+}
+h2 {
+  letter-spacing: -0.025em;
+}
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid #d2814e;
+  outline-offset: 3px;
+}
+svg {
+  display: block;
+  vertical-align: middle;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+ul {
+  list-style: none;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--berry);
+  font-weight: 600;
+  font-size: 1.35rem;
+}
+.brand-mark {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  background: var(--berry);
+  border-radius: 50% 50% 45% 55%;
+  transform: rotate(-7deg);
+  font-size: 1.2rem;
+}
+.brand-mark::first-letter {
+  transform: rotate(7deg);
+}
+.auth-shell,
+.onboarding {
+  min-height: 100vh;
+  background: var(--berry);
+}
+.auth-header,
+.onboarding-header {
+  height: 72px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.auth-header .brand,
+.onboarding-header .brand {
+  color: white;
+}
+.auth-header .brand-mark,
+.onboarding-header .brand-mark {
+  color: var(--berry);
+  background: var(--apricot);
+}
+.auth-header > span {
+  color: #e8cdd6;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+.auth-main {
+  min-height: calc(100vh - 72px);
+  padding: 25px 18px 60px;
+  display: grid;
+  place-items: start center;
+}
+.auth-card {
+  width: 100%;
+  max-width: 530px;
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 28px 22px;
+  box-shadow: 0 18px 45px #35102038;
+}
+.auth-card > .eyebrow {
+  margin-top: 8px;
+}
+.auth-card h1 {
+  font-size: clamp(2rem, 8vw, 3.15rem);
+  line-height: 1.02;
+  margin-bottom: 13px;
+}
+.auth-description,
+.welcome-auth > p:not(.eyebrow),
+.auth-confirmation > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+.auth-primary,
+.auth-secondary {
+  width: 100%;
+  min-height: 49px;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.auth-primary {
+  border: 0;
+  background: var(--berry);
+  color: white;
+  margin-top: 18px;
+}
+.auth-secondary {
+  border: 1px solid var(--berry);
+  background: transparent;
+  color: var(--berry);
+  margin-top: 9px;
+}
+.auth-trust {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 17px;
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.4;
+}
+.auth-trust svg {
+  flex: 0 0 auto;
+  color: var(--berry);
+}
+.auth-back {
+  border: 0;
+  color: var(--berry);
+  background: transparent;
+  padding: 2px 0 20px;
+  font-size: 0.73rem;
+  font-weight: 800;
+}
+.auth-fields {
+  display: grid;
+  gap: 15px;
+}
+.auth-fields label {
+  display: grid;
+  gap: 6px;
+}
+.auth-fields label > span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.auth-fields label > span button {
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  padding: 0;
+  text-decoration: underline;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+.auth-fields input {
+  width: 100%;
+  border: 1px solid #b9a6a0;
+  border-radius: 12px;
+  background: #fffaf6;
+  color: var(--ink);
+  padding: 13px 14px;
+  font-size: 0.82rem;
+}
+.password-field {
+  display: flex;
+  position: relative;
+}
+.password-field input {
+  padding-right: 60px;
+}
+.password-field button {
+  position: absolute;
+  right: 11px;
+  top: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 4px;
+}
+.terms-check {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 9px;
+  align-items: start;
+  margin-top: 17px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+.terms-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--berry);
+}
+.terms-check button {
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}
+.form-error {
+  color: #a52132;
+  background: #fae3e3;
+  border-radius: 9px;
+  padding: 9px 11px;
+  margin: 12px 0 -7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.auth-switch {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.7rem;
+  margin: 16px 0 0;
+}
+.auth-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  padding: 0;
+  text-decoration: underline;
+  font-weight: 800;
+}
+.prototype-note {
+  text-align: center;
+  color: #927f86;
+  font-size: 0.6rem;
+  margin: 18px 0 0;
+}
+.auth-state-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blush);
+  color: var(--berry);
+  margin-bottom: 22px;
+}
+.auth-confirmation {
+  text-align: center;
+}
+.auth-confirmation .auth-state-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+.auth-confirmation .auth-secondary {
+  border: 0;
+  text-decoration: underline;
+}
+.onboarding-header {
+  height: 72px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.onboarding-header > span {
+  color: #ecd3dc;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.onboarding-progress {
+  height: 4px;
+  background: #57142d;
+}
+.onboarding-progress i {
+  display: block;
+  height: 100%;
+  background: var(--apricot);
+  transition: width 0.3s ease;
+}
+.onboarding-main {
+  min-height: calc(100vh - 76px);
+  padding: 22px 14px 45px;
+  display: grid;
+  place-items: start center;
+}
+.welcome-step,
+.onboarding-step {
+  width: 100%;
+  max-width: 620px;
+}
+.welcome-step,
+.onboarding-step {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 27px 20px;
+  box-shadow: 0 20px 50px #37102038;
+}
+.welcome-step {
+  text-align: center;
+}
+.onboarding-photo {
+  height: 190px;
+  margin: -27px -20px 25px;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+.onboarding-photo::after {
+  content: '';
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(48, 27, 35, 0.72));
+}
+.onboarding-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 44%;
+}
+.onboarding-photo span {
+  position: absolute;
+  z-index: 1;
+  left: 18px;
+  bottom: 15px;
+  color: white;
+  font-family: 'Figma Fredoka';
+  font-size: 1rem;
+}
+.welcome-step h1,
+.onboarding-step h1 {
+  font-size: clamp(2.15rem, 9vw, 3.75rem);
+  line-height: 1.02;
+  margin-bottom: 16px;
+}
+.welcome-step > p:not(.eyebrow):not(.privacy-copy) {
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 520px;
+  margin: 0 auto 28px;
+}
+.onboarding-label {
+  display: block;
+  text-align: left;
+  font-size: 0.77rem;
+  font-weight: 800;
+  margin: 0 auto 7px;
+  max-width: 430px;
+}
+.welcome-step > input {
+  display: block;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  border: 1px solid #bba9a3;
+  background: #fffaf6;
+  border-radius: 13px;
+  padding: 14px 15px;
+  color: var(--ink);
+}
+.welcome-step > .wide {
+  max-width: 430px;
+}
+.primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.demo-link {
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  text-decoration: underline;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 14px;
+}
+.welcome-step .privacy-copy {
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.45;
+  max-width: 420px;
+  margin: 3px auto 0;
+}
+.onboarding-step > .eyebrow {
+  margin-top: 10px;
+}
+.onboarding-step .step-description {
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 28px;
+  max-width: 570px;
+}
+.step-body {
+  min-height: 280px;
+}
+.step-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 18px;
+}
+.back-button {
+  border: 0;
+  background: transparent;
+  color: var(--berry);
+  font-weight: 800;
+  padding: 12px 4px;
+}
+.onboarding-choices {
+  display: grid;
+  gap: 10px;
+}
+.onboarding-choices button,
+.chip-choices button {
+  min-height: 55px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fffaf6;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  font-weight: 700;
+}
+.onboarding-choices button.selected,
+.chip-choices button.selected {
+  border-color: var(--berry);
+  background: var(--blush);
+  color: var(--berry);
+}
+.diagnosis-form {
+  display: grid;
+  gap: 16px;
+}
+.diagnosis-form label,
+.date-field {
+  display: grid;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.diagnosis-form small,
+.date-field small {
+  color: var(--muted);
+  font-weight: 600;
+  margin-left: 5px;
+}
+.diagnosis-form input,
+.date-field input {
+  width: 100%;
+  border: 1px solid #bba9a3;
+  border-radius: 13px;
+  background: #fffaf6;
+  color: var(--ink);
+  padding: 14px;
+}
+.unit-input {
+  position: relative;
+}
+.unit-input input {
+  padding-right: 50px;
+}
+.unit-input b {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.onboarding-unknowns {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  background: var(--blush);
+  color: var(--berry-dark);
+  border-radius: 15px;
+  padding: 16px;
+  margin-top: 22px;
+}
+.onboarding-unknowns svg {
+  flex: 0 0 auto;
+}
+.onboarding-unknowns p {
+  margin: 4px 0 0;
+  color: #6b4d59;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+.onboarding-group {
+  border: 0;
+  padding: 0;
+  margin: 0 0 28px;
+}
+.onboarding-group legend {
+  font-family: 'Figma Fredoka';
+  font-size: 1rem;
+  margin-bottom: 11px;
+}
+.chip-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip-choices button {
+  min-height: 43px;
+  border-radius: 999px;
+  padding: 9px 13px;
+  font-size: 0.75rem;
+}
+.setup-summary {
+  background: var(--blush);
+  border-radius: 19px;
+  padding: 20px;
+  margin-top: 23px;
+}
+.setup-summary h2 {
+  font-size: 1.3rem;
+}
+.setup-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: grid;
+  gap: 11px;
+}
+.setup-summary li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #654f57;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+.setup-summary li svg {
+  flex: 0 0 auto;
+  color: var(--berry);
+}
+.consent-note {
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  margin: 16px 2px 0;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.7rem !important;
+  font-weight: 800;
+  color: var(--berry);
+  margin-bottom: 8px;
+  font-family: 'Figma Nunito Sans', sans-serif;
+}
+.primary {
+  border: 0;
+  background: var(--berry);
+  color: white;
+  border-radius: 8px;
+  padding: 14px 19px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.wide {
+  width: 100%;
+  margin-top: 17px;
+}
+
+@media (min-width: 720px) {
+  .onboarding-main {
+    padding-top: 55px;
+  }
+  .auth-main {
+    padding-top: 55px;
+  }
+  .auth-card {
+    padding: 42px 44px;
+  }
+  .welcome-step,
+  .onboarding-step {
+    padding: 44px 48px;
+  }
+  .onboarding-photo {
+    height: 230px;
+    margin: -44px -48px 32px;
+  }
+  .onboarding-choices {
+    grid-template-columns: 1fr 1fr;
+  }
+  .diagnosis-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+/* Real validation and navigation use the same prototype typography. */
+.auth-fields .sn-error {
+  color: #a52132;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.auth-fields .sn-hint {
+  color: var(--muted);
+  font-size: 0.67rem;
+}
+.auth-back {
+  display: inline-block;
+}
+.auth-switch a,
+.terms-check a {
+  color: var(--berry);
+  font-weight: 800;
+  text-decoration: underline;
+}
+.auth-fields label > span a {
+  color: var(--berry);
+  font-size: 0.67rem;
+  text-decoration: underline;
+}
+.setup-summary dl {
+  margin: 16px 0 0;
+  display: grid;
+  gap: 14px;
+}
+.setup-summary dt {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--berry);
+}
+.setup-summary dd {
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #654f57;
+}
+
+.terms-check a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+.terms-check a:focus-visible,
+.terms-check a:hover {
+  text-decoration: underline;
+}
+.sn-error {
+  color: #a52132;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* Ionic normalises labels to a normal line height; the prototype inherits 1.5. */
+label {
+  line-height: inherit;
+}
+.auth-introduction > .eyebrow {
+  margin-top: 8px;
+}
+
+legend {
+  padding: 0;
+}
+
+/* Tailwind preflight rules used by the supplied prototype's native controls. */
+input::placeholder {
+  opacity: 1;
+}
+@supports (not ((-webkit-appearance: -apple-pay-button))) or (contain-intrinsic-size: 1px) {
+  input::placeholder {
+    color: currentColor;
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    input::placeholder {
+      color: color-mix(in oklab, currentColor 50%, transparent);
+    }
+  }
+}
+::-webkit-date-and-time-value {
+  min-height: 1lh;
+  text-align: inherit;
+}
+::-webkit-datetime-edit {
+  display: inline-flex;
+}
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+::-webkit-datetime-edit-text,
+::-webkit-datetime-edit-year-field,
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field {
+  padding-block: 0;
+}
+
+small {
+  font-size: 80%;
+}
+b,
+strong {
+  font-weight: bolder;
+}
+
+::-webkit-datetime-edit {
+  padding-block: 0;
+}
+::-webkit-calendar-picker-indicator {
+  line-height: 1;
+}
+
+::-webkit-date-and-time-value {
+  padding: 0;
+  border: 0;
+}

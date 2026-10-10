@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
-import { RouterOutlet } from '@angular/router';
+import { IonRouterOutlet } from '@ionic/angular/standalone';
 
+/** Patient navigation: Today, Food, My health and Appointment. Nothing internal appears here. */
 @Component({
   selector: 'app-tabs',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'tabs.page.html',
-  styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, RouterOutlet],
+  imports: [IonRouterOutlet],
+  template: '<ion-router-outlet [animated]="false"></ion-router-outlet>',
 })
 export class TabsPage {}

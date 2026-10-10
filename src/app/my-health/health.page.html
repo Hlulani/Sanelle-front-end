@@ -1,0 +1,437 @@
+<ion-content
+  ><app-figma-frame active="health" title="Your health" label="My health" [attr.inert]="showReportReview() ? '' : null">
+    @if (error()) {
+      <p class="form-error" role="alert">{{ error() }}</p>
+    }
+    <div class="health-tabs" role="tablist" aria-label="Your health information">
+      <button
+        role="tab"
+        [attr.aria-selected]="view === 'diagnosis'"
+        [class]="view === 'diagnosis' ? 'selected' : ''"
+        (click)="setView('diagnosis')"
+      >
+        Diagnosis details</button
+      ><button
+        role="tab"
+        [attr.aria-selected]="view === 'symptoms'"
+        [class]="view === 'symptoms' ? 'selected' : ''"
+        (click)="setView('symptoms')"
+      >
+        Symptoms & daily life
+      </button>
+    </div>
+    @if (view === 'diagnosis') {
+      <section class="health-summary">
+        <div>
+          <p class="eyebrow light">Recorded from your scan</p>
+          <h2>
+            @if (profileView.fibroidCount) {
+              {{ `${profileView.fibroidCount} fibroids` }}
+            } @else {
+              Diagnosis saved
+            }
+          </h2>
+          <p>
+            @if (profileView.largestSize) {
+              Largest recorded size <strong>{{ profileView.largestSize }}</strong>
+            } @else {
+              No size recorded
+            }
+          </p>
+          <div class="report-actions">
+            <button class="light-action" (click)="onScanReport()">
+              @if (savedReport) {
+                Add another report
+              } @else {
+                Add a scan report
+              }</button
+            ><button class="light-action quiet" (click)="onReviewReport()">Check saved details</button>
+          </div>
+        </div>
+        <div class="report-document" aria-label="Visual preview of saved report fields">
+          <span>Ultrasound report</span><i></i><i></i>
+          <div>
+            <small>Number</small><b>{{ profileView.fibroidCount || '—' }}</b>
+          </div>
+          <div>
+            <small>Largest size</small
+            ><b>
+              @if (profileView.largestSize) {
+                {{ profileView.largestSize }}
+              } @else {
+                —
+              }
+            </b>
+          </div>
+          <em>{{ design.missing().length }} fields not recorded</em>
+        </div>
+      </section>
+      <section class="report-library">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Your source documents</p>
+            <h2>Reports</h2>
+          </div>
+          <button (click)="onScanReport()"><svg figmaIcon="plus"></svg> Add report</button>
+        </div>
+        @for (r of design.reports(); track r.id) {
+          <button class="report-list-item" (click)="openReport(r)">
+            <div class="report-page-thumb">
+              <i></i><i></i><b>{{ reportPages(r) }}</b>
+            </div>
+            <div>
+              <strong>{{ r.title }}</strong
+              ><span
+                >{{ r.reportDate || r.savedAt.slice(0, 10) }} · {{ reportPages(r) }} page{{
+                  reportPages(r) === 1 ? '' : 's'
+                }}</span
+              >
+            </div>
+            <em [class.checked]="status(r) === 'checked'">{{
+              status(r) === 'checked' ? 'Checked' : 'Needs checking'
+            }}</em
+            ><svg figmaIcon="arrow"></svg>
+          </button>
+        } @empty {
+          <div class="report-empty">
+            <strong>No report files saved yet.</strong>
+            <p>Take photos, choose images, upload a PDF, or enter details manually.</p>
+            <button (click)="onScanReport()">Add your first report</button>
+          </div>
+        }
+      </section>
+      <section class="details-section">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Report wording + explanation</p>
+            <h2>Your diagnosis details</h2>
+          </div>
+        </div>
+        <article class="report-detail">
+          <div class="report-wording">
+            <span>Report field</span><strong>Number of fibroids</strong
+            ><b>{{ profileView.fibroidCount || 'Not recorded' }}</b>
+          </div>
+          <details>
+            <summary>What does this mean?</summary>
+            <p>
+              This is the number recorded in the report details you checked. Sanelle does not add to or reinterpret that
+              number.
+            </p>
+          </details>
+        </article>
+        <article class="report-detail">
+          <div class="report-wording">
+            <span>Report field</span><strong>Largest recorded size</strong
+            ><b>
+              @if (profileView.largestSize) {
+                {{ profileView.largestSize }}
+              } @else {
+                Not recorded
+              }
+            </b>
+          </div>
+          <details>
+            <summary>What does this mean?</summary>
+            <p>
+              This preserves the value and unit you confirmed. A clinician can explain what the measurement means in the
+              context of your scan.
+            </p>
+          </details>
+        </article>
+        @for (item of otherDetails; track item.key) {
+          <article class="report-detail" [class.missing-report]="!item.value">
+            <div class="report-wording">
+              <span>Report field</span><strong>{{ item.label }}</strong
+              ><b>{{ item.value || 'Not recorded' }}</b>
+            </div>
+            @if (!item.value) {
+              <p>{{ item.explanation }}</p>
+              <button (click)="onSuggestQuestion(item.key)">Add a question for my next doctor’s visit</button>
+            }
+            <details class="source-details">
+              <summary>Sources and limitations</summary>
+              <p>
+                This explains missing documentation only and cannot interpret your scan.
+                <a routerLink="/learn/C09" [queryParams]="{ from: 'health', view: view }"
+                  >View the evidence and its limitations</a
+                >.
+              </p>
+            </details>
+          </article>
+        }
+        <div class="unknown-note">
+          <svg figmaIcon="info"></svg>
+          <p>
+            <strong>“Not recorded” does not mean abnormal.</strong> It means this detail is not in the information you
+            added. Sanelle won’t guess.
+          </p>
+        </div>
+      </section>
+      @if (treatmentPublished) {
+        <section class="treatment-section">
+          <p class="eyebrow">Preparing for a care discussion</p>
+          <h2>Understanding treatment conversations</h2>
+          <p>
+            Treatment discussions can include monitoring, medicines, procedures, or surgery. The research library keeps
+            treatments received, people’s preferences, and barriers to care as separate questions rather than treating
+            them as the same outcome.
+          </p>
+          <div class="outcome-map" aria-label="Treatment outcomes should be considered separately">
+            <div>
+              <span>01</span><strong>Symptoms</strong>
+              <p>Bleeding, pain, pressure and daily impact</p>
+            </div>
+            <div>
+              <span>02</span><strong>Fibroid measures</strong>
+              <p>Volume, number and location</p>
+            </div>
+            <div>
+              <span>03</span><strong>Durability</strong>
+              <p>Repeat treatment and follow-up time</p>
+            </div>
+            <div>
+              <span>04</span><strong>Reproduction</strong>
+              <p>Pregnancy and fertility questions need their own denominators</p>
+            </div>
+          </div>
+          <div class="boundary-note">
+            <strong>Sanelle does not recommend a treatment or predict fertility outcomes.</strong> Use this area to
+            understand terms and prepare questions for a qualified clinician.
+          </div>
+          <button class="text-action" (click)="setShowTreatmentEvidence(!showTreatmentEvidence)">
+            @if (showTreatmentEvidence) {
+              Hide
+            } @else {
+              Show
+            }
+            evidence scope <svg figmaIcon="arrow"></svg>
+          </button>
+          @if (showTreatmentEvidence) {
+            <div class="evidence-scope">
+              <p><strong>Evidence boundary</strong></p>
+              <p>
+                Sanelle supports understanding broad categories and preparing questions. It does not compare options for
+                you, recommend a treatment, or predict fertility outcomes.
+              </p>
+            </div>
+          }
+        </section>
+      }
+    } @else {
+      <section class="timeline">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Symptoms & daily life</p>
+            <h2>Notice what changes for you</h2>
+          </div>
+          <button (click)="openLog()">Log today <svg figmaIcon="plus"></svg></button>
+        </div>
+        @if (latestCheckIn) {
+          <article class="history-entry">
+            <time>{{ latestCheckIn.recordedAt }}</time>
+            <h3>
+              @if (latestCheckIn.symptoms.includes('Bleeding')) {
+                {{ `${latestCheckIn.bleeding} bleeding` }}
+              } @else {
+                @if (latestCheckIn.symptoms.length) {
+                  {{ latestCheckIn.symptoms.join(' · ') }}
+                } @else {
+                  No symptoms selected
+                }
+              }
+            </h3>
+            <p><strong>Effect on your day:</strong> {{ latestCheckIn.impact }}</p>
+            <button (click)="editLatestLog()">Edit check-in</button>
+          </article>
+        } @else {
+          <div class="empty-chart">
+            <div>
+              <strong>No check-ins yet.</strong>
+              <p>Record a symptom when it affects your day. No daily streak required.</p>
+            </div>
+          </div>
+        }
+        <section class="history-window">
+          <div class="history-window-head">
+            <div>
+              <p class="eyebrow">Your recorded history</p>
+              <h3>Current 30-day window</h3>
+            </div>
+            <strong>{{ recordedCount }}<span> days recorded</span></strong>
+          </div>
+          <div class="day-dots" [attr.aria-label]="`${recordedCount} of 30 days have check-ins`">
+            @for (d of window(); track d.date) {
+              <i [class]="dotClass(d)" [title]="dotTitle(d)"></i>
+            }
+          </div>
+          <div class="dot-key">
+            <span><i class="heavy"></i> Heavy</span><span><i class="moderate"></i> Moderate</span
+            ><span><i class="light"></i> Light</span><span><i class="unknown"></i> No entry</span>
+          </div>
+          <p>Days without a check-in remain unknown. They are not counted as symptom-free days.</p>
+        </section>
+        <section class="context-learning">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">Based on what you record</p>
+              <h2>Useful context, not predictions</h2>
+            </div>
+          </div>
+          <div class="learning-scroll">
+            @if (published('C11')) {
+              <article class="learning-card visual-card">
+                <div class="signal-visual"><i></i><i></i><i></i><span>C11</span></div>
+                <strong>Size and symptoms answer different questions</strong>
+                <p>
+                  Bleeding, pain, pressure and daily impact can matter even when a fibroid is small. A check-in does not
+                  prove the fibroid caused a symptom.
+                </p>
+                <details>
+                  <summary>Sources and limits</summary>
+                  <p>G02, G03, R05, R16 and R38 support keeping anatomy and symptom impact separate.</p>
+                </details>
+              </article>
+            }
+            @if (published('C14')) {
+              <article class="learning-card photo-learning">
+                <img [src]="notesImage" alt="Notebook and pen for preparing a health conversation" />
+                <div>
+                  <strong>Bring the impact, not just a score</strong>
+                  <p>Preserve what changed in your day so you can decide whether to bring it to an appointment.</p>
+                  <span>C14 · C15</span>
+                </div>
+              </article>
+            }
+            @if (published('C12')) {
+              <article class="learning-card">
+                <div class="blood-result-visual"><span>Symptoms</span><b>≠</b><span>Lab result</span></div>
+                <strong>Heavy bleeding cannot diagnose anemia</strong>
+                <p>
+                  Fatigue and bleeding history can support a clinical conversation. Anemia and iron deficiency require
+                  their own assessment.
+                </p>
+                <details>
+                  <summary>Sources and limits</summary>
+                  <p>C12 draws on R05 and R56. No diagnosis is calculated from your logs.</p>
+                </details>
+              </article>
+            }
+          </div>
+        </section>
+        <section class="stats-example">
+          <div class="stats-head">
+            <div>
+              <p class="eyebrow">Your observations</p>
+              <h3>30-day summary</h3>
+            </div>
+            <span>Personal history</span>
+          </div>
+          <p class="stat-callout">
+            You checked in on <strong>{{ recordedCount }} of 30 days</strong>. Of the
+            {{ bleedingAnswers.length }} check-in{{ bleedingAnswers.length === 1 ? '' : 's' }} with a bleeding answer,
+            <strong>{{ heavyCount }} recorded heavy or very heavy bleeding.</strong>
+          </p>
+          <div class="coverage-row"><span [style.width.%]="coverage"></span></div>
+          <p class="coverage-note">
+            <strong>Coverage: {{ coverage }}%</strong> · The other {{ 30 - recordedCount }} days are unknown, not
+            symptom-free.
+          </p>
+          <details class="evidence-disclosure">
+            <summary>How this statistic is calculated</summary>
+            <p>
+              Counts use only saved personal check-ins. Missing days and unanswered fields are excluded and shown
+              separately. Personal history is not combined with research statistics.
+            </p>
+            <span
+              >The research library includes a measurement review, but instrument ratings and source gaps remain
+              unresolved. This personal history is not a validated clinical score.</span
+            >
+          </details>
+        </section>
+        <section class="clinical-results">
+          <div>
+            <p class="eyebrow">Clinical results, if you have them</p>
+            <h3>Keep symptoms and lab results separate</h3>
+            <p>
+              Fatigue or heavy bleeding cannot diagnose anemia. You can save a dated hemoglobin result exactly as
+              reported for your next conversation.
+            </p>
+          </div>
+          @if (clinicalResult) {
+            <div class="saved-lab">
+              <span>Hemoglobin</span><strong>{{ clinicalResult.value }} {{ clinicalResult.unit }}</strong
+              ><small>Reported result · {{ clinicalResult.date }}</small
+              ><button (click)="setShowLabForm(true)">Edit result</button>
+            </div>
+          } @else {
+            @if (!showLabForm) {
+              <button class="secondary" (click)="setShowLabForm(true)">Add a reported result</button>
+            } @else {}
+          }
+          @if (showLabForm) {
+            <div class="lab-form">
+              <label
+                >Result exactly as reported
+                <div>
+                  <input inputmode="decimal" [(ngModel)]="labValue" placeholder="For example 11.2" /><span>{{
+                    clinicalResult?.unit ?? 'g/dL'
+                  }}</span>
+                </div></label
+              ><label>Test date<input type="date" [(ngModel)]="labDate" /></label
+              ><button [disabled]="!labValue || !labDate" (click)="saveLab()">Save reported result</button>
+            </div>
+          }
+          <details class="evidence-disclosure">
+            <summary>Why Sanelle keeps this separate</summary>
+            <p>
+              Claim C12 distinguishes self-reported fatigue or heavy bleeding from clinical anemia and iron-deficiency
+              assessment. Sanelle records the source, date and unit without interpreting the result.
+            </p>
+          </details>
+        </section>
+        <button class="primary wide" (click)="openLog()">
+          <svg figmaIcon="plus"></svg> Log symptoms and their impact
+        </button>
+      </section>
+    }
+  </app-figma-frame>
+  @if (showReportReview()) {
+    <div class="figma">
+      <div class="modal-wrap" appDialogFocus role="dialog" aria-modal="true" aria-labelledby="report-review-title">
+        <button class="backdrop" (click)="showReportReview.set(false)" aria-label="Close report review"></button>
+        <div class="sheet report-review-sheet">
+          <button class="icon-button sheet-close" (click)="showReportReview.set(false)" aria-label="Close">
+            <svg figmaIcon="close" />
+          </button>
+          <p class="eyebrow">Before these details are saved</p>
+          <h2 id="report-review-title">Check what was captured</h2>
+          <p>
+            Compare these fields with the original report. Sanelle has not inferred missing details or changed the
+            measurement unit.
+          </p>
+          <div class="extraction-review">
+            @for (field of reviewFields; track field.key) {
+              <div>
+                <span>{{ field.label }}</span
+                ><strong>{{ design.value(field.key) || 'Not recorded' }}</strong>
+              </div>
+            }
+          </div>
+          <label class="confirm-check"
+            ><input type="checkbox" [(ngModel)]="reviewConfirmed" /><span
+              >I checked these details against the report I have.</span
+            ></label
+          >
+          @if (error()) {
+            <p class="form-error" role="alert">{{ error() }}</p>
+          }
+          <button class="primary wide" [disabled]="!reviewConfirmed || reviewSaving()" (click)="saveReview()">
+            Save checked details
+          </button>
+          <button class="dismiss-action" (click)="showReportReview.set(false)">Go back without saving</button>
+        </div>
+      </div>
+    </div>
+  }
+</ion-content>

@@ -1,0 +1,209 @@
+<ion-content
+  ><app-figma-frame active="visit" title="Prepare for an appointment" label="Appointment">
+    @if (error()) {
+      <p class="form-error" role="alert">{{ error() }}</p>
+    }
+    @if (copied()) {
+      <div class="toast" role="status"><svg figmaIcon="check" />Summary copied</div>
+    }
+    <section class="visit-intro">
+      <div>
+        <p class="eyebrow light">Your editable brief</p>
+        <h2>Walk in with the full picture,<br />not a perfect memory.</h2>
+        <p>Sanelle has brought together what you recorded. Review and edit before sharing with a clinician.</p>
+      </div>
+      <img [src]="notesImage" alt="A notebook and pen ready for appointment questions" />
+    </section>
+    <section class="visit-paper">
+      <div class="paper-head">
+        <div>
+          <p class="eyebrow">Appointment summary</p>
+          <h2>{{ profileView.name }}’s health notes</h2>
+        </div>
+        <span>Draft</span>
+      </div>
+      <details class="paper-section">
+        <summary>Appointment date and main concern</summary>
+        <div class="paper-section">
+          <h3>My main concern for this visit</h3>
+          @if (!editingVisit()) {
+            <p>{{ record().visitGoal || 'Not added yet.' }}</p>
+            <p>
+              {{ record().appointment.date ? formatDate(record().appointment.date) : 'No appointment date saved.' }}
+            </p>
+            <button class="record-answer" (click)="editVisit()">
+              {{ record().visitGoal || record().appointment.date ? 'Edit date and concern' : 'Add date and concern' }}
+            </button>
+          } @else {
+            <div class="answer-form">
+              <label
+                >My main concern<textarea
+                  name="concern"
+                  [(ngModel)]="concern"
+                  placeholder="e.g. Could my fibroids affect my chances of having a baby?"
+                ></textarea></label
+              ><label>Date (optional)<input type="date" name="visitDate" [(ngModel)]="visitDate" /></label
+              ><label>With (optional)<input name="visitWith" [(ngModel)]="visitWith" /></label>
+              <div>
+                <button (click)="saveVisit()">Save</button><button (click)="editingVisit.set(false)">Cancel</button>
+              </div>
+            </div>
+          }
+        </div>
+      </details>
+      <div class="paper-section">
+        <h3>Recorded diagnosis</h3>
+        <p>
+          @if (profileView.fibroidCount) {
+            {{ `${profileView.fibroidCount} fibroids` }}
+          } @else {
+            Fibroid diagnosis
+          }
+          @if (profileView.largestSize) {
+            {{ `; largest recorded as ${profileView.largestSize}.` }}
+          } @else {
+            ; no size recorded.
+          }
+        </p>
+        <div class="missing-inline">
+          <svg figmaIcon="info"></svg
+          ><span>{{
+            summary().missing.length
+              ? summary().missing.join(', ') + ' are not recorded.'
+              : 'All report details are recorded.'
+          }}</span>
+        </div>
+      </div>
+      <div class="paper-section">
+        <h3>Recent symptoms & impact</h3>
+        <p>
+          @if (latestCheckIn) {
+            {{
+              `${latestCheckIn.symptoms.includes('Bleeding') ? `${latestCheckIn.bleeding} bleeding` : latestCheckIn.symptoms.join(', ') || 'No symptoms selected'} · ${latestCheckIn.impact}`
+            }}
+          } @else {
+            No symptom check-ins recorded yet.
+          }
+        </p>
+        @if (clinicalResult) {
+          <p class="summary-clinical-result">
+            <strong>Reported clinical result:</strong> {{ clinicalResult.name }} {{ clinicalResult.value }}
+            {{ clinicalResult.unit
+            }}{{ clinicalResult.date ? ' on ' + clinicalResult.date : ' · Test date not recorded' }}. No interpretation
+            added.
+          </p>
+        }
+        @if (summary().symptoms; as s) {
+          <details class="evidence-disclosure">
+            <summary>Recorded symptom summary</summary>
+            @for (line of s.lines; track line) {
+              <p>{{ line }}</p>
+            }
+          </details>
+        }
+      </div>
+      <div class="paper-section">
+        <h3>Questions for my healthcare professional</h3>
+        @if (questionsView().length === 0) {
+          <div class="question-empty">
+            <strong>No questions saved yet.</strong>
+            <p>Add one in your own words, or accept a suggestion from a missing report detail.</p>
+          </div>
+        }
+        <ol class="questions visit-questions">
+          @for (question of questionsView(); track $index; let index = $index) {
+            <li>
+              <span>{{ index + 1 }}</span>
+              <div>
+                <p>{{ question.text }}</p>
+                <small
+                  >{{ question.source }} ·
+                  <b [class]="`question-status ${question.status.toLowerCase()}`">{{ question.status }}</b></small
+                >
+                @if (question.history?.at(-1)?.note === 'Carried forward to my next visit') {
+                  <p class="fine-print">Carried forward · unresolved at an earlier visit</p>
+                }
+                <app-question-history [events]="question.history ?? []" />
+                @if (question.answer) {
+                  <div class="saved-answer">
+                    <strong>Answer recorded</strong>
+                    <p>{{ question.answer }}</p>
+                    @if (question.nextStep) {
+                      <p>
+                        <b>Next step:</b> {{ question.nextStep }}
+                        @if (question.reviewDate) {
+                          {{ ` · Review ${question.reviewDate}` }}
+                        } @else {}
+                      </p>
+                    }
+                  </div>
+                }
+                @if (answeringId === question.id) {
+                  <div class="answer-form">
+                    <label
+                      >What did your clinician say?<textarea
+                        [(ngModel)]="answer"
+                        placeholder="Save the answer in your own words"
+                      ></textarea></label
+                    ><label
+                      >Agreed next step<input
+                        [(ngModel)]="nextStep"
+                        placeholder="For example: request report copy" /></label
+                    ><label>Review or follow-up date<input type="date" [(ngModel)]="reviewDate" /></label>
+                    <div>
+                      <button (click)="saveOutcome('Answered')">Save answer</button
+                      ><button (click)="saveOutcome('Unresolved')">Mark unresolved</button>
+                    </div>
+                  </div>
+                } @else {
+                  <button class="record-answer" (click)="setAnsweringId(question.id)">
+                    @if (question.status === 'Answered') {
+                      Update answer
+                    } @else {
+                      Record an answer or next step
+                    }
+                  </button>
+                }
+                @if (question.status === 'Unresolved') {
+                  <button class="carry-forward" (click)="carryQuestion(question.id)">
+                    Carry forward to next visit
+                  </button>
+                }
+              </div>
+              <button (click)="removeQuestion(index)" [attr.aria-label]="`Remove question: ${question.text}`">
+                <svg figmaIcon="close" [size]="17"></svg>
+              </button>
+            </li>
+          }
+        </ol>
+        <div class="question-input">
+          <input
+            [(ngModel)]="newQuestion"
+            (keydown)='$event.key === "Enter" &amp;&amp; addQuestion()'
+            placeholder="Type a question you want to remember"
+            aria-label="New appointment question"
+          /><button (click)="addQuestion()" aria-label="Add question"><svg figmaIcon="plus"></svg></button>
+        </div>
+      </div>
+      @if (steps().length) {
+        <div class="paper-section">
+          <h3>Next steps and review dates</h3>
+          @for (step of steps(); track step.id) {
+            <div class="saved-answer">
+              <label
+                ><input type="checkbox" [checked]="!!step.completedAt" (change)="toggleStep(step)" />{{
+                  step.title
+                }}</label
+              >
+              <p>{{ step.dueDate ? 'Review ' + formatDate(step.dueDate) : 'No review date' }}</p>
+            </div>
+          }
+        </div>
+      }
+      <button class="primary wide" (click)="copy()">Copy editable summary</button>
+      <p class="fine-print centered">
+        This summary contains only details you entered. Review it with your healthcare professional.
+      </p>
+    </section></app-figma-frame
+  ></ion-content
+>

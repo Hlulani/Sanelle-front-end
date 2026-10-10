@@ -4,15 +4,20 @@ import { accountKey } from '../core/storage/account-key';
 import {
   AppointmentQuestion,
   Appointment,
+  ClinicalResult,
   Finding,
   FindingKey,
   HealthRecord,
+  QuestionEvent,
+  QuestionStatus,
+  ReportSource,
   SymptomEntry,
   VisitReview,
   CareTask,
   HealthReport,
   emptyHealthRecord,
   hasContent,
+  questionStatus,
   unansweredQuestions,
 } from './diagnosis.model';
 import { UserFacingError } from '../core/errors/errors';
@@ -32,6 +37,10 @@ export function storageKeyFor(email: string): string {
 
 function newId(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+}
+
+function byKey(findings: Finding[]): HealthReport['findings'] {
+  return findings.reduce<HealthReport['findings']>((all, finding) => ({ ...all, [finding.key]: finding }), {});
 }
 
 @Injectable({ providedIn: 'root' })
@@ -82,6 +91,75 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
           : reports,
       };
     });
+  }
+
+  /**
+   * Keeps a report whose details haven't been compared with it yet ("Save and finish later").
+   * It never changes the current details or the appointment summary until it is checked.
+   */
+  async saveReportForLater(
+    findings: Finding[],
+    meta: { id?: string; title: string; reportDate?: string; source: ReportSource; pageCount?: number },
+  ): Promise<string> {
+    const id = meta.id ?? newId();
+    await this.update((r) => {
+      const savedAt = new Date().toISOString();
+      const report: HealthReport = {
+        id,
+        title: meta.title.trim() || 'My report',
+        reportDate: meta.reportDate,
+        savedAt,
+        source: meta.source,
+        pageCount: meta.pageCount,
+        status: 'needs-checking',
+        findings: byKey(findings.map((f) => ({ ...f, needsChecking: true, updatedAt: savedAt }))),
+      };
+      return { ...r, reports: [...(r.reports ?? []).filter((item) => item.id !== id), report] };
+    });
+    return id;
+  }
+
+  /**
+   * Saves a report the person compared with the original, and makes its details the current
+   * ones. Confirmation covers transcription only; it is never clinician verification.
+   */
+  async saveCheckedReport(
+    findings: Finding[],
+    meta: { id?: string; title: string; reportDate?: string; source: ReportSource; pageCount?: number },
+  ): Promise<string> {
+    const id = meta.id ?? newId();
+    await this.update((r) => {
+      const savedAt = new Date().toISOString();
+      const checked = byKey(findings.map((f) => ({ ...f, needsChecking: false, updatedAt: savedAt })));
+      const report: HealthReport = {
+        id,
+        title: meta.title.trim() || 'My report',
+        reportDate: meta.reportDate,
+        savedAt: (r.reports ?? []).find((item) => item.id === id)?.savedAt ?? savedAt,
+        source: meta.source,
+        pageCount: meta.pageCount,
+        status: 'checked',
+        checkedAt: savedAt,
+        findings: checked,
+      };
+      const reports = (r.reports ?? []).filter((item) => item.id !== id);
+      // Details recorded before any report (e.g. during setup) are kept as their own entry.
+      if (!r.activeReportId && Object.keys(r.findings).length) {
+        reports.push({
+          id: newId(),
+          title: 'Details I added myself',
+          savedAt,
+          status: 'checked',
+          findings: r.findings,
+        });
+      }
+      return { ...r, reports: [...reports, report], activeReportId: id, findings: checked };
+    });
+    return id;
+  }
+
+  report(id: string): HealthReport | undefined {
+    return this.state().reports?.find((report) => report.id === id);
   }
 
   saveReport(findings: Finding[], title: string, reportDate?: string, makeCurrent = true): Promise<void> {
@@ -183,7 +261,7 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
     return this.update(() => record);
   }
 
-  addQuestion(text: string, findingKey?: FindingKey): Promise<void> {
+  addQuestion(text: string, findingKey?: FindingKey, sourceLabel?: string): Promise<void> {
     const trimmed = text.trim();
     if (!trimmed) return Promise.resolve();
     return this.update((r) => {
@@ -193,6 +271,8 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
         text: trimmed,
         findingKey,
         origin: findingKey ? 'suggested' : 'custom',
+        sourceLabel,
+        status: 'open',
         createdAt: new Date().toISOString(),
       };
       return { ...r, questions: [...r.questions, q] };
@@ -204,6 +284,106 @@ export class HealthRepository extends AccountRecordStore<HealthRecord> {
       ...r,
       questions: r.questions.map((q) => (q.id === id ? { ...q, ...changes } : q)),
     }));
+  }
+
+  /** Records what the clinician said, in the person's own words. */
+  answerQuestion(id: string, answer: string, visitDate?: string): Promise<void> {
+    const text = answer.trim();
+    if (!text) return Promise.reject(new UserFacingError('Write the answer in your own words, or mark it unresolved.'));
+    return this.recordQuestionEvent(id, { status: 'answered', answer: text, visitDate });
+  }
+
+  /** Asked, but not answered. Kept apart from questions that were never asked. */
+  markUnresolved(id: string, note?: string, visitDate?: string): Promise<void> {
+    return this.recordQuestionEvent(id, { status: 'unresolved', note: note?.trim() || undefined, visitDate });
+  }
+
+  /** Puts an unresolved question back on the list for the next visit, keeping its history. */
+  carryForward(id: string): Promise<void> {
+    return this.recordQuestionEvent(id, { status: 'open', note: 'Carried forward to my next visit' });
+  }
+
+  /** The answer and its agreed next step share one encrypted write. */
+  saveQuestionOutcome(
+    id: string,
+    status: 'answered' | 'unresolved',
+    text: string,
+    visitDate: string,
+    task?: { title: string; dueDate?: string },
+  ): Promise<void> {
+    const answer = text.trim();
+    if (status === 'answered' && !answer)
+      return Promise.reject(new UserFacingError('Write the answer in your own words, or mark it unresolved.'));
+    return this.recordQuestionEvent(
+      id,
+      { status, visitDate, ...(status === 'answered' ? { answer } : { note: answer || undefined }) },
+      task,
+    );
+  }
+
+  private recordQuestionEvent(
+    id: string,
+    event: Omit<QuestionEvent, 'at'>,
+    task?: { title: string; dueDate?: string },
+  ): Promise<void> {
+    return this.update((r) => {
+      if (!r.questions.some((q) => q.id === id)) throw new UserFacingError('This question is no longer saved.');
+      const at = new Date().toISOString();
+      return {
+        ...r,
+        ...(task?.title.trim()
+          ? {
+              tasks: [
+                ...(r.tasks ?? []),
+                {
+                  id: newId(),
+                  createdAt: at,
+                  title: task.title.trim(),
+                  dueDate: task.dueDate,
+                  visitDate: event.visitDate,
+                  questionId: id,
+                },
+              ],
+            }
+          : {}),
+        questions: r.questions.map((q) => {
+          if (q.id !== id) return q;
+          const history = [...(q.history ?? [])];
+          // An answer recorded before history existed is kept as the first entry.
+          if (!q.history && q.answer?.trim()) history.push({ at: q.createdAt, status: 'answered', answer: q.answer });
+          history.push({ at, ...event });
+          const status: QuestionStatus = event.status;
+          return { ...q, status, answer: status === 'answered' ? event.answer : q.answer, history };
+        }),
+      };
+    });
+  }
+
+  questionsWithStatus(status: QuestionStatus): AppointmentQuestion[] {
+    return this.state().questions.filter((q) => questionStatus(q) === status);
+  }
+
+  saveResult(result: Omit<ClinicalResult, 'id' | 'savedAt'> & { id?: string }): Promise<void> {
+    const name = result.name.trim();
+    const value = result.value.trim();
+    if (!name) return Promise.reject(new UserFacingError('Add the result name, as it appears on the result.'));
+    if (!value) return Promise.reject(new UserFacingError('Add the exact value.'));
+    return this.update((r) => {
+      const saved: ClinicalResult = {
+        ...result,
+        id: result.id ?? newId(),
+        name,
+        value,
+        unit: result.unit.trim(),
+        source: result.source.trim(),
+        savedAt: new Date().toISOString(),
+      };
+      return { ...r, results: [...(r.results ?? []).filter((item) => item.id !== saved.id), saved] };
+    });
+  }
+
+  removeResult(id: string): Promise<void> {
+    return this.update((r) => ({ ...r, results: (r.results ?? []).filter((item) => item.id !== id) }));
   }
 
   removeQuestion(id: string): Promise<void> {

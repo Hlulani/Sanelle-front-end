@@ -1,0 +1,79 @@
+<ion-content
+  ><app-figma-frame active="health" title="Your health" label="My health">
+    <section class="details-section">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Report wording + explanation</p>
+          <h2>Your diagnosis details</h2>
+        </div>
+      </div>
+      @for (f of findings(); track f.key) {
+        <article class="report-detail" [class.missing-report]="f.completeness.state === 'unknown'">
+          <a
+            class="report-wording"
+            routerLink="/health/report/check"
+            [queryParams]="editParams()"
+            [attr.aria-label]="'Edit ' + defs[f.key].label"
+            ><span>Report field</span
+            ><strong>{{
+              f.key === 'largestSize'
+                ? 'Largest recorded size'
+                : f.key === 'cavity'
+                  ? 'Cavity involvement'
+                  : defs[f.key].label
+            }}</strong
+            ><b>{{
+              f.completeness.state === 'present'
+                ? value(f)
+                : f.completeness.state === 'absent'
+                  ? 'Report says not affected'
+                  : 'Not recorded'
+            }}</b></a
+          >
+          @if (f.completeness.state === 'unknown') {
+            <p>{{ explain(f.key) }}</p>
+            @if (asked(f.key)) {
+              <p>Question saved for your next visit</p>
+            } @else {
+              <button
+                [routerLink]="['/health/question', f.key]"
+                [queryParams]="{ from: 'details', report: report()?.id }"
+              >
+                Add a question for my next doctor’s visit
+              </button>
+            }
+          }
+          <details class="source-details">
+            <summary>
+              {{ f.completeness.state === 'unknown' ? 'Sources and limitations' : 'What does this mean?' }}
+            </summary>
+            @if (f.completeness.state !== 'unknown') {
+              <p>{{ confirmation(f) }}</p>
+              @if (f.originalWording) {
+                <p>Original wording{{ f.sourcePage ? ' · page ' + f.sourcePage : '' }}: {{ f.originalWording }}</p>
+              }
+              <p>Report date: {{ f.reportDate || 'Not recorded' }}</p>
+            }
+            <p>
+              A clinician can explain what the recorded information means in the context of your scan. Sanelle does not
+              infer missing details.
+            </p>
+            @if (whyUnknown(); as e) {
+              <a [routerLink]="['/learn', e.claimId]" [queryParams]="{ from: 'details', report: report()?.id }"
+                >View sources and limitations</a
+              >
+            }
+          </details>
+        </article>
+      }
+      <div class="unknown-note">
+        <svg figmaIcon="info" />
+        <p>
+          <strong>“Not recorded” does not mean abnormal.</strong> It means this detail is not in the information you
+          added. Sanelle won’t guess.
+        </p>
+      </div>
+      <button class="secondary" routerLink="/health/report/check" [queryParams]="editParams()">Correct a detail</button>
+    </section>
+  </app-figma-frame></ion-content
+>

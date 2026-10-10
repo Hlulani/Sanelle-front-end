@@ -1,10 +1,10 @@
 :root {
-  /* Ionic colours mapped onto the Sanelle brand (see theme/sanelle.scss). */
+  /* Ionic colours mapped onto the Sanelle tokens (see theme/sanelle.scss). */
   --ion-color-primary: #74203f;
   --ion-color-primary-rgb: 116, 32, 63;
-  --ion-color-primary-contrast: #fff6f0;
-  --ion-color-primary-contrast-rgb: 255, 246, 240;
-  --ion-color-primary-shade: #561530;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #52152d;
   --ion-color-primary-tint: #82365a;
   --ion-color-secondary: #f6e1e3;
   --ion-color-secondary-rgb: 246, 225, 227;
@@ -14,32 +14,18 @@
   --ion-color-secondary-tint: #f7e4e6;
   --ion-color-tertiary: #f2b37e;
   --ion-color-tertiary-rgb: 242, 179, 126;
-  --ion-color-tertiary-contrast: #2a1a20;
-  --ion-color-tertiary-contrast-rgb: 42, 26, 32;
+  --ion-color-tertiary-contrast: #301b23;
+  --ion-color-tertiary-contrast-rgb: 48, 27, 35;
   --ion-color-tertiary-shade: #d59e6f;
   --ion-color-tertiary-tint: #f3bb8b;
+  --ion-color-success: #2f674b;
+  --ion-color-success-rgb: 47, 103, 75;
+  --ion-color-warning: #9a622e;
+  --ion-color-warning-rgb: 154, 98, 46;
   --ion-color-danger: #a1262b;
   --ion-color-danger-rgb: 161, 38, 43;
-  --ion-color-medium: #6b5560;
-  --ion-color-medium-rgb: 107, 85, 96;
-  --ion-background-color: #fbf5ef;
-  --ion-text-color: #2a1a20;
-
-  /* Older screens' tokens, now pointing at the brand tokens. */
-  --app-ink: #2a1a20;
-  --app-muted: #6b5560;
-  --app-paper: #fbf5ef;
-  --app-card: #ffffff;
-  --app-primary: #74203f;
-  --app-primary-contrast: #fff6f0;
-  --app-primary-soft: #f6e1e3;
-  --app-accent: #74203f;
-  --app-line: #e6d8d4;
-  --app-shadow-sm: 0 1px 2px rgba(42, 26, 32, 0.06), 0 1px 3px rgba(42, 26, 32, 0.04);
-
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-pill: 999px;
+  --ion-color-medium: #74636a;
+  --ion-color-medium-rgb: 116, 99, 106;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #301b23;
 }

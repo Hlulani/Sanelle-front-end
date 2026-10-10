@@ -1,0 +1,185 @@
+<ion-content
+  ><app-figma-report-frame [stage]="3" (closed)="cancel()">
+    <section class="scan-step review-step">
+      <p class="eyebrow">Check before saving</p>
+      <h1 id="scan-title">Compare what was captured with your report</h1>
+      <p>You are checking the transcription—not confirming a medical interpretation.</p>
+      @if (demo) {
+        <p class="form-error" role="status">Thandi’s sample report. These are example details, not your diagnosis.</p>
+      }
+      @if (reading()) {
+        <p role="status">{{ progress() || 'Reading your report…' }}</p>
+      }
+      @if (readError()) {
+        <p class="form-error" role="alert">{{ readError() }}</p>
+      }
+      @if (resumed()) {
+        <p class="scale-note">The original pages aren’t kept on your phone. Have the report with you to compare.</p>
+      }
+      @if (missingPage(); as m) {
+        <p class="form-error" role="status">
+          The report says it has {{ m.stated }} pages, but {{ m.read }} were read. A missing page may hold missing
+          details.
+        </p>
+      }
+      @if (ready() && !reading()) {
+        <details class="evidence-disclosure">
+          <summary>Report name and date</summary>
+          <div class="answer-form">
+            <label>Name for this report<input name="title" [(ngModel)]="title" (ngModelChange)="changed()" /></label
+            ><label
+              >Date on the report (optional)<input
+                type="date"
+                name="reportDate"
+                [max]="today"
+                [(ngModel)]="reportDate"
+                (ngModelChange)="changed()"
+            /></label>
+          </div>
+        </details>
+        <div class="original-wording">
+          <div><span>Original report wording</span><small>Compare with the source</small></div>
+          <textarea
+            [ngModel]="originalWording"
+            (ngModelChange)="editWording($event)"
+            placeholder="Enter the wording exactly as it appears"
+          ></textarea>
+        </div>
+        <div class="captured-fields" aria-label="Report fields">
+          @for (row of rows(); track row.key) {
+            <label [class.missing-field]="row.state === 'unknown' && row.key !== 'count' && row.key !== 'largestSize'">
+              <span [id]="'f-' + row.key">{{
+                row.key === 'largestSize'
+                  ? 'Largest recorded dimensions'
+                  : row.key === 'cavity'
+                    ? 'Cavity involvement'
+                    : defs[row.key].label
+              }}</span>
+              @if (row.key === 'count' || row.key === 'largestSize' || row.state === 'present') {
+                @if (row.key === 'largestSize') {
+                  <div>
+                    <input
+                      [name]="'v-' + row.key"
+                      [attr.name]="'v-' + row.key"
+                      [attr.aria-label]="defs[row.key].label"
+                      [ngModel]="row.value"
+                      (ngModelChange)="setValue(row, $event)"
+                    /><select
+                      [name]="'u-' + row.key"
+                      [attr.name]="'u-' + row.key"
+                      aria-label="Size unit"
+                      [(ngModel)]="row.unit"
+                      (ngModelChange)="changed()"
+                    >
+                      <option value="">Not written</option>
+                      <option value="mm">mm</option>
+                      <option value="cm">cm</option>
+                    </select>
+                  </div>
+                } @else {
+                  <input
+                    [name]="'v-' + row.key"
+                    [attr.name]="'v-' + row.key"
+                    [attr.aria-label]="defs[row.key].label"
+                    [ngModel]="row.value"
+                    (ngModelChange)="setValue(row, $event)"
+                  />
+                }
+              } @else if (row.state === 'absent') {
+                <strong>Report says not affected</strong>
+              } @else {
+                <strong>Not recorded in this report</strong>
+              }
+              <small>{{
+                row.key === 'largestSize'
+                  ? 'Unit preserved from report'
+                  : row.state === 'unknown'
+                    ? 'No value inferred'
+                    : status(row).label
+              }}</small>
+            </label>
+            <details class="source-details">
+              <summary>Check or edit {{ defs[row.key].label.toLowerCase() }}</summary>
+              <div class="chip-choices">
+                <button [class.selected]="row.state === 'present'" (click)="setState(row, 'present')">
+                  {{ row.state === 'present' ? 'Has a value' : 'Add a value' }}
+                </button>
+                @if (defs[row.key].canBeAbsent) {
+                  <button [class.selected]="row.state === 'absent'" (click)="setState(row, 'absent')">
+                    Says not affected
+                  </button>
+                }
+                <button [class.selected]="row.state === 'unknown'" (click)="setState(row, 'unknown')">
+                  Not recorded
+                </button>
+              </div>
+              @if (row.wording) {
+                <p>Original wording{{ row.page ? ' · page ' + row.page : '' }}: {{ row.wording }}</p>
+                @if (previews().length) {
+                  <button class="text-action" (click)="showOriginal(row)">Show me on the page</button>
+                }
+              }
+              @if (row.candidates.length > 1) {
+                <fieldset>
+                  <legend>More than one statement was found. Choose the one to use.</legend>
+                  @for (c of row.candidates; track $index; let i = $index) {
+                    <label class="confirm-check"
+                      ><input
+                        type="radio"
+                        [name]="'c-' + row.key"
+                        [checked]="row.candidateIndex === i"
+                        (change)="chooseCandidate(row, i)"
+                      /><span>{{ c.wording }}</span></label
+                    >
+                  }
+                </fieldset>
+              }
+            </details>
+          }
+        </div>
+        <label class="confirm-check"
+          ><input type="checkbox" name="confirmed" [(ngModel)]="confirmed" /><span>{{ confirmationText }}</span></label
+        >
+        @if (error()) {
+          <p class="form-error" role="alert">{{ error() }}</p>
+        }
+        <div class="review-actions">
+          @if (!editingChecked()) {
+            <button [disabled]="saving()" (click)="save(false)">Save and finish later</button>
+          }
+          <button class="primary" [disabled]="saving() || !confirmed" (click)="save(true)">
+            {{ saving() ? 'Saving…' : 'Save checked details' }}
+          </button>
+        </div>
+      }
+    </section>
+  </app-figma-report-frame></ion-content
+>
+<ion-modal class="sn-sheet" [isOpen]="!!viewed()" (didDismiss)="viewed.set(null)">
+  <ng-template>
+    @if (viewed(); as original) {
+      <div class="original">
+        <div class="sn-top">
+          <h2>Original page</h2>
+          <button type="button" class="sn-btn sn-btn--small" (click)="viewed.set(null)">Back to checking</button>
+        </div>
+        <p class="sn-hint">Highlights help you find the words. Check the image itself.</p>
+        <div class="original-image">
+          <img [src]="original.page.url" alt="The report page you chose" />
+          @for (region of original.regions; track $index) {
+            <span
+              class="highlight"
+              [style.left.%]="(region.x / original.page.width) * 100"
+              [style.top.%]="(region.y / original.page.height) * 100"
+              [style.width.%]="(region.width / original.page.width) * 100"
+              [style.height.%]="(region.height / original.page.height) * 100"
+            ></span>
+          }
+        </div>
+        @if (!original.regions.length) {
+          <p class="sn-hint">A highlight couldn’t be placed reliably. Compare the page yourself.</p>
+        }
+      </div>
+    }
+  </ng-template>
+</ion-modal>
