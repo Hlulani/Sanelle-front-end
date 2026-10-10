@@ -202,14 +202,13 @@ export async function correctedProgress(reference: Page, step: number) {
 }
 
 /**
- * Differing pixels allowed when the app is compared with the prototype. Zero, except:
- *  - WebKit's Ionic scrolling layer rasterises one corner of the login arrow differently;
- *  - Linux WebKit (CI) anti-aliases a few glyph edges and the page's corner pixel differently
- *    from macOS WebKit, where the references were checked.
+ * Differing pixels allowed when the app is compared with the prototype. Zero on macOS, where the
+ * references were checked, except that WebKit's Ionic scrolling layer rasterises one corner of
+ * the login arrow differently. On Linux (CI) both browsers anti-alias a few glyph edges and the
+ * page's corner pixel slightly differently, so up to 50 stray pixels are allowed there.
  * Layout is verified separately, element by element, to within 0.1 CSS pixels everywhere.
  */
 function allowedStrayPixels(info: TestInfo, id: string): number {
-  if (info.project.name !== 'iphone') return 0;
   if (process.platform === 'linux') return 50;
-  return id === 'AUTH-04-empty' ? 25 : 0;
+  return info.project.name === 'iphone' && id === 'AUTH-04-empty' ? 25 : 0;
 }
