@@ -82,3 +82,6 @@ Thumbs.db
 
 # Research library: kept locally, not in the repo
 /docs/research
+
+# Presentation drafts: kept locally, not in the repo
+/docs/presentation
