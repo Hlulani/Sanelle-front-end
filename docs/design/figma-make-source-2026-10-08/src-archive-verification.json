@@ -1,0 +1,88 @@
+{
+  "archive": "/Users/hbaloyi/Downloads/src.zip",
+  "sha256": "45a77a355a1414d1e1e27bd86f4b6372989b0855eb8f7cf4f303c1065c2083d3",
+  "compared_with": "/Users/hbaloyi/Downloads/project.zip",
+  "files": [
+    {
+      "file": "App.tsx",
+      "sha256": "8ab87c21a46e04dfba7509c06a64980512ea77f0ad22d22523d80066b951931f",
+      "identical_project_file": "src/App.tsx"
+    },
+    {
+      "file": "imports/README.md",
+      "sha256": "6423771ddf02d7947d66c047999cf65e7989beace9b285bcb095aa8e7ed1c5dc",
+      "identical_project_file": "src/imports/README.md"
+    },
+    {
+      "file": "imports/WhatsApp_Image_2026-10-07_at_20.07.27.jpeg",
+      "sha256": "e928a052d9d8bd7e7759233c93b471dd22b13f327e23929237ed279d14050c03",
+      "identical_project_file": "src/imports/WhatsApp_Image_2026-10-07_at_20.07.27.jpeg"
+    },
+    {
+      "file": "imports/fibroids-additional-primary-readings-2026-10-06.md",
+      "sha256": "efcbd2b8606f9b143e12aa479f1c6815f96aed0cb41f1119d8717127c0f42c81",
+      "identical_project_file": "src/imports/fibroids-additional-primary-readings-2026-10-06.md"
+    },
+    {
+      "file": "imports/fibroids-claim-to-evidence-2026-10-06.md",
+      "sha256": "0d1cdd9b38f82220bb93a4d40f0817efbb5ac3b4a2630f4616faaf96968e9ebc",
+      "identical_project_file": "src/imports/fibroids-claim-to-evidence-2026-10-06.md"
+    },
+    {
+      "file": "imports/fibroids-evidence-map-2026-10-05.md",
+      "sha256": "78315b12a77ebcc7430c5fd3ac3b43386eaf0c790b500701453c77f0314bce37",
+      "identical_project_file": "src/imports/fibroids-evidence-map-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-evidence-synthesis-and-critical-appraisal-2026-10-05.md",
+      "sha256": "c4ef754a4856b08a4070d7f7049ae3b73ccbc3cc3c45649e92b995aed8b45136",
+      "identical_project_file": "src/imports/fibroids-evidence-synthesis-and-critical-appraisal-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-general-facts-and-critical-reading-2026-10-05.md",
+      "sha256": "b98d2629c357301a963fe826f12562f282f99407eac1d0b99f55ffa1a74f081f",
+      "identical_project_file": "src/imports/fibroids-general-facts-and-critical-reading-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-primary-reading-continuation-2026-10-06.md",
+      "sha256": "10a8c644fc71691698f492ec236b7c3786a81d6c222396edd773b764538cd9c6",
+      "identical_project_file": "src/imports/fibroids-primary-reading-continuation-2026-10-06.md"
+    },
+    {
+      "file": "imports/fibroids-quality-continuation-2026-10-05.md",
+      "sha256": "c1dd25eab544163e534244c71d910377ce67de1291c6b2476a350fbdf0c43afc",
+      "identical_project_file": "src/imports/fibroids-quality-continuation-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-research-dossier-2026-10-05.md",
+      "sha256": "ef1adf6202148c99234bc690f83c945fe9b03817312eb8dbe8c29eb5211b4a0e",
+      "identical_project_file": "src/imports/fibroids-research-dossier-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-research-protocol-2026-10-05.md",
+      "sha256": "beb3e2721c38273de3003154a66bbc6e2eaf811b215b923077a5ab310e9105cb",
+      "identical_project_file": "src/imports/fibroids-research-protocol-2026-10-05.md"
+    },
+    {
+      "file": "imports/fibroids-review-completion-and-domain-screening-2026-10-06.md",
+      "sha256": "656145a3c795c84990223266c26152f8b0a45fc4310a3f7105fe08d205996b5f",
+      "identical_project_file": "src/imports/fibroids-review-completion-and-domain-screening-2026-10-06.md"
+    },
+    {
+      "file": "index.css",
+      "sha256": "d3c500a484a55f5a9edfff7d373d1fe289d1d598c9e7dc8494ed69285142dc17",
+      "identical_project_file": "src/index.css"
+    },
+    {
+      "file": "main.tsx",
+      "sha256": "5f49dce6e6cc4b5d678cf529ef892af0ab7dfa6afb300b11ad559224019b8b05",
+      "identical_project_file": "src/main.tsx"
+    },
+    {
+      "file": "vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "identical_project_file": "src/vite-env.d.ts"
+    }
+  ],
+  "all_files_identical": true
+}

@@ -1,0 +1,149 @@
+[
+  {
+    "selector": ".onboarding-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-progress",
+    "actual": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "expected": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-main",
+    "actual": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 805.046875
+    },
+    "expected": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 805.046875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Your companion after a fibroid diagnosis",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Sanelle brings your diagnosis details, food questions, symptoms, and appointment notes into one calm place.",
+        "font": "16px / 24.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Start setting up Sanelle",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview with Thandi’s demo details",
+        "font": "800 12.16px / 18.24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.24px"
+      },
+      {
+        "tag": "P",
+        "text": "You can skip optional questions and update anything later. Your health details are stored only on this device.",
+        "font": "10.72px / 15.544001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.544001px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Your companion after a fibroid diagnosis",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Sanelle brings your diagnosis details, food questions, symptoms, and appointment notes into one calm place.",
+        "font": "16px / 24.799999px Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Start setting up Sanelle",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview with Thandi’s demo details",
+        "font": "800 12.16px / 18.24px Nunito Sans, sans-serif",
+        "lineHeight": "18.24px"
+      },
+      {
+        "tag": "P",
+        "text": "You can skip optional questions and update anything later. Your health details are stored only on this device.",
+        "font": "10.72px / 15.544001px Nunito Sans, sans-serif",
+        "lineHeight": "15.544001px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 34,
+      "y": 354.5625,
+      "width": 322,
+      "height": 107.34375
+    },
+    "expected": {
+      "x": 34,
+      "y": 354.5625,
+      "width": 322,
+      "height": 107.34375
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".primary",
+    "actual": {
+      "x": 34,
+      "y": 676.765625,
+      "width": 322,
+      "height": 52
+    },
+    "expected": {
+      "x": 34,
+      "y": 676.765625,
+      "width": 322,
+      "height": 52
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

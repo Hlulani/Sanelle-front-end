@@ -1,0 +1,127 @@
+[
+  {
+    "selector": ".report-review-sheet",
+    "actual": {
+      "x": 0,
+      "y": 283.796875,
+      "width": 390,
+      "height": 560.203125
+    },
+    "expected": {
+      "x": 0,
+      "y": 283.796875,
+      "width": 390,
+      "height": 560.203125
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Before these details are saved",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Check what was captured",
+        "font": "28px / 42px Figma Fredoka, sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Compare these fields with the original report. Sanelle has not inferred missing details or changed the measurement unit.",
+        "font": "13.12px / 19.024px Figma Nunito Sans, sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Save checked details",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Go back without saving",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Before these details are saved",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Check what was captured",
+        "font": "28px / 42px Fredoka, sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Compare these fields with the original report. Sanelle has not inferred missing details or changed the measurement unit.",
+        "font": "13.12px / 19.024px Nunito Sans, sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Save checked details",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Go back without saving",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ]
+  },
+  {
+    "selector": ".extraction-review",
+    "actual": {
+      "x": 21,
+      "y": 465.578125,
+      "width": 348,
+      "height": 206
+    },
+    "expected": {
+      "x": 21,
+      "y": 465.578125,
+      "width": 348,
+      "height": 206
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".confirm-check",
+    "actual": {
+      "x": 21,
+      "y": 691.578125,
+      "width": 348,
+      "height": 15.640625
+    },
+    "expected": {
+      "x": 21,
+      "y": 691.578125,
+      "width": 348,
+      "height": 15.640625
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

@@ -1,0 +1,330 @@
+[
+  {
+    "selector": ".sheet",
+    "actual": {
+      "x": 0,
+      "y": 122.328125,
+      "width": 390,
+      "height": 721.671875
+    },
+    "expected": {
+      "x": 0,
+      "y": 122.328125,
+      "width": 390,
+      "height": 721.671875
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "A quick check-in",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "What showed up today?",
+        "font": "28px / 42px Figma Fredoka, sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Select anything you noticed. This isn’t a test and you can leave things blank.",
+        "font": "13.12px / 19.024px Figma Nunito Sans, sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bleeding",
+        "font": "800 12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain",
+        "font": "800 12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "A quick check-in",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "What showed up today?",
+        "font": "28px / 42px Fredoka, sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Select anything you noticed. This isn’t a test and you can leave things blank.",
+        "font": "13.12px / 19.024px Nunito Sans, sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Bleeding",
+        "font": "800 12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain",
+        "font": "800 12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ]
+  },
+  {
+    "selector": ".choice-grid",
+    "actual": {
+      "x": 21,
+      "y": 285.109375,
+      "width": 348,
+      "height": 112
+    },
+    "expected": {
+      "x": 21,
+      "y": 285.109375,
+      "width": 348,
+      "height": 112
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Bleeding",
+        "font": "800 12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain",
+        "font": "800 12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Bleeding",
+        "font": "800 12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain",
+        "font": "800 12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ]
+  },
+  {
+    "selector": ".bleeding-scale",
+    "actual": {
+      "x": 21,
+      "y": 449.765625,
+      "width": 348,
+      "height": 50.421875
+    },
+    "expected": {
+      "x": 21,
+      "y": 449.765625,
+      "width": 348,
+      "height": 50.421875
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "None",
+        "font": "8.96px / 13.440001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Light",
+        "font": "8.96px / 13.440001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Moderate",
+        "font": "8.96px / 13.440001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Heavy",
+        "font": "800 8.96px / 13.440001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Very heavy",
+        "font": "8.96px / 13.440001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "None",
+        "font": "8.96px / 13.440001px Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Light",
+        "font": "8.96px / 13.440001px Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Moderate",
+        "font": "8.96px / 13.440001px Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Heavy",
+        "font": "800 8.96px / 13.440001px Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Very heavy",
+        "font": "8.96px / 13.440001px Nunito Sans, sans-serif",
+        "lineHeight": "13.440001px"
+      }
+    ]
+  },
+  {
+    "selector": ".impact-list",
+    "actual": {
+      "x": 21,
+      "y": 583.1875,
+      "width": 348,
+      "height": 166.8125
+    },
+    "expected": {
+      "x": 21,
+      "y": 583.1875,
+      "width": 348,
+      "height": 166.8125
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "No change",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Slowed me down",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Changed my plans",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Couldn’t do usual activities",
+        "font": "12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "No change",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Slowed me down",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Changed my plans",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Couldn’t do usual activities",
+        "font": "12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ]
+  }
+]

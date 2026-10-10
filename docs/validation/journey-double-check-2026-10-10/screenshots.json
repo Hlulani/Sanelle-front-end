@@ -1,0 +1,464 @@
+[
+  {
+    "id": "AUTH-01",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-01.png",
+    "sha256": "8ad6b1553bc55a4b11996a229fe75320eca1a80c392a805633245e1f816fb34c",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-02",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-02.png",
+    "sha256": "fabef53837d31d38931c11a852f5997240a5411d56a710b2e7b5cf4ca47c06dc",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-03",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-03.png",
+    "sha256": "eb88c9122fa72b874bcf97c47d1b42621229db7bd3cc375051b7ce7c7fe55937",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-04",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-04.png",
+    "sha256": "eea10ebead910d6d159ae0c606ab98027b2d9969bf191364108583f082ac6825",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-04-invalid-credentials",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-04-invalid-credentials.png",
+    "sha256": "36cfde3c05bde021be6a512119491beafb0cca30beab06a17224344480e0efc2",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-05",
+    "journey": "Account entry",
+    "file": "happy-path/AUTH-05.png",
+    "sha256": "5884260599ff288b0ff43bc23a4a538952953764328b080dfcadff8ee98455e2",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "TOD-02",
+    "journey": "Today and health",
+    "file": "happy-path/TOD-02.png",
+    "sha256": "228988b07850f50763bf77b71c17686b502d500d64f16f78d486b40e29d27564",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "TOD-03",
+    "journey": "Today and health",
+    "file": "happy-path/TOD-03.png",
+    "sha256": "228988b07850f50763bf77b71c17686b502d500d64f16f78d486b40e29d27564",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "HLT-01",
+    "journey": "Today and health",
+    "file": "happy-path/HLT-01.png",
+    "sha256": "75f64250d15d04635df14ef5be3ffb4f4b4c53ea82ee2e58fda0b1483c5911cd",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "HLT-02",
+    "journey": "Today and health",
+    "file": "happy-path/HLT-02.png",
+    "sha256": "5335a74c6fd847d3a9965aa82022c731ebe674e98be44cc0ecdd5929b150a11b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "HLT-03",
+    "journey": "Today and health",
+    "file": "happy-path/HLT-03.png",
+    "sha256": "2b9d642cd95d3e1f1dfbc466e5735f80997a8d8397518ac0021cb0d8b74c0347",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-01",
+    "journey": "Report capture and review",
+    "file": "happy-path/RPT-01.png",
+    "sha256": "8b99bb3163f67f837f0674beed8cbf1dcdf1451045f40794efda1b5dd2d295cf",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-02",
+    "journey": "Report capture and review",
+    "file": "happy-path/RPT-02.png",
+    "sha256": "03e44dca6e04fe29354a060ffff857cd3392db75e71c2f36f184620edd5d31e5",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-03",
+    "journey": "Report capture and review",
+    "file": "happy-path/RPT-03.png",
+    "sha256": "5455f90ce16ec582a2b1e608e95f79e6bf4f549641b8a6f5483ec0d70b916af9",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-04",
+    "journey": "Report capture and review",
+    "file": "happy-path/RPT-04.png",
+    "sha256": "e2cfdcd6ac16ea9b750a4446869ead12cb92958ab079ae6de452e1f4601dce34",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "SYM-01",
+    "journey": "Symptoms and reported results",
+    "file": "happy-path/SYM-01.png",
+    "sha256": "1fe66331fd1e4e43d37e2ac1c2eecfd94515d2bf7b333d58fd5c09930488a36a",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "SYM-02",
+    "journey": "Symptoms and reported results",
+    "file": "happy-path/SYM-02.png",
+    "sha256": "f6663863a8ef68bccfb7d38cbcfd641a31de0e200fc0ec955f475828a1607e77",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "SYM-03",
+    "journey": "Symptoms and reported results",
+    "file": "happy-path/SYM-03.png",
+    "sha256": "f6663863a8ef68bccfb7d38cbcfd641a31de0e200fc0ec955f475828a1607e77",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "SYM-04",
+    "journey": "Symptoms and reported results",
+    "file": "happy-path/SYM-04.png",
+    "sha256": "4352faa745440e97a67eaa62c590f901309ef251cf64254742c586aff5f3f4ae",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01.png",
+    "sha256": "637ce206d51aa0623f2c97152e3648dd0ac38e1f249af33dd1a402b6797a3b71",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01A",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01A.png",
+    "sha256": "903cee8216a68faa1967450d8a05efe816b2abdbb25e508419bf348e74142fd1",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AA",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AA.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AI",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AI.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AD",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AD.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AC",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AC.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AH",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AH.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-01AR",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-01AR.png",
+    "sha256": "bd1656048df4896ce2e419f3f657914295a7903d40eb2e9ca5835e0f6493782b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-02",
+    "journey": "Food, requirements and recipe",
+    "file": "happy-path/FOOD-02.png",
+    "sha256": "0b9fa779b1955b3578c861035329d2d7b5ca3b306ae7f59253fef8d8ecf152f0",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-3-days",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-3-days.png",
+    "sha256": "1f6adefdc716dd0d69dde59788d29295c27dccec29199b337647936bea0dfd1f",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-7-days",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-7-days.png",
+    "sha256": "46f6a91b6aa03012da082022cd14f010d4f16c3cde8a61e546013be9e860a686",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-14-days",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-14-days.png",
+    "sha256": "c69e9dabab36c825fc9c6ed4ddcf47e1e0cbe3e685c7c38678e21ea8376ac9d2",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-30-days",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-30-days.png",
+    "sha256": "695dc7055b2ff421eb3a01bffd4d1cf022b9d016c36cbbfa66c6380c724d8354",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-calendar-3",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-calendar-3.png",
+    "sha256": "e8bba4f6031c8ae8f6d4be816eabd6a662bafef87c5cbf09db61c773f74cea89",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-calendar-7",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-calendar-7.png",
+    "sha256": "39fdf43afb0248d2c277c9fe09954740e608c5367cf06ccb92abaf4cd70f01b7",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-calendar-14",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-calendar-14.png",
+    "sha256": "4be92da24cfe4084a368e1a45ff68046dd79967cda905ac8c3d10b6ecab36a86",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-calendar-30",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-calendar-30.png",
+    "sha256": "74f670e628f30b9ce6040ce90a22915775c53153cf325226688d8df6f0fc3440",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-start-3",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-start-3.png",
+    "sha256": "92ac78790f091e68cce9fc1b158aa2603e8ebd568e660a57f17919278d47af81",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-start-7",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-start-7.png",
+    "sha256": "34ff5144b99e750dfa0f15d8cfeff2e1ced6ba62ca2242ded6520fde18d4165c",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-start-14",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-start-14.png",
+    "sha256": "d5b78d48cf2f1bfa641652d3d7cbcac8842ccaaabce821784597301018e16ab7",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-start-30",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-start-30.png",
+    "sha256": "f24a40f686c869068312ff9f24405c124c9c61e959e9f9a4f5aafe1f1c163450",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-3",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-3.png",
+    "sha256": "8e6c9f04b0c4e72c0f4b8cd150d7818595fd0d70a6cc0ee0303705d2130e794d",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-7",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-7.png",
+    "sha256": "e86d2a295657e3337c699092d080c10deb34bea06d12d09e8bee9cfde143dfb0",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-14",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-14.png",
+    "sha256": "8e58ccf1332989fbbfae6102476c5013b9d98958dfea547e4ef058652a06c568",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03-shopping-30",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03-shopping-30.png",
+    "sha256": "007cfade0339aa971ad98ed1a4241b9299f8a2a36e57c25a2a6ec6e8fcdca5af",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03A",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03A.png",
+    "sha256": "33ee787dd1ccd54503e6ad68858d781dc17d43b4798d45b28dddaf15c84bda56",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03B",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03B.png",
+    "sha256": "ad53dbc30719c5b3c42c355b4cdb14249a1c4d0db27ccf73ef0ec23398ba1c0f",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03C",
+    "journey": "Planning and shopping",
+    "file": "happy-path/FOOD-03C.png",
+    "sha256": "5d3f70df994ad806a12725a195e443b794b090d416e688b63dd09cd7ddb93475",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-04",
+    "journey": "Food evidence and internal catalog",
+    "file": "happy-path/FOOD-04.png",
+    "sha256": "51fd8a57b72650fc328d17fed9d2b603eeabed2bd5dc24f0f5972a55a6345c29",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "EVC-01",
+    "journey": "Food evidence and internal catalog",
+    "file": "happy-path/EVC-01.png",
+    "sha256": "b958fd3f05cda8b22808b7e0fa428562fa140704c48045bbba9bf00c4913692f",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "EVC-02",
+    "journey": "Food evidence and internal catalog",
+    "file": "happy-path/EVC-02.png",
+    "sha256": "d49e75c4e26332822363f4cbf620561e08a5f26610627eeb688de6a6900d1557",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "EVC-02P",
+    "journey": "Food evidence and internal catalog",
+    "file": "happy-path/EVC-02P.png",
+    "sha256": "3cb323ac83eee6b64d70ed5332326d1a23782337a583ccb880dbe6e347e18420",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "EVC-02D",
+    "journey": "Food evidence and internal catalog",
+    "file": "happy-path/EVC-02D.png",
+    "sha256": "cc0ec6a5c7215af5a9000429bde3a22b24924452b5cedddd569ae505a4d9807b",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "APT-01",
+    "journey": "Appointment questions and answers",
+    "file": "happy-path/APT-01.png",
+    "sha256": "dbbffb5270a2f036221bc3c78d05a4b574e4182139ad4e966d93c2aeb89b74e0",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "APT-02",
+    "journey": "Appointment questions and answers",
+    "file": "happy-path/APT-02.png",
+    "sha256": "549c837aa89cab997308773e7a0aaa4dc5bf11ef794ed127314a54a0123d3407",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "APT-03",
+    "journey": "Appointment questions and answers",
+    "file": "happy-path/APT-03.png",
+    "sha256": "549c837aa89cab997308773e7a0aaa4dc5bf11ef794ed127314a54a0123d3407",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-02L",
+    "journey": "Account loading",
+    "file": "happy-path/AUTH-02L.png",
+    "sha256": "c0538dd8ed3c43db0506e5caed4ecf3c3b0f5ff6c60c936b8495eeb8c052d6eb",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "AUTH-04L",
+    "journey": "Account loading",
+    "file": "happy-path/AUTH-04L.png",
+    "sha256": "5989e0d9d8af8b566503a09566d005425ac9380eaa58fcfecd1834d2c9c4a582",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "TOD-02A",
+    "journey": "Upcoming appointment",
+    "file": "happy-path/TOD-02A.png",
+    "sha256": "33c2235e45e5251ddef31437615cadb159a9cce5c614d9b41432aa39adc209fa",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-review-sheet",
+    "journey": "Report review",
+    "file": "happy-path/RPT-review-sheet.png",
+    "sha256": "255eed218bfc38554cd1a826464a7815c530f42f0f643c3d631f49cae6d1a0eb",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "RPT-02-quality-warnings",
+    "journey": "Photo-quality warnings",
+    "file": "happy-path/RPT-02-quality-warnings.png",
+    "sha256": "ff90aa59ae5408d7ba727afb1f5791a0e0815862efbd7c49348ce2e5a3784a50",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "HLT-02F-02C-questions",
+    "journey": "Missing diagnosis details",
+    "file": "happy-path/HLT-02F-02C-questions.png",
+    "sha256": "414c75a023cb22676ffad0051ce1dc88bea73b51bf272c53bd5d1f959c191045",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "SYM-03R",
+    "journey": "Statistics disclosure",
+    "file": "happy-path/SYM-03R.png",
+    "sha256": "ed806f936a800ac04db03426a2c596a51aebb1ce6b7ff8d2576276bd2ee7fa1f",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-02-shopping",
+    "journey": "Recipe shopping",
+    "file": "happy-path/FOOD-02-shopping.png",
+    "sha256": "c02250cf788159a777dd2d31edba4b6bb666b25b67fd29e724bd36abbb3fb3eb",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03V",
+    "journey": "Ingredient review",
+    "file": "happy-path/FOOD-03V.png",
+    "sha256": "53840c2de655e807813ce0125f517519e8f036bc2e5707225c50c2889aac8752",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03N",
+    "journey": "Swap recovery",
+    "file": "happy-path/FOOD-03N.png",
+    "sha256": "2a90b79ec13310ef70a44fdafaa6080976a23670d4e4c8a3f8ebd48cea37a7bc",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  },
+  {
+    "id": "FOOD-03G2",
+    "journey": "Later-week shopping",
+    "file": "happy-path/FOOD-03G2.png",
+    "sha256": "8bf74844bbb3c5c057c14d0ff10d527474e401eb06cbf91ad90f44f64019a4b6",
+    "capture": "Actual Angular app in Chromium; throwaway accounts and fixture data; phone viewport 390 x 844 CSS pixels"
+  }
+]

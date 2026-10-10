@@ -1,0 +1,26 @@
+{
+  "verified_at": "2026-10-10T12:17:25.994356+00:00",
+  "inventory_states": 111,
+  "states_with_browser_assertions": 110,
+  "withdrawn_state": "Filter empty-state verified; actual catalog has no withdrawn record",
+  "browser_tests": {
+    "passed": 108,
+    "failed": 0,
+    "projects": [
+      "chromium",
+      "iphone"
+    ],
+    "log": "logs/browser.log"
+  },
+  "unit_tests": {
+    "passed": 117,
+    "failed": 0,
+    "log": "logs/unit.log"
+  },
+  "build": "passed with Ionic empty-glob and Tesseract CommonJS optimization warnings",
+  "lint": "passed without warnings",
+  "format": "passed",
+  "independent_source_viewport_comparisons": 46,
+  "individual_inventory_states_claimed_pixel_exact": false,
+  "presentation_app_captures": 66
+}

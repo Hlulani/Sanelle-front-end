@@ -1,0 +1,184 @@
+[
+  {
+    "selector": ".scan-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 68
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 68
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".scan-progress",
+    "actual": {
+      "x": 0,
+      "y": 68,
+      "width": 390,
+      "height": 4
+    },
+    "expected": {
+      "x": 0,
+      "y": 68,
+      "width": 390,
+      "height": 4
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".scan-step",
+    "actual": {
+      "x": 18,
+      "y": 105,
+      "width": 354,
+      "height": 506.296875
+    },
+    "expected": {
+      "x": 18,
+      "y": 105,
+      "width": 354,
+      "height": 506.296875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Add the report you have",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Use clear, complete pages. You’ll check every captured detail against the original before anything is saved.",
+        "font": "12.8px / 19.200001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "19.200001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Take photosCapture one page at a time",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Enter details manuallyUseful if the report is not available",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview with Thandi’s sample report",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Your report may contain identifying information. Reading happens on this device. Files aren’t uploaded or saved; only the details you check are kept.",
+        "font": "10.4px / 14.559999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "14.559999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Add the report you have",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Use clear, complete pages. You’ll check every captured detail against the original before anything is saved.",
+        "font": "12.8px / 19.200001px Nunito Sans, sans-serif",
+        "lineHeight": "19.200001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Take photosCapture one page at a time",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Enter details manuallyUseful if the report is not available",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Preview with Thandi’s sample report",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Your report may contain identifying information. Reading happens on this device. Files aren’t uploaded or saved; only the details you check are kept.",
+        "font": "10.4px / 14.559999px Nunito Sans, sans-serif",
+        "lineHeight": "14.559999px"
+      }
+    ]
+  },
+  {
+    "selector": ".source-options",
+    "actual": {
+      "x": 18,
+      "y": 270.875,
+      "width": 354,
+      "height": 217
+    },
+    "expected": {
+      "x": 18,
+      "y": 270.875,
+      "width": 354,
+      "height": 217
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Take photosCapture one page at a time",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Enter details manuallyUseful if the report is not available",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Take photosCapture one page at a time",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Enter details manuallyUseful if the report is not available",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  }
+]

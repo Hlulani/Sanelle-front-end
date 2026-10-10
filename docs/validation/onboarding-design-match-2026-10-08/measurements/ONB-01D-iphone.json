@@ -1,0 +1,107 @@
+[
+  {
+    "selector": ".onboarding-appbar",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 370,
+      "height": 68
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 370,
+      "height": 68
+    }
+  },
+  {
+    "selector": ".onboarding-photo",
+    "actual": {
+      "x": 20,
+      "y": 101,
+      "width": 330,
+      "height": 175
+    },
+    "expected": {
+      "x": 20,
+      "y": 101,
+      "width": 330,
+      "height": 175
+    }
+  },
+  {
+    "selector": ".onboarding-eyebrow",
+    "actual": {
+      "x": 20,
+      "y": 299.98016357421875,
+      "width": 131.84385681152344,
+      "height": 10.0574951171875
+    },
+    "expected": {
+      "x": 20,
+      "y": 299.98016357421875,
+      "width": 131.84385681152344,
+      "height": 10.0574951171875
+    }
+  },
+  {
+    "selector": ".onboarding-body h1",
+    "actual": {
+      "x": 20,
+      "y": 318.953125,
+      "width": 330,
+      "height": 26.390625
+    },
+    "expected": {
+      "x": 20,
+      "y": 318.953125,
+      "width": 330,
+      "height": 26.390625
+    }
+  },
+  {
+    "selector": ".sn-lead",
+    "actual": {
+      "x": 20,
+      "y": 356.0625,
+      "width": 330,
+      "height": 15.53125
+    },
+    "expected": {
+      "x": 20,
+      "y": 356.0625,
+      "width": 330,
+      "height": 15.53125
+    }
+  },
+  {
+    "selector": ".onboarding-nav",
+    "actual": {
+      "x": 0,
+      "y": 763,
+      "width": 370,
+      "height": 61
+    },
+    "expected": {
+      "x": 0,
+      "y": 763,
+      "width": 370,
+      "height": 61
+    }
+  },
+  {
+    "selector": ".sn-actions > .sn-btn",
+    "actual": {
+      "x": 20,
+      "y": 551.59375,
+      "width": 330,
+      "height": 36
+    },
+    "expected": {
+      "x": 20,
+      "y": 551.59375,
+      "width": 330,
+      "height": 36
+    }
+  }
+]

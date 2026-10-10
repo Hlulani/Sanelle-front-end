@@ -1,0 +1,142 @@
+[
+  {
+    "selector": ".auth-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-card",
+    "actual": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 433.078125
+    },
+    "expected": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 433.078125
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Welcome to Sanelle",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Understand what was recorded, make food decisions with less fear, notice symptom patterns, and prepare for appointments.",
+        "font": "13.12px / 20.336px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Welcome to Sanelle",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Understand what was recorded, make food decisions with less fear, notice symptom patterns, and prepare for appointments.",
+        "font": "13.12px / 20.336px \"Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Create my account",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "I already have an account",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 40,
+      "y": 157.796875,
+      "width": 320,
+      "height": 65.25
+    },
+    "expected": {
+      "x": 40,
+      "y": 157.796875,
+      "width": 320,
+      "height": 65.25
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-primary",
+    "actual": {
+      "x": 40,
+      "y": 321.078125,
+      "width": 320,
+      "height": 49
+    },
+    "expected": {
+      "x": 40,
+      "y": 321.078125,
+      "width": 320,
+      "height": 49
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-secondary",
+    "actual": {
+      "x": 40,
+      "y": 379.078125,
+      "width": 320,
+      "height": 50
+    },
+    "expected": {
+      "x": 40,
+      "y": 379.078125,
+      "width": 320,
+      "height": 50
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-trust",
+    "actual": {
+      "x": 40,
+      "y": 454.078125,
+      "width": 320,
+      "height": 48
+    },
+    "expected": {
+      "x": 40,
+      "y": 454.078125,
+      "width": 320,
+      "height": 48
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

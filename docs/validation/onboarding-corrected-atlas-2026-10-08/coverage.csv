@@ -1,0 +1,13 @@
+screen_id,state,supplied_artboard,reference_viewport,app_screenshot,browser_measurements
+ONB-01E,Name — empty,reference/ONB-01E.png,reference-viewports/ONB-01E.png,screenshots/ONB-01E.png,measurements/ONB-01E-chromium.json; measurements/ONB-01E-iphone.json
+ONB-01,Name — complete,reference/ONB-01.png,reference-viewports/ONB-01.png,screenshots/ONB-01.png,measurements/ONB-01-chromium.json; measurements/ONB-01-iphone.json
+ONB-01D,Thandi demo loaded,reference/ONB-01D.png,reference-viewports/ONB-01D.png,screenshots/ONB-01D.png,measurements/ONB-01D-chromium.json; measurements/ONB-01D-iphone.json
+ONB-02E,Priorities — none selected,reference/ONB-02E.png,reference-viewports/ONB-02E.png,screenshots/ONB-02E.png,measurements/ONB-02E-chromium.json; measurements/ONB-02E-iphone.json
+ONB-02,Priorities — selected,reference/ONB-02.png,reference-viewports/ONB-02.png,screenshots/ONB-02.png,measurements/ONB-02-chromium.json; measurements/ONB-02-iphone.json
+ONB-03E,Diagnosis details — empty,reference/ONB-03E.png,reference-viewports/ONB-03E.png,screenshots/ONB-03E.png,measurements/ONB-03E-chromium.json; measurements/ONB-03E-iphone.json
+ONB-03,Diagnosis details — partial,reference/ONB-03.png,reference-viewports/ONB-03.png,screenshots/ONB-03.png,measurements/ONB-03-chromium.json; measurements/ONB-03-iphone.json
+ONB-04E,Everyday context — empty,reference/ONB-04E.png,reference-viewports/ONB-04E.png,screenshots/ONB-04E.png,measurements/ONB-04E-chromium.json; measurements/ONB-04E-iphone.json
+ONB-04,Everyday context — selected,reference/ONB-04.png,reference-viewports/ONB-04.png,screenshots/ONB-04.png,measurements/ONB-04-chromium.json; measurements/ONB-04-iphone.json
+ONB-05E,Appointment — no date,reference/ONB-05E.png,reference-viewports/ONB-05E.png,screenshots/ONB-05E.png,measurements/ONB-05E-chromium.json; measurements/ONB-05E-iphone.json
+ONB-05,Appointment — date added,reference/ONB-05.png,reference-viewports/ONB-05.png,screenshots/ONB-05.png,measurements/ONB-05-chromium.json; measurements/ONB-05-iphone.json
+ONB-06,Setup summary,reference/ONB-06.png,reference-viewports/ONB-06.png,screenshots/ONB-06.png,measurements/ONB-06-chromium.json; measurements/ONB-06-iphone.json

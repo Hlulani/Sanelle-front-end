@@ -1,0 +1,131 @@
+[
+  {
+    "selector": ".auth-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-card",
+    "actual": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 484.21875
+    },
+    "expected": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 484.21875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Reset your password",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Enter the email address connected to your Sanelle account.",
+        "font": "13.12px / 20.336px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Send reset link",
+        "font": "800 16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "← Back to login",
+        "font": "800 11.68px / 17.52px \"Nunito Sans\", sans-serif",
+        "lineHeight": "17.52px"
+      },
+      {
+        "tag": "P",
+        "text": "Reset your password",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Enter the email address connected to your Sanelle account.",
+        "font": "13.12px / 20.336px \"Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Send reset link",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 40,
+      "y": 272.328125,
+      "width": 320,
+      "height": 65.25
+    },
+    "expected": {
+      "x": 40,
+      "y": 272.328125,
+      "width": 320,
+      "height": 65.25
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-fields",
+    "actual": {
+      "x": 40,
+      "y": 415.265625,
+      "width": 320,
+      "height": 70.953125
+    },
+    "expected": {
+      "x": 40,
+      "y": 415.265625,
+      "width": 320,
+      "height": 70.953125
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-primary",
+    "actual": {
+      "x": 40,
+      "y": 504.21875,
+      "width": 320,
+      "height": 49
+    },
+    "expected": {
+      "x": 40,
+      "y": 504.21875,
+      "width": 320,
+      "height": 49
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

@@ -1,0 +1,112 @@
+screen_id,journey,screen_or_state,purpose,entry_from,primary_transition,alternate_transition
+AUTH-01,Account,Welcome,Explain Sanelle before any health data is requested.,App launch,Create account → AUTH-02,Log in → AUTH-04
+AUTH-02,Account,Registration — default,"Capture name, email, password and acknowledgement.",AUTH-01,Submit → AUTH-02L,Log in → AUTH-04
+AUTH-02L,Account,Registration — submitting,Prevent duplicate submission while account creation runs.,AUTH-02,Success → AUTH-03,Failure → AUTH-02E
+AUTH-02E,Account,Registration — field error,Show specific validation beside the relevant field.,AUTH-02L,Correct field → AUTH-02,Log in → AUTH-04
+AUTH-02T,Account,Registration — terms missing,Explain why acknowledgement is required.,AUTH-02,Accept → AUTH-02,Back → AUTH-01
+AUTH-03,Account,Verification email sent,Explain verification and resend timing.,AUTH-02L,Verified → ONB-01,Resend / log in
+AUTH-04,Account,Login — default,Restore an existing account.,AUTH-01,Submit → AUTH-04L,Forgot password → AUTH-05
+AUTH-04L,Account,Login — submitting,Keep entered email visible while authenticating.,AUTH-04,Success → TOD-02,Failure → AUTH-04E
+AUTH-04E,Account,Login — invalid credentials,Give recoverable feedback without exposing account status.,AUTH-04L,Retry → AUTH-04,Reset → AUTH-05
+AUTH-04U,Account,Login — email unverified,Offer resend verification without losing context.,AUTH-04L,Resend → AUTH-03,Back → AUTH-04
+AUTH-05,Account,Forgot password — default,Request account email.,AUTH-04,Send → AUTH-05S,Back → AUTH-04
+AUTH-05S,Account,Password reset sent,Confirm secure link delivery without exposing account existence.,AUTH-05,Return → AUTH-04,Resend
+ONB-01E,Onboarding,Name — empty,Orient before enabling setup.,AUTH-03,Enter name → ONB-01,Preview demo
+ONB-01,Onboarding,Name — complete,Confirm preferred name.,ONB-01E,Continue → ONB-02E,Back
+ONB-01D,Onboarding,Thandi demo loaded,Show which demo values will be used.,ONB-01E,Continue → ONB-02,Clear demo
+ONB-02E,Onboarding,Priorities — none selected,Make all priorities optional.,ONB-01,Continue → ONB-03E,Select priorities
+ONB-02,Onboarding,Priorities — selected,Show multiple current needs without creating a treatment plan.,ONB-02E,Continue → ONB-03E,Edit selection
+ONB-03E,Onboarding,Diagnosis details — empty,Allow every field to remain not recorded.,ONB-02,Continue → ONB-04E,Enter known details
+ONB-03,Onboarding,Diagnosis details — partial,Keep count and largest size independent.,ONB-03E,Continue → ONB-04E,Clear value
+ONB-04E,Onboarding,Everyday context — empty,Allow symptom and food setup to be skipped.,ONB-03,Continue → ONB-05E,Choose context
+ONB-04,Onboarding,Everyday context — selected,Confirm symptom interests and practical food needs.,ONB-04E,Continue → ONB-05E,Edit
+ONB-05E,Onboarding,Appointment — no date,Do not require an upcoming appointment.,ONB-04,Finish → ONB-06,Add date
+ONB-05,Onboarding,Appointment — date added,Use an explicit date for Today priority.,ONB-05E,Finish → ONB-06,Remove date
+ONB-06,Onboarding,Setup summary,Explain what will appear first and the medical boundary.,ONB-05/05E,Open Sanelle → TOD-01,Back
+TOD-01,Today,First-use intent,Route a new user once without becoming permanent onboarding.,ONB-06,Choose destination,Look around → TOD-02E
+TOD-02E,Today,Returning Today — no activity,Offer a flexible task chooser without implying failure.,App return,Choose task,Primary nav
+TOD-02A,Today,Returning Today — appointment priority,Lead with a user-saved appointment date.,App return,Open summary → APT-01,Primary nav
+TOD-02R,Today,Returning Today — report priority,Lead with explicitly unfinished transcription checking.,App return,Continue → RPT-03U,Primary nav
+TOD-02S,Today,Returning Today — symptom priority,Show latest observation and where it is used.,App return,History → SYM-02,Log again
+TOD-02M,Today,Returning Today — meal priority,Show saved plan and current grocery window.,App return,Open plan → FOOD-03W,Primary nav
+TOD-03E,Today,Recent activity — empty,Explain that completed actions will appear here.,TOD-02E,Choose task,None
+TOD-03,Today,Recent activity — populated,"Connect report, check-in, question and meal events.",TOD-02A/R/S/M,Open event,None
+RPT-01,Report,Choose report source,"Offer camera, images, PDF and manual entry.",HLT-01E/TOD-02R,Choose source,Close
+RPT-02,Report,Camera — ready,Show full-page framing guidance.,RPT-01,Capture,Cancel
+RPT-02G,Report,Camera — glare detected,Explain where glare blocks text.,RPT-02,Retake,Use anyway → RPT-03U
+RPT-02B,Report,Camera — blur detected,Prevent unreadable text from appearing confident.,RPT-02,Retake,Cancel
+RPT-02C,Report,Camera — page cropped,Identify missing page edge.,RPT-02,Retake,Cancel
+RPT-02M,Report,Camera — multiple pages,"Add, reorder and remove pages.",RPT-02,Use pages → RPT-03U,Add page
+RPT-02P,Report,Photos/PDF selected,"Show filename, pages and privacy context.",RPT-01,Continue → RPT-03U,Remove file
+RPT-03U,Report,Extraction review — unchecked,"Show original wording, page, value, unit and status.",RPT-02M/P,Confirm fields,Finish later → RPT-04N
+RPT-03E,Report,Extraction review — edited,Make user corrections visible before save.,RPT-03U,Save → RPT-04C,Undo correction
+RPT-03M,Report,Manual entry,Keep all absent fields explicitly not recorded.,RPT-01,Save → RPT-04C,Cancel
+RPT-03C,Report,Extraction review — confirmed,Confirm transcription rather than medical interpretation.,RPT-03U/E,Save checked → RPT-04C,Back
+RPT-04N,Report,Report saved — needs checking,Create a persistent unfinished state.,RPT-03U,Finish → RPT-03U,View source
+RPT-04C,Report,Report saved — checked,"Show saved source, date and confirmation type.",RPT-03C/M,Understand details → HLT-02K,Add report
+HLT-01E,My health,Diagnosis — no report,Offer source capture and manual details.,Primary nav,Add report → RPT-01,Symptoms tab
+HLT-01,My health,Diagnosis — report library,Show checked and unfinished source documents.,Primary nav/RPT-04,Open report,Add report
+HLT-02K,My health,Report detail — recorded fields,Preserve wording and confirmed values.,HLT-01,Open explanation,Sources
+HLT-02L,My health,Location — not recorded,Explain missing location without inference.,HLT-02K,Question → HLT-03,Dismiss
+HLT-02F,My health,FIGO — not recorded,Explain that classification may be absent.,HLT-02K,Question → HLT-03,Dismiss
+HLT-02C,My health,Cavity involvement — not recorded,Explain missing cavity information neutrally.,HLT-02K,Question → HLT-03,Dismiss
+HLT-03,My health,Suggested question — default,Show one traceable editable prompt.,HLT-02L/F/C,Save → HLT-03S,Dismiss
+HLT-03E,My health,Suggested question — edited,Preserve user wording before saving.,HLT-03,Save → HLT-03S,Reset
+HLT-03S,My health,Question added,Confirm exact destination.,HLT-03/E,Open summary → APT-01,Done
+SYM-01E,Symptoms,Check-in — empty,Allow fields to remain unanswered.,Today/My health,Select observation,Close
+SYM-01S,Symptoms,Check-in — symptoms selected,Keep symptom types separate from severity.,SYM-01E,Continue,Edit
+SYM-01B,Symptoms,Check-in — bleeding category,Use personal categories without volume conversion.,SYM-01S,Continue,Clear answer
+SYM-01I,Symptoms,Check-in — daily impact,Record functional effect in user language.,SYM-01B,Save → SYM-01C,Back
+SYM-01C,Symptoms,Check-in saved,Explain history and appointment-summary use.,SYM-01I,History → SYM-02,Edit
+SYM-02E,Symptoms,History — no check-ins,Explain how the first observation becomes useful.,Symptoms tab,Log → SYM-01E,None
+SYM-02,Symptoms,History — current window,Show dated category dots and unknown days.,SYM-01C,Summary → SYM-03,Add check-in
+SYM-02L,Symptoms,History — low coverage,Make sparse data visible rather than interpreting it.,SYM-02,Add check-in,Sources
+SYM-03,Symptoms,Statistics — personal observations,Expose window and field-specific denominators.,SYM-02,Context cards,Prepare visit
+SYM-03R,Symptoms,Contextual research disclosure,Connect C11 C12 C14 C15 C37 without predicting.,SYM-03,Return,Sources
+SYM-04E,Symptoms,Clinical result — empty,Keep symptoms separate from laboratory results.,SYM-03,Add result → SYM-04F,Back
+SYM-04F,Symptoms,Clinical result — form,"Capture exact value, unit, date and source.",SYM-04E,Save → SYM-04S,Cancel
+SYM-04S,Symptoms,Clinical result — saved,Show no interpretation and appointment use.,SYM-04F,Summary → APT-01,Edit
+FOOD-01,Food,Food landing,"Choose advice, recipes, or planning.",Primary nav,Choose path,None
+FOOD-01AE,Food,Requirements — no strict exclusions,Offer allergy and strict-requirement setup without forcing it.,FOOD-01,Continue,Add requirement
+FOOD-01AA,Food,Requirements — allergies selected,Show strict exclusions separately from preferences.,FOOD-01AE,Continue,Edit
+FOOD-01AI,Food,Requirements — intolerance,Avoid representing intolerance as allergy.,FOOD-01AA,Continue,Back
+FOOD-01AD,Food,Requirements — dietary pattern,"Capture vegetarian, vegan, pescatarian and other patterns.",FOOD-01AI,Continue,Back
+FOOD-01AC,Food,Requirements — cultural/religious,Explain certification/preparation limits.,FOOD-01AD,Continue,Back
+FOOD-01AH,Food,Requirements — household,Support same or mixed household needs.,FOOD-01AC,Continue,Back
+FOOD-01AR,Food,Requirements — cooking rhythm,"Capture meals, cook frequency, servings and leftovers.",FOOD-01AH,Generate → FOOD-03D,Back
+FOOD-02,Food,Flexible recipe,Adjust servings and ingredient swaps.,FOOD-01,Plan → FOOD-03D,Back
+FOOD-03D,Food,Planner — 3 days,Show three detailed editable days.,FOOD-01AR/02,Save → TOD-02M,Swap → FOOD-03A
+FOOD-03W,Food,Planner — 1 week,Show seven days and one grocery list.,FOOD-01AR/02,Save → TOD-02M,Swap → FOOD-03A
+FOOD-03T,Food,Planner — 2 weeks,Show two week groups and two grocery windows.,FOOD-01AR/02,Save → TOD-02M,Swap → FOOD-03A
+FOOD-03M,Food,Planner — 1 month,Show thirty days grouped by week.,FOOD-01AR/02,Save → TOD-02M,Swap → FOOD-03A
+FOOD-03E,Food,Planner — open day,Allow no meal and no grocery commitment.,FOOD-03D/W/T/M,Choose meal,Leave open
+FOOD-03P,Food,Planner — preparation complete,Separate preparation from eating.,FOOD-03D/W/T/M,Undo prep,Next day
+FOOD-03A,Food,Swap — preferred meals,"Rank favourites, history, matches and other eligible meals.",FOOD-03D/W/T/M,Choose → FOOD-03B,Cancel
+FOOD-03N,Food,Swap — no compatible meal,Explain which strict requirement prevents results.,FOOD-03A,Change filters,Cancel
+FOOD-03V,Food,Swap — needs ingredient review,Avoid claiming allergy safety when data is incomplete.,FOOD-03A,Review ingredients,Choose another
+FOOD-03B,Food,Swap scope,"Choose day, week, or every occurrence.",FOOD-03A,Continue → FOOD-03C,Back
+FOOD-03C,Food,Grocery difference,"Show added, removed and retained ingredients.",FOOD-03B,Confirm → FOOD-03S,Cancel
+FOOD-03S,Food,Swap confirmed,Confirm changed days and grocery window.,FOOD-03C,Return → FOOD-03W,Undo
+FOOD-03G1,Food,Groceries — Week 1,Aggregate only first-week items.,FOOD-03T/M,Mark already have,Next week
+FOOD-03G2,Food,Groceries — later week,Keep fresh shopping windows separate.,FOOD-03T/M,Update list,Previous week
+FOOD-04,Food,Food claim — summary,State bounded practical conclusion.,FOOD-01,Sources → FOOD-04S,Done
+FOOD-04S,Food,Food claim — sources and limits,"Separate incidence, growth, treatment and fertility outcomes.",FOOD-04,Done → FOOD-01,Research method
+APT-01E,Appointment,Summary — no questions,Offer manual question or report suggestion route.,Primary nav,Add question,Back
+APT-01,Appointment,Summary — populated,Combine only user-entered or confirmed information.,Primary nav/HLT-03S,Review question,Copy
+APT-01M,Appointment,Add manual question,Save wording in user language.,APT-01/E,Add → APT-01,Cancel
+APT-01S,Appointment,Suggested question added,Show source from missing report detail.,HLT-03S,Open → APT-01,Done
+APT-02,Appointment,Record answer — empty,Capture clinician response without interpretation.,APT-01,Save answer,Mark unresolved
+APT-02A,Appointment,Answer saved,Show answer in user wording.,APT-02,Next step → APT-03N,Edit
+APT-02U,Appointment,Question unresolved,Distinguish unresolved from unanswered.,APT-02,Carry → APT-03C,Add note
+APT-03N,Appointment,Next step and review date,Capture user-reported agreed follow-up.,APT-02A,Finish → TOD-02A,Skip date
+APT-03C,Appointment,Question carried forward,Retain history and reopen for next visit.,APT-02U,Summary → APT-01,Resolve
+APT-03D,Appointment,Summary copied,Confirm editable summary copy action.,APT-01,Done,Copy again
+EVC-01,Internal evidence,Catalog — all entries,"Show search, topic, status, version and affected features.",Internal role,Open → EVC-02P,Return
+EVC-01S,Internal evidence,Catalog — search results,Keep query visible and count results.,EVC-01,Open entry,Clear
+EVC-01F,Internal evidence,Catalog — filtered,Combine topic and publication status filters.,EVC-01,Open entry,Clear filters
+EVC-01E,Internal evidence,Catalog — no results,Explain filter recovery.,EVC-01S/F,Clear filter,New search
+EVC-02P,Internal evidence,Entry detail — published,Allow published explanation to supply listed features.,EVC-01,Review affected features,Back
+EVC-02I,Internal evidence,Entry detail — in review,Block patient use pending review.,EVC-01,Review history,Back
+EVC-02D,Internal evidence,Entry detail — draft,Show missing reviewer/date/cutoff states.,EVC-01,Continue drafting,Back
+EVC-02W,Internal evidence,Entry detail — withdrawn,Retain audit history and no active features.,EVC-01,Review withdrawal,Back
+EVC-02A,Internal evidence,Entry detail — affected features,Show every screen and prompt changed by an update.,EVC-02P/I/D/W,Open feature list,Back

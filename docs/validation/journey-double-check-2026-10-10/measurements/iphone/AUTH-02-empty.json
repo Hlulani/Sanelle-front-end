@@ -1,0 +1,175 @@
+[
+  {
+    "selector": ".auth-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-card",
+    "actual": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 670.6875
+    },
+    "expected": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 670.6875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Create your account",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Your account lets you return to your diagnosis notes, meal plans, symptom history, and appointment questions.",
+        "font": "13.12px / 20.335999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "20.335999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Create account",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Already registered? Log in",
+        "font": "11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "← Back",
+        "font": "800 11.68px / 17.52px Nunito Sans, sans-serif",
+        "lineHeight": "17.52px"
+      },
+      {
+        "tag": "P",
+        "text": "Create your account",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Your account lets you return to your diagnosis notes, meal plans, symptom history, and appointment questions.",
+        "font": "13.12px / 20.335999px Nunito Sans, sans-serif",
+        "lineHeight": "20.335999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Create account",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Already registered? Log in",
+        "font": "11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Log in",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 40,
+      "y": 199.953125,
+      "width": 320,
+      "height": 65.25
+    },
+    "expected": {
+      "x": 40,
+      "y": 199.953125,
+      "width": 320,
+      "height": 65.25
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-fields",
+    "actual": {
+      "x": 40,
+      "y": 363.140625,
+      "width": 320,
+      "height": 242.765625
+    },
+    "expected": {
+      "x": 40,
+      "y": 363.140625,
+      "width": 320,
+      "height": 242.765625
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ]
+  },
+  {
+    "selector": ".auth-primary",
+    "actual": {
+      "x": 40,
+      "y": 657.90625,
+      "width": 320,
+      "height": 49
+    },
+    "expected": {
+      "x": 40,
+      "y": 657.90625,
+      "width": 320,
+      "height": 49
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

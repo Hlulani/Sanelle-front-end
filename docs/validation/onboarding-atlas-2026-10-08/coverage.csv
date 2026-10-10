@@ -1,0 +1,13 @@
+screen_id,screen_or_state,reference,actual,verification
+ONB-01E,Name — empty,reference/ONB-01E.png,screenshots/ONB-01E.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-01,Name — complete,reference/ONB-01.png,screenshots/ONB-01.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-01D,Thandi demo loaded,reference/ONB-01D.png,screenshots/ONB-01D.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-02E,Priorities — none selected,reference/ONB-02E.png,screenshots/ONB-02E.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-02,Priorities — selected,reference/ONB-02.png,screenshots/ONB-02.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-03E,Diagnosis details — empty,reference/ONB-03E.png,screenshots/ONB-03E.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-03,Diagnosis details — partial,reference/ONB-03.png,screenshots/ONB-03.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-04E,Everyday context — empty,reference/ONB-04E.png,screenshots/ONB-04E.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-04,Everyday context — selected,reference/ONB-04.png,screenshots/ONB-04.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-05E,Appointment — no date,reference/ONB-05E.png,screenshots/ONB-05E.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-05,Appointment — date added,reference/ONB-05.png,screenshots/ONB-05.png,Real-account browser flow in Chrome and iPhone WebKit
+ONB-06,Setup summary,reference/ONB-06.png,screenshots/ONB-06.png,Real-account browser flow in Chrome and iPhone WebKit

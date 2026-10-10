@@ -1,0 +1,237 @@
+{
+  "as_of": "2026-10-08",
+  "scope": "Handoff implementation and selected behavioral, runtime and visual verification; not clinical validation",
+  "frontend_unit": {
+    "passed": 107,
+    "failed": 0,
+    "command": "npm run test:ci"
+  },
+  "browser_journeys": {
+    "passed": 52,
+    "failed": 0,
+    "scenarios_per_browser": 26,
+    "projects": [
+      "chromium (Android Chrome emulation)",
+      "iphone (iPhone WebKit emulation)"
+    ],
+    "uncaught_browser_and_angular_runtime_errors": 0,
+    "command": "npm run e2e"
+  },
+  "backend": {
+    "suites": 16,
+    "tests": 150,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "command": "./mvnw -q test",
+    "source": "Existing backend Maven Surefire reports from this implementation pass"
+  },
+  "lint": {
+    "status": "passed",
+    "command": "npm run lint"
+  },
+  "optimized_build": {
+    "status": "passed",
+    "command": "SANELLE_API_ORIGIN=http://localhost:8080 npm run build",
+    "release_configuration": false,
+    "remaining_warnings": [
+      "Tesseract CommonJS dependencies",
+      "Stencil dynamic import glob"
+    ]
+  },
+  "photo_coverage": {
+    "recipes": 166,
+    "valid_local_photos": 93,
+    "status": "passed",
+    "command": "npm run check:meal-photos"
+  },
+  "handoff_coverage": {
+    "journeys": 9,
+    "screens": 37,
+    "screenshots_present": 37,
+    "supplemental_screenshots": 4,
+    "assets_traced": 13,
+    "screenshot_dimensions": {
+      "SYM-01.png": [
+        1024,
+        2216
+      ],
+      "EVC-02.png": [
+        1024,
+        2216
+      ],
+      "SYM-02.png": [
+        1024,
+        2216
+      ],
+      "EVC-01.png": [
+        1024,
+        2216
+      ],
+      "SYM-03.png": [
+        1024,
+        2216
+      ],
+      "FOOD-03A.png": [
+        1024,
+        2216
+      ],
+      "FOOD-03-shopping.png": [
+        1024,
+        2216
+      ],
+      "SYM-04.png": [
+        1024,
+        2216
+      ],
+      "FOOD-03B.png": [
+        1024,
+        2216
+      ],
+      "FOOD-03C.png": [
+        1024,
+        2216
+      ],
+      "ONB-01.png": [
+        1024,
+        2216
+      ],
+      "AUTH-04-invalid-credentials.png": [
+        1024,
+        2216
+      ],
+      "ONB-02.png": [
+        1024,
+        2216
+      ],
+      "ONB-03.png": [
+        1024,
+        2216
+      ],
+      "HLT-03.png": [
+        1024,
+        2216
+      ],
+      "HLT-02.png": [
+        1024,
+        2216
+      ],
+      "ONB-04.png": [
+        1024,
+        2216
+      ],
+      "HLT-01.png": [
+        1024,
+        2216
+      ],
+      "ONB-05.png": [
+        1024,
+        2216
+      ],
+      "AUTH-04.png": [
+        1024,
+        2216
+      ],
+      "RPT-01.png": [
+        1024,
+        2216
+      ],
+      "AUTH-05.png": [
+        1024,
+        2216
+      ],
+      "FOOD-04.png": [
+        1024,
+        2216
+      ],
+      "RPT-02.png": [
+        1024,
+        2216
+      ],
+      "RPT-03.png": [
+        1024,
+        2216
+      ],
+      "FOOD-03.png": [
+        1024,
+        2216
+      ],
+      "AUTH-02.png": [
+        1024,
+        2216
+      ],
+      "AUTH-03.png": [
+        1024,
+        2216
+      ],
+      "FOOD-02.png": [
+        1024,
+        2216
+      ],
+      "AUTH-01.png": [
+        1024,
+        2216
+      ],
+      "RPT-04.png": [
+        1024,
+        2216
+      ],
+      "TOD-03-empty.png": [
+        1024,
+        2216
+      ],
+      "FOOD-01.png": [
+        1024,
+        2216
+      ],
+      "TOD-01.png": [
+        1024,
+        2216
+      ],
+      "APT-01.png": [
+        1024,
+        2216
+      ],
+      "APT-03.png": [
+        1024,
+        2216
+      ],
+      "TOD-02.png": [
+        1024,
+        2216
+      ],
+      "TOD-03.png": [
+        1024,
+        2216
+      ],
+      "APT-02.png": [
+        1024,
+        2216
+      ],
+      "FOOD-01A.png": [
+        1024,
+        2216
+      ],
+      "TOD-02-empty.png": [
+        1024,
+        2216
+      ]
+    }
+  },
+  "research_consistency": {
+    "status": "passed",
+    "command": "python3 docs/research/scripts/verify-research-library.py",
+    "publications_in_existing_ledger": 78,
+    "claim_rows_checked": 44,
+    "field_purposes_checked": 25,
+    "source_hashes_reverified": 0,
+    "independent_scientific_validation": false
+  },
+  "limits": [
+    "Independent clinical review pending",
+    "Editor browser role uses a fixture",
+    "Email delivery tested through dev outbox",
+    "No physical-device camera/native capability verification",
+    "Encrypted records local to device; cloud sync and research participation pipeline not implemented"
+  ]
+}

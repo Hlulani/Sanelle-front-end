@@ -1,0 +1,127 @@
+[
+  {
+    "selector": ".suggestion-sheet",
+    "actual": {
+      "x": 0,
+      "y": 383.078125,
+      "width": 390,
+      "height": 460.921875
+    },
+    "expected": {
+      "x": 0,
+      "y": 383.078125,
+      "width": 390,
+      "height": 460.921875
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Suggested from your report",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Would you like to save this question?",
+        "font": "28px / 42px \"Figma Fredoka\", sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Nothing is added automatically. Edit it so it sounds like you, save it, or dismiss it.",
+        "font": "13.12px / 19.024px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add to my next doctor’s visit",
+        "font": "800 16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Not now",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Suggested from your report",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Would you like to save this question?",
+        "font": "28px / 42px Fredoka, sans-serif",
+        "lineHeight": "42px"
+      },
+      {
+        "tag": "P",
+        "text": "Nothing is added automatically. Edit it so it sounds like you, save it, or dismiss it.",
+        "font": "13.12px / 19.024px \"Nunito Sans\", sans-serif",
+        "lineHeight": "19.024px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add to my next doctor’s visit",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Not now",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ]
+  },
+  {
+    "selector": ".question-editor",
+    "actual": {
+      "x": 21,
+      "y": 587.9375,
+      "width": 348,
+      "height": 119.265625
+    },
+    "expected": {
+      "x": 21,
+      "y": 587.9375,
+      "width": 348,
+      "height": 119.265625
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".sheet .primary",
+    "actual": {
+      "x": 21,
+      "y": 724.203125,
+      "width": 348,
+      "height": 52
+    },
+    "expected": {
+      "x": 21,
+      "y": 724.203125,
+      "width": 348,
+      "height": 52
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

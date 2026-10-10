@@ -1,0 +1,185 @@
+[
+  {
+    "selector": ".onboarding-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-progress",
+    "actual": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "expected": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-main",
+    "actual": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 768
+    },
+    "expected": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 768
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Make Sanelle useful from day one",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Choose any that matter now. This only organises what you see first—it does not create medical recommendations.",
+        "font": "16px / 24.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Understand my diagnosis",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Make food feel simpler",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Track symptoms",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Prepare for appointments",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Back",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Continue",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Make Sanelle useful from day one",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "Choose any that matter now. This only organises what you see first—it does not create medical recommendations.",
+        "font": "16px / 24.799999px Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Understand my diagnosis",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Make food feel simpler",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Track symptoms",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Prepare for appointments",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Back",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Continue",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 34,
+      "y": 159.78125,
+      "width": 322,
+      "height": 71.5625
+    },
+    "expected": {
+      "x": 34,
+      "y": 159.78125,
+      "width": 322,
+      "height": 71.5625
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".primary",
+    "actual": {
+      "x": 222.1875,
+      "y": 676.734375,
+      "width": 133.8125,
+      "height": 52
+    },
+    "expected": {
+      "x": 222.1875,
+      "y": 676.734375,
+      "width": 133.8125,
+      "height": 52
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

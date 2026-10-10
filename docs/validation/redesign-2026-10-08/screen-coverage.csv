@@ -1,0 +1,38 @@
+screen_id,journey,screen_name,route,test_file,screenshot,handoff_state_checked
+AUTH-01,Account,Welcome,/welcome,e2e/auth.spec.ts,screenshots/AUTH-01.png,No account required to view the welcome proposition
+AUTH-02,Account,Register,/register,e2e/auth.spec.ts,screenshots/AUTH-02.png,Inline validation for name email password and terms
+AUTH-03,Account,Check email,/check-email,e2e/auth.spec.ts,screenshots/AUTH-03.png,Production must distinguish verification and reset links
+AUTH-04,Account,Log in,/login,e2e/auth.spec.ts,screenshots/AUTH-04.png,Invalid credentials and unverified email are separate states
+AUTH-05,Account,Reset password,/reset-password,e2e/auth.spec.ts,screenshots/AUTH-05.png,Unknown email must not disclose account existence
+ONB-01,Onboarding,Name and orientation,/onboarding (step 1),e2e/auth.spec.ts,screenshots/ONB-01.png,Can preview Thandi demo data
+ONB-02,Onboarding,Choose priorities,/onboarding (step 2),e2e/auth.spec.ts,screenshots/ONB-02.png,All choices optional and editable
+ONB-03,Onboarding,Known diagnosis details,/onboarding (step 3),e2e/auth.spec.ts,screenshots/ONB-03.png,Blank means not recorded or unsure
+ONB-04,Onboarding,Symptoms and food context,/onboarding (step 4),e2e/auth.spec.ts,screenshots/ONB-04.png,No fertility or pregnancy assumption
+ONB-05,Onboarding,Optional appointment date,/onboarding (step 5),e2e/auth.spec.ts,screenshots/ONB-05.png,No appointment is required
+TOD-01,Today,First-use intent,/tabs/today,e2e/auth.spec.ts,screenshots/TOD-01.png,Shown once then replaced by returning Today
+TOD-02,Today,Returning next step,/tabs/today,e2e/summary.spec.ts,screenshots/TOD-02.png,No saved activity shows flexible task chooser
+TOD-03,Today,Recent activity,/tabs/today,e2e/summary.spec.ts,screenshots/TOD-03.png,No activity explains where future actions appear
+RPT-01,Report,Choose report source,/health/report/new,e2e/diagnosis.spec.ts,screenshots/RPT-01.png,Privacy notice and supported-file guidance
+RPT-02,Report,Capture pages,/health/report/capture,e2e/diagnosis.spec.ts,screenshots/RPT-02.png,Glare blur cropped page and missing-page states
+RPT-03,Report,Check extracted details,/health/report/check,e2e/diagnosis.spec.ts,screenshots/RPT-03.png,Every field can be corrected or marked not recorded
+RPT-04,Report,Report saved,/health/report/:id/saved,e2e/diagnosis.spec.ts,screenshots/RPT-04.png,Status is Checked or Needs checking
+HLT-01,Health,Diagnosis overview,/tabs/health,e2e/diagnosis.spec.ts,screenshots/HLT-01.png,No report shows source-document empty state
+HLT-02,Health,Report wording and explanations,/health/details,e2e/diagnosis.spec.ts,screenshots/HLT-02.png,Recorded and missing fields are visually distinct
+HLT-03,Health,Suggested doctor question,/health/question/:key,e2e/diagnosis.spec.ts,screenshots/HLT-03.png,Nothing is added automatically
+SYM-01,Symptoms,Daily check-in,/health/check-in/:date,e2e/summary.spec.ts,screenshots/SYM-01.png,Fields may be left blank
+SYM-02,Symptoms,History and current window,/health/symptoms,e2e/summary.spec.ts,screenshots/SYM-02.png,Days without entries remain unknown
+SYM-03,Symptoms,Statistics and contextual learning,/health/symptoms/summary,e2e/summary.spec.ts,screenshots/SYM-03.png,Low coverage is shown rather than hidden
+SYM-04,Symptoms,Reported clinical result,/health/results,e2e/summary.spec.ts,screenshots/SYM-04.png,No result has a useful empty state
+FOOD-01,Food,Choose food task,/tabs/food,e2e/nourish.spec.ts,screenshots/FOOD-01.png,No banned-food onboarding
+FOOD-01A,Food,Plan requirements,/food/requirements,e2e/nourish.spec.ts,screenshots/FOOD-01A.png,Allergies and strict avoidances are separate from preferences and dislikes
+FOOD-02,Food,Flexible recipe,/food/recipe/:id,e2e/nourish.spec.ts,screenshots/FOOD-02.png,Recommendation criteria are visible
+FOOD-03,Food,Multi-day meal plan and shopping list,/food/plan,e2e/nourish.spec.ts,screenshots/FOOD-03.png,Each day can be changed cleared or marked prepared; longer plans generate groceries one week at a time
+FOOD-03A,Food,Preferred-meal swap selector,/food/swap/:date (choose),e2e/nourish.spec.ts,screenshots/FOOD-03A.png,Favourites history preference matches and other compatible meals are ranked in that order
+FOOD-03B,Food,Swap scope,/food/swap/:date (scope),e2e/nourish.spec.ts,screenshots/FOOD-03B.png,Single and repeated meal states remain explicit
+FOOD-03C,Food,Grocery change confirmation,/food/swap/:date (shopping review),e2e/nourish.spec.ts,screenshots/FOOD-03C.png,Added and removed ingredients are shown before confirmation
+FOOD-04,Food,Food claim explanation,/food/claims and /learn/:id,e2e/learn.spec.ts,screenshots/FOOD-04.png,Incidence growth and treatment outcomes remain separate
+APT-01,Appointment,Editable summary,/tabs/appointment,e2e/summary.spec.ts,screenshots/APT-01.png,No questions and no check-ins have useful empty states
+APT-02,Appointment,Record clinician answer,/appointment/answer/:id,e2e/summary.spec.ts,screenshots/APT-02.png,Answer remains in user's own words
+APT-03,Appointment,Next step and carry forward,/appointment/next-step,e2e/summary.spec.ts,screenshots/APT-03.png,No automatic clinical interpretation
+EVC-01,Internal evidence,Catalog list,/internal/evidence,e2e/learn.spec.ts,screenshots/EVC-01.png,No results state explains filter recovery
+EVC-02,Internal evidence,Entry detail,/internal/evidence/:id,e2e/learn.spec.ts,screenshots/EVC-02.png,Nonpublished entries display patient-experience block

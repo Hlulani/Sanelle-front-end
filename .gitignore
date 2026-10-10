@@ -79,3 +79,6 @@ Thumbs.db
 
 # Demo recordings for presentations: kept locally, not in the repo
 /demo
+
+# Research library: kept locally, not in the repo
+/docs/research

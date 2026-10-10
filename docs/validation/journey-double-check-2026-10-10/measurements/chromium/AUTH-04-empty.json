@@ -1,0 +1,204 @@
+[
+  {
+    "selector": ".auth-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 400,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-card",
+    "actual": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 478
+    },
+    "expected": {
+      "x": 18,
+      "y": 97,
+      "width": 364,
+      "height": 478
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Welcome back",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Continue with your saved health notes and plans.",
+        "font": "13.12px / 20.336px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.32px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Log in",
+        "font": "800 16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "New to Sanelle? Create an account",
+        "font": "11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "← Back",
+        "font": "800 11.68px / 17.52px \"Nunito Sans\", sans-serif",
+        "lineHeight": "17.52px"
+      },
+      {
+        "tag": "P",
+        "text": "Welcome back",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Continue with your saved health notes and plans.",
+        "font": "13.12px / 20.336px \"Nunito Sans\", sans-serif",
+        "lineHeight": "20.336px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Forgot password?",
+        "font": "800 10.72px / 16.08px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.08px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.32px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Log in",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "New to Sanelle? Create an account",
+        "font": "11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Create an account",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 40,
+      "y": 200.328125,
+      "width": 320,
+      "height": 32.625
+    },
+    "expected": {
+      "x": 40,
+      "y": 200.328125,
+      "width": 320,
+      "height": 32.625
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-fields",
+    "actual": {
+      "x": 40,
+      "y": 290.296875,
+      "width": 320,
+      "height": 156.90625
+    },
+    "expected": {
+      "x": 40,
+      "y": 290.296875,
+      "width": 320,
+      "height": 156.90625
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Forgot password?",
+        "font": "800 10.72px / 16.08px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.08px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Show",
+        "font": "800 10.88px / 16.32px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ]
+  },
+  {
+    "selector": ".auth-primary",
+    "actual": {
+      "x": 40,
+      "y": 465.203125,
+      "width": 320,
+      "height": 49
+    },
+    "expected": {
+      "x": 40,
+      "y": 465.203125,
+      "width": 320,
+      "height": 49
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".auth-primary svg",
+    "actual": {
+      "x": 217.296875,
+      "y": 479.703125,
+      "width": 20,
+      "height": 20
+    },
+    "expected": {
+      "x": 217.296875,
+      "y": 479.703125,
+      "width": 20,
+      "height": 20
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

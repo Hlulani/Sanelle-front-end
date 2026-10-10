@@ -1,0 +1,185 @@
+[
+  {
+    "selector": ".onboarding-header",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-progress",
+    "actual": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "expected": {
+      "x": 0,
+      "y": 72,
+      "width": 390,
+      "height": 4
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".onboarding-main",
+    "actual": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 919.515625
+    },
+    "expected": {
+      "x": 0,
+      "y": 76,
+      "width": 390,
+      "height": 919.515625
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Your everyday context",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "These answers make check-ins and meal ideas more relevant. They are optional and can change.",
+        "font": "16px / 24.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Heavy bleeding",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain or cramping",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "No symptoms right now",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Quick meals",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Your everyday context",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "P",
+        "text": "These answers make check-ins and meal ideas more relevant. They are optional and can change.",
+        "font": "16px / 24.799999px Nunito Sans, sans-serif",
+        "lineHeight": "24.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Heavy bleeding",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pain or cramping",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pelvic pressure",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Low energy",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "No symptoms right now",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Quick meals",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      }
+    ]
+  },
+  {
+    "selector": "h1",
+    "actual": {
+      "x": 34,
+      "y": 159.78125,
+      "width": 322,
+      "height": 107.34375
+    },
+    "expected": {
+      "x": 34,
+      "y": 159.78125,
+      "width": 322,
+      "height": 107.34375
+    },
+    "actualType": [],
+    "referenceType": []
+  },
+  {
+    "selector": ".primary",
+    "actual": {
+      "x": 222.1875,
+      "y": 871.515625,
+      "width": 133.8125,
+      "height": 52
+    },
+    "expected": {
+      "x": 222.1875,
+      "y": 871.515625,
+      "width": 133.8125,
+      "height": 52
+    },
+    "actualType": [],
+    "referenceType": []
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "reference": "Supplied Figma Make App.tsx; recipe photography is separately maintained in the existing meal-photo catalog.",
+  "assets": [
+    {
+      "asset": "src/assets/photos/figma-meal.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1547592180-85f173990554?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1400",
+      "sha256": "57f3f4428ad6a1c1a1072357f0eea999c94e7b54e0f9895c09b6601815e02b1a",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-quick-meal.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1714062105876-1756a22c4caf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=82&w=900",
+      "sha256": "26f58996bf4ff041a7c4f6f0c49b514fd6cb1fd20e139d8ff463a95cf9bccdd6",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-pantry-meal.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1577594412936-01fbd0d88d2c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=82&w=900",
+      "sha256": "52f148a2d3c964eeab453b728802f16b5045603dba7fc754e520ea3c3c512d11",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-cooking.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1636647511729-6703539ba71f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=84&w=1200",
+      "sha256": "2c43cb37d77b679e06f39f5f786282240204b081ba2c27b4aa367d7a730578e0",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-notes.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1620275765334-4ed948bb4502?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=82&w=900",
+      "sha256": "ddeb240bf5c3dde999342ffffed5e072d4b352ba6f2049ebbac517b0106eca19",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-groceries.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1760445530338-d5cb6c5b2e74?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=82&w=900",
+      "sha256": "6838282b5f3eb950f840c04edc08ce99576a4eeea3b7a2f24fbfe9e8d4c97da6",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    },
+    {
+      "asset": "src/assets/photos/figma-onboarding-reading.jpg",
+      "original_source_url": "https://images.unsplash.com/photo-1749704647390-8f696a0be917?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=84&w=1000",
+      "sha256": "98230a722ab1c2bd9e126d5378f06a7b0bdc434ee99ac0ec129f69f883efd5b2",
+      "use": "Original Figma Make photography; exact source image downloaded locally"
+    }
+  ]
+}

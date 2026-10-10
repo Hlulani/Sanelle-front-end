@@ -1,0 +1,11 @@
+{
+  "archive": "/Users/hbaloyi/Downloads/project.zip",
+  "sha256": "976e1938ee56944805157602031ca7ebd2c4013454e8ef14fb17d64a0f009522",
+  "visualSource": "src/App.tsx + src/index.css",
+  "note": "Matches user welcome screenshot. Atlas exports do not match the live prototype.",
+  "confirmedBySourceArchive": {
+    "path": "/Users/hbaloyi/Downloads/src.zip",
+    "sha256": "45a77a355a1414d1e1e27bd86f4b6372989b0855eb8f7cf4f303c1065c2083d3",
+    "allFilesIdentical": true
+  }
+}

@@ -1,0 +1,313 @@
+[
+  {
+    "selector": ".topbar",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".page-heading",
+    "actual": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 135.296875
+    },
+    "expected": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 135.296875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "One helpful next step is enough.",
+        "font": "15.2px / 22.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "22.799999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "One helpful next step is enough.",
+        "font": "15.2px / 22.799999px Nunito Sans, sans-serif",
+        "lineHeight": "22.799999px"
+      }
+    ]
+  },
+  {
+    "selector": ".intent-panel",
+    "actual": {
+      "x": 18,
+      "y": 227.296875,
+      "width": 354,
+      "height": 454.34375
+    },
+    "expected": {
+      "x": 18,
+      "y": 227.296875,
+      "width": 354,
+      "height": 454.34375
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "New here? Start with one thing",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you to Sanelle today?",
+        "font": "27.200001px / 40.800003px Figma Fredoka, sans-serif",
+        "lineHeight": "40.800003px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "1Understand my scan",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2Figure out food",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3Log how I feel",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "4Prepare for a visit",
+        "font": "700 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "I’d rather look around",
+        "font": "700 12px / 18px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "New here? Start with one thing",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you to Sanelle today?",
+        "font": "27.200001px / 40.800003px Fredoka, sans-serif",
+        "lineHeight": "40.800003px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "1Understand my scan",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2Figure out food",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3Log how I feel",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "4Prepare for a visit",
+        "font": "700 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "I’d rather look around",
+        "font": "700 12px / 18px Nunito Sans, sans-serif",
+        "lineHeight": "18px"
+      }
+    ]
+  },
+  {
+    "selector": ".diagnosis-strip",
+    "actual": {
+      "x": 18,
+      "y": 701.640625,
+      "width": 354,
+      "height": 106.984375
+    },
+    "expected": {
+      "x": 18,
+      "y": 701.640625,
+      "width": 354,
+      "height": 106.984375
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Your recorded diagnosis",
+        "font": "800 9.76px / 14.64px Figma Nunito Sans, sans-serif",
+        "lineHeight": "14.64px"
+      },
+      {
+        "tag": "H2",
+        "text": "Fibroid diagnosis",
+        "font": "17.280001px / 25.920002px Figma Fredoka, sans-serif",
+        "lineHeight": "25.920002px"
+      },
+      {
+        "tag": "P",
+        "text": "5 details are not recorded yet",
+        "font": "12.32px / 18.48px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.48px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Your recorded diagnosis",
+        "font": "800 9.76px / 14.64px Nunito Sans, sans-serif",
+        "lineHeight": "14.64px"
+      },
+      {
+        "tag": "H2",
+        "text": "Fibroid diagnosis",
+        "font": "17.280001px / 25.920002px Fredoka, sans-serif",
+        "lineHeight": "25.920002px"
+      },
+      {
+        "tag": "P",
+        "text": "5 details are not recorded yet",
+        "font": "12.32px / 18.48px Nunito Sans, sans-serif",
+        "lineHeight": "18.48px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "",
+        "font": "16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".mobile-nav",
+    "actual": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "expected": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ]
+  }
+]

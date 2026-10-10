@@ -1,0 +1,35 @@
+{
+  "browserTests": {
+    "passed": 62,
+    "failed": 0,
+    "projects": [
+      "chromium",
+      "iphone"
+    ],
+    "retries": 0
+  },
+  "unitTests": {
+    "passed": 107,
+    "failed": 0
+  },
+  "onboardingStates": 12,
+  "stateMeasurements": 24,
+  "maximumGeometryErrorCssPixels": 0,
+  "fullScreenComparison": {
+    "chromium": {
+      "maxDiffPixels": 0,
+      "threshold": 0.01,
+      "scale": "css"
+    },
+    "iphone": {
+      "maxDiffPixels": 0,
+      "threshold": 0.2,
+      "scale": "device",
+      "interfaceThreshold": 0.01,
+      "photoAssetAndCropChecked": true
+    }
+  },
+  "lint": "passed",
+  "build": "passed",
+  "scope": "onboarding"
+}

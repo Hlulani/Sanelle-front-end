@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-10-08T20:12:30.996121+00:00",
+  "source": "Supplied React Figma Make source and corrected journey map",
+  "browser_tests": {
+    "passed": 84,
+    "failed": 0,
+    "projects": [
+      "chromium",
+      "iphone"
+    ],
+    "log": "logs/browser.log"
+  },
+  "final_report_headline_regression": {
+    "passed": 8,
+    "failed": 0,
+    "note": "Repeated report journeys after preventing an extracted count from displaying the word fibroids twice; original finding remains untouched.",
+    "log": "logs/report-regression.log"
+  },
+  "unit_tests": {
+    "passed": 117,
+    "failed": 0,
+    "log": "logs/unit.log"
+  },
+  "build": "passed",
+  "lint": "passed",
+  "format": "passed",
+  "remaining_journey_source_viewports": 16,
+  "individual_inventory_states": 111,
+  "individual_inventory_states_claimed_pixel_exact": false,
+  "presentation_app_captures": 55
+}

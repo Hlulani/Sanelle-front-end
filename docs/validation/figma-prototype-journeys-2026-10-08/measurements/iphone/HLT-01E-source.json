@@ -1,0 +1,344 @@
+[
+  {
+    "selector": ".topbar",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px Figma Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px Nunito Sans, sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".page-heading",
+    "actual": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 106.9375
+    },
+    "expected": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 106.9375
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "My health",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Log symptoms",
+        "font": "800 12.48px / 18.719999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "My health",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Log symptoms",
+        "font": "800 12.48px / 18.719999px Nunito Sans, sans-serif",
+        "lineHeight": "18.719999px"
+      }
+    ]
+  },
+  {
+    "selector": ".health-tabs",
+    "actual": {
+      "x": 18,
+      "y": 198.9375,
+      "width": 354,
+      "height": 45.265625
+    },
+    "expected": {
+      "x": 18,
+      "y": 198.9375,
+      "width": 354,
+      "height": 45.265625
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Diagnosis details",
+        "font": "800 11.52px / 17.280001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "17.280001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Symptoms & daily life",
+        "font": "800 11.52px / 17.280001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "17.280001px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Diagnosis details",
+        "font": "800 11.52px / 17.280001px Nunito Sans, sans-serif",
+        "lineHeight": "17.280001px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Symptoms & daily life",
+        "font": "800 11.52px / 17.280001px Nunito Sans, sans-serif",
+        "lineHeight": "17.280001px"
+      }
+    ]
+  },
+  {
+    "selector": ".health-summary",
+    "actual": {
+      "x": 18,
+      "y": 261.203125,
+      "width": 354,
+      "height": 390.140625
+    },
+    "expected": {
+      "x": 18,
+      "y": 261.203125,
+      "width": 354,
+      "height": 390.140625
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Recorded from your scan",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Diagnosis saved",
+        "font": "36.799999px / 55.199997px Figma Fredoka, sans-serif",
+        "lineHeight": "55.199997px"
+      },
+      {
+        "tag": "P",
+        "text": "No size recorded",
+        "font": "13.6px / 20.400002px Figma Nunito Sans, sans-serif",
+        "lineHeight": "20.400002px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add a scan report",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Check saved details",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Recorded from your scan",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Diagnosis saved",
+        "font": "36.799999px / 55.199997px Fredoka, sans-serif",
+        "lineHeight": "55.199997px"
+      },
+      {
+        "tag": "P",
+        "text": "No size recorded",
+        "font": "13.6px / 20.400002px Nunito Sans, sans-serif",
+        "lineHeight": "20.400002px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add a scan report",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Check saved details",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      }
+    ]
+  },
+  {
+    "selector": ".report-library",
+    "actual": {
+      "x": 18,
+      "y": 681.34375,
+      "width": 354,
+      "height": 227.84375
+    },
+    "expected": {
+      "x": 18,
+      "y": 681.34375,
+      "width": 354,
+      "height": 227.84375
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Your source documents",
+        "font": "800 11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Reports",
+        "font": "24.799999px / 37.199997px Figma Fredoka, sans-serif",
+        "lineHeight": "37.199997px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add report",
+        "font": "800 12.8px / 19.200001px Figma Nunito Sans, sans-serif",
+        "lineHeight": "19.200001px"
+      },
+      {
+        "tag": "P",
+        "text": "Take photos, choose images, upload a PDF, or enter details manually.",
+        "font": "11.2px / 16.799999px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add your first report",
+        "font": "800 10.88px / 16.32px Figma Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Your source documents",
+        "font": "800 11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "H2",
+        "text": "Reports",
+        "font": "24.799999px / 37.199997px Fredoka, sans-serif",
+        "lineHeight": "37.199997px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add report",
+        "font": "800 12.8px / 19.200001px Nunito Sans, sans-serif",
+        "lineHeight": "19.200001px"
+      },
+      {
+        "tag": "P",
+        "text": "Take photos, choose images, upload a PDF, or enter details manually.",
+        "font": "11.2px / 16.799999px Nunito Sans, sans-serif",
+        "lineHeight": "16.799999px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add your first report",
+        "font": "800 10.88px / 16.32px Nunito Sans, sans-serif",
+        "lineHeight": "16.32px"
+      }
+    ]
+  },
+  {
+    "selector": ".mobile-nav",
+    "actual": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "expected": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px Figma Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px Nunito Sans, sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ]
+  }
+]

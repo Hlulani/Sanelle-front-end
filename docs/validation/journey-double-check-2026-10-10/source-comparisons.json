@@ -1,0 +1,232 @@
+[
+  {
+    "id": "AUTH-01",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-02-empty",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-04-empty",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-05-empty",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-01",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-01E",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-02",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-02E",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-03",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-03E",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-04",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-04E",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-05",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-05E",
+    "browser": "chromium",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-01",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-02-empty",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-04-empty",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "AUTH-05-empty",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-01",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-01E",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-02",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-02E",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-03",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-03E",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-04",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-04E",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-05",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "ONB-05E",
+    "browser": "iphone",
+    "group": "Entry / onboarding"
+  },
+  {
+    "id": "APT-01E-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "HLT-01E-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "HLT-03-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "RPT-01-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "RPT-review-sheet-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "SYM-01I-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "SYM-02E-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "TOD-01-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "TOD-02E-source",
+    "browser": "chromium",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "APT-01E-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "HLT-01E-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "HLT-03-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "RPT-01-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "RPT-review-sheet-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "SYM-01I-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "SYM-02E-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "TOD-01-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  },
+  {
+    "id": "TOD-02E-source",
+    "browser": "iphone",
+    "group": "Remaining journeys"
+  }
+]

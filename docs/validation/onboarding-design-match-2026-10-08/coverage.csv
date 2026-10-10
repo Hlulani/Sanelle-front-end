@@ -1,0 +1,13 @@
+screen_id,state,supplied_artboard,reference_viewport,chromium_app,iphone_app
+ONB-01E,Name — empty,reference/ONB-01E.png,reference-viewports/chromium/ONB-01E.png,screenshots/chromium/ONB-01E.png,screenshots/iphone/ONB-01E.png
+ONB-01,Name — complete,reference/ONB-01.png,reference-viewports/chromium/ONB-01.png,screenshots/chromium/ONB-01.png,screenshots/iphone/ONB-01.png
+ONB-01D,Thandi demo loaded,reference/ONB-01D.png,reference-viewports/chromium/ONB-01D.png,screenshots/chromium/ONB-01D.png,screenshots/iphone/ONB-01D.png
+ONB-02E,Priorities — none selected,reference/ONB-02E.png,reference-viewports/chromium/ONB-02E.png,screenshots/chromium/ONB-02E.png,screenshots/iphone/ONB-02E.png
+ONB-02,Priorities — selected,reference/ONB-02.png,reference-viewports/chromium/ONB-02.png,screenshots/chromium/ONB-02.png,screenshots/iphone/ONB-02.png
+ONB-03E,Diagnosis details — empty,reference/ONB-03E.png,reference-viewports/chromium/ONB-03E.png,screenshots/chromium/ONB-03E.png,screenshots/iphone/ONB-03E.png
+ONB-03,Diagnosis details — partial,reference/ONB-03.png,reference-viewports/chromium/ONB-03.png,screenshots/chromium/ONB-03.png,screenshots/iphone/ONB-03.png
+ONB-04E,Everyday context — empty,reference/ONB-04E.png,reference-viewports/chromium/ONB-04E.png,screenshots/chromium/ONB-04E.png,screenshots/iphone/ONB-04E.png
+ONB-04,Everyday context — selected,reference/ONB-04.png,reference-viewports/chromium/ONB-04.png,screenshots/chromium/ONB-04.png,screenshots/iphone/ONB-04.png
+ONB-05E,Appointment — no date,reference/ONB-05E.png,reference-viewports/chromium/ONB-05E.png,screenshots/chromium/ONB-05E.png,screenshots/iphone/ONB-05E.png
+ONB-05,Appointment — date added,reference/ONB-05.png,reference-viewports/chromium/ONB-05.png,screenshots/chromium/ONB-05.png,screenshots/iphone/ONB-05.png
+ONB-06,Setup summary,reference/ONB-06.png,reference-viewports/chromium/ONB-06.png,screenshots/chromium/ONB-06.png,screenshots/iphone/ONB-06.png

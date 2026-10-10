@@ -1,0 +1,107 @@
+[
+  {
+    "selector": ".onboarding-appbar",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 370,
+      "height": 68
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 370,
+      "height": 68
+    }
+  },
+  {
+    "selector": ".onboarding-photo",
+    "actual": {
+      "x": 20,
+      "y": 101,
+      "width": 330,
+      "height": 175
+    },
+    "expected": {
+      "x": 20,
+      "y": 101,
+      "width": 330,
+      "height": 175
+    }
+  },
+  {
+    "selector": ".onboarding-eyebrow",
+    "actual": {
+      "x": 20,
+      "y": 300,
+      "width": 130.578125,
+      "height": 10
+    },
+    "expected": {
+      "x": 20,
+      "y": 300,
+      "width": 130.578125,
+      "height": 10
+    }
+  },
+  {
+    "selector": ".onboarding-body h1",
+    "actual": {
+      "x": 20,
+      "y": 319,
+      "width": 330,
+      "height": 52.8125
+    },
+    "expected": {
+      "x": 20,
+      "y": 319,
+      "width": 330,
+      "height": 52.8125
+    }
+  },
+  {
+    "selector": ".sn-lead",
+    "actual": {
+      "x": 20,
+      "y": 382.53125,
+      "width": 330,
+      "height": 31.0625
+    },
+    "expected": {
+      "x": 20,
+      "y": 382.53125,
+      "width": 330,
+      "height": 31.0625
+    }
+  },
+  {
+    "selector": ".onboarding-nav",
+    "actual": {
+      "x": 0,
+      "y": 763,
+      "width": 370,
+      "height": 61
+    },
+    "expected": {
+      "x": 0,
+      "y": 763,
+      "width": 370,
+      "height": 61
+    }
+  },
+  {
+    "selector": ".sn-actions > .sn-btn",
+    "actual": {
+      "x": 20,
+      "y": 716.3125,
+      "width": 330,
+      "height": 36
+    },
+    "expected": {
+      "x": 20,
+      "y": 716.3125,
+      "width": 330,
+      "height": 36
+    }
+  }
+]

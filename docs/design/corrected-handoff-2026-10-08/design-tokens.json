@@ -1,0 +1,35 @@
+{
+  "color": {
+    "berry": "#74203F",
+    "berryDark": "#52152D",
+    "white": "#FFFFFF",
+    "offWhite": "#F7F5F2",
+    "blush": "#F6E1E3",
+    "apricot": "#F2B37E",
+    "ink": "#301B23",
+    "muted": "#74636A",
+    "line": "#DFD1CB",
+    "success": "#2F674B",
+    "warning": "#9A622E",
+    "unknown": "#E3DEDB"
+  },
+  "typography": {
+    "heading": "Fredoka, sans-serif",
+    "body": "Nunito Sans, sans-serif"
+  },
+  "surfaceRules": {
+    "page": "white",
+    "documentOrLongForm": "offWhite",
+    "missingInformation": "blush",
+    "primaryOrientation": "berry",
+    "practicalHighlight": "apricot",
+    "ordinarySeparation": "spacing and line"
+  },
+  "radius": {
+    "control": 8,
+    "section": 6,
+    "modalTop": 26,
+    "circular": 999
+  },
+  "minimumTouchTarget": 44
+}

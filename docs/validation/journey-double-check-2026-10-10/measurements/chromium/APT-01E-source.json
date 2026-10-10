@@ -1,0 +1,301 @@
+[
+  {
+    "selector": ".topbar",
+    "actual": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "expected": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 72
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "J",
+        "font": "800 16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".page-heading",
+    "actual": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 138.3125
+    },
+    "expected": {
+      "x": 18,
+      "y": 92,
+      "width": 354,
+      "height": 138.3125
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Appointment",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Appointment",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ]
+  },
+  {
+    "selector": ".visit-intro",
+    "actual": {
+      "x": 18,
+      "y": 230.3125,
+      "width": 354,
+      "height": 437.1875
+    },
+    "expected": {
+      "x": 18,
+      "y": 230.3125,
+      "width": 354,
+      "height": 437.1875
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Your editable brief",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Walk in with the full picture,not a perfect memory.",
+        "font": "28px / 30.8px \"Figma Fredoka\", sans-serif",
+        "lineHeight": "30.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Sanelle has brought together what you recorded. Review and edit before sharing with a clinician.",
+        "font": "16px / 24px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Your editable brief",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Walk in with the full picture,not a perfect memory.",
+        "font": "28px / 30.8px Fredoka, sans-serif",
+        "lineHeight": "30.8px"
+      },
+      {
+        "tag": "P",
+        "text": "Sanelle has brought together what you recorded. Review and edit before sharing with a clinician.",
+        "font": "16px / 24px \"Nunito Sans\", sans-serif",
+        "lineHeight": "24px"
+      }
+    ]
+  },
+  {
+    "selector": ".visit-paper",
+    "actual": {
+      "x": 18,
+      "y": 645.5,
+      "width": 354,
+      "height": 821.859375
+    },
+    "expected": {
+      "x": 18,
+      "y": 645.5,
+      "width": 354,
+      "height": 821.859375
+    },
+    "actualType": [
+      {
+        "tag": "P",
+        "text": "Appointment summary",
+        "font": "800 11.2px / 16.8px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Journey Tester’s health notes",
+        "font": "23.2px / 34.8px \"Figma Fredoka\", sans-serif",
+        "lineHeight": "34.8px"
+      },
+      {
+        "tag": "H3",
+        "text": "My main concern for this visit",
+        "font": "16px / 24px \"Figma Fredoka\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Not added yet.",
+        "font": "13.12px / 19.68px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "19.68px"
+      },
+      {
+        "tag": "P",
+        "text": "No appointment date saved.",
+        "font": "13.12px / 19.68px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "19.68px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Add date and concern",
+        "font": "800 10.4px / 15.6px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "15.6px"
+      },
+      {
+        "tag": "H3",
+        "text": "Recorded diagnosis",
+        "font": "16px / 24px \"Figma Fredoka\", sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Fibroid diagnosis  ; no size recorded.",
+        "font": "13.12px / 19.68px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "19.68px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "P",
+        "text": "Appointment summary",
+        "font": "800 11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      },
+      {
+        "tag": "H2",
+        "text": "Journey Tester’s health notes",
+        "font": "23.2px / 34.8px Fredoka, sans-serif",
+        "lineHeight": "34.8px"
+      },
+      {
+        "tag": "H3",
+        "text": "Recorded diagnosis",
+        "font": "16px / 24px Fredoka, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Fibroid diagnosis; no size recorded.",
+        "font": "13.12px / 19.68px \"Nunito Sans\", sans-serif",
+        "lineHeight": "19.68px"
+      },
+      {
+        "tag": "H3",
+        "text": "Recent symptoms & impact",
+        "font": "16px / 24px Fredoka, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "No symptom check-ins recorded yet.",
+        "font": "13.12px / 19.68px \"Nunito Sans\", sans-serif",
+        "lineHeight": "19.68px"
+      },
+      {
+        "tag": "H3",
+        "text": "Questions for my healthcare professional",
+        "font": "16px / 24px Fredoka, sans-serif",
+        "lineHeight": "24px"
+      },
+      {
+        "tag": "P",
+        "text": "Add one in your own words, or accept a suggestion from a missing report detail.",
+        "font": "11.2px / 16.8px \"Nunito Sans\", sans-serif",
+        "lineHeight": "16.8px"
+      }
+    ]
+  },
+  {
+    "selector": ".mobile-nav",
+    "actual": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "expected": {
+      "x": 0,
+      "y": 771,
+      "width": 390,
+      "height": 73
+    },
+    "actualType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px \"Figma Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ],
+    "referenceType": [
+      {
+        "tag": "BUTTON",
+        "text": "Today",
+        "font": "800 10.08px / 15.12px \"Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Food",
+        "font": "800 10.08px / 15.12px \"Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "My health",
+        "font": "800 10.08px / 15.12px \"Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Appointment",
+        "font": "800 10.08px / 15.12px \"Nunito Sans\", sans-serif",
+        "lineHeight": "15.12px"
+      }
+    ]
+  }
+]
