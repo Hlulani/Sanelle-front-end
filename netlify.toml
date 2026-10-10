@@ -1,0 +1,20 @@
+# Netlify: builds the web app. Set SANELLE_API_ORIGIN (the Render API address, e.g.
+# https://sanelle-api.onrender.com) under Site configuration → Environment variables.
+[build]
+  command = "npm run build"
+  publish = "www"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The phone-frame page for reviewers.
+[[redirects]]
+  from = "/phone"
+  to = "/phone/index.html"
+  status = 200
+
+# Every other path is an app route (e.g. /tabs/today), served by the app.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

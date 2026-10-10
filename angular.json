@@ -35,6 +35,11 @@
                 "output": "assets"
               },
               {
+                "glob": "**/*",
+                "input": "src/phone",
+                "output": "phone"
+              },
+              {
                 "glob": "worker.min.js",
                 "input": "node_modules/tesseract.js/dist",
                 "output": "assets/ocr"

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sanelle · Try the app</title>
+    <meta name="description" content="Sanelle, a companion for living with fibroids, running live in a phone frame." />
+    <link rel="icon" type="image/png" href="/assets/icon/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito+Sans:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // On a phone, skip the frame and open the app itself.
+      if (window.matchMedia('(max-width: 900px)').matches) location.replace('/welcome');
+    </script>
+    <style>
+      :root {
+        --berry: #74203f;
+        --ink: #301b23;
+        --muted: #74636a;
+        --line: #dfd1cb;
+        --off: #f7f5f2;
+        --blush: #f6e1e3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          16px/1.5 'Nunito Sans',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        color: var(--ink);
+        background: var(--off);
+      }
+      .wrap {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(0, 440px) auto;
+        gap: 64px;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+      h1 {
+        font:
+          600 40px/1.1 Fredoka,
+          'Nunito Sans',
+          sans-serif;
+        margin: 12px 0;
+      }
+      .eyebrow {
+        margin: 24px 0 0;
+        font:
+          800 12px/1 'Nunito Sans',
+          sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--berry);
+      }
+      .lead {
+        font-size: 18px;
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 16px 18px;
+        margin-bottom: 14px;
+      }
+      .card h2 {
+        font:
+          800 15px/1.3 'Nunito Sans',
+          sans-serif;
+        margin: 0 0 8px;
+      }
+      .card p,
+      .card li {
+        margin: 0;
+        font-size: 15px;
+      }
+      .card ol {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .login {
+        background: var(--blush);
+        border-color: transparent;
+      }
+      .cred {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+      }
+      .cred span {
+        min-width: 72px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      code {
+        font:
+          700 14px ui-monospace,
+          Menlo,
+          monospace;
+        background: #fff;
+        padding: 3px 8px;
+        border-radius: 4px;
+      }
+      .copy {
+        border: 0;
+        background: none;
+        color: var(--berry);
+        font:
+          800 13px 'Nunito Sans',
+          sans-serif;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      /* The frame: a bezel with the dynamic island in it, so nothing covers the app. */
+      .phone {
+        width: 418px;
+        border-radius: 60px;
+        background: #1d1418;
+        padding: 52px 14px 22px;
+        box-shadow:
+          0 30px 60px rgba(48, 27, 35, 0.25),
+          inset 0 0 0 2px #3a2a31;
+        position: relative;
+      }
+      .phone::before {
+        content: '';
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 30px;
+        border-radius: 20px;
+        background: #000;
+      }
+      .screen {
+        display: block;
+        width: 390px;
+        height: 800px;
+        border: 0;
+        border-radius: 8px 8px 40px 40px;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section>
+        <img src="/assets/brand/sanelle-logo.svg" alt="Sanelle" height="40" />
+        <p class="eyebrow">Live app · try it in the phone</p>
+        <h1>A companion for living with fibroids</h1>
+        <p class="lead">
+          Understand what your scan report says and leaves out, plan meals that fit how you eat, and go to appointments
+          prepared.
+        </p>
+
+        <div class="card login">
+          <h2>Log in with the demo account</h2>
+          <p>Please use this account rather than creating one: new accounts need an email confirmation.</p>
+          <div class="cred">
+            <span>Email</span><code id="email">judge@sanelle-demo.app</code>
+            <button class="copy" type="button" data-copy="email">Copy</button>
+          </div>
+          <div class="cred">
+            <span>Password</span><code id="password">Thandi-Demo-2026</code>
+            <button class="copy" type="button" data-copy="password">Copy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>A two-minute path</h2>
+          <ol>
+            <li>Tap <strong>I already have an account</strong> and log in.</li>
+            <li>Today: choose <strong>Understand my scan</strong>.</li>
+            <li>My health: add a report, then see what it leaves out.</li>
+            <li>Food: plan a week and swap a meal.</li>
+            <li>Appointment: your questions and summary.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h2>Limits, honestly</h2>
+          <p>
+            Not medical advice. Report reading copies text for you to check; it doesn’t interpret it. Health records
+            stay in this browser.
+          </p>
+        </div>
+        <p class="note">The first load can take up to a minute while the server wakes up.</p>
+      </section>
+
+      <div class="phone">
+        <iframe class="screen" src="/welcome" title="Sanelle app"></iframe>
+      </div>
+    </div>
+    <script>
+      for (const button of document.querySelectorAll('[data-copy]')) {
+        button.addEventListener('click', async () => {
+          const text = document.getElementById(button.dataset.copy).textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = 'Copied';
+            setTimeout(() => (button.textContent = 'Copy'), 1500);
+          } catch {
+            /* Selecting the text still works. */
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
