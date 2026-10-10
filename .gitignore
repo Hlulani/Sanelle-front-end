@@ -87,4 +87,4 @@ Thumbs.db
 /docs/presentation
 /e2e/presentation-capture.spec.ts
 /e2e/presentation.config.ts
-/scripts/build-presentation-pack.cjs
+/scripts/*presentation-pack*
