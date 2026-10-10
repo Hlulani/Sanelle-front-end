@@ -90,10 +90,11 @@ for (const [label, count] of [
     await screen(page).getByRole('tab', { name: label, exact: true }).click();
     await expect(screen(page).locator('.plan-calendar > .plan-day > button')).toHaveCount(count);
     await savePlan(page, count);
-    await screen(page).getByRole('button', { name: 'Mark prep done', exact: true }).click();
-    await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
+    await screen(page).getByRole('button', { name: 'I made this', exact: true }).click();
+    await expect(screen(page).getByRole('button', { name: /^Remove made tick: / })).toBeVisible();
     await page.reload();
-    await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
+    await expect(screen(page).getByRole('button', { name: /^Remove made tick: / })).toBeVisible();
+    await expect(screen(page).locator('.made-count')).toHaveText(new RegExp(`^1 of \\d+ made$`));
     await expect(screen(page).getByRole('tab', { name: label, exact: true })).toHaveAttribute('aria-selected', 'true');
     await expect(screen(page).getByText('Finding meals…', { exact: true })).toHaveCount(0);
     await expect(screen(page).locator('.meal-choice-list button:has(app-meal-image)')).toHaveCount(3);

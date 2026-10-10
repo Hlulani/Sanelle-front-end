@@ -44,6 +44,9 @@ export class FoodPage implements OnInit {
   });
   readonly plannedDays = computed(() => this.planWeeks()[this.planWeek()]?.days ?? []);
   readonly plannedMealCount = computed(() => this.savedPlan()?.days.filter((day) => day.meal).length ?? 0);
+  readonly madeMealCount = computed(
+    () => this.savedPlan()?.days.filter((day) => day.meal && day.preparedAt).length ?? 0,
+  );
   readonly horizonText = horizonLabel;
   readonly options = signal<RankedOption[]>([]);
   readonly feature = computed(() => this.options()[0] ?? null);

@@ -163,7 +163,7 @@ export class PlanPage {
     const days = this.plan()?.days ?? [];
     return days.length ? `${this.short(days[0].date)} to ${this.short(days[days.length - 1].date)}` : '';
   });
-  readonly preparedCount = computed(() => (this.plan()?.days ?? []).filter((d) => d.preparedAt).length);
+  readonly preparedCount = computed(() => (this.plan()?.days ?? []).filter((d) => d.meal && d.preparedAt).length);
   readonly mealDays = computed(() => (this.plan()?.days ?? []).filter((d) => d.meal).length);
 
   async ionViewWillEnter() {
@@ -391,7 +391,7 @@ export class PlanPage {
   meta(day: PlanDay): string {
     if (!day.meal) return 'Open day';
     if (day.leftovers) return 'Leftovers';
-    if (day.preparedAt) return 'Prep done';
+    if (day.preparedAt) return 'Made';
     return day.meal.prepTimeMinutes ? `${day.meal.prepTimeMinutes} min` : 'Recipe';
   }
 

@@ -51,8 +51,8 @@ test('Save stays in Food and exposes the exact saved meals, cooking, prep and sh
   expect(new URL(page.url()).searchParams.get('stage')).toBe('cook');
   await expect(screen(page).locator('.planner h2')).toHaveText(name);
   await expect(screen(page).getByRole('heading', { name: 'How to cook', exact: true })).toBeInViewport();
-  await screen(page).getByRole('button', { name: 'Mark prep done', exact: true }).click();
-  await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
+  await screen(page).getByRole('button', { name: 'I made this', exact: true }).click();
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Made ·' })).toBeVisible();
   await openFood(page);
   await expect(days.nth(2)).toHaveClass(/prepared/);
   await expect(days.first()).not.toHaveClass(/prepared/);

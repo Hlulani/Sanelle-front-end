@@ -48,77 +48,100 @@
               </ul>
             </details>
           }
-          @if (m.instructions && m.instructions.length) {
-            <ol aria-label="Cooking steps">
-              @for (line of m.instructions; track $index) {
-                <li>{{ line }}</li>
-              }
-            </ol>
-          } @else {
-            <p role="status">
-              Cooking instructions are not recorded for this meal. Choose another recipe if you need step-by-step
-              guidance.
-            </p>
-          }
-          @if (checks().length) {
-            <div class="cooking-checks">
-              <h4>Check before serving</h4>
-              @for (check of checks(); track check.label) {
-                <p>
-                  <strong>{{ check.label }}.</strong> {{ check.text }}
-                  <a [href]="check.source" target="_blank" rel="noopener noreferrer">Source</a>
-                </p>
-              }
-            </div>
-          }
-          @if (m.recipeContent; as content) {
-            <details class="evidence-disclosure recipe-sources">
-              <summary>Recipe notes &amp; sources</summary>
-              <p>{{ content.timingNote }}</p>
-              <p>
-                For larger portions, keep pieces even and cook in batches if needed. Ingredient amounts scale; cooking
-                times do not.
-              </p>
-              <p>
-                These directions clarify the original recipe. Sources support cooking techniques and food handling; they
-                do not validate this complete recipe.
-              </p>
-              <p>
-                {{
-                  content.kitchenTested
-                    ? 'This version records kitchen testing.'
-                    : 'This recipe has not been kitchen-tested.'
-                }}
-              </p>
-              <ul>
-                @for (url of content.sourceUrls; track url) {
-                  <li>
-                    <a [href]="url" target="_blank" rel="noopener noreferrer">{{ sourceLabel(url) }}</a>
-                  </li>
+          @if (!plannedDay()?.preparedAt || showSteps()) {
+            @if (m.instructions && m.instructions.length) {
+              <ol aria-label="Cooking steps">
+                @for (line of m.instructions; track $index) {
+                  <li>{{ line }}</li>
                 }
-              </ul>
-              <span>Content version: {{ content.version }}</span>
-            </details>
-          }
-          @if (plannedDay(); as day) {
-            <button class="primary wide" [disabled]="saving()" (click)="togglePrepared()">
-              {{ day.preparedAt ? 'Undo prep' : 'Mark prep done' }}
-            </button>
-            <!-- Confirms where she tapped, not at the foot of the recipe. -->
-            @if (prepNotice(); as n) {
-              <p class="prep-confirmation" [class.is-done]="!!day.preparedAt" role="status">
-                @if (day.preparedAt) {
-                  <svg figmaIcon="check" />
-                }
-                {{ n }}
+              </ol>
+            } @else {
+              <p role="status">
+                Cooking instructions are not recorded for this meal. Choose another recipe if you need step-by-step
+                guidance.
               </p>
             }
+            @if (checks().length) {
+              <div class="cooking-checks">
+                <h4>Check before serving</h4>
+                @for (check of checks(); track check.label) {
+                  <p>
+                    <strong>{{ check.label }}.</strong> {{ check.text }}
+                    <a [href]="check.source" target="_blank" rel="noopener noreferrer">Source</a>
+                  </p>
+                }
+              </div>
+            }
+            @if (m.recipeContent; as content) {
+              <details class="evidence-disclosure recipe-sources">
+                <summary>Recipe notes &amp; sources</summary>
+                <p>{{ content.timingNote }}</p>
+                <p>
+                  For larger portions, keep pieces even and cook in batches if needed. Ingredient amounts scale; cooking
+                  times do not.
+                </p>
+                <p>
+                  These directions clarify the original recipe. Sources support cooking techniques and food handling;
+                  they do not validate this complete recipe.
+                </p>
+                <p>
+                  {{
+                    content.kitchenTested
+                      ? 'This version records kitchen testing.'
+                      : 'This recipe has not been kitchen-tested.'
+                  }}
+                </p>
+                <ul>
+                  @for (url of content.sourceUrls; track url) {
+                    <li>
+                      <a [href]="url" target="_blank" rel="noopener noreferrer">{{ sourceLabel(url) }}</a>
+                    </li>
+                  }
+                </ul>
+                <span>Content version: {{ content.version }}</span>
+              </details>
+            }
+          } @else {
+            <button class="text-action" type="button" (click)="showSteps.set(true)">Show the steps again</button>
+          }
+          @if (plannedDay(); as day) {
+            @if (day.preparedAt) {
+              <!-- Finished: the next useful step leads; undo is available but quiet. -->
+              <div class="made-panel" role="status">
+                <p class="made-title"><svg figmaIcon="check" /> Made · {{ dayLabel(day.date) }}</p>
+                <p class="fine-print">Ticked in your meal plan. Not a record of what you ate.</p>
+                @if (nextMeal(); as next) {
+                  <a
+                    class="primary wide"
+                    [routerLink]="['/food/recipe', next.meal!.mealId]"
+                    [queryParams]="{ date: next.date, stage: 'cook' }"
+                    >Next: {{ dayLabel(next.date) }} · {{ next.meal!.name }} <svg figmaIcon="arrow" [size]="18"
+                  /></a>
+                } @else {
+                  <a class="primary wide" routerLink="/food/plan" [queryParams]="{ date: day.date }"
+                    >Back to my meal plan <svg figmaIcon="arrow" [size]="18"
+                  /></a>
+                }
+                <p class="fine-print remove-tick">
+                  Tapped by mistake?
+                  <button class="text-action" type="button" [disabled]="saving()" (click)="togglePrepared()">
+                    Remove the tick
+                  </button>
+                </p>
+              </div>
+            } @else {
+              <button class="primary wide" [disabled]="saving()" (click)="togglePrepared()">I made this</button>
+              @if (prepNotice(); as n) {
+                <p class="prep-confirmation" role="status">{{ n }}</p>
+              }
+            }
           } @else if (date) {
-            <p class="fine-print">Save this meal in your plan before marking preparation done.</p>
+            <p class="fine-print">Save this meal in your plan to tick it as made.</p>
           }
         </div>
       }
-      @if (date) {
+      <!-- The made panel already leads back to the plan when there is no next meal. -->
+      @if (date && !(plannedDay()?.preparedAt && !nextMeal())) {
         <a class="text-action" routerLink="/food/plan" [queryParams]="{ date: date }">Back to my meal plan</a>
       }
       <div class="serving-row">

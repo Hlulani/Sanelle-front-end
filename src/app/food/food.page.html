@@ -19,6 +19,7 @@
           <div class="plan-count">
             <strong>{{ plannedMealCount() }}</strong
             ><span>meals planned</span>
+            <span class="made-count">{{ madeMealCount() }} of {{ plannedMealCount() }} made</span>
           </div>
         </header>
         @if (planEnded()) {
@@ -50,10 +51,13 @@
                 <span>{{ shortDate(d.date) }}</span>
                 @if (d.meal; as m) {
                   <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" />
+                  @if (d.preparedAt) {
+                    <span class="made-badge" aria-hidden="true"><svg figmaIcon="check" [size]="14" /></span>
+                  }
                   <strong>{{ m.name }}</strong>
                   <small
                     >{{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded'
-                    }}{{ d.preparedAt ? ' · Prep done' : '' }}{{ d.leftovers ? ' · Leftovers' : '' }}</small
+                    }}{{ d.preparedAt ? ' · Made' : '' }}{{ d.leftovers ? ' · Leftovers' : '' }}</small
                   >
                 } @else {
                   <div class="open-day"><svg figmaIcon="plus" /><small>No meal planned</small></div>

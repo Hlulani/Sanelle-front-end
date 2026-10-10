@@ -3,6 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
+  Injector,
+  afterNextRender,
   OnChanges,
   OnDestroy,
   Input,
@@ -35,6 +38,8 @@ import { cookingChecks, cookingSourceLabel } from './cooking-checks';
 })
 export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
   private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
   private readonly catalog = inject(RecipeCatalog);
   private readonly food = inject(FoodProfileService);
   private readonly editor = inject(PlanEditor);
@@ -68,8 +73,16 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly notice = signal<string | null>(null);
-  /** Shown right under the prep button. */
+  /** Shown right under the "I made this" button after an undo. */
   readonly prepNotice = signal<string | null>(null);
+  /** Once a meal is made its steps fold away; she can open them again. */
+  readonly showSteps = signal(false);
+  /** The next planned day still to make, after this one. */
+  readonly nextMeal = computed(() => {
+    const plan = this.editor.plan();
+    if (!this.date || !plan) return null;
+    return plan.days.find((d) => d.date > this.date! && d.meal && !d.leftovers && !d.preparedAt) ?? null;
+  });
   readonly plannedDay = computed(() => {
     if (!this.date || this.editor.isDraft()) return null;
     const day = this.editor.plan()?.days.find((d) => d.date === this.date);
@@ -104,6 +117,7 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
     this.error.set(null);
     this.notice.set(null);
     this.prepNotice.set(null);
+    this.showSteps.set(false);
     this.meal.set(null);
     this.option.set(null);
     try {
@@ -128,15 +142,25 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
     if (!day) return;
     await this.run(async () => {
       await this.editor.togglePrepared(day.date);
-      const when = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(
-        parseLocalDate(day.date),
-      );
-      this.prepNotice.set(
-        day.preparedAt
-          ? 'Prep mark removed.'
-          : `Prep done for ${when}. It’s ticked in your meal plan; it doesn’t record what you ate.`,
-      );
+      this.showSteps.set(false);
+      this.prepNotice.set(day.preparedAt ? 'Tick removed. This meal is back to not made.' : null);
+      this.keepInView(day.preparedAt ? '.prep-confirmation' : '.made-panel');
     });
+  }
+  /** Folding or unfolding the steps moves the content; keep the result of her tap on screen. */
+  private keepInView(selector: string) {
+    afterNextRender(
+      () =>
+        (this.host.nativeElement as HTMLElement)
+          .querySelector(selector)
+          ?.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior }),
+      { injector: this.injector },
+    );
+  }
+  dayLabel(iso: string): string {
+    return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(
+      parseLocalDate(iso),
+    );
   }
   amount(raw: string) {
     return raw ? scaleIngredientAmount(raw, this.servings()) : 'Amount not specified';

@@ -40,6 +40,9 @@
           <div class="plan-count">
             <strong>{{ mealDays() }}</strong
             ><span>meals planned</span>
+            @if (plan() && !isDraft()) {
+              <span class="made-count">{{ preparedCount() }} of {{ mealDays() }} made</span>
+            }
           </div>
         </header>
         @if (error()) {
@@ -91,10 +94,14 @@
                 >
                   <span>Day {{ i + 1 }}</span>
                   @if (d.meal; as m) {
-                    <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" /><strong>{{ m.name }}</strong
+                    <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" />
+                    @if (d.preparedAt) {
+                      <span class="made-badge" aria-hidden="true"><svg figmaIcon="check" [size]="14" /></span>
+                    }
+                    <strong>{{ m.name }}</strong
                     ><small
                       >{{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded'
-                      }}{{ d.preparedAt ? ' · Prep done' : '' }}</small
+                      }}{{ d.preparedAt ? ' · Made' : '' }}</small
                     >
                   } @else {
                     <div class="open-day"><svg figmaIcon="plus" /><small>No meal planned</small></div>
@@ -130,8 +137,12 @@
                   <h3>{{ d.meal?.name || 'Choose a meal' }}</h3>
                 </div>
                 @if (d.meal) {
-                  <button [disabled]="busy() || isDraft()" (click)="togglePrepared(d)">
-                    {{ d.preparedAt ? 'Undo prep' : 'Mark prep done' }}
+                  <button
+                    [disabled]="busy() || isDraft()"
+                    [attr.aria-label]="d.preparedAt ? 'Remove made tick: ' + d.meal.name : null"
+                    (click)="togglePrepared(d)"
+                  >
+                    {{ d.preparedAt ? 'Remove made tick' : 'I made this' }}
                   </button>
                 }
               </div>

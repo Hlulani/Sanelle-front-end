@@ -80,7 +80,7 @@
         <article class="meal-feature">
           <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" [eager]="true" />
           <div class="meal-overlay">
-            <div class="pill">{{ d.preparedAt ? 'Preparation done' : 'Today’s planned meal' }}</div>
+            <div class="pill">{{ d.preparedAt ? 'Made' : 'Today’s planned meal' }}</div>
             <h2>{{ m.name }}</h2>
             <div class="meta">
               <span

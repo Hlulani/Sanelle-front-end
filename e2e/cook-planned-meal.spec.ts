@@ -35,27 +35,44 @@ test('a selected planned meal opens its own cooking steps and saves preparation 
   await expect(screen(page).getByRole('heading', { name: 'How to cook', exact: true })).toBeInViewport();
   await expect(screen(page).locator('.prep-note ol li').first()).toBeVisible();
   await expect(screen(page).locator('.stepper strong')).toHaveText('2');
-  await screen(page).getByRole('button', { name: 'Mark prep done', exact: true }).click();
-  await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
-  // The confirmation and the way back appear where she tapped, not at the foot of the recipe.
-  await expect(screen(page).getByRole('status').filter({ hasText: 'Prep done for' })).toBeInViewport();
-  await expect(screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true })).toBeInViewport();
+  await screen(page).getByRole('button', { name: 'I made this', exact: true }).click();
+  // Finished: a completion panel leads where she tapped, the steps fold away and undo stays quiet.
+  const made = screen(page).getByRole('status').filter({ hasText: 'Made ·' });
+  await expect(made).toBeInViewport();
+  await expect(made).toContainText('Not a record of what you ate.');
+  // Day 3 is the plan's last meal, so the next step is back to the plan.
+  const backFromMade = made.getByRole('link', { name: 'Back to my meal plan', exact: true });
+  await expect(backFromMade).toBeInViewport();
+  await expect(screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true })).toHaveCount(1);
+  await expect(screen(page).locator('.prep-note ol')).toHaveCount(0);
+  await screen(page).getByRole('button', { name: 'Show the steps again', exact: true }).click();
+  await expect(screen(page).locator('.prep-note ol li').first()).toBeVisible();
   await page.reload();
   await expect(screen(page).locator('.planner h2')).toHaveText(mealName);
-  await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
-  await screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true }).click();
+  await expect(made).toBeVisible();
+  await backFromMade.click();
   await expect(page).toHaveURL(new RegExp(`/food/plan\\?date=${date}`));
   await expect(days.nth(2)).toHaveClass(/selected/);
   await expect(days.nth(2)).toHaveClass(/prepared/);
+  await expect(days.nth(2).locator('.made-badge')).toBeVisible();
+  await expect(days.nth(2).locator('small')).toContainText('Made');
   await expect(days.first()).not.toHaveClass(/prepared/);
+  await expect(screen(page).locator('.made-count')).toHaveText('1 of 3 made');
   await expect(screen(page).locator('.day-editor h3')).toHaveText(mealName);
-  // Reuse the recipe route for another meal. The name and preparation state must update.
+  // Reuse the recipe route for another meal. The name and made state must update, and the
+  // finished panel offers the next planned meal still to make.
   await days.first().click();
   await expect(screen(page).locator('.planner h2')).toHaveText(otherMealName);
-  await expect(screen(page).getByRole('button', { name: 'Mark prep done', exact: true })).toBeVisible();
+  await screen(page).getByRole('button', { name: 'I made this', exact: true }).click();
+  await expect(made.getByRole('link', { name: /^Next: / })).toBeInViewport();
+  await made.getByRole('button', { name: 'Remove the tick', exact: true }).click();
+  await expect(screen(page).getByRole('button', { name: 'I made this', exact: true })).toBeVisible();
+  await expect(
+    screen(page).getByRole('status').filter({ hasText: 'Tick removed. This meal is back to not made.' }),
+  ).toBeInViewport();
   await screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true }).click();
   await days.nth(2).click();
-  await screen(page).getByRole('button', { name: 'Undo prep', exact: true }).click();
+  await made.getByRole('button', { name: 'Remove the tick', exact: true }).click();
   await screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true }).click();
   await expect(days.nth(2)).not.toHaveClass(/prepared/);
 });
