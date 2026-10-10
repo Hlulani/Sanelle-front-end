@@ -73,3 +73,8 @@ ion-header::after {
 
 /* Supplied Figma Make styles follow Ionic resets. */
 @include meta.load-css('./app/shared/design/figma/prototype');
+
+/* Netlify injects a "Powered by Netlify" badge that would cover the tab bar. */
+#nl-badge-frame {
+  display: none !important;
+}
