@@ -4,6 +4,80 @@
       <p class="form-error" role="alert">{{ error() }}</p>
       <button class="secondary" (click)="load()">Try again</button>
     }
+    @if (savedPlan(); as p) {
+      <section class="meal-plan-builder saved-meal-plan" aria-label="My saved meal plan">
+        <header class="meal-plan-head">
+          <div>
+            <p class="eyebrow">Saved on this device</p>
+            <h2>My saved meal plan</h2>
+            <p>
+              {{ horizonText(p.horizon) }} · {{ shortDate(p.days[0].date) }} to
+              {{ shortDate(p.days[p.days.length - 1].date) }} · {{ p.servings }}
+              {{ p.servings === 1 ? 'person' : 'people' }}
+            </p>
+          </div>
+          <div class="plan-count">
+            <strong>{{ plannedMealCount() }}</strong
+            ><span>meals planned</span>
+          </div>
+        </header>
+        @if (planEnded()) {
+          <p class="prep-note">This plan has ended. You can still open its recipes or make a new plan.</p>
+        } @else {
+          <p class="muted">Choose a planned meal to open its cooking instructions.</p>
+        }
+        @if (planWeeks().length > 1) {
+          <div class="grocery-weeks" aria-label="Saved meal plan week">
+            @for (w of planWeeks(); track w.index) {
+              <button
+                [class.selected]="planWeek() === w.index"
+                [attr.aria-pressed]="planWeek() === w.index"
+                (click)="planWeek.set(w.index)"
+              >
+                {{ w.label }}
+              </button>
+            }
+          </div>
+        }
+        <div class="plan-calendar">
+          @for (d of plannedDays(); track d.date; let i = $index) {
+            <div class="plan-day">
+              <button
+                [class.prepared]="!!d.preparedAt"
+                [attr.aria-label]="'Day ' + (planWeek() * 7 + i + 1) + ': ' + (d.meal?.name || 'No meal planned')"
+                (click)="openPlannedDay(d)"
+              >
+                <span>{{ shortDate(d.date) }}</span>
+                @if (d.meal; as m) {
+                  <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" />
+                  <strong>{{ m.name }}</strong>
+                  <small
+                    >{{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded'
+                    }}{{ d.preparedAt ? ' · Prep done' : '' }}{{ d.leftovers ? ' · Leftovers' : '' }}</small
+                  >
+                } @else {
+                  <div class="open-day"><svg figmaIcon="plus" /><small>No meal planned</small></div>
+                }
+              </button>
+              @if (d.meal; as m) {
+                <a
+                  class="day-cook"
+                  [routerLink]="['/food/recipe', m.mealId]"
+                  [queryParams]="{ date: d.date, stage: 'cook' }"
+                  [attr.aria-label]="'Cook Day ' + (planWeek() * 7 + i + 1) + ': ' + m.name"
+                >
+                  Cook this meal <svg figmaIcon="arrow" [size]="16" />
+                </a>
+              }
+            </div>
+          }
+        </div>
+        <button class="secondary wide" routerLink="/food/plan">Open meal plan <svg figmaIcon="arrow" /></button>
+        <button class="secondary wide" routerLink="/food/plan" [queryParams]="{ view: 'shopping', week: planWeek() }">
+          Open shopping list <svg figmaIcon="arrow" />
+        </button>
+      </section>
+    }
     <app-food-paths />
     @if (!loading() && !error() && options().length === 0) {
       <div class="report-empty">

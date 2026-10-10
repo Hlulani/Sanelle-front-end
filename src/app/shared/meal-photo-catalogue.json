@@ -1604,5 +1604,9 @@
       "note": "Baked vegetable eggs are pictured as a frittata rather than individual muffins."
     }
   },
-  "fallbackPhotoKey": "meal-ingredients"
+  "fallbackPhotoKey": "meal-ingredients",
+  "aliases": {
+    "Oat Banana Pancakes": "Oat Banana Pancakes (2-Ingredient)",
+    "Golden Milk Smoothie Bowl": "Anti-Inflammatory Golden Milk Smoothie Bowl"
+  }
 }

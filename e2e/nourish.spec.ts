@@ -4,15 +4,14 @@ async function requirements(page: import('@playwright/test').Page) {
   await page.goto('/food/requirements');
   await screen(page).getByRole('button', { name: 'Confirm and plan meals' }).click();
   await expect(page).toHaveURL(/food\/plan/);
-  await expect(screen(page).locator('.plan-calendar > button')).not.toHaveCount(0);
+  await expect(screen(page).locator('.plan-calendar > .plan-day > button')).not.toHaveCount(0);
 }
-async function saveAndReturn(page: import('@playwright/test').Page, count: number) {
+async function savePlan(page: import('@playwright/test').Page, count: number) {
   await screen(page)
     .getByRole('button', { name: `Save ${count === 30 ? 'monthly' : count + '-day'} plan`, exact: true })
     .click();
-  await expect(page).toHaveURL(/tabs\/today/);
-  await screen(page).getByRole('button', { name: 'Open meal plan', exact: true }).click();
   await expect(page).toHaveURL(/food\/plan/);
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Meal plan saved.' })).toBeVisible();
 }
 test('FOOD-01/01A/02: pictured recipe, servings and favourites', async ({ page }, info) => {
   await page.goto('/tabs/food');
@@ -66,12 +65,15 @@ test('Recipe shopping edits persist and follow the meal into the plan', async ({
   await shot(page, 'FOOD-02-shopping', info, false);
   await screen(page).getByRole('button', { name: 'Save this meal and shopping list' }).click();
   await expect(page).toHaveURL(/food\/plan/);
+  await screen(page).getByRole('button', { name: 'Shopping list', exact: true }).click();
   await expect(
     screen(page).getByRole('checkbox', { name: 'Already have Presentation apples', exact: true }),
   ).toBeVisible();
   await expect(screen(page).getByRole('checkbox', { name: firstName!, exact: true })).toBeChecked();
   await expect(screen(page).getByRole('checkbox', { name: removedName!, exact: true })).toHaveCount(0);
-  await saveAndReturn(page, 3);
+  await screen(page).getByRole('button', { name: 'Meal plan', exact: true }).click();
+  await savePlan(page, 3);
+  await screen(page).getByRole('button', { name: 'Shopping list', exact: true }).click();
   await page.reload();
   await expect(
     screen(page).getByRole('checkbox', { name: 'Already have Presentation apples', exact: true }),
@@ -86,8 +88,8 @@ for (const [label, count] of [
   test(`FOOD-03 ${label}: duration, groceries and preparation persist`, async ({ page }, info) => {
     await requirements(page);
     await screen(page).getByRole('tab', { name: label, exact: true }).click();
-    await expect(screen(page).locator('.plan-calendar > button')).toHaveCount(count);
-    await saveAndReturn(page, count);
+    await expect(screen(page).locator('.plan-calendar > .plan-day > button')).toHaveCount(count);
+    await savePlan(page, count);
     await screen(page).getByRole('button', { name: 'Mark prep done', exact: true }).click();
     await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
     await page.reload();
@@ -98,6 +100,7 @@ for (const [label, count] of [
     await shot(page, `FOOD-03-${count}-days`, info);
     await screen(page).locator('.plan-calendar').scrollIntoViewIfNeeded();
     await shot(page, `FOOD-03-calendar-${count}`, info, false);
+    await screen(page).getByRole('button', { name: 'Shopping list', exact: true }).click();
     if (count === 30) await expect(screen(page).getByRole('button', { name: 'Week 5', exact: true })).toBeVisible();
     if (count === 14) await expect(screen(page).getByRole('button', { name: 'Week 2', exact: true })).toBeVisible();
     await screen(page).getByLabel('Add another item').fill('Extra apples');
@@ -108,7 +111,7 @@ for (const [label, count] of [
     await page.reload();
     await expect(screen(page).getByRole('checkbox', { name: 'Already have Extra apples' })).toBeChecked();
     await expect(screen(page).getByText('Finding meals…', { exact: true })).toHaveCount(0);
-    await expect(screen(page).locator('.meal-choice-list button:has(app-meal-image)')).toHaveCount(3);
+    await expect(screen(page).locator('.meal-choice-list button:has(app-meal-image)')).toHaveCount(0);
     await screen(page).locator('.shopping-section .section-title').scrollIntoViewIfNeeded();
     await shot(page, `FOOD-03-shopping-start-${count}`, info, false);
     await screen(page).getByLabel('Add another item').scrollIntoViewIfNeeded();
@@ -118,7 +121,7 @@ for (const [label, count] of [
 test('FOOD-03A–03C: swap scope, grocery differences, open days and duration edits', async ({ page }, info) => {
   await requirements(page);
   await screen(page).getByRole('tab', { name: '1 month', exact: true }).click();
-  await saveAndReturn(page, 30);
+  await savePlan(page, 30);
   await screen(page).getByRole('button', { name: 'Swap this meal', exact: true }).click();
   await expect(screen(page).getByRole('button', { name: 'Choose this meal' }).first()).toBeVisible();
   await shot(page, 'FOOD-03A', info);
@@ -132,9 +135,9 @@ test('FOOD-03A–03C: swap scope, grocery differences, open days and duration ed
   await shot(page, 'FOOD-03C', info);
   await screen(page).getByRole('button', { name: 'Confirm swap and shopping changes' }).click();
   await expect(page).toHaveURL(/food\/plan/);
-  await expect(screen(page).locator('.prep-note[role=status]')).toContainText('Meal swapped');
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Meal swapped' })).toBeVisible();
   await screen(page).getByRole('button', { name: 'Undo swap', exact: true }).click();
-  await expect(screen(page).locator('.prep-note[role=status]')).toContainText('Swap undone');
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Swap undone' })).toBeVisible();
   await screen(page)
     .getByRole('button', { name: /Leave this day open/ })
     .click();
@@ -142,7 +145,7 @@ test('FOOD-03A–03C: swap scope, grocery differences, open days and duration ed
   await screen(page).getByRole('tab', { name: '3 days', exact: true }).click();
   await screen(page).getByRole('tab', { name: '1 month', exact: true }).click();
   await expect(screen(page).getByRole('heading', { name: 'Choose a meal', exact: true })).toBeVisible();
-  await saveAndReturn(page, 30);
+  await savePlan(page, 30);
   await page.reload();
   await expect(screen(page).getByRole('heading', { name: 'Choose a meal', exact: true })).toBeVisible();
 });
@@ -161,7 +164,7 @@ test('FOOD-03V/03N swap flags ingredient preferences and recovers from no compat
   page,
 }, info) => {
   await requirements(page);
-  await saveAndReturn(page, 3);
+  await savePlan(page, 3);
   await screen(page).getByRole('button', { name: 'Not this ingredient', exact: true }).first().click();
   await expect(screen(page).getByText('Preference saved. Future suggestions will flag this ingredient.')).toBeVisible();
   await screen(page).getByRole('button', { name: 'Swap this meal', exact: true }).click();
@@ -182,7 +185,8 @@ test('FOOD-03V/03N swap flags ingredient preferences and recovers from no compat
 test('FOOD-03G1/G2 weekly shopping edits stay in their own week', async ({ page }, info) => {
   await requirements(page);
   await screen(page).getByRole('tab', { name: '2 weeks', exact: true }).click();
-  await saveAndReturn(page, 14);
+  await savePlan(page, 14);
+  await screen(page).getByRole('button', { name: 'Shopping list', exact: true }).click();
   const shopping = screen(page).locator('.shopping-section');
   await screen(page).getByLabel('Add another item').fill('Week one apples');
   await screen(page).getByRole('button', { name: 'Add grocery item' }).click();
@@ -195,6 +199,8 @@ test('FOOD-03G1/G2 weekly shopping edits stay in their own week', async ({ page 
   await screen(page).locator('.shopping-section').scrollIntoViewIfNeeded();
   await shot(page, 'FOOD-03G2', info, false);
   await page.reload();
+  await expect(shopping.getByText('Week two pears', { exact: true })).toBeVisible();
+  await screen(page).getByRole('button', { name: 'Week 1', exact: true }).click();
   await expect(shopping.getByText('Week one apples', { exact: true })).toBeVisible();
   await expect(shopping.getByText('Week two pears', { exact: true })).toHaveCount(0);
   await screen(page).getByRole('button', { name: 'Week 2', exact: true }).click();

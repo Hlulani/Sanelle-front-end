@@ -46,6 +46,12 @@ function normalizedName(name: string): string {
 
 const normalizedPhotos = new Map(Object.entries(MEAL_PHOTOS).map(([name, photo]) => [normalizedName(name), photo]));
 
+// Preserve deliberate photos when recipe content corrects a misleading title.
+for (const [alias, original] of Object.entries(catalogue.aliases)) {
+  const photo = MEAL_PHOTOS[original];
+  if (photo) normalizedPhotos.set(normalizedName(alias), photo);
+}
+
 /** Deliberate recipe matches only; spelling/capitalisation differences do not lose the photo. */
 export function photoFor(name: string | undefined | null): MealPhoto | null {
   return name ? (normalizedPhotos.get(normalizedName(name)) ?? null) : null;

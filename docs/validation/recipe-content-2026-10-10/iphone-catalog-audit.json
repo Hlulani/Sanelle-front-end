@@ -1,0 +1,439 @@
+{
+  "count": 166,
+  "reviewed": 166,
+  "examples": [
+    {
+      "id": "54ff50ed-2c49-4ea6-b188-22f1297fdf62",
+      "name": "Baked Cod with Lemon and Greens",
+      "mealType": "DINNER",
+      "tags": [
+        "light",
+        "dinner"
+      ],
+      "ingredients": [
+        {
+          "name": "Lemon juice",
+          "amount": "1 tbsp"
+        },
+        {
+          "name": "Olive oil",
+          "amount": "1 tbsp"
+        },
+        {
+          "name": "Cod",
+          "amount": "180 g"
+        },
+        {
+          "name": "Spinach",
+          "amount": "2 cups"
+        },
+        {
+          "name": "Salt",
+          "amount": "pinch"
+        }
+      ],
+      "instructions": [
+        "Preheat a conventional oven to 200°C. Use fresh or fully thawed cod and pat it dry; place it in a small baking dish.",
+        "Coat the cod with about half the olive oil, the lemon juice and the salt.",
+        "Bake for about 12-15 minutes; a thick fillet may need longer. Check the fish in its thickest part using the fish cooking check below before serving.",
+        "While the fish bakes, warm the remaining oil in a frying pan over medium heat. Add the spinach and stir for about 2-3 minutes until wilted.",
+        "Plate the cod with the spinach and spoon over the juices from the baking dish."
+      ],
+      "createdAt": "2026-10-03T10:13:09.909772Z",
+      "imageUrl": null,
+      "whyItHelps": "Cod is a lean source of protein and iron, and spinach adds anti-inflammatory antioxidants and vitamin K.",
+      "vegetableSubstitutes": "Spinach → kale or Swiss chard",
+      "freshOrFrozen": "Spinach: frozen works well once thawed and squeezed dry; use fresh if serving barely wilted.",
+      "colorPalette": "White fish fillet with a bed of dark green sauteed spinach",
+      "prepTimeMinutes": 20,
+      "dietaryTags": [
+        "Dairy-free",
+        "Gluten-free"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [
+          "Use fresh or fully thawed fish for these timings, not a frozen fillet; follow the pack if it specifies a different cooking method."
+        ],
+        "cookingChecks": [
+          "fish",
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+          "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures",
+          "https://media3.neff-international.com/Documents/MCDOC02081769_NEFF_Recipe_A4_Cod_Bake.pdf"
+        ]
+      }
+    },
+    {
+      "id": "18b1a0cd-649d-4b68-82af-5b21fdf57774",
+      "name": "Beef and Veggie Skillet",
+      "mealType": "DINNER",
+      "tags": [
+        "dinner",
+        "iron-rich"
+      ],
+      "ingredients": [
+        {
+          "name": "Olive oil",
+          "amount": "1 tsp"
+        },
+        {
+          "name": "Onion",
+          "amount": "1/2"
+        },
+        {
+          "name": "Lean ground beef",
+          "amount": "200 g"
+        },
+        {
+          "name": "Spinach",
+          "amount": "1 cup"
+        },
+        {
+          "name": "Bell pepper",
+          "amount": "1/2"
+        }
+      ],
+      "instructions": [
+        "Dice the onion and bell pepper; wash and dry the spinach.",
+        "Heat the olive oil in a frying pan over medium heat. Add the onion and pepper and stir for about 4-5 minutes until starting to soften.",
+        "Add the ground beef and break it into small pieces with a spatula. Cook for about 6-8 minutes, stirring regularly.",
+        "Check the ground beef using the ground-meat cooking check below; continue cooking if needed.",
+        "Stir in the spinach for about 1-2 minutes until wilted, then serve hot."
+      ],
+      "createdAt": "2026-10-03T10:13:09.909772Z",
+      "imageUrl": null,
+      "whyItHelps": "Lean beef is a strong source of iron, and bell pepper and spinach add anti-inflammatory vitamins and antioxidants.",
+      "vegetableSubstitutes": "Bell pepper → zucchini; Spinach → kale",
+      "freshOrFrozen": "Bell pepper: both work, frozen sliced pepper is fine cooked into a skillet. Spinach: frozen works well once thawed and squeezed dry.",
+      "colorPalette": "Browned beef with red bell pepper and wilted green spinach",
+      "prepTimeMinutes": 20,
+      "dietaryTags": [
+        "Dairy-free",
+        "Gluten-free"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [],
+        "cookingChecks": [
+          "ground-meat",
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+          "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures"
+        ]
+      }
+    },
+    {
+      "id": "4fd385bb-78c8-403f-9b6c-8df1ce8348d7",
+      "name": "Chicken Rice Soup",
+      "mealType": "DINNER",
+      "tags": [
+        "dinner"
+      ],
+      "ingredients": [
+        {
+          "name": "Cooked chicken",
+          "amount": "120 g"
+        },
+        {
+          "name": "Chicken stock",
+          "amount": "3 cups"
+        },
+        {
+          "name": "Cooked rice",
+          "amount": "1 cup"
+        },
+        {
+          "name": "Carrot",
+          "amount": "1"
+        }
+      ],
+      "instructions": [
+        "Use chicken and rice that have already been fully cooked. Peel and finely dice the carrot; cut or shred the cooked chicken.",
+        "Bring the stock to a boil in a saucepan. Add the carrot, reduce to a gentle simmer and cook for about 8-10 minutes until tender.",
+        "Stir in the cooked chicken and rice. Simmer for about 3-5 minutes, stirring, until the soup is hot throughout.",
+        "Check the reheating guidance below for chilled cooked ingredients; serve immediately once they are thoroughly reheated."
+      ],
+      "createdAt": "2026-10-03T10:13:09.909772Z",
+      "imageUrl": null,
+      "whyItHelps": "Chicken and stock provide protein and iron, and carrot adds a mild dose of fiber and beta-carotene.",
+      "vegetableSubstitutes": "Carrot → parsnip",
+      "freshOrFrozen": "Carrot: both work, frozen sliced carrot is fine in soups; fresh is better where texture matters.",
+      "colorPalette": "Golden broth with pale chicken, rice, and orange carrot",
+      "prepTimeMinutes": 15,
+      "dietaryTags": [
+        "Dairy-free",
+        "Gluten-free"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [
+          "Have these ingredients already cooked before you start; their quantities are measured after cooking: Cooked chicken, Cooked rice. Cook them separately using their packet directions, or use a suitable ready-cooked product."
+        ],
+        "cookingChecks": [
+          "rice-storage",
+          "reheating",
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+          "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures",
+          "https://www.gov.uk/government/publications/home-food-fact-checker/home-food-fact-checker"
+        ]
+      }
+    },
+    {
+      "id": "0fd0d4ea-6864-428a-a3f1-b9444d632289",
+      "name": "Overnight Oats with Chia and Berries",
+      "mealType": "BREAKFAST",
+      "tags": [
+        "high-fiber",
+        "meal-prep",
+        "breakfast"
+      ],
+      "ingredients": [
+        {
+          "name": "Chia seeds",
+          "amount": "1 tbsp"
+        },
+        {
+          "name": "Greek yogurt",
+          "amount": "2 tbsp"
+        },
+        {
+          "name": "Rolled oats",
+          "amount": "1/2 cup"
+        },
+        {
+          "name": "Milk (or oat milk)",
+          "amount": "3/4 cup"
+        },
+        {
+          "name": "Mixed berries",
+          "amount": "1/2 cup"
+        }
+      ],
+      "instructions": [
+        "Stir the rolled oats, chia seeds, milk and Greek yogurt together in a covered jar or bowl.",
+        "Refrigerate for at least 8 hours or overnight; stir again after about 15 minutes if convenient to disperse chia clumps.",
+        "Wash fresh berries or prepare frozen berries according to their packet.",
+        "Stir the oats before eating, add the berries and serve chilled. Overnight chilling is additional to the hands-on preparation time."
+      ],
+      "createdAt": "2026-10-03T10:13:09.909772Z",
+      "imageUrl": null,
+      "whyItHelps": "Oats and chia seeds together deliver a strong dose of fiber, and berries add anti-inflammatory antioxidants.",
+      "vegetableSubstitutes": "Mixed berries → any frozen berry mix",
+      "freshOrFrozen": "Berries: fresh or frozen both work well as a topping, straight from the freezer is fine.",
+      "colorPalette": "Creamy oats layered with deep purple-red berries",
+      "prepTimeMinutes": 5,
+      "dietaryTags": [
+        "Gluten-free",
+        "Vegetarian"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [
+          "Allow the refrigeration time stated in the directions as well as hands-on preparation; these recipes are not ready immediately after mixing."
+        ],
+        "cookingChecks": [
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts"
+        ]
+      }
+    },
+    {
+      "id": "6f4cbe5b-a8b0-46fe-b97c-a9fdd7d62086",
+      "name": "Lentil Soup with Turmeric and Ginger",
+      "mealType": "LUNCH",
+      "tags": [
+        "high-fiber",
+        "lunch",
+        "anti-inflammatory",
+        "vegan",
+        "iron-rich",
+        "gluten-free"
+      ],
+      "ingredients": [
+        {
+          "name": "Onion, diced",
+          "amount": "1/4"
+        },
+        {
+          "name": "Fresh ginger, grated",
+          "amount": "1 tsp"
+        },
+        {
+          "name": "Vegetable broth",
+          "amount": "2 cups"
+        },
+        {
+          "name": "Carrot, diced",
+          "amount": "1/2"
+        },
+        {
+          "name": "Parsley, chopped",
+          "amount": "1 tbsp"
+        },
+        {
+          "name": "Turmeric",
+          "amount": "1/2 tsp"
+        },
+        {
+          "name": "Lentils",
+          "amount": "1/2 cup"
+        }
+      ],
+      "instructions": [
+        "Use dried red split lentils for these timings; rinse them. Dice the onion and carrot and grate the ginger.",
+        "Cook the onion, carrot and ginger in a saucepan over medium heat with a few tablespoons of the measured broth for about 3-4 minutes.",
+        "Add the lentils, turmeric and remaining broth, bring to a gentle boil and lower the heat.",
+        "Simmer for about 20-25 minutes, stirring occasionally, until the lentils are soft; add water if needed.",
+        "Finish with the parsley and serve hot."
+      ],
+      "createdAt": "2026-10-03T10:18:04.50907Z",
+      "imageUrl": null,
+      "whyItHelps": "Lentils are high in fiber and plant protein; turmeric and ginger are traditional anti-inflammatory spices used in many cuisines.",
+      "vegetableSubstitutes": "Carrot → parsnip or sweet potato; Onion → shallot or leek",
+      "freshOrFrozen": "Carrot: Both work. Frozen sliced or diced carrot is fine in soups, stews, and curries; fresh is better for raw or roasted dishes where texture matters. Onion: Frozen diced onion works fine in any cooked dish; use fresh for raw uses like salads or garnish.",
+      "colorPalette": "Golden-orange broth, orange carrots, green parsley garnish",
+      "prepTimeMinutes": 30,
+      "dietaryTags": [
+        "Vegan",
+        "gluten-free"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [
+          "Use dried red split lentils, rinsed, for the stated simmering times. Other lentil varieties may need longer and more liquid; follow the packet and cook until soft."
+        ],
+        "cookingChecks": [
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts"
+        ]
+      }
+    },
+    {
+      "id": "d8e1eb0e-f215-41ee-bdfb-d60d2a4cdd38",
+      "name": "Turkey Chili with Kidney Beans, Bell Peppers, and Avocado",
+      "mealType": "DINNER",
+      "tags": [
+        "high-fiber",
+        "dairy-free",
+        "high-protein",
+        "dinner",
+        "gluten-free"
+      ],
+      "ingredients": [
+        {
+          "name": "Avocado, diced",
+          "amount": "1/2"
+        },
+        {
+          "name": "Kidney beans",
+          "amount": "1/2 cup"
+        },
+        {
+          "name": "Chili powder",
+          "amount": "1 tsp"
+        },
+        {
+          "name": "Cilantro, chopped",
+          "amount": "1 tbsp"
+        },
+        {
+          "name": "Ground turkey",
+          "amount": "150 g"
+        },
+        {
+          "name": "Cumin",
+          "amount": "1/2 tsp"
+        },
+        {
+          "name": "Bell peppers, diced",
+          "amount": "1/2 cup"
+        },
+        {
+          "name": "Tomato, diced",
+          "amount": "1 cup"
+        }
+      ],
+      "instructions": [
+        "Use canned kidney beans, drained and rinsed; dice the pepper, tomato and avocado.",
+        "Brown the ground turkey in a non-stick saucepan over medium heat for about 6-8 minutes, breaking up clumps.",
+        "Add the beans, pepper, tomato, chili powder and cumin with a splash of water if needed. Bring to a gentle simmer.",
+        "Simmer on low for about 20 minutes, stirring occasionally, until the pepper is tender. Check the turkey using the poultry cooking check below.",
+        "Serve topped with the avocado and cilantro."
+      ],
+      "createdAt": "2026-10-03T10:18:04.50907Z",
+      "imageUrl": null,
+      "whyItHelps": "Lean ground turkey combined with fiber-rich beans and vitamin-C-rich peppers.",
+      "vegetableSubstitutes": "Bell pepper → poblano pepper or zucchini; Tomato → red bell pepper or sun-dried tomato",
+      "freshOrFrozen": "Bell pepper: Frozen sliced peppers work well in any cooked dish (stir-fries, curries, stews, roasting); use fresh if it needs to stay raw or crisp. Tomato: Fresh is better for salads and raw preparations; frozen or canned diced tomato is fine in anything cooked (sauces, soups, stews).",
+      "colorPalette": "Deep red chili, red and yellow peppers, green avocado and cilantro garnish",
+      "prepTimeMinutes": 35,
+      "dietaryTags": [
+        "Gluten-free",
+        "dairy-free"
+      ],
+      "recipeContent": {
+        "version": "2026-10-10.v1",
+        "reviewStatus": "editorial",
+        "kitchenTested": false,
+        "methodBasis": "existing-recipe-with-editorial-clarification",
+        "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+        "ingredientNotes": [
+          "Use canned, drained and rinsed beans/chickpeas, or ones fully cooked separately. These short methods do not cook dried beans.",
+          "Use thawed poultry. Thighs are boneless unless the ingredient list explicitly says bone-in; keep raw poultry and its utensils separate from ready-to-eat ingredients."
+        ],
+        "cookingChecks": [
+          "poultry",
+          "storage"
+        ],
+        "sourceUrls": [
+          "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+          "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+          "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+          "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures"
+        ]
+      }
+    }
+  ]
+}

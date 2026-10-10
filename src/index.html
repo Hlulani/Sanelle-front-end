@@ -53,6 +53,27 @@
         opacity: 0;
         pointer-events: none;
       }
+      #startup-recovery {
+        max-width: 320px;
+        padding: 0 24px;
+        text-align: center;
+      }
+      #startup-recovery[hidden] {
+        display: none;
+      }
+      #startup-recovery button {
+        min-height: 44px;
+        padding: 10px 20px;
+        margin-top: 16px;
+        border: 0;
+        border-radius: 8px;
+        background: #f2b37e;
+        color: #301b23;
+        font:
+          700 16px system-ui,
+          sans-serif;
+        cursor: pointer;
+      }
       @media (prefers-reduced-motion: reduce) {
         #splash {
           transition: none;
@@ -65,7 +86,21 @@
     <div id="splash" role="status" aria-label="Sanelle is loading">
       <img src="assets/brand/sanelle-logo-on-berry.png" alt="" width="212" height="58" />
       <p>Private, practical support</p>
+      <div id="startup-recovery" hidden>
+        <p>Sanelle is taking longer to open. Check your connection and try again.</p>
+        <button id="startup-reload" type="button">Reload Sanelle</button>
+      </div>
     </div>
     <app-root></app-root>
+    <script>
+      // This recovery must work even if the application bundle fails to load.
+      document.getElementById('startup-reload').addEventListener('click', () => window.location.reload());
+      window.setTimeout(() => {
+        const splash = document.getElementById('splash');
+        if (splash && !splash.classList.contains('is-done')) {
+          document.getElementById('startup-recovery').hidden = false;
+        }
+      }, 15000);
+    </script>
   </body>
 </html>

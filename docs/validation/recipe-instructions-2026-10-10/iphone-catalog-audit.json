@@ -1,0 +1,75 @@
+{
+  "mealCount": 166,
+  "recipesWithInstructions": 166,
+  "missingInstructions": [],
+  "example": {
+    "id": "54ff50ed-2c49-4ea6-b188-22f1297fdf62",
+    "name": "Baked Cod with Lemon and Greens",
+    "mealType": "DINNER",
+    "tags": [
+      "light",
+      "dinner"
+    ],
+    "ingredients": [
+      {
+        "name": "Lemon juice",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "Olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "Cod",
+        "amount": "180 g"
+      },
+      {
+        "name": "Spinach",
+        "amount": "2 cups"
+      },
+      {
+        "name": "Salt",
+        "amount": "pinch"
+      }
+    ],
+    "instructions": [
+      "Preheat a conventional oven to 200°C. Use fresh or fully thawed cod and pat it dry; place it in a small baking dish.",
+      "Coat the cod with about half the olive oil, the lemon juice and the salt.",
+      "Bake for about 12-15 minutes; a thick fillet may need longer. Check the fish in its thickest part using the fish cooking check below before serving.",
+      "While the fish bakes, warm the remaining oil in a frying pan over medium heat. Add the spinach and stir for about 2-3 minutes until wilted.",
+      "Plate the cod with the spinach and spoon over the juices from the baking dish."
+    ],
+    "createdAt": "2026-10-03T10:13:09.909772Z",
+    "imageUrl": null,
+    "whyItHelps": "Cod is a lean source of protein and iron, and spinach adds anti-inflammatory antioxidants and vitamin K.",
+    "vegetableSubstitutes": "Spinach → kale or Swiss chard",
+    "freshOrFrozen": "Spinach: frozen works well once thawed and squeezed dry; use fresh if serving barely wilted.",
+    "colorPalette": "White fish fillet with a bed of dark green sauteed spinach",
+    "prepTimeMinutes": 20,
+    "dietaryTags": [
+      "Dairy-free",
+      "Gluten-free"
+    ],
+    "recipeContent": {
+      "version": "2026-10-10.v1",
+      "reviewStatus": "editorial",
+      "kitchenTested": false,
+      "methodBasis": "existing-recipe-with-editorial-clarification",
+      "timingNote": "Cooking times are approximate guides, not guarantees; check the stated doneness. Ingredient size, equipment and batch size can change the time. Oven temperatures here refer to conventional ovens; follow your oven guidance for fan settings.",
+      "ingredientNotes": [
+        "Use fresh or fully thawed fish for these timings, not a frozen fillet; follow the pack if it specifies a different cooking method."
+      ],
+      "cookingChecks": [
+        "fish",
+        "storage"
+      ],
+      "sourceUrls": [
+        "https://www.gov.uk/government/publications/cooking-your-food/cooking-your-food",
+        "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-produce-safely",
+        "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+        "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures",
+        "https://media3.neff-international.com/Documents/MCDOC02081769_NEFF_Recipe_A4_Cod_Bake.pdf"
+      ]
+    }
+  }
+}

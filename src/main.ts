@@ -9,6 +9,7 @@ import { AuthService } from './app/core/auth/auth.service';
 import { registerAppIcons } from './app/core/icons';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { showStartupRecovery } from './startup-recovery';
 
 registerAppIcons();
 
@@ -23,4 +24,7 @@ bootstrapApplication(AppComponent, {
     provideAppInitializer(() => inject(AuthService).init()),
     provideRouter(routes, withPreloading(PreloadAllModules)),
   ],
+}).catch((error: unknown) => {
+  console.error('Sanelle could not start.', error);
+  showStartupRecovery();
 });

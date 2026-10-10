@@ -17,6 +17,13 @@ test('Today first-use and returning empty match the actual Figma components', as
     await screen(page).getByRole('button', { name: 'I’d rather look around' }).click();
     await ref.getByRole('button', { name: 'I’d rather look around' }).click();
     await ref.locator('.diagnosis-copy strong').evaluate((e) => (e.textContent = '5 details are not recorded yet'));
+    // Explicit correction: without a saved plan, Today never shows the prototype's sample meal.
+    // It offers to find something to cook; a saved plan's own meal is checked in cook-planned-meal.spec.ts.
+    const findMeal = screen(page).getByRole('button', { name: 'Find something to cook', exact: true });
+    await expect(findMeal).toBeVisible();
+    await ref
+      .locator('.meal-feature')
+      .evaluate((card, html) => (card.outerHTML = html), await findMeal.evaluate((e) => e.outerHTML));
     await compareFigma(page, ref, 'TOD-02E-source', info, [
       '.topbar',
       '.page-heading',
@@ -199,9 +206,9 @@ test('Food landing and planner retain the source introduction and duration contr
     await screen(page).getByRole('button', { name: 'Confirm and plan meals' }).click();
     await ref.locator('.mobile-nav').getByRole('button', { name: 'Food', exact: true }).click();
     await ref.getByRole('button', { name: /Plan meals & groceries/ }).click();
-    await expect(screen(page).locator('.plan-calendar > button')).toHaveCount(3);
+    await expect(screen(page).locator('.plan-calendar > .plan-day > button')).toHaveCount(3);
     await expect(screen(page).getByText('Finding meals…', { exact: true })).toHaveCount(0);
-    // The exported planner's three mock recipes are replaced by actual eligible meals; compare its shared geometry.
+    // Task navigation adds a row above the source planner. Preserve the source components' widths and heights; vertical positions shift by that row.
     for (const selector of [
       '.topbar',
       '.page-heading',
@@ -215,13 +222,13 @@ test('Food landing and planner retain the source introduction and duration contr
         .last()
         .boundingBox();
       const expected = await ref.locator(selector).boundingBox();
-      for (const key of ['x', 'y', 'width', 'height'] as const)
+      for (const key of ['x', 'width', 'height'] as const)
         expect(Math.abs(actual![key] - expected![key]), `${selector} ${key}`).toBeLessThan(0.1);
     }
     for (const label of ['3 days', '1 week', '2 weeks', '1 month']) {
       await screen(page).getByRole('tab', { name: label, exact: true }).click();
       await ref.getByRole('tab', { name: label, exact: true }).click();
-      await expect(screen(page).locator('.plan-calendar > button')).toHaveCount(
+      await expect(screen(page).locator('.plan-calendar > .plan-day > button')).toHaveCount(
         await ref.locator('.plan-calendar > button').count(),
       );
     }

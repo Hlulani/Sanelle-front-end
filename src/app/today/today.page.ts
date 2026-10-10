@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@a
 import { Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { HealthRepository } from '../my-health/health-repository';
+import { MealImageComponent } from '../shared/components/meal-image/meal-image.component';
 import { MealPlanStore } from '../food/meal-plan.store';
 import { PRIORITIES, Priority, ProfileService } from '../core/profile/profile.service';
 import { FigmaFrameComponent } from '../shared/design/figma/figma-frame.component';
@@ -49,12 +50,13 @@ const INTENTS: Record<Priority, Intent> = {
   selector: 'app-today',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [IonContent, RouterLink, FigmaFrameComponent, FigmaIconComponent],
+  imports: [IonContent, RouterLink, MealImageComponent, FigmaFrameComponent, FigmaIconComponent],
   templateUrl: './today.page.html',
 })
 export class TodayPage implements OnInit {
   readonly design = inject(PatientDesignState);
-  readonly mealImage = 'assets/photos/figma-meal.jpg';
+  readonly plannedToday = computed(() => this.plans.today());
+  readonly savedServings = computed(() => this.plans.plan()?.servings ?? 1);
   readonly fixedIntents = Object.values(INTENTS);
   readonly intentLabels = Object.values(INTENTS).map((i) => i.title);
   get profileView() {

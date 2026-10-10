@@ -75,17 +75,36 @@
       </div>
       <button (click)="go('food')">Explore food <svg figmaIcon="arrow"></svg></button>
     </div>
-    <article class="meal-feature">
-      <img [src]="mealImage" alt="A colourful bowl of grains and roasted vegetables" />
-      <div class="meal-overlay">
-        <div class="pill">Easy batch lunch</div>
-        <h2>Roast veg & herby grain bowls</h2>
-        <div class="meta">
-          <span><svg figmaIcon="clock"></svg> 35 min</span><span><svg figmaIcon="people"></svg> 4 servings</span>
-        </div>
-        <button (click)="go('food')">See the flexible recipe <svg figmaIcon="arrow"></svg></button>
-      </div>
-    </article>
+    @if (plannedToday(); as d) {
+      @if (d.meal; as m) {
+        <article class="meal-feature">
+          <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" [eager]="true" />
+          <div class="meal-overlay">
+            <div class="pill">{{ d.preparedAt ? 'Preparation done' : 'Today’s planned meal' }}</div>
+            <h2>{{ m.name }}</h2>
+            <div class="meta">
+              <span
+                ><svg figmaIcon="clock" />
+                {{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded' }}</span
+              ><span
+                ><svg figmaIcon="people" /> {{ savedServings() }}
+                {{ savedServings() === 1 ? 'serving' : 'servings' }}</span
+              >
+            </div>
+            <button [routerLink]="['/food/recipe', m.mealId]" [queryParams]="{ date: d.date, stage: 'cook' }">
+              Cook today’s meal <svg figmaIcon="arrow" />
+            </button>
+          </div>
+        </article>
+      } @else {
+        <p class="prep-note">Today is open in your meal plan. Choose a meal whenever you need one.</p>
+        <button class="secondary" routerLink="/food/plan" [queryParams]="{ date: d.date }">
+          Choose today’s meal <svg figmaIcon="arrow" />
+        </button>
+      }
+    } @else {
+      <button class="secondary wide" routerLink="/food/find">Find something to cook <svg figmaIcon="arrow" /></button>
+    }
     <div class="two-column">
       @if (latestCheckIn) {
         <section class="checkin-result">

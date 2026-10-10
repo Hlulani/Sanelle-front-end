@@ -12,6 +12,17 @@ export interface Ingredient {
   amount: string;
 }
 
+export interface RecipeContent {
+  version: string;
+  reviewStatus: string;
+  kitchenTested: boolean;
+  methodBasis: string;
+  timingNote: string;
+  ingredientNotes: string[];
+  cookingChecks: string[];
+  sourceUrls: string[];
+}
+
 export interface MealResponse {
   id: string;
   name: string;
@@ -26,4 +37,5 @@ export interface MealResponse {
   colorPalette?: string | null;
   prepTimeMinutes?: number | null;
   dietaryTags?: string[];
+  recipeContent?: RecipeContent | null;
 }

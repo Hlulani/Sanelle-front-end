@@ -10,6 +10,9 @@ assert.equal(recipeNames.length, 166, 'All current recipes have deliberate photo
 for (const [name, match] of Object.entries(catalogue.recipes)) {
   assert(catalogue.photos[match.photoKey], 'Missing photo match for ' + name);
 }
+for (const [alias, original] of Object.entries(catalogue.aliases ?? {})) {
+  assert(catalogue.recipes[original], 'Recipe title alias has no photo: ' + alias);
+}
 let bytes = 0;
 for (const [key, photo] of Object.entries(catalogue.photos)) {
   assert(/^assets\/meals\/[^/]+\.jpg$/.test(photo.src), 'Local photo path: ' + key);

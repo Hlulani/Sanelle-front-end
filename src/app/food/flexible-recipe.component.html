@@ -28,21 +28,89 @@
         ><button [class.selected]="stage === 'cook'" (click)="stage = 'cook'">2. Prepare</button>
       </div>
       @if (stage === 'cook') {
-        <div class="prep-note">
-          <strong>Ready to prepare?</strong>
+        <div class="prep-note cooking-steps">
+          <h3>How to cook</h3>
+          <p class="recipe-cooking-name">{{ m.name }}</p>
           <p>
             {{
               m.prepTimeMinutes !== null && m.prepTimeMinutes !== undefined
-                ? 'Set aside ' + m.prepTimeMinutes + ' minutes.'
+                ? 'Recorded preparation time: ' + m.prepTimeMinutes + ' minutes.'
                 : 'Preparation time is not recorded.'
             }}
           </p>
-          <ol>
-            @for (line of m.instructions; track $index) {
-              <li>{{ line }}</li>
-            }
-          </ol>
+          @if (m.recipeContent?.ingredientNotes?.length) {
+            <details class="evidence-disclosure ingredient-notes">
+              <summary>Before you start</summary>
+              <ul>
+                @for (note of m.recipeContent!.ingredientNotes; track $index) {
+                  <li>{{ note }}</li>
+                }
+              </ul>
+            </details>
+          }
+          @if (m.instructions && m.instructions.length) {
+            <ol aria-label="Cooking steps">
+              @for (line of m.instructions; track $index) {
+                <li>{{ line }}</li>
+              }
+            </ol>
+          } @else {
+            <p role="status">
+              Cooking instructions are not recorded for this meal. Choose another recipe if you need step-by-step
+              guidance.
+            </p>
+          }
+          @if (checks().length) {
+            <div class="cooking-checks">
+              <h4>Check before serving</h4>
+              @for (check of checks(); track check.label) {
+                <p>
+                  <strong>{{ check.label }}.</strong> {{ check.text }}
+                  <a [href]="check.source" target="_blank" rel="noopener noreferrer">Source</a>
+                </p>
+              }
+            </div>
+          }
+          @if (m.recipeContent; as content) {
+            <details class="evidence-disclosure recipe-sources">
+              <summary>Recipe notes &amp; sources</summary>
+              <p>{{ content.timingNote }}</p>
+              <p>
+                For larger portions, keep pieces even and cook in batches if needed. Ingredient amounts scale; cooking
+                times do not.
+              </p>
+              <p>
+                These directions clarify the original recipe. Sources support cooking techniques and food handling; they
+                do not validate this complete recipe.
+              </p>
+              <p>
+                {{
+                  content.kitchenTested
+                    ? 'This version records kitchen testing.'
+                    : 'This recipe has not been kitchen-tested.'
+                }}
+              </p>
+              <ul>
+                @for (url of content.sourceUrls; track url) {
+                  <li>
+                    <a [href]="url" target="_blank" rel="noopener noreferrer">{{ sourceLabel(url) }}</a>
+                  </li>
+                }
+              </ul>
+              <span>Content version: {{ content.version }}</span>
+            </details>
+          }
+          @if (plannedDay(); as day) {
+            <button class="primary wide" [disabled]="saving()" (click)="togglePrepared()">
+              {{ day.preparedAt ? 'Undo prep' : 'Mark prep done' }}
+            </button>
+          } @else if (date) {
+            <p class="fine-print">Save this meal in your plan before marking preparation done.</p>
+          }
         </div>
+      }
+      @if (date) {
+        <a class="text-action" routerLink="/food/plan" [queryParams]="{ date: date }">Back to my meal plan</a>
       }
       <div class="serving-row">
         <span>Servings</span>

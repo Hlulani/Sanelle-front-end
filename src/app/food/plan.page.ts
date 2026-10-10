@@ -1,6 +1,7 @@
 import { FlexibleRecipeComponent } from './flexible-recipe.component';
 import { FoodPathsComponent } from './food-paths.component';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
@@ -56,6 +57,9 @@ const WEEKDAYS = [
   templateUrl: './plan.page.html',
 })
 export class PlanPage {
+  @ViewChild(IonContent) private content?: IonContent;
+  @ViewChild('dayEditor', { read: ElementRef }) private dayEditor?: ElementRef<HTMLElement>;
+  private scrollVersion = 0;
   private readonly editor = inject(PlanEditor);
   private readonly food = inject(FoodProfileService);
   private readonly catalog = inject(RecipeCatalog);
@@ -117,7 +121,8 @@ export class PlanPage {
   readonly servings = signal(1);
   startDate = this.today;
 
-  readonly view = signal<'meals' | 'shopping'>('meals');
+  private readonly query = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+  readonly view = computed(() => (this.query().get('view') === 'shopping' ? 'shopping' : 'meals'));
   readonly selected = signal<string | null>(null);
   readonly week = signal(0);
   readonly busy = signal(false);
@@ -135,6 +140,10 @@ export class PlanPage {
     return plan ? groceryWeeks(plan, this.catalog.recipes()) : [];
   });
   readonly list = computed(() => this.lists()[Math.min(this.week(), this.lists().length - 1)] ?? null);
+  readonly shoppingRangeLabel = computed(() => {
+    const list = this.list();
+    return list ? `${this.short(list.from)} to ${this.short(list.to)}` : '';
+  });
   readonly shoppingItems = computed(() => [
     ...(this.list()?.items ?? []).map((item) => ({ ...item, have: false })),
     ...(this.list()?.have ?? []).map((item) => ({ ...item, have: true })),
@@ -165,6 +174,19 @@ export class PlanPage {
     this.batch.set(p.practical.includes('batch'));
     this.maxPrep.set(p.practical.includes('quick') ? 30 : null);
     const params = this.route.snapshot.queryParamMap;
+    const date = params.get('date');
+    if (date && this.plan()?.days.some((d) => d.date === date)) {
+      this.selected.set(date);
+      this.week.set(Math.floor(this.plan()!.days.findIndex((d) => d.date === date) / 7));
+    }
+    const requestedWeek = Number(params.get('week'));
+    if (
+      params.has('week') &&
+      Number.isInteger(requestedWeek) &&
+      requestedWeek >= 0 &&
+      requestedWeek < this.weeks().length
+    )
+      this.week.set(requestedWeek);
     const servings = Number(params.get('servings'));
     if (Number.isInteger(servings) && servings >= 1 && servings <= 12) this.servings.set(servings);
     if (params.get('swapped')) this.notice.set(params.get('swapped'));
@@ -177,6 +199,7 @@ export class PlanPage {
       this.error.set(messageFor(e, 'Meals couldn’t load. Please try again.'));
     } finally {
       this.busy.set(false);
+      if (date && this.view() === 'meals') this.revealDay();
     }
   }
 
@@ -221,11 +244,10 @@ export class PlanPage {
       this.setupOpen.set(false);
       this.selected.set(null);
       this.week.set(0);
-      this.view.set('meals');
       this.notice.set(null);
       await this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { new: null, meal: null, servings: null },
+        queryParams: { new: null, meal: null, servings: null, view: null, week: null },
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
@@ -240,10 +262,7 @@ export class PlanPage {
     });
   }
   async savePlan() {
-    await this.run(async () => {
-      await this.editor.saveDraft();
-      await this.router.navigate(['/tabs/today'], { queryParams: { planSaved: 1 } });
-    });
+    await this.run(() => this.editor.saveDraft());
   }
 
   startAgain() {
@@ -256,8 +275,27 @@ export class PlanPage {
     this.notice.set(null);
   }
 
+  openDay(day: PlanDay) {
+    if (day.meal && !this.isDraft()) {
+      void this.router.navigate(['/food/recipe', day.meal.mealId], { queryParams: { date: day.date, stage: 'cook' } });
+    } else this.select(day);
+  }
+
   select(day: PlanDay) {
     this.selected.set(day.date);
+    this.week.set(Math.floor((this.plan()?.days.findIndex((d) => d.date === day.date) ?? 0) / 7));
+    this.revealDay();
+  }
+
+  private revealDay() {
+    const version = ++this.scrollVersion;
+    requestAnimationFrame(async () => {
+      const target = this.dayEditor?.nativeElement;
+      if (!target || !this.content) return;
+      const scroll = await this.content.getScrollElement();
+      if (version !== this.scrollVersion || this.view() !== 'meals' || !target.isConnected) return;
+      await this.content.scrollToPoint(0, scroll.scrollTop + target.getBoundingClientRect().top - 20, 0);
+    });
   }
 
   async leaveOpen(day: PlanDay) {
@@ -270,6 +308,28 @@ export class PlanPage {
 
   swap(day: PlanDay) {
     void this.router.navigate(['/food/swap', day.date]);
+  }
+
+  async showView(view: 'meals' | 'shopping') {
+    ++this.scrollVersion;
+    await this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { view: view === 'shopping' ? 'shopping' : null, week: this.week() },
+      queryParamsHandling: 'merge',
+    });
+    requestAnimationFrame(() => {
+      if (this.view() === view) void this.content?.scrollToTop(0);
+    });
+  }
+
+  async showWeek(index: number) {
+    this.week.set(index);
+    await this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { week: index },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   // Shopping

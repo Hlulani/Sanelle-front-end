@@ -1357,7 +1357,7 @@
     overflow-x: auto;
     padding-bottom: 10px;
   }
-  .plan-calendar > button {
+  .plan-calendar > .plan-day > button {
     min-height: 190px;
     border: 1px solid var(--line);
     background: #f7f5f2;
@@ -1368,47 +1368,47 @@
     gap: 6px;
     text-align: left;
   }
-  .plan-calendar > button.selected {
+  .plan-calendar > .plan-day > button.selected {
     border: 2px solid var(--berry);
     padding: 7px;
   }
-  .plan-calendar > button.prepared {
+  .plan-calendar > .plan-day > button.prepared {
     box-shadow: inset 0 4px var(--apricot);
   }
-  .plan-calendar > button > span {
+  .plan-calendar > .plan-day > button > span {
     color: var(--berry);
     font-size: 0.58rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
-  .plan-calendar > button img {
+  .plan-calendar > .plan-day > button img {
     width: 100%;
     height: 80px;
     object-fit: cover;
   }
-  .plan-calendar > button strong {
+  .plan-calendar > .plan-day > button strong {
     font-size: 0.68rem;
     line-height: 1.25;
   }
-  .plan-calendar > button small {
+  .plan-calendar > .plan-day > button small {
     color: var(--muted);
     font-size: 0.55rem;
   }
   .plan-calendar.compact {
     grid-template-columns: repeat(7, minmax(94px, 1fr));
   }
-  .plan-calendar.compact > button {
+  .plan-calendar.compact > .plan-day > button {
     min-height: 125px;
     grid-template-rows: auto 48px 1fr;
   }
-  .plan-calendar.compact > button img {
+  .plan-calendar.compact > .plan-day > button img {
     height: 48px;
   }
-  .plan-calendar.compact > button strong {
+  .plan-calendar.compact > .plan-day > button strong {
     font-size: 0.57rem;
   }
-  .plan-calendar.compact > button > small {
+  .plan-calendar.compact > .plan-day > button > small {
     display: none;
   }
   .open-day {
@@ -5000,4 +5000,117 @@
   display: block;
   height: 100%;
   width: 100%;
+}
+
+// Cooking and shopping use the same plan without burying either task inside recipe editing.
+.figma .plan-day {
+  display: flex;
+  flex-direction: column;
+}
+.figma .plan-day > button {
+  flex: 1;
+  width: 100%;
+}
+.figma .day-cook {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: var(--berry);
+  color: white;
+  padding: 12px 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-decoration: none;
+  min-height: 44px;
+}
+.figma nav.horizon-tabs {
+  grid-template-columns: 1fr 1fr;
+}
+.figma .meal-feature > app-meal-image {
+  position: absolute;
+  inset: 0;
+}
+.figma .shopping-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.figma .shopping-row > label {
+  flex: 1;
+  grid-template-columns: 24px 1fr;
+  border-bottom: 0;
+  min-height: 52px;
+}
+.figma .shopping-row span small {
+  display: block;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.figma .shopping-row > button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.figma .shopping-add input.grocery-quantity {
+  flex: 0 1 80px;
+  border-left: 1px solid var(--line);
+}
+
+.figma .day-edit {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--berry);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.figma .cooking-steps h3 {
+  color: var(--berry);
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+}
+.figma .cooking-steps ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.figma .cooking-steps li + li {
+  margin-top: 14px;
+}
+.figma .cooking-steps li::marker {
+  color: var(--berry);
+  font-weight: 800;
+}
+
+.figma .cooking-steps ul {
+  list-style: disc;
+  padding-left: 1.3em;
+  line-height: 1.6;
+}
+.figma .cooking-checks {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  padding-top: 16px;
+}
+.figma .cooking-checks h4 {
+  color: var(--berry);
+  font-size: 1rem;
+  margin: 0 0 12px;
+}
+.figma .recipe-cooking-name {
+  font-weight: 800;
+  color: var(--ink);
+}
+.figma .cooking-checks a,
+.figma .recipe-sources a {
+  color: var(--berry);
+  text-decoration: underline;
+}
+.figma .recipe-sources a {
+  overflow-wrap: anywhere;
 }

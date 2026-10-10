@@ -1,9 +1,13 @@
 import { inject, Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Preferences } from '@capacitor/preferences';
 import { ApiService, LoginResponse, RegisterRequest } from '../services/api.service';
-import { firstValueFrom, from, map, switchMap, tap } from 'rxjs';
+import { firstValueFrom, from, map, switchMap, tap, timeout } from 'rxjs';
 import { CareReminders } from '../../my-health/care-reminders.service';
 import { accountKey } from '../storage/account-key';
+
+export const SESSION_REFRESH_TIMEOUT_MS = 15_000;
+const SESSION_REFRESH_RETRY_DELAY_MS = 30_000;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -24,6 +28,7 @@ export class AuthService {
 
   // Shared promise so concurrent 401s trigger one refresh call, not one each.
   private refreshInFlight: Promise<boolean> | null = null;
+  private refreshRetryAfter = 0;
 
   // Resolves once the in-memory cache has been hydrated from Preferences.
   // Must be awaited (via an app initializer) before any guard runs.
@@ -85,6 +90,7 @@ export class AuthService {
     this.accessToken = null;
     this.refreshToken = null;
     this.onboardingCompleted = false;
+    this.refreshRetryAfter = 0;
     void Preferences.remove({ key: this.TOKEN_KEY });
     void Preferences.remove({ key: this.REFRESH_KEY });
     void Preferences.remove({ key: this.LEGACY_ONBOARDING_KEY });
@@ -129,6 +135,9 @@ export class AuthService {
     // 2) a refresh is already underway elsewhere — await the same one
     if (this.refreshInFlight) return this.refreshInFlight;
 
+    // Don't immediately block the sign-in screen with the same unavailable-server request.
+    if (Date.now() < this.refreshRetryAfter) return false;
+
     // 3) refresh token itself is missing/expired, don't bother calling the API
     if (!this.hasValidRefreshToken()) return false;
 
@@ -144,16 +153,23 @@ export class AuthService {
     if (!rt) return false;
 
     try {
-      const pair = await firstValueFrom(this.api.refresh(rt));
+      const pair = await firstValueFrom(this.api.refresh(rt).pipe(timeout(SESSION_REFRESH_TIMEOUT_MS)));
       this.storeTokens(pair.accessToken, pair.refreshToken);
       return true;
-    } catch {
-      this.logout();
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && [400, 401, 403].includes(error.status)) {
+        this.logout();
+      } else {
+        // An outage isn't an invalid session. Keep its credentials and all local records;
+        // a manual sign-in remains available and a later navigation can retry restoration.
+        this.refreshRetryAfter = Date.now() + SESSION_REFRESH_RETRY_DELAY_MS;
+      }
       return false;
     }
   }
 
   private storeTokens(accessToken: string, refreshToken: string): void {
+    this.refreshRetryAfter = 0;
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     void Preferences.set({ key: this.TOKEN_KEY, value: accessToken });

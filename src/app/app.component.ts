@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
+import { NavigationEnd, NavigationError, Router } from '@angular/router';
 import { filter, take } from 'rxjs';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AuthService } from './core/auth/auth.service';
+import { showStartupRecovery } from '../startup-recovery';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +21,14 @@ export class AppComponent implements OnInit {
     // The splash in index.html stays until the first screen is in place, then fades.
     this.router.events
       .pipe(
-        filter((e) => e instanceof NavigationEnd || e instanceof NavigationCancel || e instanceof NavigationError),
+        filter((e) => e instanceof NavigationEnd || e instanceof NavigationError),
         take(1),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => hideSplash());
+      .subscribe((event) => {
+        if (event instanceof NavigationError) showStartupRecovery();
+        else hideSplash();
+      });
     await this.auth.restoreSession();
   }
 
