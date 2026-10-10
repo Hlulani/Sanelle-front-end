@@ -8,6 +8,10 @@ import { APP_URL } from './support/accounts';
  * afterwards. Draft food topics only exist in the development build, so the app is served
  * with ng serve.
  */
+const TIMEZONE = 'Europe/Vienna';
+// Tests that compute dates themselves must agree with the browser about what "today" is,
+// including around midnight, so the test process uses the browser's time zone too.
+process.env['TZ'] = TIMEZONE;
 const PHONE = { width: 390, height: 844 };
 const BACKEND_DIR = process.env['SANELLE_BACKEND_DIR'] ?? path.resolve(__dirname, '../../sanelle-back-end');
 
@@ -30,7 +34,7 @@ export default defineConfig({
     actionTimeout: 15_000,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    timezoneId: 'Europe/Vienna',
+    timezoneId: TIMEZONE,
   },
   projects: [
     {
