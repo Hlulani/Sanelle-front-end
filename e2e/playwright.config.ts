@@ -4,8 +4,9 @@ import { APP_URL } from './support/accounts';
 
 /**
  * End-to-end tests of the real app against the real backend. Each test signs up its own
- * throwaway account and deletes it afterwards. Draft food topics only exist in the
- * development build, so the app is served with ng serve.
+ * throwaway account, confirmed through the backend's development outbox, and deletes it
+ * afterwards. Draft food topics only exist in the development build, so the app is served
+ * with ng serve.
  */
 const PHONE = { width: 390, height: 844 };
 const BACKEND_DIR = process.env['SANELLE_BACKEND_DIR'] ?? path.resolve(__dirname, '../../sanelle-back-end');
@@ -45,6 +46,8 @@ export default defineConfig({
     {
       command: './mvnw spring-boot:run',
       cwd: BACKEND_DIR,
+      // Account tests confirm email through the development outbox, which is off unless asked for.
+      env: { ...(process.env as Record<string, string>), MAIL_OUTBOX_ENABLED: 'true' },
       url: 'http://localhost:8080/v3/api-docs',
       reuseExistingServer: true,
       timeout: 3 * 60_000,
