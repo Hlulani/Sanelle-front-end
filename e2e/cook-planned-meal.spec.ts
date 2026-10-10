@@ -37,6 +37,9 @@ test('a selected planned meal opens its own cooking steps and saves preparation 
   await expect(screen(page).locator('.stepper strong')).toHaveText('2');
   await screen(page).getByRole('button', { name: 'Mark prep done', exact: true }).click();
   await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();
+  // The confirmation and the way back appear where she tapped, not at the foot of the recipe.
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Prep done for' })).toBeInViewport();
+  await expect(screen(page).getByRole('link', { name: 'Back to my meal plan', exact: true })).toBeInViewport();
   await page.reload();
   await expect(screen(page).locator('.planner h2')).toHaveText(mealName);
   await expect(screen(page).getByRole('button', { name: 'Undo prep', exact: true })).toBeVisible();

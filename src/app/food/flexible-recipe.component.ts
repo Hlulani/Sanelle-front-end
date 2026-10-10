@@ -1,3 +1,4 @@
+import { parseLocalDate } from '../shared/calendar-date';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -67,6 +68,8 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly notice = signal<string | null>(null);
+  /** Shown right under the prep button. */
+  readonly prepNotice = signal<string | null>(null);
   readonly plannedDay = computed(() => {
     if (!this.date || this.editor.isDraft()) return null;
     const day = this.editor.plan()?.days.find((d) => d.date === this.date);
@@ -100,6 +103,7 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     this.notice.set(null);
+    this.prepNotice.set(null);
     this.meal.set(null);
     this.option.set(null);
     try {
@@ -124,8 +128,13 @@ export class FlexibleRecipeComponent implements OnChanges, OnDestroy {
     if (!day) return;
     await this.run(async () => {
       await this.editor.togglePrepared(day.date);
-      this.notice.set(
-        day.preparedAt ? 'Preparation mark removed.' : 'Preparation saved for this day in your meal plan.',
+      const when = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(
+        parseLocalDate(day.date),
+      );
+      this.prepNotice.set(
+        day.preparedAt
+          ? 'Prep mark removed.'
+          : `Prep done for ${when}. It’s ticked in your meal plan; it doesn’t record what you ate.`,
       );
     });
   }

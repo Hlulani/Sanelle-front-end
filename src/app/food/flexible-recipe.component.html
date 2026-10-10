@@ -104,6 +104,15 @@
             <button class="primary wide" [disabled]="saving()" (click)="togglePrepared()">
               {{ day.preparedAt ? 'Undo prep' : 'Mark prep done' }}
             </button>
+            <!-- Confirms where she tapped, not at the foot of the recipe. -->
+            @if (prepNotice(); as n) {
+              <p class="prep-confirmation" [class.is-done]="!!day.preparedAt" role="status">
+                @if (day.preparedAt) {
+                  <svg figmaIcon="check" />
+                }
+                {{ n }}
+              </p>
+            }
           } @else if (date) {
             <p class="fine-print">Save this meal in your plan before marking preparation done.</p>
           }

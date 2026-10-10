@@ -1826,6 +1826,24 @@
     line-height: 1.4;
     margin: 10px 0 0;
   }
+  .prep-confirmation {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 10px 0 0;
+    font-size: 0.81rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .prep-confirmation.is-done {
+    color: #2f674b;
+  }
+  .prep-confirmation svg {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+  }
   .centered {
     text-align: center;
   }
