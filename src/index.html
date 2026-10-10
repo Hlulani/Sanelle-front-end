@@ -21,9 +21,51 @@
     <!-- add to homescreen for ios -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="theme-color" content="#74203f" />
+
+    <!-- The splash shows before any script loads; the app removes it after its first screen. -->
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 18px;
+        background: #74203f;
+        transition: opacity 240ms ease;
+      }
+      #splash img {
+        width: 212px;
+        height: auto;
+      }
+      #splash p {
+        margin: 0;
+        color: #ead5dc;
+        font:
+          600 15px/1.4 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      #splash.is-done {
+        opacity: 0;
+        pointer-events: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #splash {
+          transition: none;
+        }
+      }
+    </style>
   </head>
 
   <body>
+    <div id="splash" role="status" aria-label="Sanelle is loading">
+      <img src="assets/brand/sanelle-logo-on-berry.png" alt="" width="212" height="58" />
+      <p>Private, practical support</p>
+    </div>
     <app-root></app-root>
   </body>
 </html>
