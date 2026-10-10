@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { DialogFocusDirective } from '../../shared/design/figma/dialog-focus.directive';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +13,7 @@ import { TodayPage } from '../../today/today.page';
   selector: 'app-check-in',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DialogFocusDirective, FigmaIconComponent, HealthPage, TodayPage],
+  imports: [FormsModule, DialogFocusDirective, FigmaIconComponent, HealthPage, TodayPage],
   templateUrl: './check-in.page.html',
 })
 export class CheckInPage implements OnInit {
@@ -44,6 +45,8 @@ export class CheckInPage implements OnInit {
     'Couldn’t do usual activities',
   ];
   readonly symptoms = this.selected;
+  /** Her own words, kept exactly as written. */
+  note = '';
   get impact() {
     return this.dailyImpact();
   }
@@ -61,6 +64,7 @@ export class CheckInPage implements OnInit {
     );
     this.bleed.set(e?.bleeding);
     this.dailyImpact.set(e?.dailyImpact);
+    this.note = e?.notes ?? '';
     this.ready.set(true);
   }
   toggle(choice: NonNullable<SymptomEntry['observedSymptoms']>[number]) {
@@ -78,7 +82,7 @@ export class CheckInPage implements OnInit {
   }
   async save() {
     if (!this.ready() || this.saving()) return;
-    if (!this.selected().length && !this.dailyImpact()) {
+    if (!this.selected().length && !this.dailyImpact() && !this.note.trim()) {
       this.error.set('Choose at least one answer, or close without saving.');
       return;
     }
@@ -93,6 +97,7 @@ export class CheckInPage implements OnInit {
         observedSymptoms: [...observed],
         bleeding: observed.includes('Bleeding') ? this.bleed() : undefined,
         dailyImpact: this.dailyImpact(),
+        notes: this.note.trim() || undefined,
         pain: observed.includes('Pain') ? prior?.pain : undefined,
         bloating: observed.includes('Pelvic pressure') ? prior?.bloating : undefined,
         fatigue: observed.includes('Low energy') ? prior?.fatigue : undefined,

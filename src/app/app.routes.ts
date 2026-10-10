@@ -135,6 +135,11 @@ export const routes: Routes = [
     loadComponent: () => import('./my-health/backup/backup.page').then((m) => m.BackupPage),
   },
   {
+    path: 'learn',
+    canActivate: [authGuard],
+    loadComponent: () => import('./evidence/learn.page').then((m) => m.LearnPage),
+  },
+  {
     path: 'learn/:id',
     canActivate: [authGuard],
     loadComponent: () => import('./evidence/evidence-explanation.page').then((m) => m.EvidenceExplanationPage),

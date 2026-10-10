@@ -11,6 +11,12 @@ import { WindowDay, dayMarkText, symptomStats, symptomWindow } from './symptoms/
 import { isIsoDate, localIsoDate } from '../shared/calendar-date';
 import { messageFor } from '../core/errors/errors';
 import { DialogFocusDirective } from '../shared/design/figma/dialog-focus.directive';
+import {
+  SUGGESTED_FROM_CHECKINS,
+  SuggestedQuestion,
+  matchExplanations,
+  suggestQuestions,
+} from '../insights/records-assistant';
 
 @Component({
   selector: 'app-health',
@@ -39,6 +45,17 @@ export class HealthPage implements OnInit {
     { key: 'cavity' as FindingKey, label: 'Cavity involvement' },
   ];
   readonly notesImage = 'assets/photos/figma-notes.jpg';
+  /** Suggestions read from her own check-ins. Nothing is saved until she adds one. */
+  readonly suggestions = computed(() => suggestQuestions(this.design.health.record(), this.today));
+  readonly matches = computed(() =>
+    matchExplanations(this.design.health.record(), (id) => !!this.evidence.published(id), this.today).map((m) => ({
+      ...m,
+      entry: this.evidence.published(m.claimId)!,
+    })),
+  );
+  /** Her edits to suggested wording, by original text. */
+  readonly suggestionDrafts = signal<Record<string, string>>({});
+  readonly addedSuggestion = signal<string | null>(null);
   private readonly viewState = signal<'diagnosis' | 'symptoms'>('diagnosis');
   get view() {
     return this.viewState();
@@ -127,6 +144,26 @@ export class HealthPage implements OnInit {
     this.labDate = this.clinicalResult?.date ?? '';
     this.showLabForm = value;
   }
+  suggestionText(q: SuggestedQuestion): string {
+    return this.suggestionDrafts()[q.text] ?? q.text;
+  }
+
+  editSuggestion(q: SuggestedQuestion, text: string) {
+    this.suggestionDrafts.update((d) => ({ ...d, [q.text]: text }));
+  }
+
+  async addSuggestion(q: SuggestedQuestion) {
+    const text = this.suggestionText(q).trim();
+    if (!text) return;
+    this.error.set(null);
+    try {
+      await this.design.health.addQuestion(text, undefined, SUGGESTED_FROM_CHECKINS);
+      this.addedSuggestion.set(text);
+    } catch (e) {
+      this.error.set(messageFor(e, 'Your question couldn’t be saved. Please try again.'));
+    }
+  }
+
   published(id: string) {
     return this.evidence.published(id);
   }

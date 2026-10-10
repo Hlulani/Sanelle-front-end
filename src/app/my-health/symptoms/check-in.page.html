@@ -43,6 +43,15 @@
           <button [class]="impact === item ? 'selected' : ''" (click)="setImpact(item)"><i></i>{{ item }}</button>
         }
       </div>
+      <label class="field-label" for="checkin-note">Anything else, in your own words? (optional)</label>
+      <textarea
+        id="checkin-note"
+        class="checkin-note"
+        name="note"
+        rows="2"
+        [(ngModel)]="note"
+        placeholder="e.g. Flooding at night; felt dizzy on the stairs"
+      ></textarea>
       @if (error()) {
         <p class="form-error" role="alert">{{ error() }}</p>
       }

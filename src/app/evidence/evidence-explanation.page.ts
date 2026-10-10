@@ -8,6 +8,7 @@ import { FoodPage } from '../food/food.page';
 import { TodayPage } from '../today/today.page';
 import { HealthPage } from '../my-health/health.page';
 import { ReportDetailsPage } from '../my-health/report/report-details.page';
+import { LearnPage } from './learn.page';
 import { EvidenceService } from './evidence.service';
 import { OUTCOME_KIND_LABELS } from './evidence.model';
 
@@ -16,7 +17,7 @@ import { OUTCOME_KIND_LABELS } from './evidence.model';
   selector: 'app-evidence-explanation',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [DialogFocusDirective, FigmaIconComponent, FoodPage, TodayPage, HealthPage, ReportDetailsPage],
+  imports: [DialogFocusDirective, FigmaIconComponent, FoodPage, TodayPage, HealthPage, ReportDetailsPage, LearnPage],
   templateUrl: './evidence-explanation.page.html',
 })
 export class EvidenceExplanationPage {
@@ -38,6 +39,8 @@ export class EvidenceExplanationPage {
       void this.router.navigate(['/health/details'], {
         queryParams: { report: this.route.snapshot.queryParamMap.get('report') },
       });
+    } else if (this.origin === 'learn') {
+      void this.router.navigateByUrl('/learn');
     } else if (this.origin === 'health') {
       void this.router.navigate(['/tabs/health'], {
         queryParams: { view: this.route.snapshot.queryParamMap.get('view') },

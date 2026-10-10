@@ -271,12 +271,54 @@
           </div>
           <p>Days without a check-in remain unknown. They are not counted as symptom-free days.</p>
         </section>
+        @if (suggestions().length || matches().length) {
+          <section class="from-checkins" aria-labelledby="from-checkins-title">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">Read from your check-ins</p>
+                <h2 id="from-checkins-title">Worth bringing up</h2>
+              </div>
+            </div>
+            <p class="fine-print">
+              Suggestions from patterns in your own records. Edit any wording; nothing is saved unless you add it.
+            </p>
+            @if (addedSuggestion(); as a) {
+              <p class="saved-note" role="status">Added to your questions in Appointment: “{{ a }}”</p>
+            }
+            @for (q of suggestions(); track q.text) {
+              <article class="suggestion-card">
+                <p class="why">{{ q.why }}</p>
+                <label
+                  ><span class="visually-hidden">Suggested question</span
+                  ><textarea
+                    rows="3"
+                    [ngModel]="suggestionText(q)"
+                    (ngModelChange)="editSuggestion(q, $event)"
+                    [name]="'suggestion-' + $index"
+                  ></textarea>
+                </label>
+                <button class="secondary" (click)="addSuggestion(q)">Add to my questions</button>
+              </article>
+            }
+            @for (m of matches(); track m.claimId) {
+              <article class="suggestion-card match-card">
+                <p class="why">You wrote: “{{ m.quote }}”</p>
+                <strong>{{ m.entry.title }}</strong>
+                <p>{{ m.entry.explanation }}</p>
+                <a [routerLink]="['/learn', m.claimId]" [queryParams]="{ from: 'health', view: 'symptoms' }"
+                  >Sources and limits</a
+                >
+              </article>
+            }
+          </section>
+        }
         <section class="context-learning">
           <div class="section-title">
             <div>
               <p class="eyebrow">Based on what you record</p>
               <h2>Useful context, not predictions</h2>
             </div>
+            <a class="text-action" routerLink="/learn">What the research says</a>
           </div>
           <div class="learning-scroll">
             @if (published('C11')) {

@@ -138,6 +138,15 @@ test('Symptoms empty history and selected check-in match the source', async ({ p
     await page.goto('/health/symptoms');
     await ref.locator('.mobile-nav').getByRole('button', { name: 'My health' }).click();
     await ref.getByRole('tab', { name: 'Symptoms & daily life' }).click();
+    // Explicit correction: the context section links to the full "What the research says" library.
+    const learnLink = screen(page).locator('.context-learning .section-title > a');
+    await expect(learnLink).toHaveText('What the research says');
+    await ref
+      .locator('.context-learning .section-title')
+      .evaluate(
+        (title, html) => title.insertAdjacentHTML('beforeend', html),
+        await learnLink.evaluate((e) => e.outerHTML),
+      );
     await compareFigma(page, ref, 'SYM-02E-source', info, [
       '.topbar',
       '.page-heading',
@@ -163,6 +172,32 @@ test('Symptoms empty history and selected check-in match the source', async ({ p
     // Figma preselects Heavy; clicking its selected button does not clear it. Restore the matching chosen state.
     if (!(await page.locator('.bleeding-scale button.selected').count()))
       await page.locator('.sheet').getByRole('button', { name: 'Heavy', exact: true }).click();
+    // Explicit correction: the check-in has an optional note, in her own words, after the effect on her day.
+    const note = await page
+      .locator('.sheet')
+      .evaluate((sheet) =>
+        ['label[for="checkin-note"]', '#checkin-note'].map((q) => sheet.querySelector(q)!.outerHTML).join(''),
+      );
+    await ref.locator('.sheet .impact-list').evaluate((list, html) => list.insertAdjacentHTML('afterend', html), note);
+    // The note isn't in the prototype, so it keeps the app's space but is left out of the pixel comparison.
+    await expect(page.locator('#checkin-note')).toBeVisible();
+    for (const selector of ['label[for="checkin-note"]', '#checkin-note']) {
+      const box = await page.locator(selector).evaluate((e) => {
+        const c = getComputedStyle(e);
+        return { width: c.width, height: c.height, margin: c.margin, display: c.display, padding: '0', border: '0' };
+      });
+      await ref.locator(selector).evaluate((e, b) => {
+        Object.assign((e as HTMLElement).style, { ...b, boxSizing: 'border-box' });
+      }, box);
+    }
+    for (const p of [page, ref])
+      await p
+        .locator('.sheet')
+        .evaluate((sheet) =>
+          sheet
+            .querySelectorAll<HTMLElement>('label[for="checkin-note"], #checkin-note')
+            .forEach((e) => (e.style.visibility = 'hidden')),
+        );
     await compareFigma(page, ref, 'SYM-01I-source', info, [
       '.sheet',
       '.choice-grid',

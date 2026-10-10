@@ -34,6 +34,9 @@
             <button class="record-answer" (click)="editVisit()">
               {{ record().visitGoal || record().appointment.date ? 'Edit date and concern' : 'Add date and concern' }}
             </button>
+            @if (brief()) {
+              <button class="record-answer" (click)="useDraft()">Draft my concern from my records</button>
+            }
           } @else {
             <div class="answer-form">
               <label
@@ -44,8 +47,16 @@
                 ></textarea></label
               ><label>Date (optional)<input type="date" name="visitDate" [(ngModel)]="visitDate" /></label
               ><label>With (optional)<input name="visitWith" [(ngModel)]="visitWith" /></label>
+              @if (drafted()) {
+                <p class="fine-print" role="status">
+                  Drafted from your own check-ins and notes. Change anything before saving; it isn’t a medical summary.
+                </p>
+              } @else if (brief()) {
+                <button class="record-answer" (click)="useDraft()">Draft from my records</button>
+              }
               <div>
-                <button (click)="saveVisit()">Save</button><button (click)="editingVisit.set(false)">Cancel</button>
+                <button (click)="saveVisit()">Save</button
+                ><button (click)="editingVisit.set(false); drafted.set(false)">Cancel</button>
               </div>
             </div>
           }

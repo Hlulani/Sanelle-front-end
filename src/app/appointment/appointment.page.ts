@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
 import { IonContent } from '@ionic/angular/standalone';
+import { draftVisitBrief } from '../insights/records-assistant';
 import { HealthRepository } from '../my-health/health-repository';
 import { AppointmentQuestion, CareTask, QuestionEvent, questionStatus } from '../my-health/diagnosis.model';
 import { buildSummary, formatDate, summaryAsText } from '../my-health/summary';
@@ -125,12 +126,24 @@ export class AppointmentPage {
   visitDate = '';
   visitWith = '';
   concern = '';
+  /** A draft of her main concern from her own records, if she has check-ins. */
+  readonly brief = computed(() => draftVisitBrief(this.record(), this.today));
+  readonly drafted = signal(false);
 
   ionViewWillEnter() {
     void this.design.load();
   }
 
   formatDate = formatDate;
+
+  /** Fills the concern box with a draft she edits; nothing is saved until she taps Save. */
+  useDraft() {
+    const brief = this.brief();
+    if (!brief) return;
+    if (!this.editingVisit()) this.editVisit();
+    this.concern = brief;
+    this.drafted.set(true);
+  }
 
   editVisit() {
     const r = this.record();
@@ -149,6 +162,7 @@ export class AppointmentPage {
       await this.repo.setAppointment({ date: this.visitDate || undefined, with: this.visitWith.trim() || undefined });
       await this.repo.setVisitGoal(this.concern);
       this.editingVisit.set(false);
+      this.drafted.set(false);
     });
   }
 
