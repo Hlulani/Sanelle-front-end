@@ -83,5 +83,8 @@ Thumbs.db
 # Research library: kept locally, not in the repo
 /docs/research
 
-# Presentation drafts: kept locally, not in the repo
+# Presentation drafts and their capture tooling: kept locally, not in the repo
 /docs/presentation
+/e2e/presentation-capture.spec.ts
+/e2e/presentation.config.ts
+/scripts/build-presentation-pack.cjs
