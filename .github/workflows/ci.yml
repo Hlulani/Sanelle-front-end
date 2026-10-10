@@ -62,8 +62,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Install WebKit for Playwright
-        run: npx playwright install --with-deps webkit
+      - name: Install Chromium and WebKit for Playwright
+        run: npx playwright install --with-deps chromium webkit
       - name: Compile the backend (so the e2e server starts quickly)
         working-directory: sanelle-back-end
         run: ./mvnw -B -q -DskipTests compile
