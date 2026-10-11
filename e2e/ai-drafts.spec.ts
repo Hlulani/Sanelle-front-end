@@ -49,10 +49,12 @@ test('With her consent, AI drafts her concern and questions; anything unsupporte
   const worth = screen(page).getByRole('region', { name: 'Worth bringing up' });
   await worth.getByRole('button', { name: 'Suggest with AI' }).click();
   // Nothing is sent until she agrees, and she's told what goes.
-  await expect(worth.getByRole('group', { name: 'Draft with AI?' })).toContainText('Not your name, email, reports');
+  await expect(worth.getByRole('group', { name: 'Draft with Sanelle AI?' })).toContainText(
+    'Not your name, email, reports',
+  );
   expect(sent).toHaveLength(0);
   await worth.getByRole('button', { name: 'Send and draft' }).click();
-  await expect(worth.getByRole('status').filter({ hasText: 'Drafted by AI (Claude)' })).toBeVisible();
+  await expect(worth.getByRole('status').filter({ hasText: 'Drafted by Sanelle AI' })).toBeVisible();
   await expect(worth.locator('.suggestion-card textarea')).toHaveValue(
     'What could help when heavy bleeding changes my plans?',
   );
@@ -72,7 +74,7 @@ test('With her consent, AI drafts her concern and questions; anything unsupporte
   await expect(concern).toHaveValue(
     'My main concern: heavy bleeding with pain that changed my plans on 1 of 1 check-ins.',
   );
-  await expect(screen(page).getByRole('status').filter({ hasText: 'Drafted by AI (Claude)' })).toBeVisible();
+  await expect(screen(page).getByRole('status').filter({ hasText: 'Drafted by Sanelle AI' })).toBeVisible();
   await screen(page).getByRole('button', { name: 'Save', exact: true }).click();
   await expect(
     screen(page).getByText('My main concern: heavy bleeding with pain that changed my plans on 1 of 1 check-ins.'),

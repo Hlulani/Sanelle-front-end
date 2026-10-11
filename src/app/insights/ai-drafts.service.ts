@@ -6,7 +6,7 @@ import { EvidenceService } from '../evidence/evidence.service';
 import { HealthRecord } from '../my-health/diagnosis.model';
 import { InsightsResponse, buildInsightsRequest, checkDraft } from './ai-drafts';
 
-/** Optional drafting by Claude. Offered only when the server has a key; the rules stay the fallback. */
+/** Optional drafting by Sanelle AI (Claude, via the server). Offered only when the server has a key; the rules stay the fallback. */
 @Injectable({ providedIn: 'root' })
 export class AiDraftsService {
   private readonly http = inject(HttpClient);
