@@ -1,0 +1,31 @@
+{
+  "crop": {
+    "x": 658,
+    "y": 58,
+    "width": 466,
+    "height": 922
+  },
+  "clips": [
+    {
+      "file": "00-check-in-setup.mp4",
+      "durationSeconds": 82.91
+    },
+    {
+      "file": "01-ai-suggestions.mp4",
+      "durationSeconds": 108.36
+    },
+    {
+      "file": "02-ai-visit-draft.mp4",
+      "durationSeconds": 115.11
+    },
+    {
+      "file": "03-report-reading.mp4",
+      "durationSeconds": 84.1
+    },
+    {
+      "file": "04-research-library.mp4",
+      "durationSeconds": 52.82
+    }
+  ],
+  "main": "sanelle-ai-main-demo.mp4"
+}

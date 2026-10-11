@@ -188,3 +188,7 @@ npx capacitor-assets generate --ios --android
 - **Allergy filtering** works from ingredient names and isn't a guarantee of allergen safety. Always check labels.
 
 Implementation details and validation: [2026-10-04 improvements](docs/product-improvements-2026-10-04.md).
+
+## Demo videos
+
+Run `npm run demo:record` to record the health-to-appointment and meal-planning journeys with fictional data. Export presentation-ready MP4 files with `npm run demo:export` (requires FFmpeg). Videos and recording instructions: [docs/demo](docs/demo/README.md).

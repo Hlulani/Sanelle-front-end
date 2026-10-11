@@ -1,0 +1,171 @@
+{
+  "source": "https://sanelle.netlify.app/phone",
+  "fictionalCheckins": true,
+  "realAiRequests": true,
+  "viewport": {
+    "width": 1280,
+    "height": 1040
+  },
+  "phone": {
+    "x": 683,
+    "y": 83,
+    "width": 418,
+    "height": 874
+  },
+  "clips": [
+    {
+      "id": "00-check-in-setup",
+      "title": "Set up two fictional check-ins",
+      "start": 3.686,
+      "end": 86.595
+    },
+    {
+      "id": "01-ai-suggestions",
+      "title": "Sanelle AI suggestions",
+      "start": 86.595,
+      "end": 194.957
+    },
+    {
+      "id": "02-ai-visit-draft",
+      "title": "Sanelle AI appointment concern",
+      "start": 194.957,
+      "end": 310.069
+    },
+    {
+      "id": "03-report-reading",
+      "title": "On-device report text recognition",
+      "start": 310.069,
+      "end": 394.165
+    },
+    {
+      "id": "04-research-library",
+      "title": "Published research supporting the matches",
+      "start": 394.165,
+      "end": 446.985
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Start with her own recorded experience",
+      "seconds": 11.028
+    },
+    {
+      "title": "A fictional check-in: symptoms, impact and her own words",
+      "seconds": 39.066
+    },
+    {
+      "title": "A fictional check-in: symptoms, impact and her own words",
+      "seconds": 67.432
+    },
+    {
+      "title": "Two recorded days; missing days remain unknown",
+      "seconds": 79.592
+    },
+    {
+      "title": "Starting state: suggestions from patterns in her own records",
+      "seconds": 88.641
+    },
+    {
+      "title": "Consent: what is read, who processes it, and review before saving",
+      "seconds": 99.834
+    },
+    {
+      "title": "Fresh AI questions, grounded in the two recorded check-ins",
+      "seconds": 119.358
+    },
+    {
+      "title": "Why this question: inspect its recorded counts",
+      "seconds": 129.468
+    },
+    {
+      "title": "She edits the question before adding it",
+      "seconds": 148.414
+    },
+    {
+      "title": "Only the question she chose is added",
+      "seconds": 159.595
+    },
+    {
+      "title": "An exact note excerpt matched to a published explanation",
+      "seconds": 168.656
+    },
+    {
+      "title": "Read the research explanation and its limits",
+      "seconds": 182.871
+    },
+    {
+      "title": "The chosen question is now ready for the appointment",
+      "seconds": 200.109
+    },
+    {
+      "title": "Draft a concern using her recorded experience",
+      "seconds": 212.281
+    },
+    {
+      "title": "Read the first-person AI draft; it is not a medical summary",
+      "seconds": 227.373
+    },
+    {
+      "title": "She reviews and edits every word before saving",
+      "seconds": 256.861
+    },
+    {
+      "title": "The edited concern is saved for her appointment",
+      "seconds": 300.066
+    },
+    {
+      "title": "Add a scan report",
+      "seconds": 317.323
+    },
+    {
+      "title": "Report reading happens on the device; review before saving",
+      "seconds": 328.559
+    },
+    {
+      "title": "Real text recognition: compare the captured wording",
+      "seconds": 343.557
+    },
+    {
+      "title": "Check the extracted measurements against the report",
+      "seconds": 354.682
+    },
+    {
+      "title": "Confirm only after checking the original",
+      "seconds": 370.993
+    },
+    {
+      "title": "Checked details saved",
+      "seconds": 385.162
+    },
+    {
+      "title": "Published summaries grouped by topic",
+      "seconds": 405.479
+    },
+    {
+      "title": "Short answer and evidence limits",
+      "seconds": 419.687
+    },
+    {
+      "title": "Study population, sources and limitations",
+      "seconds": 433.884
+    }
+  ],
+  "aiCalls": [
+    {
+      "status": 200,
+      "checkinCount": 2,
+      "sentAccountDetails": false
+    },
+    {
+      "status": 200,
+      "checkinCount": 2,
+      "sentAccountDetails": false
+    }
+  ],
+  "browserErrors": [],
+  "safetyTalkingPoints": [
+    "Unsupported diagnoses, causes, numbers, quotations and unpublished references are filtered.",
+    "An empty accepted result keeps the rules-based fallback and the user’s own text.",
+    "Nothing is saved until she chooses Add or Save."
+  ]
+}

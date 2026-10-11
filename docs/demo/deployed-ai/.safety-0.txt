@@ -1,0 +1,4 @@
+Drafts are checked
+Unsupported diagnoses, causes,
+counts, quotes and unpublished
+references are filtered.

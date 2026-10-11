@@ -89,3 +89,8 @@ Thumbs.db
 /e2e/presentation.config.ts
 /scripts/*presentation-pack*
 /scripts/*pitch*
+
+# Demo videos are shared directly, not kept in git
+docs/demo/**/*.mp4
+docs/demo/**/*.webm
+.DS_Store
