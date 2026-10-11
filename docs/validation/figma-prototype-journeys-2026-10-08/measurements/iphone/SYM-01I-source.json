@@ -3,15 +3,15 @@
     "selector": ".sheet",
     "actual": {
       "x": 0,
-      "y": 122.328125,
+      "y": 75.96875,
       "width": 390,
-      "height": 721.671875
+      "height": 768.03125
     },
     "expected": {
       "x": 0,
-      "y": 122.328125,
+      "y": 75.96875,
       "width": 390,
-      "height": 721.671875
+      "height": 768.03125
     },
     "actualType": [
       {
@@ -118,13 +118,13 @@
     "selector": ".choice-grid",
     "actual": {
       "x": 21,
-      "y": 285.109375,
+      "y": 238.75,
       "width": 348,
       "height": 112
     },
     "expected": {
       "x": 21,
-      "y": 285.109375,
+      "y": 238.75,
       "width": 348,
       "height": 112
     },
@@ -185,13 +185,13 @@
     "selector": ".bleeding-scale",
     "actual": {
       "x": 21,
-      "y": 449.765625,
+      "y": 403.40625,
       "width": 348,
       "height": 50.421875
     },
     "expected": {
       "x": 21,
-      "y": 449.765625,
+      "y": 403.40625,
       "width": 348,
       "height": 50.421875
     },
@@ -264,13 +264,13 @@
     "selector": ".impact-list",
     "actual": {
       "x": 21,
-      "y": 583.1875,
+      "y": 536.828125,
       "width": 348,
       "height": 166.8125
     },
     "expected": {
       "x": 21,
-      "y": 583.1875,
+      "y": 536.828125,
       "width": 348,
       "height": 166.8125
     },

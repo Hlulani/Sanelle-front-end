@@ -2571,6 +2571,29 @@
     font-weight: 700;
     color: #2f674b;
   }
+  .ai-consent {
+    display: grid;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--offwhite, #f7f5f2);
+  }
+  .ai-consent p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+  .ai-consent div {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .ai-label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
   .context-learning {
     margin-top: 34px;
   }

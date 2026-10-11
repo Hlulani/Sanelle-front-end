@@ -37,6 +37,18 @@
             @if (brief()) {
               <button class="record-answer" (click)="useDraft()">Draft my concern from my records</button>
             }
+            @if (ai.available()) {
+              @if (askingAi()) {
+                <app-ai-consent (send)="draftWithAi()" (decline)="askingAi.set(false)" />
+              } @else {
+                <button class="record-answer" [disabled]="aiBusy()" (click)="startAi()">
+                  {{ aiBusy() ? 'Drafting…' : 'Draft with AI' }}
+                </button>
+              }
+            }
+            @if (aiNotice(); as n) {
+              <p class="fine-print" role="status">{{ n }}</p>
+            }
           } @else {
             <div class="answer-form">
               <label
@@ -47,12 +59,29 @@
                 ></textarea></label
               ><label>Date (optional)<input type="date" name="visitDate" [(ngModel)]="visitDate" /></label
               ><label>With (optional)<input name="visitWith" [(ngModel)]="visitWith" /></label>
-              @if (drafted()) {
+              @if (drafted() === 'ai') {
+                <p class="ai-label" role="status">
+                  Drafted by AI (Claude) from your check-ins and notes. Check every word before saving; it isn’t a
+                  medical summary.
+                </p>
+              } @else if (drafted()) {
                 <p class="fine-print" role="status">
                   Drafted from your own check-ins and notes. Change anything before saving; it isn’t a medical summary.
                 </p>
               } @else if (brief()) {
                 <button class="record-answer" (click)="useDraft()">Draft from my records</button>
+              }
+              @if (ai.available()) {
+                @if (askingAi()) {
+                  <app-ai-consent (send)="draftWithAi()" (decline)="askingAi.set(false)" />
+                } @else {
+                  <button class="record-answer" [disabled]="aiBusy()" (click)="startAi()">
+                    {{ aiBusy() ? 'Drafting…' : 'Draft with AI' }}
+                  </button>
+                }
+              }
+              @if (aiNotice(); as n) {
+                <p class="fine-print" role="status">{{ n }}</p>
               }
               <div>
                 <button (click)="saveVisit()">Save</button

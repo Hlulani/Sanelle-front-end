@@ -279,9 +279,34 @@
                 <h2 id="from-checkins-title">Worth bringing up</h2>
               </div>
             </div>
-            <p class="fine-print">
-              Suggestions from patterns in your own records. Edit any wording; nothing is saved unless you add it.
-            </p>
+            @if (aiDraft()) {
+              <p class="ai-label" role="status">Drafted by AI (Claude) from your check-ins. Check it before adding.</p>
+            } @else {
+              <p class="fine-print">
+                Suggestions from patterns in your own records. Edit any wording; nothing is saved unless you add it.
+              </p>
+            }
+            @if (ai.available()) {
+              @if (askingAi() && !ai.consented()) {
+                <app-ai-consent (send)="suggestWithAi()" (decline)="askingAi.set(false)" />
+              } @else if (aiDraft()) {
+                <button class="text-action" type="button" (click)="aiDraft.set(null)">
+                  Show the suggestions from my check-ins
+                </button>
+              } @else {
+                <button
+                  class="text-action"
+                  type="button"
+                  [disabled]="aiBusy()"
+                  (click)="ai.consented() ? suggestWithAi() : askingAi.set(true)"
+                >
+                  {{ aiBusy() ? 'Drafting…' : 'Suggest with AI' }}
+                </button>
+              }
+            }
+            @if (aiNotice(); as n) {
+              <p class="fine-print" role="status">{{ n }}</p>
+            }
             @if (addedSuggestion(); as a) {
               <p class="saved-note" role="status">Added to your questions in Appointment: “{{ a }}”</p>
             }

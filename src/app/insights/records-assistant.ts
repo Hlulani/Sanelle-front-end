@@ -29,7 +29,7 @@ export interface MatchedExplanation {
 
 const plural = (n: number, one: string, many = one + 's') => `${n} ${n === 1 ? one : many}`;
 
-type Symptom = 'bleeding' | 'pain' | 'pressure' | 'energy';
+export type Symptom = 'bleeding' | 'pain' | 'pressure' | 'energy';
 const SYMPTOM_WORDS: Record<Symptom, string> = {
   bleeding: 'bleeding',
   pain: 'pain',
@@ -38,7 +38,7 @@ const SYMPTOM_WORDS: Record<Symptom, string> = {
 };
 
 /** Whether a check-in recorded the symptom, from either the quick check-in or older detailed entries. */
-function noticed(e: SymptomEntry, s: Symptom): boolean {
+export function noticed(e: SymptomEntry, s: Symptom): boolean {
   switch (s) {
     case 'bleeding':
       return (e.bleeding !== undefined && e.bleeding !== 'none') || !!e.observedSymptoms?.includes('Bleeding');

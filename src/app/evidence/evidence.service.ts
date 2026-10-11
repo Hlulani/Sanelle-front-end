@@ -26,6 +26,11 @@ export class EvidenceService {
     return this.entries.filter((e) => e.status === 'published' && e.topic === topic);
   }
 
+  /** Every published entry, in catalogue order. */
+  allPublished(): CatalogEntry[] {
+    return this.entries.filter((e) => e.status === 'published');
+  }
+
   /** Internal catalogue only. */
   entry(id: string): CatalogEntry | null {
     return this.find(id) ?? null;

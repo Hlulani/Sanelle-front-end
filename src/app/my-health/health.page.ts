@@ -17,12 +17,22 @@ import {
   matchExplanations,
   suggestQuestions,
 } from '../insights/records-assistant';
+import { AiConsentComponent } from '../insights/ai-consent.component';
+import { AiDraftsService } from '../insights/ai-drafts.service';
 
 @Component({
   selector: 'app-health',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IonContent, FormsModule, RouterLink, FigmaFrameComponent, FigmaIconComponent, DialogFocusDirective],
+  imports: [
+    IonContent,
+    FormsModule,
+    RouterLink,
+    FigmaFrameComponent,
+    FigmaIconComponent,
+    DialogFocusDirective,
+    AiConsentComponent,
+  ],
   templateUrl: './health.page.html',
 })
 export class HealthPage implements OnInit {
@@ -46,12 +56,23 @@ export class HealthPage implements OnInit {
   ];
   readonly notesImage = 'assets/photos/figma-notes.jpg';
   /** Suggestions read from her own check-ins. Nothing is saved until she adds one. */
-  readonly suggestions = computed(() => suggestQuestions(this.design.health.record(), this.today));
+  readonly ruleSuggestions = computed(() => suggestQuestions(this.design.health.record(), this.today));
+  readonly ruleMatches = computed(() =>
+    matchExplanations(this.design.health.record(), (id) => !!this.evidence.published(id), this.today),
+  );
+  readonly ai = inject(AiDraftsService);
+  readonly askingAi = signal(false);
+  readonly aiBusy = signal(false);
+  readonly aiNotice = signal<string | null>(null);
+  /** An AI draft that passed every check; it replaces the rule-based suggestions until she leaves. */
+  readonly aiDraft = signal<{ questions: SuggestedQuestion[]; matches: { claimId: string; quote: string }[] } | null>(
+    null,
+  );
+  readonly suggestions = computed(() => this.aiDraft()?.questions ?? this.ruleSuggestions());
   readonly matches = computed(() =>
-    matchExplanations(this.design.health.record(), (id) => !!this.evidence.published(id), this.today).map((m) => ({
-      ...m,
-      entry: this.evidence.published(m.claimId)!,
-    })),
+    (this.aiDraft()?.matches ?? this.ruleMatches())
+      .filter((m) => this.evidence.published(m.claimId))
+      .map((m) => ({ ...m, entry: this.evidence.published(m.claimId)! })),
   );
   /** Her edits to suggested wording, by original text. */
   readonly suggestionDrafts = signal<Record<string, string>>({});
@@ -128,6 +149,7 @@ export class HealthPage implements OnInit {
     void this.ionViewWillEnter();
   }
   async ionViewWillEnter() {
+    void this.ai.refresh();
     await this.design.load();
     this.view =
       this.route.snapshot.data['healthView'] ??
@@ -161,6 +183,25 @@ export class HealthPage implements OnInit {
       this.addedSuggestion.set(text);
     } catch (e) {
       this.error.set(messageFor(e, 'Your question couldn’t be saved. Please try again.'));
+    }
+  }
+
+  async suggestWithAi() {
+    this.askingAi.set(false);
+    this.ai.consented.set(true);
+    this.aiBusy.set(true);
+    this.aiNotice.set(null);
+    try {
+      const d = await this.ai.draft(this.design.health.record(), this.today);
+      if (d.questions.length || d.matches.length) this.aiDraft.set({ questions: d.questions, matches: d.matches });
+      else
+        this.aiNotice.set(
+          'Nothing from AI met Sanelle’s checks, so these are still the suggestions from your check-ins.',
+        );
+    } catch {
+      this.aiNotice.set('AI drafting isn’t available right now. The suggestions from your check-ins are still here.');
+    } finally {
+      this.aiBusy.set(false);
     }
   }
 

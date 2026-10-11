@@ -15,6 +15,8 @@ import { PHOTOS } from '../shared/photos';
 import { isIsoDate, localIsoDate } from '../shared/calendar-date';
 import { messageFor } from '../core/errors/errors';
 import { QuestionHistoryComponent } from './question-history.component';
+import { AiConsentComponent } from '../insights/ai-consent.component';
+import { AiDraftsService } from '../insights/ai-drafts.service';
 
 /**
  * APT-01: an editable summary for the next visit, built only from what she entered or confirmed.
@@ -24,7 +26,14 @@ import { QuestionHistoryComponent } from './question-history.component';
   selector: 'app-appointment',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [IonContent, FormsModule, FigmaFrameComponent, FigmaIconComponent, QuestionHistoryComponent],
+  imports: [
+    IonContent,
+    FormsModule,
+    FigmaFrameComponent,
+    FigmaIconComponent,
+    QuestionHistoryComponent,
+    AiConsentComponent,
+  ],
   templateUrl: './appointment.page.html',
 })
 export class AppointmentPage {
@@ -128,10 +137,43 @@ export class AppointmentPage {
   concern = '';
   /** A draft of her main concern from her own records, if she has check-ins. */
   readonly brief = computed(() => draftVisitBrief(this.record(), this.today));
-  readonly drafted = signal(false);
+  /** Who drafted the concern box: her records' rules, or AI. Cleared when she saves or cancels. */
+  readonly drafted = signal<false | 'rules' | 'ai'>(false);
+  readonly ai = inject(AiDraftsService);
+  readonly askingAi = signal(false);
+  readonly aiBusy = signal(false);
+  readonly aiNotice = signal<string | null>(null);
 
   ionViewWillEnter() {
+    void this.ai.refresh();
     void this.design.load();
+  }
+
+  startAi() {
+    if (this.ai.consented()) void this.draftWithAi();
+    else this.askingAi.set(true);
+  }
+
+  /** Asks Claude for a draft from the same counts; keeps her own text if nothing passes the checks. */
+  async draftWithAi() {
+    this.askingAi.set(false);
+    this.ai.consented.set(true);
+    this.aiBusy.set(true);
+    this.aiNotice.set(null);
+    try {
+      const d = await this.ai.draft(this.record(), this.today);
+      if (!d.brief) {
+        this.aiNotice.set('Nothing from AI met Sanelle’s checks. Your text is unchanged.');
+        return;
+      }
+      if (!this.editingVisit()) this.editVisit();
+      this.concern = d.brief;
+      this.drafted.set('ai');
+    } catch {
+      this.aiNotice.set('AI drafting isn’t available right now. Your text is unchanged.');
+    } finally {
+      this.aiBusy.set(false);
+    }
   }
 
   formatDate = formatDate;
@@ -142,7 +184,7 @@ export class AppointmentPage {
     if (!brief) return;
     if (!this.editingVisit()) this.editVisit();
     this.concern = brief;
-    this.drafted.set(true);
+    this.drafted.set('rules');
   }
 
   editVisit() {
