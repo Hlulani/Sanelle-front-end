@@ -1,5 +1,11 @@
 # Sanelle
 
+> **Links for reviewers**
+> - **Live app (phone view):** https://sanelle.netlify.app/phone
+> - **Back-end repository (Spring Boot API):** https://github.com/Hlulani/sanelle-back-end
+> - **Front-end repository (this one):** https://github.com/Hlulani/Sanelle-front-end
+> - **Judge login:** `judge@sanelle-demo.app` / `Thandi-Demo-2026`
+
 Sanelle helps women understand their fibroid diagnosis, make informed food choices and feel prepared for appointments.
 
 It's a mobile-first app built with **Ionic + Angular + Capacitor**. The API lives in [sanelle-back-end](https://github.com/Hlulani/sanelle-back-end).
