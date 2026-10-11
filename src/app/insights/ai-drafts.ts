@@ -77,8 +77,13 @@ export function checkDraft(draft: InsightsResponse, request: InsightsRequest): I
   return {
     brief: draft.brief && supported(draft.brief) ? draft.brief.trim() : '',
     questions: (draft.questions ?? []).filter((q) => q.text?.trim() && supported(q.text) && supported(q.why ?? '')),
+    // Each quote supports one explanation at most.
     matches: (draft.matches ?? []).filter(
-      (m) => ids.has(m.claimId) && m.quote?.trim() && notes.includes(m.quote.trim().toLowerCase()),
+      (m, i, all) =>
+        ids.has(m.claimId) &&
+        m.quote?.trim() &&
+        notes.includes(m.quote.trim().toLowerCase()) &&
+        all.findIndex((x) => x.quote?.trim().toLowerCase() === m.quote.trim().toLowerCase()) === i,
     ),
   };
 }

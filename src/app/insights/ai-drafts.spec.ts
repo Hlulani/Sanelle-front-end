@@ -52,6 +52,7 @@ describe('AI drafts', () => {
           { claimId: 'C36', quote: 'flooding at night' },
           { claimId: 'C36', quote: 'soaked through everything' },
           { claimId: 'C99', quote: 'Flooding at night' },
+          { claimId: 'C36', quote: 'Flooding at night' },
         ],
       },
       req,
