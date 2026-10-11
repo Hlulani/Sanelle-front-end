@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
@@ -111,7 +111,9 @@ export class AppointmentPage {
 
   readonly photo = PHOTOS.notebook;
   readonly today = localIsoDate();
-  readonly added = toSignal(inject(ActivatedRoute).queryParamMap.pipe(map((p) => p.get('added') === '1')), {
+  private readonly route = inject(ActivatedRoute);
+  @ViewChild('newQuestionInput') private newQuestionInput?: ElementRef<HTMLInputElement>;
+  readonly added = toSignal(this.route.queryParamMap.pipe(map((p) => p.get('added') === '1')), {
     initialValue: false,
   });
   readonly record = this.repo.record;
@@ -147,6 +149,14 @@ export class AppointmentPage {
   ionViewWillEnter() {
     void this.ai.refresh();
     void this.design.load();
+  }
+
+  ionViewDidEnter() {
+    if (this.route.snapshot.queryParamMap.get('start') === 'question') {
+      const input = this.newQuestionInput?.nativeElement;
+      input?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      input?.focus({ preventScroll: true });
+    }
   }
 
   startAi() {

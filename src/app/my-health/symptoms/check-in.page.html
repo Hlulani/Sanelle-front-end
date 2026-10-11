@@ -15,7 +15,7 @@
       <h2 id="log-title">What showed up today?</h2>
       <p>Select anything you noticed. This isn’t a test and you can leave things blank.</p>
       <div class="choice-grid">
-        @for (choice of choices; track $index) {
+        @for (choice of choices(); track choice) {
           <button [class]="symptoms().includes(choice) ? 'selected' : ''" (click)="toggle(choice)">
             @if (symptoms().includes(choice)) {
               <svg figmaIcon="check" [size]="17"></svg>

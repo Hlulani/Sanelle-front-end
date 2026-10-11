@@ -810,3 +810,27 @@ strong {
   padding: 0;
   border: 0;
 }
+
+.onboarding .unit-input select {
+  padding: 0.65rem;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  font: inherit;
+  background: var(--cream);
+}
+.onboarding .setup-summary .demo-link {
+  display: block;
+  min-height: 44px;
+  text-align: left;
+}
+
+.onboarding .unit-input {
+  display: flex;
+  gap: 8px;
+}
+.onboarding .unit-input input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 14px;
+}

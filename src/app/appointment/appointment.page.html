@@ -218,6 +218,7 @@
         </ol>
         <div class="question-input">
           <input
+            #newQuestionInput
             [(ngModel)]="newQuestion"
             (keydown)='$event.key === "Enter" &amp;&amp; addQuestion()'
             placeholder="Type a question you want to remember"

@@ -7,25 +7,15 @@ import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../core/auth/auth.service';
 import { FoodNeed, PRIORITIES, Priority, ProfileService, TrackedSymptom } from '../core/profile/profile.service';
 import { HealthRepository } from '../my-health/health-repository';
-import { Finding } from '../my-health/diagnosis.model';
+import { OnboardingDraft } from './onboarding-draft';
 import { FoodProfileService } from '../food/food-profile.service';
 import { PHOTOS } from '../shared/photos';
 import { isIsoDate, localIsoDate, parseLocalDate } from '../shared/calendar-date';
 
 const STEPS = 5;
 const SUMMARY_STEP = 6;
-/** Demo values from the actual prototype. Diagnosis values are saved only when that step is continued. */
-export const THANDI = {
-  name: 'Thandi',
-  priorities: ['diagnosis', 'food', 'appointment'] as Priority[],
-  count: '2',
-  size: '4.1',
-  trackSymptoms: ['bleeding'] as TrackedSymptom[],
-  foodNeeds: ['quick', 'ingredient-swaps'] as FoodNeed[],
-};
-
 /**
- * ONB-01 to ONB-05: enough to organise the app, nothing more. Every step after the name is
+ * ONB-01 to ONB-05: enough to organise the app, nothing more. Every step is
  * optional, nothing is inferred, and fertility goals are never assumed or asked.
  */
 @Component({
@@ -51,15 +41,15 @@ export class OnboardingPage implements OnInit {
   get screenId(): string {
     switch (this.step()) {
       case 1:
-        return this.demoLoaded() ? 'ONB-01D' : this.name.trim() ? 'ONB-01' : 'ONB-01E';
+        return this.draft.preview() ? 'ONB-01D' : this.draft.name.trim() ? 'ONB-01' : 'ONB-01E';
       case 2:
-        return this.priorities().length ? 'ONB-02' : 'ONB-02E';
+        return this.draft.priorities().length ? 'ONB-02' : 'ONB-02E';
       case 3:
-        return this.count.trim() || this.size.trim() ? 'ONB-03' : 'ONB-03E';
+        return this.draft.count.trim() || this.draft.size.trim() ? 'ONB-03' : 'ONB-03E';
       case 4:
-        return this.trackSymptoms().length || this.foodNeeds().length ? 'ONB-04' : 'ONB-04E';
+        return this.draft.trackSymptoms().length || this.draft.foodNeeds().length ? 'ONB-04' : 'ONB-04E';
       case 5:
-        return this.appointmentDate ? 'ONB-05' : 'ONB-05E';
+        return this.draft.appointmentDate ? 'ONB-05' : 'ONB-05E';
       default:
         return 'ONB-06';
     }
@@ -68,7 +58,9 @@ export class OnboardingPage implements OnInit {
     return [
       '',
       '',
-      `What would you like help with, ${this.name}?`,
+      this.draft.name.trim()
+        ? `What would you like help with, ${this.draft.name.trim()}?`
+        : 'What would you like help with?',
       'Add only what you know',
       'What would you like Sanelle to keep in mind?',
       'Do you have an appointment coming up?',
@@ -92,9 +84,9 @@ export class OnboardingPage implements OnInit {
       '',
       'Choose any that matter now. This only organises what you see first—it does not create medical recommendations.',
       'Scan reports can be hard to read. Leave anything blank if it was not recorded or you are unsure—Sanelle will never fill the gaps for you.',
-      'These answers make check-ins and meal ideas more relevant. They are optional and can change.',
+      'Choose the symptoms to show first in check-ins and practical needs for food planning. Nothing is logged from these choices.',
       'Add a date if you want Sanelle to help you prepare. No appointment is required.',
-      'Review what Sanelle will organise first. You can go back to update anything.',
+      'Check your answers and edit any section before opening Sanelle.',
     ][this.step()];
   }
   get prioritySummary(): string {
@@ -105,31 +97,53 @@ export class OnboardingPage implements OnInit {
       appointment: 'Appointment preparation',
     };
     return (
-      this.priorities()
+      this.draft
+        .priorities()
         .map((value) => labels[value])
         .join(' · ') || 'Not chosen'
     );
   }
   get appointmentLabel(): string {
-    return this.appointmentDate && isIsoDate(this.appointmentDate)
+    return this.draft.appointmentDate && isIsoDate(this.draft.appointmentDate)
       ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(
-          parseLocalDate(this.appointmentDate),
+          parseLocalDate(this.draft.appointmentDate),
         )
       : 'No date added';
   }
   get diagnosisSummary(): string {
-    const savedSize = this.health.record().findings.largestSize;
-    const size = this.size.trim()
-      ? `${this.size.trim()} cm`
-      : savedSize?.completeness.state === 'present'
-        ? [savedSize.completeness.value, savedSize.unit].filter(Boolean).join(' ')
-        : '';
-    return [
-      this.count.trim()
-        ? this.count.trim() + (this.count.trim() === '1' ? ' fibroid' : ' fibroids')
-        : 'Number not recorded',
-      size ? `Largest recorded size: ${size}` : 'Size not recorded',
-    ].join(' · ');
+    return this.draft.diagnosisSummary(this.health.record().findings);
+  }
+  get symptomSummary(): string {
+    return (
+      this.symptomChoices
+        .filter((c) => this.draft.trackSymptoms().includes(c.value))
+        .map((c) => c.label)
+        .join(' · ') || 'No preferences chosen'
+    );
+  }
+  get foodSummary(): string {
+    return (
+      this.foodChoices
+        .filter((c) => this.draft.foodNeeds().includes(c.value))
+        .map((c) => c.label)
+        .join(' · ') || 'No preferences chosen'
+    );
+  }
+  readonly ready = signal(false);
+  async editStep(step: number) {
+    if (this.saving()) return;
+    this.draft.beginReviewEdit();
+    this.error.set(null);
+    await this.go(step);
+  }
+  async returnToSetup() {
+    this.draft.endPreview();
+    await this.ngOnInit();
+    if (this.ready()) await this.go(1);
+  }
+  async skipName() {
+    this.draft.name = '';
+    await this.next();
   }
   readonly total = STEPS;
   readonly step = toSignal(
@@ -158,74 +172,36 @@ export class OnboardingPage implements OnInit {
     { value: 'budget', label: 'Budget-friendly ideas' },
     { value: 'ingredient-swaps', label: 'Ingredient substitutions' },
   ];
-  readonly noSymptoms = signal(false);
-  readonly cookingForOthers = signal(false);
-  readonly foodClaimHelp = signal(false);
   readonly today = localIsoDate();
 
-  name = '';
-  count = '';
-  size = '';
-  appointmentDate = '';
-  private originalCount = '';
-  private originalSize = '';
-  readonly priorities = signal<Priority[]>([]);
-  readonly trackSymptoms = signal<TrackedSymptom[]>([]);
-  readonly foodNeeds = signal<FoodNeed[]>([]);
-  readonly demoLoaded = signal(false);
+  readonly draft = new OnboardingDraft();
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
   readonly progressLabel = computed(() =>
     this.step() <= STEPS ? `Step ${this.step()} of ${STEPS}` : 'Ready to start',
   );
   async ngOnInit() {
-    await Promise.all([this.profile.load(), this.health.load()]);
-    const p = this.profile.profile();
-    this.name = p.name || this.auth.getDisplayName() || '';
-    this.priorities.set(p.priorities);
-    this.trackSymptoms.set(p.trackSymptoms);
-    this.foodNeeds.set(p.foodNeeds);
-    this.noSymptoms.set(p.onboardingContext?.noSymptomsRightNow ?? false);
-    this.cookingForOthers.set(p.onboardingContext?.cookingForOthers ?? false);
-    this.foodClaimHelp.set(p.onboardingContext?.foodClaimHelp ?? false);
-    this.appointmentDate = this.health.record().appointment.date ?? '';
-    const { count, largestSize } = this.health.record().findings;
-    if (count?.completeness.state === 'present') this.count = count.completeness.value;
-    if (largestSize?.completeness.state === 'present') {
-      const recorded = [largestSize.completeness.value, largestSize.unit].filter(Boolean).join(' ');
-      const scalar = recorded.match(/^([0-9]+(?:\.[0-9]+)?)\s*(cm|mm)$/i);
-      if (scalar) this.size = String(Number(scalar[1]) / (scalar[2].toLowerCase() === 'mm' ? 10 : 1));
-      // Unspecified units and multidimensional measurements stay in the health record; no unit is guessed.
+    this.ready.set(false);
+    this.error.set(null);
+    try {
+      await Promise.all([this.profile.load(), this.health.load(), this.food.load()]);
+      this.draft.load({
+        profile: this.profile.profile(),
+        findings: this.health.record().findings,
+        practicalNeeds: this.food.reviewed() ? this.food.profile().practical : this.profile.profile().foodNeeds,
+        displayName: this.auth.getDisplayName() || '',
+        appointmentDate: this.health.record().appointment.date ?? '',
+      });
+      this.ready.set(true);
+    } catch {
+      this.error.set('Your setup couldn’t be loaded. Try again before making changes.');
     }
-    this.originalCount = this.count;
-    this.originalSize = this.size;
     this.changeDetector.markForCheck();
   }
 
-  toggle<T>(list: { (): T[]; set(v: T[]): void }, value: T) {
-    list.set(list().includes(value) ? list().filter((v) => v !== value) : [...list(), value]);
-  }
-
   async loadThandi() {
-    this.name = THANDI.name;
-    this.priorities.set(THANDI.priorities);
-    this.count = THANDI.count;
-    this.size = THANDI.size;
-    this.trackSymptoms.set(THANDI.trackSymptoms);
-    this.foodNeeds.set(THANDI.foodNeeds);
-    this.appointmentDate = '';
-    this.noSymptoms.set(false);
-    this.cookingForOthers.set(false);
-    this.foodClaimHelp.set(true);
-    this.demoLoaded.set(true);
+    this.draft.startPreview();
     await this.next();
-  }
-
-  setCount(value: string) {
-    this.count = value.replace(/\D/g, '');
-  }
-  setSize(value: string) {
-    this.size = value.replace(/[^0-9.]/g, '');
   }
 
   openDatePicker(event: Event) {
@@ -239,30 +215,26 @@ export class OnboardingPage implements OnInit {
 
   async withoutDate() {
     if (this.saving()) return;
-    this.appointmentDate = '';
+    this.draft.appointmentDate = '';
     await this.next();
   }
 
   async next() {
-    if (this.saving()) return;
+    if (this.saving() || !this.ready()) return;
     this.error.set(null);
     const step = this.step();
-    if (step === 1 && !this.name.trim()) {
-      this.error.set('Add the name you’d like Sanelle to use.');
-      return;
-    }
-    if (step === 3 && this.size && !/^\d+(?:\.\d+)?$/.test(this.size)) {
-      this.error.set('Enter a size in centimetres, or leave it blank if it is not recorded.');
-      return;
-    }
-    if (step === 5 && this.appointmentDate && (!isIsoDate(this.appointmentDate) || this.appointmentDate < this.today)) {
-      this.error.set('Choose today or a later date, or leave it blank.');
+    const validationError = this.draft.validateStep(step, this.today);
+    if (validationError) {
+      this.error.set(validationError);
       return;
     }
     this.saving.set(true);
     try {
-      if (step <= STEPS) await this.saveStep(step);
-      if (step < SUMMARY_STEP) await this.go(step + 1);
+      if (step <= STEPS && this.draft.canPersist) await this.saveStep(step);
+      if (step < SUMMARY_STEP) {
+        await this.go(this.draft.editingReview() ? SUMMARY_STEP : step + 1);
+        this.draft.completeReviewEdit();
+      } else if (this.draft.preview()) await this.returnToSetup();
       else await this.finish();
     } catch {
       this.error.set('This step couldn’t be saved. Please try again.');
@@ -273,64 +245,45 @@ export class OnboardingPage implements OnInit {
   }
 
   private async saveStep(step: number) {
+    if (!this.draft.canPersist) return;
     switch (step) {
       case 1:
-        return this.profile.save({ name: this.name });
+        return this.profile.save({ name: this.draft.name });
       case 2:
-        return this.profile.save({ priorities: this.priorities() });
+        return this.profile.save({ priorities: this.draft.priorities() });
       case 3:
         return this.saveKnownDetails();
       case 4:
         await this.profile.save({
-          trackSymptoms: this.trackSymptoms(),
-          foodNeeds: this.foodNeeds(),
-          onboardingContext: {
-            noSymptomsRightNow: this.noSymptoms(),
-            cookingForOthers: this.cookingForOthers(),
-            foodClaimHelp: this.foodClaimHelp(),
-          },
+          trackSymptoms: this.draft.trackSymptoms(),
+          foodNeeds: this.draft.foodNeeds(),
         });
-        return this.food.seedPractical(this.foodNeeds());
+        return this.food.seedPractical(this.draft.foodNeeds());
       default:
-        return this.health.setAppointment({ date: this.appointmentDate || undefined });
+        return this.health.setAppointment({ date: this.draft.appointmentDate || undefined });
     }
   }
 
   /** Only what she typed is saved, as her own note. A blank stays (or goes back to) not recorded. */
   private saveKnownDetails(): Promise<void> {
-    const saved = this.health.record().findings;
-    const findings: Finding[] = [];
-    if (this.count !== this.originalCount && this.count.trim())
-      findings.push({
-        key: 'count',
-        completeness: { state: 'present', value: this.count.trim() },
-        source: 'self-reported',
-      });
-    else if (this.count !== this.originalCount && saved.count?.source === 'self-reported')
-      findings.push({ key: 'count', completeness: { state: 'unknown' } });
-    if (this.size !== this.originalSize && this.size.trim())
-      findings.push({
-        key: 'largestSize',
-        completeness: { state: 'present', value: this.size.trim() },
-        unit: 'cm',
-        source: 'self-reported',
-      });
-    else if (this.size !== this.originalSize && saved.largestSize?.source === 'self-reported')
-      findings.push({ key: 'largestSize', completeness: { state: 'unknown' } });
+    const findings = this.draft.diagnosisChanges(this.health.record().findings);
     return (findings.length ? this.health.saveFindings(findings) : Promise.resolve()).then(() => {
-      this.originalCount = this.count;
-      this.originalSize = this.size;
+      this.draft.acceptDiagnosisChanges();
     });
   }
 
   private async finish() {
-    await this.profile.save({ onboardedAt: new Date().toISOString(), firstUseDone: false });
-    this.auth.setOnboardingCompleted(true);
+    await this.profile.save({ onboardedAt: this.profile.profile().onboardedAt ?? new Date().toISOString() });
+    await this.auth.setOnboardingCompleted(true);
     await this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
   }
 
   back() {
-    if (!this.saving()) return this.go(this.step() - 1);
+    if (!this.saving()) {
+      const destination = this.draft.editingReview() ? SUMMARY_STEP : this.step() - 1;
+      this.draft.cancelReviewEdit();
+      return this.go(destination);
+    }
     return Promise.resolve(false);
   }
 

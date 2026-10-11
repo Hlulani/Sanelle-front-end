@@ -26,6 +26,19 @@ import { messageFor } from '../core/errors/errors';
         </header>
         <section class="paper-section">
           <strong>{{ profile.name() || auth.getUsername() }}</strong>
+          <label
+            >Preferred name (optional)<input
+              name="preferredName"
+              [(ngModel)]="preferredName"
+              [disabled]="!nameReady() || busy()"
+              (ngModelChange)="nameSaved.set(false)"
+              placeholder="Name or nickname"
+              autocomplete="given-name"
+          /></label>
+          <button class="record-answer" [disabled]="!nameReady() || busy()" (click)="saveName()">Save name</button>
+          @if (nameSaved()) {
+            <p role="status">Name saved</p>
+          }
           <p>{{ auth.getUserEmail() }}</p>
         </section>
         @if (error()) {
@@ -50,6 +63,7 @@ import { messageFor } from '../core/errors/errors';
           <p class="fine-print">These order your shortcuts. They don’t change medical advice.</p>
         </section>
         <section class="paper-section">
+          <a class="text-action" routerLink="/onboarding" [queryParams]="{ step: 6 }">Review or edit my setup</a>
           <h2>Your records</h2>
           <p>
             Health records, food preferences and meal plans are saved on this device. Your account does not
@@ -107,8 +121,31 @@ export class AccountPage {
   acknowledged = false;
   private deletingEmail: string | null = null;
   private serverDeleted = false;
-  ionViewWillEnter() {
-    void this.profile.load();
+  readonly nameReady = signal(false);
+  readonly nameSaved = signal(false);
+  async ionViewWillEnter() {
+    this.nameReady.set(false);
+    try {
+      await this.profile.load();
+      this.preferredName = this.profile.profile().name || this.auth.getDisplayName() || '';
+      this.nameReady.set(true);
+    } catch (e) {
+      this.error.set(messageFor(e, 'Your setup couldn’t be loaded.'));
+    }
+  }
+  preferredName = '';
+  async saveName() {
+    if (this.busy() || !this.nameReady()) return;
+    this.busy.set(true);
+    this.error.set(null);
+    try {
+      await this.profile.save({ name: this.preferredName });
+      this.nameSaved.set(true);
+    } catch (e) {
+      this.error.set(messageFor(e, 'Your name couldn’t be saved.'));
+    } finally {
+      this.busy.set(false);
+    }
   }
   async toggle(value: Priority) {
     this.error.set(null);

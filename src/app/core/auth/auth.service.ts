@@ -184,10 +184,12 @@ export class AuthService {
     return this.onboardingCompleted;
   }
 
-  setOnboardingCompleted(completed = true): void {
-    this.onboardingCompleted = completed;
+  async setOnboardingCompleted(completed = true): Promise<void> {
     const email = this.getUserEmail();
-    if (email) void Preferences.set({ key: this.onboardingKey(email), value: completed ? 'true' : 'false' });
+    if (!email) throw new Error('Sign in before saving setup.');
+    await Preferences.set({ key: this.onboardingKey(email), value: completed ? 'true' : 'false' });
+    if (this.getUserEmail() !== email) throw new Error('The signed-in account changed.');
+    this.onboardingCompleted = completed;
   }
 
   private onboardingKey(email: string): string {

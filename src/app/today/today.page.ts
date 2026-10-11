@@ -18,6 +18,8 @@ interface Intent {
   title: string;
   hint: string;
   route: string;
+  /** The button on the first-use card: says exactly what tapping it does. */
+  action: string;
 }
 
 const INTENTS: Record<Priority, Intent> = {
@@ -26,19 +28,28 @@ const INTENTS: Record<Priority, Intent> = {
     title: 'Understand my scan',
     hint: 'Add your report and see what it says',
     route: '/tabs/health',
+    action: 'Add my report',
   },
-  food: { priority: 'food', title: 'Figure out food', hint: 'Plan meals or find one for today', route: '/tabs/food' },
+  food: {
+    priority: 'food',
+    title: 'Figure out food',
+    hint: 'Plan meals or find one for today',
+    route: '/tabs/food',
+    action: 'Plan my meals',
+  },
   symptoms: {
     priority: 'symptoms',
     title: 'Log how I feel',
     hint: 'A short check-in for today',
     route: `/health/check-in/today`,
+    action: 'Start a check-in',
   },
   appointment: {
     priority: 'appointment',
     title: 'Prepare for a visit',
     hint: 'Questions and a summary to take with you',
     route: '/tabs/appointment',
+    action: 'Add a question',
   },
 };
 
@@ -57,8 +68,6 @@ export class TodayPage implements OnInit {
   readonly design = inject(PatientDesignState);
   readonly plannedToday = computed(() => this.plans.today());
   readonly savedServings = computed(() => this.plans.plan()?.servings ?? 1);
-  readonly fixedIntents = Object.values(INTENTS);
-  readonly intentLabels = Object.values(INTENTS).map((i) => i.title);
   get profileView() {
     return { fibroidCount: this.design.count(), largestSize: this.design.size() };
   }
@@ -140,9 +149,6 @@ export class TodayPage implements OnInit {
   onCloseIntent() {
     void this.choose(null);
   }
-  chooseIntent(label: string) {
-    void this.choose(this.fixedIntents.find((i) => i.title === label) ?? null);
-  }
   go(screen: string) {
     void this.router.navigateByUrl('/tabs/' + (screen === 'visit' ? 'appointment' : screen));
   }
@@ -181,6 +187,37 @@ export class TodayPage implements OnInit {
     );
   });
 
+  /** Where a first-use choice starts: the first useful screen, not an empty overview. */
+  private start(intent: Intent): Intent {
+    if (intent.priority === 'appointment')
+      return {
+        ...intent,
+        title: 'Add your first appointment question',
+        route: '/tabs/appointment?start=question',
+        hint: this.health.record().appointment.date
+          ? 'Your saved date is ready. Start with one question you want to remember.'
+          : 'Start with one question. You can add a date whenever you have one.',
+      };
+    if (intent.priority === 'food')
+      return {
+        ...intent,
+        title: 'Find food that fits your day',
+        route: '/food/requirements',
+        hint: 'Review your food requirements and practical needs before choosing meals.',
+      };
+    // Nothing to review yet on a first visit: go straight to adding the report.
+    if (intent.priority === 'diagnosis') return { ...intent, route: '/health/report/new' };
+    return intent;
+  }
+  readonly firstAction = computed(() => this.start(this.intents()[0]));
+  /** Her other onboarding choices, so picking several never hides any of them. */
+  readonly alsoChosen = computed(() => {
+    const chosen = this.profile.profile().priorities;
+    return this.intents()
+      .slice(1)
+      .filter((i) => chosen.includes(i.priority))
+      .map((i) => this.start(i));
+  });
   readonly next = computed(() => nextStep(this.health.record(), this.plans.plan(), this.today));
   readonly activity = computed(() => recentActivity(this.health.record(), this.plans.plan()));
   readonly shortcuts = computed(() => this.intents().filter((i) => !this.isLead(i.priority)));

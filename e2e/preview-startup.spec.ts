@@ -42,7 +42,7 @@ test('the phone frame signs into the real backend and loads database recipes', a
       'Continue',
       'Continue',
       'Continue',
-      'Finish setup',
+      'Review setup',
       'Open Sanelle',
     ]) {
       await app.getByRole('button', { name, exact: true }).click();

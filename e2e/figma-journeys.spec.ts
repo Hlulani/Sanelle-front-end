@@ -7,13 +7,37 @@ test('Today first-use and returning empty match the actual Figma components', as
   try {
     // Unknown count and size are not silently presented as recorded information.
     await ref.locator('.diagnosis-copy strong').evaluate((e) => (e.textContent = '5 details are not recorded yet'));
-    await compareFigma(page, ref, 'TOD-01-source', info, [
-      '.topbar',
-      '.page-heading',
-      '.intent-panel',
-      '.diagnosis-strip',
-      '.mobile-nav',
-    ]);
+    // Explicit correction: onboarding already asked her priorities, so the first visit shows one next step
+    // from them instead of asking again, and leaves the diagnosis summary for later visits.
+    const firstStep = await screen(page)
+      .locator('.intent-panel')
+      .evaluate((e) => e.outerHTML);
+    await ref.locator('.intent-panel').evaluate((panel, html) => {
+      panel.insertAdjacentHTML('beforebegin', html);
+      (panel as HTMLElement).style.display = 'none';
+      panel.classList.replace('intent-panel', 'original-intent-panel');
+    }, firstStep);
+    // Everything after the first step waits for later visits.
+    await ref.locator('.original-intent-panel').evaluate((panel) => {
+      for (let e = panel.nextElementSibling; e; e = e.nextElementSibling)
+        if (!e.matches('.mobile-nav'))
+          (e as HTMLElement).dataset['firstVisitHidden'] = (e as HTMLElement).style.visibility || 'shown';
+      panel
+        .parentElement!.querySelectorAll<HTMLElement>('[data-first-visit-hidden]')
+        .forEach((e) => (e.style.visibility = 'hidden'));
+    });
+    await compareFigma(page, ref, 'TOD-01-source', info, ['.topbar', '.page-heading', '.intent-panel', '.mobile-nav']);
+    await ref.locator('.intent-panel').evaluate((e) => e.remove());
+    await ref.locator('.original-intent-panel').evaluate((panel) => {
+      (panel as HTMLElement).style.display = '';
+      panel.classList.replace('original-intent-panel', 'intent-panel');
+    });
+    await ref.evaluate(() =>
+      document.querySelectorAll<HTMLElement>('[data-first-visit-hidden]').forEach((e) => {
+        e.style.visibility = '';
+        delete e.dataset['firstVisitHidden'];
+      }),
+    );
     await screen(page).getByRole('button', { name: 'I’d rather look around' }).click();
     await ref.getByRole('button', { name: 'I’d rather look around' }).click();
     await ref.locator('.diagnosis-copy strong').evaluate((e) => (e.textContent = '5 details are not recorded yet'));

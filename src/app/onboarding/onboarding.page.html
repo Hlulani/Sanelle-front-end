@@ -8,7 +8,16 @@
       <i [style.width.%]="step() <= 5 ? (step() - 1) * 25 : 100"></i>
     </div>
     <main class="onboarding-main" [attr.data-screen-id]="screenId">
-      @if (step() === 1) {
+      @if (!ready()) {
+        <section class="onboarding-step" aria-live="polite">
+          @if (error()) {
+            <p class="form-error" role="alert">{{ error() }}</p>
+            <button class="primary" (click)="ngOnInit()">Try again</button>
+          } @else {
+            <p>Loading your setup…</p>
+          }
+        </section>
+      } @else if (step() === 1) {
         <section class="welcome-step">
           <div class="onboarding-photo">
             <img [src]="photo.src" [alt]="photo.alt" /><span>Start with what matters to you</span>
@@ -18,20 +27,20 @@
           <p>
             Sanelle brings your diagnosis details, food questions, symptoms, and appointment notes into one calm place.
           </p>
-          <label class="onboarding-label" for="first-name">What should we call you?</label>
+          <label class="onboarding-label" for="first-name">What should we call you? <small>Optional</small></label>
           <input
             id="first-name"
             aria-label="First name"
             name="name"
-            [(ngModel)]="name"
-            placeholder="Your first name"
+            [(ngModel)]="draft.name"
+            placeholder="Your name or nickname"
             autocomplete="given-name"
           />
           @if (error()) {
             <p class="form-error" role="alert">{{ error() }}</p>
           }
-          <button class="primary wide" type="button" [disabled]="saving() || !name.trim()" (click)="next()">
-            Start setting up Sanelle
+          <button class="primary wide" type="button" [disabled]="saving()" (click)="next()">
+            {{ draft.editingReview() ? 'Return to review' : 'Start setting up Sanelle' }}
             <svg
               width="20"
               height="20"
@@ -46,12 +55,18 @@
               <path d="M5 12h14M14 7l5 5-5 5" />
             </svg>
           </button>
-          <button class="demo-link" type="button" [disabled]="saving()" (click)="loadThandi()">
-            Preview with Thandi’s demo details
-          </button>
+          @if (draft.editingReview()) {
+            <button class="demo-link" type="button" [disabled]="saving()" (click)="back()">Cancel edit</button>
+          }
+          <button class="demo-link" type="button" [disabled]="saving()" (click)="skipName()">Skip name for now</button>
+          @if (!draft.editingReview()) {
+            <button class="demo-link" type="button" [disabled]="saving()" (click)="loadThandi()">
+              Preview with Thandi’s demo details
+            </button>
+          }
           <p class="privacy-copy">
-            You can skip optional questions and update anything later. Your health details are stored only on this
-            device.
+            Answers save as you continue. You can leave any question blank and edit it later. Health details stay on
+            this device; your account does not back them up.
           </p>
         </section>
       } @else {
@@ -59,6 +74,14 @@
           <p class="eyebrow">{{ eyebrow }}</p>
           <h1>{{ title }}</h1>
           <p class="step-description">{{ lead }}</p>
+          @if (draft.preview()) {
+            <p class="consent-note" role="status">
+              Temporary preview — these fictional answers will not change your records.
+            </p>
+            @if (step() !== 6) {
+              <button class="demo-link" [disabled]="saving()" (click)="returnToSetup()">Return to my setup</button>
+            }
+          }
           <div class="step-body">
             @switch (step()) {
               @case (2) {
@@ -66,11 +89,11 @@
                   @for (c of priorityChoices; track c.value) {
                     <button
                       type="button"
-                      [class.selected]="priorities().includes(c.value)"
-                      [attr.aria-pressed]="priorities().includes(c.value)"
-                      (click)="toggle(priorities, c.value)"
+                      [class.selected]="draft.priorities().includes(c.value)"
+                      [attr.aria-pressed]="draft.priorities().includes(c.value)"
+                      (click)="draft.toggle(draft.priorities, c.value)"
                     >
-                      @if (priorities().includes(c.value)) {
+                      @if (draft.priorities().includes(c.value)) {
                         <svg
                           width="17"
                           height="17"
@@ -96,8 +119,8 @@
                     ><span>Number of fibroids <small>Optional</small></span
                     ><input
                       name="count"
-                      [ngModel]="count"
-                      (ngModelChange)="setCount($event)"
+                      [ngModel]="draft.count"
+                      (ngModelChange)="draft.count = $event"
                       inputmode="numeric"
                       placeholder="Not recorded"
                   /></label>
@@ -106,11 +129,14 @@
                     <div class="unit-input">
                       <input
                         name="size"
-                        [ngModel]="size"
-                        (ngModelChange)="setSize($event)"
+                        [ngModel]="draft.size"
+                        (ngModelChange)="draft.size = $event"
                         inputmode="decimal"
                         placeholder="Not recorded"
-                      /><b aria-hidden="true">cm</b>
+                      /><select name="sizeUnit" aria-label="Size unit" [(ngModel)]="draft.sizeUnit">
+                        <option value="cm">cm</option>
+                        <option value="mm">mm</option>
+                      </select>
                     </div></label
                   >
                 </div>
@@ -145,11 +171,11 @@
                     @for (c of symptomChoices; track c.value) {
                       <button
                         type="button"
-                        [class.selected]="trackSymptoms().includes(c.value)"
-                        [attr.aria-pressed]="trackSymptoms().includes(c.value)"
-                        (click)="toggle(trackSymptoms, c.value)"
+                        [class.selected]="draft.trackSymptoms().includes(c.value)"
+                        [attr.aria-pressed]="draft.trackSymptoms().includes(c.value)"
+                        (click)="draft.toggle(draft.trackSymptoms, c.value)"
                       >
-                        @if (trackSymptoms().includes(c.value)) {
+                        @if (draft.trackSymptoms().includes(c.value)) {
                           <svg
                             width="17"
                             height="17"
@@ -167,67 +193,19 @@
                         <span>{{ c.label }}</span>
                       </button>
                     }
-                    <button
-                      type="button"
-                      [class.selected]="noSymptoms()"
-                      [attr.aria-pressed]="noSymptoms()"
-                      (click)="noSymptoms.set(!noSymptoms())"
-                    >
-                      @if (noSymptoms()) {
-                        <svg
-                          width="17"
-                          height="17"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="m5 12 4 4L19 6" />
-                        </svg>
-                      }
-                      <span>No symptoms right now</span>
-                    </button>
                   </div>
                 </fieldset>
                 <fieldset class="onboarding-group">
                   <legend>What would make food planning easier?</legend>
                   <div class="chip-choices">
                     @for (c of foodChoices; track c.value) {
-                      @if (c.value === 'ingredient-swaps') {
-                        <button
-                          type="button"
-                          [class.selected]="cookingForOthers()"
-                          [attr.aria-pressed]="cookingForOthers()"
-                          (click)="cookingForOthers.set(!cookingForOthers())"
-                        >
-                          @if (cookingForOthers()) {
-                            <svg
-                              width="17"
-                              height="17"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="1.8"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              aria-hidden="true"
-                            >
-                              <path d="m5 12 4 4L19 6" />
-                            </svg>
-                          }
-                          <span>Cooking for others</span>
-                        </button>
-                      }
                       <button
                         type="button"
-                        [class.selected]="foodNeeds().includes(c.value)"
-                        [attr.aria-pressed]="foodNeeds().includes(c.value)"
-                        (click)="toggle(foodNeeds, c.value)"
+                        [class.selected]="draft.foodNeeds().includes(c.value)"
+                        [attr.aria-pressed]="draft.foodNeeds().includes(c.value)"
+                        (click)="draft.toggle(draft.foodNeeds, c.value)"
                       >
-                        @if (foodNeeds().includes(c.value)) {
+                        @if (draft.foodNeeds().includes(c.value)) {
                           <svg
                             width="17"
                             height="17"
@@ -245,29 +223,6 @@
                         <span>{{ c.label }}</span>
                       </button>
                     }
-                    <button
-                      type="button"
-                      [class.selected]="foodClaimHelp()"
-                      [attr.aria-pressed]="foodClaimHelp()"
-                      (click)="foodClaimHelp.set(!foodClaimHelp())"
-                    >
-                      @if (foodClaimHelp()) {
-                        <svg
-                          width="17"
-                          height="17"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="m5 12 4 4L19 6" />
-                        </svg>
-                      }
-                      <span>Understanding food claims</span>
-                    </button>
                   </div>
                 </fieldset>
               }
@@ -278,7 +233,7 @@
                     type="date"
                     name="appointment"
                     [min]="today"
-                    [(ngModel)]="appointmentDate"
+                    [(ngModel)]="draft.appointmentDate"
                     (click)="openDatePicker($event)"
                 /></label>
                 <button class="demo-link" type="button" [disabled]="saving()" (click)="withoutDate()">
@@ -287,20 +242,40 @@
               }
               @case (6) {
                 <section class="setup-summary">
-                  <p class="eyebrow">Your setup</p>
-                  <h2>Sanelle will start with</h2>
+                  <h2>Your answers</h2>
                   <dl>
                     <div>
+                      <dt>Name</dt>
+                      <dd>
+                        {{ draft.name.trim() || 'Not added' }}
+                        <button class="demo-link" (click)="editStep(1)">Edit name</button>
+                      </dd>
+                    </div>
+                    <div>
                       <dt>Priorities</dt>
-                      <dd>{{ prioritySummary }}</dd>
+                      <dd>
+                        {{ prioritySummary }} <button class="demo-link" (click)="editStep(2)">Edit priorities</button>
+                      </dd>
                     </div>
                     <div>
                       <dt>Recorded diagnosis</dt>
-                      <dd>{{ diagnosisSummary }}</dd>
+                      <dd>
+                        {{ diagnosisSummary }} <button class="demo-link" (click)="editStep(3)">Edit diagnosis</button>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Daily context</dt>
+                      <dd>
+                        Show first: {{ symptomSummary }}<br />Food planning: {{ foodSummary }}
+                        <button class="demo-link" (click)="editStep(4)">Edit daily context</button>
+                      </dd>
                     </div>
                     <div>
                       <dt>Appointment</dt>
-                      <dd>{{ appointmentDate ? appointmentLabel : 'No date added' }}</dd>
+                      <dd>
+                        {{ draft.appointmentDate ? appointmentLabel : 'No date added' }}
+                        <button class="demo-link" (click)="editStep(5)">Edit appointment</button>
+                      </dd>
                     </div>
                   </dl>
                 </section>
@@ -317,7 +292,17 @@
           <div class="step-actions">
             <button class="back-button" type="button" [disabled]="saving()" (click)="back()">Back</button>
             <button class="primary" type="button" [disabled]="saving()" (click)="next()">
-              {{ step() === 6 ? 'Open Sanelle' : step() === 5 ? 'Finish setup' : 'Continue' }}
+              {{
+                step() === 6
+                  ? draft.preview()
+                    ? 'End preview'
+                    : 'Open Sanelle'
+                  : draft.editingReview()
+                    ? 'Return to review'
+                    : step() === 5
+                      ? 'Review setup'
+                      : 'Continue'
+              }}
               <svg
                 width="20"
                 height="20"

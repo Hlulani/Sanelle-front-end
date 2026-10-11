@@ -107,14 +107,23 @@ describe('Account setup and personal records', () => {
   it('remembers completed onboarding only for that account', async () => {
     await register('first@example.test');
     await login('first@example.test');
-    auth.setOnboardingCompleted();
-    await Promise.resolve();
+    await auth.setOnboardingCompleted();
     auth.logout();
     await login('first@example.test');
     expect(auth.hasCompletedOnboarding()).toBeTrue();
     await register('second@example.test');
     await login('second@example.test');
     expect(auth.hasCompletedOnboarding()).toBeFalse();
+  });
+  it('does not mark setup complete when persistence fails, and can retry', async () => {
+    await register('setup@example.test');
+    await login('setup@example.test');
+    const write = spyOn(Storage.prototype, 'setItem').and.throwError('Storage unavailable');
+    await expectAsync(auth.setOnboardingCompleted()).toBeRejected();
+    expect(auth.hasCompletedOnboarding()).toBeFalse();
+    write.and.callThrough();
+    await auth.setOnboardingCompleted();
+    expect(auth.hasCompletedOnboarding()).toBeTrue();
   });
   it('separates profile choices when switching accounts and restores them on return', async () => {
     const profile = TestBed.inject(ProfileService);

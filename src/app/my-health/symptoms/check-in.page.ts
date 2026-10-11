@@ -1,3 +1,4 @@
+import { ProfileService } from '../../core/profile/profile.service';
 import { FormsModule } from '@angular/forms';
 import { DialogFocusDirective } from '../../shared/design/figma/dialog-focus.directive';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
@@ -30,12 +31,20 @@ export class CheckInPage implements OnInit {
   readonly selected = signal<NonNullable<SymptomEntry['observedSymptoms']>>([]);
   readonly bleed = signal<BleedingLevel | undefined>(undefined);
   readonly dailyImpact = signal<SymptomEntry['dailyImpact']>(undefined);
-  readonly choices: NonNullable<SymptomEntry['observedSymptoms']> = [
-    'Bleeding',
-    'Pelvic pressure',
-    'Pain',
-    'Low energy',
-  ];
+  private readonly profile = inject(ProfileService);
+  readonly choices = computed(() => {
+    const choices = [
+      { key: 'bleeding', label: 'Bleeding' },
+      { key: 'pressure', label: 'Pelvic pressure' },
+      { key: 'pain', label: 'Pain' },
+      { key: 'tiredness', label: 'Low energy' },
+    ] as const;
+    const preferences = this.profile.profile().trackSymptoms;
+    return [
+      ...choices.filter((c) => preferences.includes(c.key)),
+      ...choices.filter((c) => !preferences.includes(c.key)),
+    ].map((c) => c.label);
+  });
   readonly bleedingLevels = BLEEDING_CHOICES.map((value) => ({ value, label: BLEEDING_LABELS[value] }));
   readonly bleedingLevelLabels = BLEEDING_CHOICES.map((value) => BLEEDING_LABELS[value]);
   readonly impacts: NonNullable<SymptomEntry['dailyImpact']>[] = [
@@ -56,7 +65,7 @@ export class CheckInPage implements OnInit {
   async ngOnInit() {
     const param = this.route.snapshot.paramMap.get('date');
     if (param && isIsoDate(param) && param <= this.today) this.date.set(param);
-    await this.design.load();
+    await Promise.all([this.design.load(), this.profile.load()]);
     const e = this.repo.symptomsOn(this.date());
     this.selected.set(
       e?.observedSymptoms ??

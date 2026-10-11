@@ -47,7 +47,7 @@ test('AUTH-01–03 registration validates fields, verifies email and completes a
       if (n === 1) await screen(page).getByLabel('First name', { exact: true }).fill('Thandi');
       await screen(page)
         .getByRole('button', {
-          name: n === 1 ? 'Start setting up Sanelle' : n === 5 ? 'Finish setup' : 'Continue',
+          name: n === 1 ? 'Start setting up Sanelle' : n === 5 ? 'Review setup' : 'Continue',
           exact: true,
         })
         .click();

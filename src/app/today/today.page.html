@@ -2,21 +2,27 @@
   ><app-figma-frame active="today" [title]="'Good morning, ' + (name() || 'there')">
     @if (firstUse()) {
       <section class="intent-panel">
-        <button class="icon-button dismiss" (click)="onCloseIntent()" aria-label="Skip this question">
-          <svg figmaIcon="close"></svg>
+        <p class="eyebrow light">Your next step</p>
+        <h2>{{ firstAction().title }}</h2>
+        <p>{{ firstAction().hint }}</p>
+        <button class="primary wide" (click)="choose(firstAction())">
+          {{ firstAction().action }} <svg figmaIcon="arrow" />
         </button>
-        <p class="eyebrow light">New here? Start with one thing</p>
-        <h2>What brought you to Sanelle today?</h2>
-        <div class="intent-grid">
-          @for (label of intentLabels; track $index; let i = $index) {
-            <button (click)="chooseIntent(label)">
-              <span>{{ i + 1 }}</span
-              >{{ label }}<svg figmaIcon="arrow"></svg>
-            </button>
-          }
-        </div>
         <button class="skip-link" (click)="onCloseIntent()">I’d rather look around</button>
       </section>
+      @if (alsoChosen().length) {
+        <section class="also-chosen" aria-labelledby="also-chosen-title">
+          <p class="eyebrow" id="also-chosen-title">Also on your list</p>
+          @for (i of alsoChosen(); track i.priority) {
+            <button (click)="choose(i)">
+              <span
+                ><strong>{{ i.title }}</strong
+                ><small>{{ i.hint }}</small></span
+              ><svg figmaIcon="arrow" />
+            </button>
+          }
+        </section>
+      }
     }
     @if (!firstUse()) {
       <section class="today-next">
@@ -47,122 +53,125 @@
         </div>
       </section>
     }
-    <section class="diagnosis-strip">
-      <div class="diagnosis-copy">
-        <p class="eyebrow">Your recorded diagnosis</p>
-        <h2>
-          @if (profileView.fibroidCount) {
-            {{ `${profileView.fibroidCount} fibroids` }}
-          } @else {
-            Fibroid diagnosis
-          }
-          @if (profileView.largestSize) {
-            <span>· largest {{ profileView.largestSize }}</span>
-          }
-        </h2>
-        <p>
-          <strong>{{ design.missing().length }} details are not recorded yet</strong>
-        </p>
-      </div>
-      <button class="circle-arrow" (click)="go('health')" aria-label="Review diagnosis">
-        <svg figmaIcon="arrow"></svg>
-      </button>
-    </section>
-    <div class="section-title">
-      <div>
-        <p class="eyebrow">Food for real life</p>
-        <h2>Cook once, feel sorted</h2>
-      </div>
-      <button (click)="go('food')">Explore food <svg figmaIcon="arrow"></svg></button>
-    </div>
-    @if (plannedToday(); as d) {
-      @if (d.meal; as m) {
-        <article class="meal-feature">
-          <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" [eager]="true" />
-          <div class="meal-overlay">
-            <div class="pill">{{ d.preparedAt ? 'Made' : 'Today’s planned meal' }}</div>
-            <h2>{{ m.name }}</h2>
-            <div class="meta">
-              <span
-                ><svg figmaIcon="clock" />
-                {{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded' }}</span
-              ><span
-                ><svg figmaIcon="people" /> {{ savedServings() }}
-                {{ savedServings() === 1 ? 'serving' : 'servings' }}</span
-              >
-            </div>
-            <button [routerLink]="['/food/recipe', m.mealId]" [queryParams]="{ date: d.date, stage: 'cook' }">
-              Cook today’s meal <svg figmaIcon="arrow" />
-            </button>
-          </div>
-        </article>
-      } @else {
-        <p class="prep-note">Today is open in your meal plan. Choose a meal whenever you need one.</p>
-        <button class="secondary" routerLink="/food/plan" [queryParams]="{ date: d.date }">
-          Choose today’s meal <svg figmaIcon="arrow" />
-        </button>
-      }
-    } @else {
-      <button class="secondary wide" routerLink="/food/find">Find something to cook <svg figmaIcon="arrow" /></button>
-    }
-    <div class="two-column">
-      @if (latestCheckIn) {
-        <section class="checkin-result">
-          <div class="checkin-result-head">
-            <div>
-              <p class="eyebrow">Today’s check-in</p>
-              <h2>Here’s what you recorded</h2>
-            </div>
-            <span><svg figmaIcon="check" [size]="16"></svg> Saved</span>
-          </div>
-          <dl>
-            <div>
-              <dt>Symptoms</dt>
-              <dd>
-                @if (latestCheckIn.symptoms.length) {
-                  {{ latestCheckIn.symptoms.join(', ') }}
-                } @else {
-                  No symptoms selected
-                }
-              </dd>
-            </div>
-            @if (latestCheckIn.symptoms.includes('Bleeding')) {
-              <div>
-                <dt>Bleeding</dt>
-                <dd>{{ latestCheckIn.bleeding }}</dd>
-              </div>
+    @if (!firstUse()) {
+      <section class="diagnosis-strip">
+        <div class="diagnosis-copy">
+          <p class="eyebrow">Your recorded diagnosis</p>
+          <h2>
+            @if (profileView.fibroidCount) {
+              {{ `${profileView.fibroidCount} fibroids` }}
+            } @else {
+              Fibroid diagnosis
             }
-            <div>
-              <dt>Effect on your day</dt>
-              <dd>{{ latestCheckIn.impact }}</dd>
-            </div>
-            <div>
-              <dt>Recorded</dt>
-              <dd>{{ latestCheckIn.recordedAt }}</dd>
-            </div>
-          </dl>
-          <p class="checkin-destination">
-            <svg figmaIcon="visit" [size]="18"></svg> This is now in <strong>Symptoms & daily life</strong> and your
-            appointment summary.
+            @if (profileView.largestSize) {
+              <span>· largest {{ profileView.largestSize }}</span>
+            }
+          </h2>
+          <p>
+            <strong>{{ design.missing().length }} details are not recorded yet</strong>
           </p>
-          <div class="checkin-actions">
-            <button (click)="openLog()">Edit this check-in</button
-            ><button (click)="onViewSymptoms()">See symptom history <svg figmaIcon="arrow"></svg></button>
-          </div>
-        </section>
+        </div>
+        <button class="circle-arrow" (click)="go('health')" aria-label="Review diagnosis">
+          <svg figmaIcon="arrow"></svg>
+        </button>
+      </section>
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Food for real life</p>
+          <h2>Cook once, feel sorted</h2>
+        </div>
+        <button (click)="go('food')">Explore food <svg figmaIcon="arrow"></svg></button>
+      </div>
+      @if (plannedToday(); as d) {
+        @if (d.meal; as m) {
+          <article class="meal-feature">
+            <app-meal-image [name]="m.name" [imageUrl]="m.imageUrl" [eager]="true" />
+            <div class="meal-overlay">
+              <div class="pill">{{ d.preparedAt ? 'Made' : 'Today’s planned meal' }}</div>
+              <h2>{{ m.name }}</h2>
+              <div class="meta">
+                <span
+                  ><svg figmaIcon="clock" />
+                  {{ m.prepTimeMinutes !== null ? m.prepTimeMinutes + ' min' : 'Time not recorded' }}</span
+                ><span
+                  ><svg figmaIcon="people" /> {{ savedServings() }}
+                  {{ savedServings() === 1 ? 'serving' : 'servings' }}</span
+                >
+              </div>
+              <button [routerLink]="['/food/recipe', m.mealId]" [queryParams]="{ date: d.date, stage: 'cook' }">
+                Cook today’s meal <svg figmaIcon="arrow" />
+              </button>
+            </div>
+          </article>
+        } @else {
+          <p class="prep-note">Today is open in your meal plan. Choose a meal whenever you need one.</p>
+          <button class="secondary" routerLink="/food/plan" [queryParams]="{ date: d.date }">
+            Choose today’s meal <svg figmaIcon="arrow" />
+          </button>
+        }
       } @else {
-        <section class="action-block blush">
-          <p class="eyebrow">Symptoms & daily life</p>
-          <h2>Record what changed today</h2>
-          <p>Save symptoms alongside what they stopped, delayed, or changed in your day.</p>
-          <button class="text-action" (click)="openLog()">Start a check-in <svg figmaIcon="arrow"></svg></button>
-        </section>
+        <button class="secondary wide" routerLink="/food/find">Find something to cook <svg figmaIcon="arrow" /></button>
       }
-      <section class="action-block apricot">
-        <div class="action-icon"><svg figmaIcon="info"></svg></div>
-        <p class="eyebrow">Claim check</p>
-        <h2>“Can food shrink fibroids?”</h2>
-        <p>Separate incidence research, measured growth and treatment claims.</p>
-        <button class="text-action" (click)="openClaim()">Read the evidence <svg figmaIcon="arrow"></svg></button>
-      </section></div></app-figma-frame
+      <div class="two-column">
+        @if (latestCheckIn) {
+          <section class="checkin-result">
+            <div class="checkin-result-head">
+              <div>
+                <p class="eyebrow">Today’s check-in</p>
+                <h2>Here’s what you recorded</h2>
+              </div>
+              <span><svg figmaIcon="check" [size]="16"></svg> Saved</span>
+            </div>
+            <dl>
+              <div>
+                <dt>Symptoms</dt>
+                <dd>
+                  @if (latestCheckIn.symptoms.length) {
+                    {{ latestCheckIn.symptoms.join(', ') }}
+                  } @else {
+                    No symptoms selected
+                  }
+                </dd>
+              </div>
+              @if (latestCheckIn.symptoms.includes('Bleeding')) {
+                <div>
+                  <dt>Bleeding</dt>
+                  <dd>{{ latestCheckIn.bleeding }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Effect on your day</dt>
+                <dd>{{ latestCheckIn.impact }}</dd>
+              </div>
+              <div>
+                <dt>Recorded</dt>
+                <dd>{{ latestCheckIn.recordedAt }}</dd>
+              </div>
+            </dl>
+            <p class="checkin-destination">
+              <svg figmaIcon="visit" [size]="18"></svg> This is now in <strong>Symptoms & daily life</strong> and your
+              appointment summary.
+            </p>
+            <div class="checkin-actions">
+              <button (click)="openLog()">Edit this check-in</button
+              ><button (click)="onViewSymptoms()">See symptom history <svg figmaIcon="arrow"></svg></button>
+            </div>
+          </section>
+        } @else {
+          <section class="action-block blush">
+            <p class="eyebrow">Symptoms & daily life</p>
+            <h2>Record what changed today</h2>
+            <p>Save symptoms alongside what they stopped, delayed, or changed in your day.</p>
+            <button class="text-action" (click)="openLog()">Start a check-in <svg figmaIcon="arrow"></svg></button>
+          </section>
+        }
+        <section class="action-block apricot">
+          <div class="action-icon"><svg figmaIcon="info"></svg></div>
+          <p class="eyebrow">Claim check</p>
+          <h2>“Can food shrink fibroids?”</h2>
+          <p>Separate incidence research, measured growth and treatment claims.</p>
+          <button class="text-action" (click)="openClaim()">Read the evidence <svg figmaIcon="arrow"></svg></button>
+        </section>
+      </div>
+    }</app-figma-frame
 ></ion-content>

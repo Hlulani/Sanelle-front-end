@@ -830,6 +830,33 @@
     color: var(--berry-dark);
     font-size: 0.72rem;
   }
+  .also-chosen {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .also-chosen button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 56px;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+  }
+  .also-chosen span {
+    display: grid;
+    gap: 2px;
+  }
+  .also-chosen small {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
   .skip-link {
     display: block;
     margin: 16px auto 0;

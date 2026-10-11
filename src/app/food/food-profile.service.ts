@@ -212,9 +212,9 @@ export class FoodProfileService extends AccountRecordStore<FoodProfile> {
     }));
   }
 
-  /** Practical needs chosen during setup start the food profile, without marking it reviewed. */
+  /** Setup edits only practical preferences; dietary requirements and their review state stay intact. */
   seedPractical(needs: FoodNeed[]): Promise<void> {
-    return this.update((current) => (current.reviewedAt ? current : { ...current, practical: [...needs] }));
+    return this.update((current) => ({ ...current, practical: FOOD_NEEDS.filter((n) => needs.includes(n)) }));
   }
 
   toggleFavourite(mealId: string): Promise<void> {

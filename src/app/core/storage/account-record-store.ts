@@ -49,7 +49,14 @@ export abstract class AccountRecordStore<T> {
     this.loading = (async () => {
       const record = this.read(await this.store.get(key));
       if (this.loadedFor === key) this.state.set(record);
-    })();
+    })().catch((error: unknown) => {
+      // A failed read must be retryable, without resetting a newer account's load.
+      if (this.loadedFor === key) {
+        this.loadedFor = null;
+        this.loading = null;
+      }
+      throw error;
+    });
     return this.loading;
   }
 

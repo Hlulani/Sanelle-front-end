@@ -58,7 +58,7 @@ export async function finishSetup(page: Page) {
     'Continue',
     'Continue',
     'Continue',
-    'Finish setup',
+    'Review setup',
     'Open Sanelle',
   ].entries()) {
     await screen(page).getByRole('button', { name, exact: true }).click();
