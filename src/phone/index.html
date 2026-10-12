@@ -14,10 +14,6 @@
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito+Sans:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
-    <script>
-      // On a phone, skip the frame and open the app itself.
-      if (window.matchMedia('(max-width: 900px)').matches) location.replace('/welcome');
-    </script>
     <style>
       :root {
         --berry: #74203f;
@@ -246,6 +242,25 @@
         background: #fff;
       }
       /* Netlify injects a "Powered by Netlify" badge; keep the page clear for reviewers. */
+      /* On a phone, the guide fills the screen; the app opens full screen from it instead of in a frame. */
+      @media (max-width: 900px) {
+        .wrap {
+          display: block;
+          padding: 16px;
+        }
+        h1 {
+          font-size: 30px;
+        }
+        .phone {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          opacity: 0;
+          pointer-events: none;
+          padding: 0;
+        }
+      }
       #nl-badge-frame {
         display: none !important;
       }
@@ -347,6 +362,8 @@
     </div>
     <script>
       const frame = document.querySelector('.screen');
+      // On a phone there's no frame to show: sign in through it out of sight, then open screens full size.
+      const onPhone = window.matchMedia('(max-width: 900px)').matches;
       const status = document.getElementById('status');
       const start = document.getElementById('start');
 
@@ -375,6 +392,10 @@
 
       /** Opens a screen inside the phone without reloading the app, so her session and choices carry over. */
       function go(url) {
+        if (onPhone) {
+          location.href = url;
+          return;
+        }
         const w = frame.contentWindow;
         try {
           w.history.pushState({}, '', url);
@@ -387,7 +408,9 @@
       /** Fills in the app's own sign-in form inside the phone and submits it. */
       start.addEventListener('click', async () => {
         if (signedIn()) {
-          status.textContent = 'Already signed in as Thandi.';
+          status.textContent = onPhone
+            ? 'Signed in as Thandi. Pick a step below; use Back to return here.'
+            : 'Already signed in as Thandi.';
           return;
         }
         start.disabled = true;
@@ -416,7 +439,9 @@
         status.textContent = 'Signing in… the server can take up to a minute to wake.';
         for (let i = 0; i < 1800 && !signedIn(); i++) await wait(100);
         status.textContent = signedIn()
-          ? 'Signed in as Thandi. Pick a step below.'
+          ? onPhone
+            ? 'Signed in as Thandi. Pick a step below; use Back to return here.'
+            : 'Signed in as Thandi. Pick a step below.'
           : 'Still waking the server. Try again in a moment.';
         start.disabled = false;
       });
@@ -425,6 +450,7 @@
         button.addEventListener('click', () => {
           if (!signedIn()) {
             status.textContent = 'Tap “Open as Thandi” first.';
+            start.scrollIntoView({ block: 'center', behavior: 'smooth' });
             return;
           }
           go(button.dataset.go);

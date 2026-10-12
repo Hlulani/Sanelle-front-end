@@ -41,3 +41,38 @@ test('Open as Thandi signs the phone in, and Show me opens each feature inside i
   // The fictional sample report is downloadable for the report-reading step.
   expect((await page.request.get('/phone/sample-report.png')).status()).toBe(200);
 });
+
+test.describe('on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test('the guide shows instead of sign-up, and Show me opens the app full screen, signed in', async ({
+    page,
+    account,
+  }, info) => {
+    await openApp(page, account);
+    await page.evaluate(() => {
+      localStorage.removeItem('CapacitorStorage.access_token');
+      localStorage.removeItem('CapacitorStorage.refresh_token');
+    });
+
+    await page.goto('/phone/index.html');
+    await expect(page).toHaveURL(/\/phone/);
+    await expect(page.getByRole('heading', { name: 'A companion for living with fibroids' })).toBeVisible();
+    await page.evaluate(({ email, password }) => {
+      document.getElementById('email')!.textContent = email;
+      document.getElementById('password')!.textContent = password;
+    }, account);
+
+    await page.getByRole('button', { name: 'Open as Thandi' }).click();
+    await expect(page.getByRole('status')).toHaveText(
+      'Signed in as Thandi. Pick a step below; use Back to return here.',
+      { timeout: 30_000 },
+    );
+    await page.screenshot({ path: info.outputPath('reviewers-page-phone.png'), fullPage: true });
+    await page.locator('[data-go="/learn"]').click();
+    await expect(page).toHaveURL(/\/learn$/);
+    await expect(page.getByRole('heading', { name: 'Diagnosis and reports', exact: true })).toBeVisible();
+    await page.goBack();
+    await expect(page.getByRole('button', { name: 'Open as Thandi' })).toBeVisible();
+  });
+});
