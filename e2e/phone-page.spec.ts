@@ -45,7 +45,7 @@ test('Open as Thandi signs the phone in, and Show me opens each feature inside i
 test.describe('on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
-  test('the guide shows instead of sign-up, and Show me opens the app full screen, signed in', async ({
+  test('the guide shows instead of sign-up, and Open as Thandi opens the app signed in', async ({
     page,
     account,
   }, info) => {
@@ -63,12 +63,17 @@ test.describe('on a phone', () => {
       document.getElementById('password')!.textContent = password;
     }, account);
 
-    await page.getByRole('button', { name: 'Open as Thandi' }).click();
-    await expect(page.getByRole('status')).toHaveText(
-      'Signed in as Thandi. Pick a step below; use Back to return here.',
-      { timeout: 30_000 },
-    );
     await page.screenshot({ path: info.outputPath('reviewers-page-phone.png'), fullPage: true });
+    // A tap opens the app itself, signed in; Back returns to the guide.
+    await page.getByRole('button', { name: 'Open as Thandi' }).click();
+    await expect(page).toHaveURL(/\/tabs\/today/, { timeout: 30_000 });
+    await expect(
+      page.getByRole('heading', { name: /^Good (morning|afternoon|evening)/ }).locator('visible=true'),
+    ).toBeVisible();
+    await page.goBack();
+    await expect(page).toHaveURL(/\/phone/);
+
+    // Show me opens a screen full size, still signed in.
     await page.locator('[data-go="/learn"]').click();
     await expect(page).toHaveURL(/\/learn$/);
     await expect(page.getByRole('heading', { name: 'Diagnosis and reports', exact: true })).toBeVisible();

@@ -408,9 +408,8 @@
       /** Fills in the app's own sign-in form inside the phone and submits it. */
       start.addEventListener('click', async () => {
         if (signedIn()) {
-          status.textContent = onPhone
-            ? 'Signed in as Thandi. Pick a step below; use Back to return here.'
-            : 'Already signed in as Thandi.';
+          if (onPhone) location.href = '/tabs/today';
+          else status.textContent = 'Already signed in as Thandi.';
           return;
         }
         start.disabled = true;
@@ -423,7 +422,8 @@
           if (!email) await wait(100);
         }
         if (!email) {
-          if (signedIn()) status.textContent = 'Signed in as Thandi. Pick a step below.';
+          if (signedIn() && onPhone) location.href = '/tabs/today';
+          else if (signedIn()) status.textContent = 'Signed in as Thandi. Pick a step below.';
           else status.textContent = 'Couldn’t open sign-in. Use “Or sign in yourself”.';
           start.disabled = false;
           return;
@@ -438,10 +438,14 @@
         doc.querySelector('button[type="submit"]').click();
         status.textContent = 'Signing in… the server can take up to a minute to wake.';
         for (let i = 0; i < 1800 && !signedIn(); i++) await wait(100);
+        if (signedIn() && onPhone) {
+          // A phone has no frame to watch, so open the app itself; Back returns to this guide.
+          status.textContent = 'Signed in. Opening the app…';
+          location.href = '/tabs/today';
+          return;
+        }
         status.textContent = signedIn()
-          ? onPhone
-            ? 'Signed in as Thandi. Pick a step below; use Back to return here.'
-            : 'Signed in as Thandi. Pick a step below.'
+          ? 'Signed in as Thandi. Pick a step below.'
           : 'Still waking the server. Try again in a moment.';
         start.disabled = false;
       });
