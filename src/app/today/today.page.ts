@@ -177,7 +177,19 @@ export class TodayPage implements OnInit {
   );
   readonly name = this.profile.name;
   readonly initial = computed(() => (this.name() || 'S').charAt(0).toUpperCase());
-  readonly firstUse = computed(() => !this.profile.profile().firstUseDone);
+  /** Until she chooses a start, or records something after setup: then Today shows what she did instead. */
+  readonly firstUse = computed(() => {
+    if (this.profile.profile().firstUseDone) return false;
+    const r = this.health.record();
+    // Setup answers (diagnosis details, an appointment date) don't count: the first-visit card builds on them.
+    const recorded =
+      r.symptoms.length ||
+      r.questions.length ||
+      (r.results ?? []).length ||
+      (r.reports ?? []).length ||
+      !!this.plans.plan();
+    return !recorded;
+  });
 
   /** Her priorities first, in the fixed order; then the rest. */
   readonly intents = computed(() => {

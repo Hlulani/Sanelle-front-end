@@ -255,3 +255,23 @@ test('Several priorities: the first leads, and the others stay one tap away', as
   await also.getByRole('button', { name: /Log how I feel/ }).click();
   await expect(page).toHaveURL(/health\/check-in/);
 });
+
+test('Once she records something, Today shows it instead of the first-visit card', async ({ page, account }) => {
+  await signIn(page, account);
+  await page.goto('/onboarding?step=2');
+  await screen(page).getByRole('button', { name: 'Understand my diagnosis', exact: true }).click();
+  for (const step of [2, 3, 4, 5]) await next(page, step);
+  await screen(page).getByRole('button', { name: 'Open Sanelle', exact: true }).click();
+  await expect(screen(page).getByText('Your next step', { exact: true })).toBeVisible();
+
+  // She goes straight to a check-in from the tab bar, without using the first-visit card.
+  await page.goto('/health/check-in/today');
+  const sheet = page.locator('.sheet');
+  const pain = sheet.getByRole('button', { name: 'Pain', exact: true });
+  if (!(await pain.getAttribute('class'))?.includes('selected')) await pain.click();
+  await sheet.getByRole('button', { name: 'Save today’s check-in' }).click();
+  await expect(page).toHaveURL(/health\/symptoms/);
+  await page.goto('/tabs/today');
+  await expect(screen(page).getByText('Here’s what you recorded', { exact: true })).toBeVisible();
+  await expect(screen(page).getByText('Your next step', { exact: true })).toHaveCount(0);
+});
