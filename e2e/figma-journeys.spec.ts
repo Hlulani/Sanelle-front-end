@@ -45,9 +45,18 @@ test('Today first-use and returning empty match the actual Figma components', as
     // It offers to find something to cook; a saved plan's own meal is checked in cook-planned-meal.spec.ts.
     const findMeal = screen(page).getByRole('button', { name: 'Find something to cook', exact: true });
     await expect(findMeal).toBeVisible();
-    await ref
-      .locator('.meal-feature')
-      .evaluate((card, html) => (card.outerHTML = html), await findMeal.evaluate((e) => e.outerHTML));
+    // The app's button carries its own spacing and centring, which the prototype's styles don't define.
+    const findMealStyle = await findMeal.evaluate((e) => {
+      const c = getComputedStyle(e);
+      return { justifyContent: c.justifyContent, marginBottom: c.marginBottom };
+    });
+    await ref.locator('.meal-feature').evaluate(
+      (card, { html, style }) => {
+        card.outerHTML = html;
+        Object.assign(document.querySelector<HTMLElement>('.today-food-action')!.style, style);
+      },
+      { html: await findMeal.evaluate((e) => e.outerHTML), style: findMealStyle },
+    );
     await compareFigma(page, ref, 'TOD-02E-source', info, [
       '.topbar',
       '.page-heading',

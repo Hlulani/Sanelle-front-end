@@ -105,12 +105,14 @@
           </article>
         } @else {
           <p class="prep-note">Today is open in your meal plan. Choose a meal whenever you need one.</p>
-          <button class="secondary" routerLink="/food/plan" [queryParams]="{ date: d.date }">
+          <button class="secondary today-food-action" routerLink="/food/plan" [queryParams]="{ date: d.date }">
             Choose today’s meal <svg figmaIcon="arrow" />
           </button>
         }
       } @else {
-        <button class="secondary wide" routerLink="/food/find">Find something to cook <svg figmaIcon="arrow" /></button>
+        <button class="secondary wide today-food-action" routerLink="/food/find">
+          Find something to cook <svg figmaIcon="arrow" />
+        </button>
       }
       <div class="two-column">
         @if (latestCheckIn) {
@@ -149,8 +151,8 @@
               </div>
             </dl>
             <p class="checkin-destination">
-              <svg figmaIcon="visit" [size]="18"></svg> This is now in <strong>Symptoms & daily life</strong> and your
-              appointment summary.
+              <svg figmaIcon="visit" [size]="18"></svg
+              ><span>This is now in <strong>Symptoms & daily life</strong> and your appointment summary.</span>
             </p>
             <div class="checkin-actions">
               <button (click)="openLog()">Edit this check-in</button

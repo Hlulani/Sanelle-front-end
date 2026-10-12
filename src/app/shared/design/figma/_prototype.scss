@@ -1153,6 +1153,11 @@
     display: grid;
     gap: 12px;
   }
+  /* Today's food action sits between the meal section and the check-in card, with room on both sides. */
+  .today-food-action {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
   .action-block {
     border-radius: 6px;
     padding: 22px;
