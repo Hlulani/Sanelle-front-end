@@ -14,6 +14,10 @@ It's a mobile-first app built with **Ionic + Angular + Capacitor**. The API live
 
 Sanelle doesn't diagnose or replace a doctor. It helps someone record what they know, see what's missing, check food claims against research, and bring clear questions to their appointment.
 
+## Before you commit
+
+Run the regression tier that matches your change: `npm run regression` (anything beyond a small UI change), `npm run regression:ui -- e2e/<spec>.ts` (styles or wording on one screen) and, after every deploy, `npm run regression:live`. Journeys and their tests: [docs/regression.md](docs/regression.md).
+
 ## What it does
 
 The app has four tabs: **Today**, **My health**, **Nourish** and **Learn**.
