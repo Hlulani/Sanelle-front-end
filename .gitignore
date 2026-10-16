@@ -77,20 +77,7 @@ Thumbs.db
 # Playwright end-to-end test output
 /e2e/.output
 
-# Demo recordings for presentations: kept locally, not in the repo
-/demo
-
 # Research library: kept locally, not in the repo
 /docs/research
 
-# Presentation drafts and their capture tooling: kept locally, not in the repo
-/docs/presentation
-/e2e/presentation-capture.spec.ts
-/e2e/presentation.config.ts
-/scripts/*presentation-pack*
-/scripts/*pitch*
-
-# Demo videos are shared directly, not kept in git
-docs/demo/**/*.mp4
-docs/demo/**/*.webm
 .DS_Store

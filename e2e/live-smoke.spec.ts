@@ -1,44 +1,35 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /**
- * The live site, the way a judge uses it. Runs only through e2e/live.config.ts.
+ * The live site, signed in to a live account. Runs only through e2e/live.config.ts.
+ * Set SANELLE_LIVE_EMAIL and SANELLE_LIVE_PASSWORD to an account that has finished onboarding.
  * Set SANELLE_LIVE_AI=1 to also make one real Sanelle AI request (it uses API credit).
  */
 const API = process.env['SANELLE_LIVE_API'] ?? 'https://sanelle-api.onrender.com/api/v1';
 const shown = (page: Page) => page.locator('main:visible, .sheet:visible').last();
 
-async function openAsThandi(page: Page) {
-  await page.goto('/phone');
-  await expect(page.getByRole('heading', { name: 'A companion for living with fibroids' })).toBeVisible();
-  await page.getByRole('button', { name: 'Open as Thandi' }).click();
+function liveAccount() {
+  const email = process.env['SANELLE_LIVE_EMAIL'];
+  const password = process.env['SANELLE_LIVE_PASSWORD'];
+  if (!email || !password) throw new Error('Set SANELLE_LIVE_EMAIL and SANELLE_LIVE_PASSWORD for the live check.');
+  return { email, password };
 }
 
-test('the API is up and Sanelle AI is switched on', async ({ page, request }) => {
-  await page.goto('/phone');
-  const email = (await page.locator('#email').textContent())!.trim();
-  const password = (await page.locator('#password').textContent())!.trim();
-  const login = await request.post(`${API}/auth/login`, { data: { email, password }, timeout: 240_000 });
-  expect(login.ok(), 'demo account signs in').toBeTruthy();
+test('the API is up and Sanelle AI is switched on', async ({ request }) => {
+  const login = await request.post(`${API}/auth/login`, { data: liveAccount(), timeout: 240_000 });
+  expect(login.ok(), 'live account signs in').toBeTruthy();
   const { accessToken } = await login.json();
   const status = await request.get(`${API}/ai/status`, { headers: { Authorization: `Bearer ${accessToken}` } });
   expect(await status.json(), 'Sanelle AI available').toMatchObject({ available: true });
 });
 
-test('a judge can open the app as Thandi, log a check-in and see it on Today', async ({ page }, info) => {
-  await openAsThandi(page);
-  if (info.project.name === 'laptop') {
-    await expect(page.getByRole('status')).toHaveText('Signed in as Thandi. Pick a step below.', { timeout: 240_000 });
-    const phone = page.frameLocator('iframe.screen');
-    await page.locator('[data-go="/learn"]').click();
-    await expect(phone.getByRole('heading', { name: 'Diagnosis and reports', exact: true })).toBeVisible();
-    await page.locator('[data-go="/tabs/appointment"]').click();
-    await expect(
-      phone.getByText('Appointment date and main concern', { exact: true }).locator('visible=true'),
-    ).toBeVisible();
-    return;
-  }
-
-  // On a phone the guide hands over to the app itself.
+test('sign in, log a check-in and see it on Today', async ({ page }) => {
+  const { email, password } = liveAccount();
+  await page.goto('/');
+  await page.getByRole('link', { name: 'I already have an account' }).click();
+  await page.getByLabel('Email', { exact: true }).fill(email);
+  await page.getByLabel('Password', { exact: true }).fill(password);
+  await page.getByRole('button', { name: 'Log in', exact: true }).click();
   await expect(page).toHaveURL(/\/tabs\/today/, { timeout: 240_000 });
   await page.goto('/health/check-in/today');
   const sheet = page.locator('.sheet:visible').first();

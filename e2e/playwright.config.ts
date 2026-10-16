@@ -17,8 +17,8 @@ const BACKEND_DIR = process.env['SANELLE_BACKEND_DIR'] ?? path.resolve(__dirname
 
 export default defineConfig({
   testDir: '.',
-  // Every spec except presentation, demo and live-site checks, which run only through their own configs.
-  testMatch: /(^|[\\/])(?!presentation-|preview-|demo-|live-)[^\\/]+\.spec\.ts$/,
+  // Every spec except the preview and live-site checks, which run only through their own configs.
+  testMatch: /(^|[\\/])(?!preview-|live-)[^\\/]+\.spec\.ts$/,
   outputDir: './.output/results',
   fullyParallel: true,
   workers: 2,

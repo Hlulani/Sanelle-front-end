@@ -7,13 +7,7 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# The phone-frame page for reviewers.
-[[redirects]]
-  from = "/phone"
-  to = "/phone/index.html"
-  status = 200
-
-# Every other path is an app route (e.g. /tabs/today), served by the app.
+# Every path is an app route (e.g. /tabs/today), served by the app.
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -1,4 +1,0 @@
-file '01-ai-suggestions.mp4'
-file '02-ai-visit-draft.mp4'
-file '03-report-reading.mp4'
-file '05-safety-talking-points.mp4'

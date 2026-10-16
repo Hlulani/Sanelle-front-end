@@ -4,7 +4,7 @@
  *
  *   npm run regression                       full: any change to logic, data, routes, storage or the API
  *   npm run regression:ui -- e2e/<spec>.ts   small UI change: styles or copy on one screen
- *   npm run regression:live                  after every deploy: the judges' path on the live site
+ *   npm run regression:live                  after every deploy: the main journey on the live site
  *
  * Steps run in order and the run stops at the first failure, so the failing step is the last one printed.
  */
@@ -41,7 +41,7 @@ const steps = {
     ['Small and wide screens', e2e('resilience', '-g', 'fit a small phone')],
     ...(specs.length ? [['The changed journey', e2e(...specs)]] : []),
   ],
-  live: [['Live site, judges’ path', ['npx', 'playwright', 'test', '--config', 'e2e/live.config.ts']]],
+  live: [['Live site, main journey', ['npx', 'playwright', 'test', '--config', 'e2e/live.config.ts']]],
 }[tier];
 
 if (!steps) {

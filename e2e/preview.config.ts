@@ -12,7 +12,7 @@ export default defineConfig({
   timeout: 60_000,
   expect: { timeout: 10_000 },
   reporter: [['list']],
-  use: { baseURL: previewUrl, viewport: { width: 1312, height: 1133 }, trace: 'retain-on-failure' },
+  use: { baseURL: previewUrl, viewport: { width: 390, height: 844 }, trace: 'retain-on-failure' },
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } },
     { name: 'webkit', use: { browserName: 'webkit' } },
@@ -22,7 +22,7 @@ export default defineConfig({
       command: 'node scripts/preview.mjs',
       cwd: path.resolve(__dirname, '..'),
       env: { SANELLE_PREVIEW_PORT: port },
-      url: `${previewUrl}/phone`,
+      url: previewUrl,
       reuseExistingServer: true,
     },
   ],

@@ -17,10 +17,6 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
     "preview": "node scripts/preview.mjs",
     "e2e:preview": "playwright test --config e2e/preview.config.ts",
-    "demo:record": "playwright test --config e2e/demo.config.ts",
-    "demo:export": "node scripts/export-demo.mjs",
-    "demo:ai:record": "playwright test --config e2e/demo-ai.config.ts",
-    "demo:ai:export": "node scripts/export-deployed-ai-demo.mjs",
     "regression": "node scripts/regression.mjs full",
     "regression:ui": "node scripts/regression.mjs ui",
     "regression:live": "node scripts/regression.mjs live"

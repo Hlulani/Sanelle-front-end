@@ -1,9 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * After every deploy: the judges' path on the live site (npm run regression:live). Nothing
- * starts locally. It signs in with the demo account shown on the reviewers' page, and only
- * writes to a throwaway browser, so the shared account's server data isn't changed.
+ * After every deploy: the main journey on the live site (npm run regression:live). Nothing
+ * starts locally. It signs in with SANELLE_LIVE_EMAIL / SANELLE_LIVE_PASSWORD and only writes
+ * to a throwaway browser, so the account's server data isn't changed.
  */
 export default defineConfig({
   testDir: '.',

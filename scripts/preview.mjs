@@ -1,4 +1,4 @@
-// Serve the actual production build locally, including the reviewer phone frame.
+// Serve the actual production build locally.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -31,7 +31,7 @@ const server = createServer(async (request, response) => {
       return;
     }
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-    let target = path.resolve(root, '.' + (['/phone', '/phone/'].includes(pathname) ? '/phone/index.html' : pathname));
+    let target = path.resolve(root, '.' + pathname);
     if (target !== path.resolve(root) && !target.startsWith(root)) {
       response.writeHead(403).end();
       return;
@@ -56,6 +56,6 @@ const server = createServer(async (request, response) => {
     response.writeHead(400).end('Unable to load this page');
   }
 });
-server.listen(port, '127.0.0.1', () => console.log(`Sanelle preview: http://127.0.0.1:${port}/phone`));
+server.listen(port, '127.0.0.1', () => console.log(`Sanelle preview: http://127.0.0.1:${port}/`));
 process.on('SIGTERM', () => server.close());
 process.on('SIGINT', () => server.close());

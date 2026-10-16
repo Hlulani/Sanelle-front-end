@@ -18,23 +18,22 @@ function fixtureToken(expiresInSeconds: number): string {
   return `${encode({ alg: 'none' })}.${encode({ sub: 'startup-fixture@example.test', exp: Math.floor(Date.now() / 1000) + expiresInSeconds })}.fixture`;
 }
 
-test('the phone frame signs into the real backend and loads database recipes', async ({
+test('the production build signs into the real backend and loads database recipes', async ({
   page,
   request,
   account,
 }, info) => {
-  await page.goto('/phone');
-  const app = page.frameLocator('iframe[title="Sanelle app"]');
-  await app.getByRole('link', { name: 'I already have an account' }).click();
-  await app.getByLabel('Email', { exact: true }).fill(account.email);
-  await app.getByLabel('Password', { exact: true }).fill(account.password);
+  await page.goto('/');
+  await page.getByRole('link', { name: 'I already have an account' }).click();
+  await page.getByLabel('Email', { exact: true }).fill(account.email);
+  await page.getByLabel('Password', { exact: true }).fill(account.password);
   const response = page.waitForResponse((r) => r.url().endsWith('/auth/login') && r.request().method() === 'POST', {
     timeout: 10_000,
   });
-  await app.getByRole('button', { name: 'Log in', exact: true }).click();
+  await page.getByRole('button', { name: 'Log in', exact: true }).click();
   expect((await response).status()).toBe(200);
-  await expect.poll(() => page.frames().some((f) => /\/onboarding|\/tabs\/today/.test(f.url()))).toBe(true);
-  const setup = app.getByLabel('First name', { exact: true });
+  await expect(page).toHaveURL(/\/onboarding|\/tabs\/today/);
+  const setup = page.getByLabel('First name', { exact: true });
   if (await setup.isVisible()) {
     await setup.fill('Thandi');
     for (const name of [
@@ -45,27 +44,26 @@ test('the phone frame signs into the real backend and loads database recipes', a
       'Review setup',
       'Open Sanelle',
     ]) {
-      await app.getByRole('button', { name, exact: true }).click();
+      await page.getByRole('button', { name, exact: true }).click();
     }
   }
-  await expect(app.getByRole('heading', { name: 'Good morning, Thandi' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Good morning, Thandi' })).toBeVisible();
   await mkdir('docs/validation/startup-recovery-2026-10-10', { recursive: true });
   await page.screenshot({ path: `docs/validation/startup-recovery-2026-10-10/${info.project.name}-signed-in.png` });
-  const frame = page.frames().find((f) => /\/tabs\/today/.test(f.url()))!;
-  await frame.goto(new URL('/food/requirements', page.url()).href);
-  await app.getByRole('button', { name: 'Confirm and plan meals', exact: true }).click();
-  await app.getByRole('button', { name: 'Save 3-day plan', exact: true }).click();
-  await expect.poll(() => frame.url()).toContain('/food/plan');
-  await expect(app.getByRole('status').filter({ hasText: 'Meal plan saved.' })).toBeInViewport();
-  const navigation = app.locator('.mobile-nav:visible');
+  await page.goto('/food/requirements');
+  await page.getByRole('button', { name: 'Confirm and plan meals', exact: true }).click();
+  await page.getByRole('button', { name: 'Save 3-day plan', exact: true }).click();
+  await expect(page).toHaveURL(/\/food\/plan/);
+  await expect(page.getByRole('status').filter({ hasText: 'Meal plan saved.' })).toBeInViewport();
+  const navigation = page.locator('.mobile-nav:visible');
   await expect(navigation).toHaveCount(1);
   await navigation.getByRole('button', { name: 'Food', exact: true }).click();
-  const saved = app.getByRole('region', { name: 'My saved meal plan' });
+  const saved = page.getByRole('region', { name: 'My saved meal plan' });
   await expect(saved.getByRole('heading')).toBeInViewport();
   await expect(saved.getByRole('link', { name: /^Cook Day/ })).toHaveCount(3);
   await mkdir('docs/validation/saved-food-plan-2026-10-10', { recursive: true });
   await page.screenshot({
-    path: `docs/validation/saved-food-plan-2026-10-10/${info.project.name}-phone-saved-plan.png`,
+    path: `docs/validation/saved-food-plan-2026-10-10/${info.project.name}-saved-plan.png`,
   });
   const cook = saved.getByRole('link', { name: /^Cook Day 1:/ });
   const mealId = new URL((await cook.getAttribute('href'))!, page.url()).pathname.split('/').pop();
@@ -79,26 +77,25 @@ test('the phone frame signs into the real backend and loads database recipes', a
   const meal = meals.find((m: { id: string }) => m.id === mealId);
   expect(meal).toBeTruthy();
   await cook.click();
-  await expect(app.getByRole('heading', { name: 'How to cook', exact: true })).toBeVisible();
-  await expect(app.getByRole('list', { name: 'Cooking steps' }).locator('li')).toHaveText(meal.instructions);
-  await expect(app.locator('.recipe-cooking-name')).toHaveText(meal.name);
+  await expect(page.getByRole('heading', { name: 'How to cook', exact: true })).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Cooking steps' }).locator('li')).toHaveText(meal.instructions);
+  await expect(page.locator('.recipe-cooking-name')).toHaveText(meal.name);
   await page.screenshot({
     path: `docs/validation/startup-recovery-2026-10-10/${info.project.name}-database-recipe.png`,
   });
 });
 
-test('the real phone frame opens Welcome and reaches sign-in', async ({ page }, info) => {
-  await page.goto('/phone');
-  const app = page.frameLocator('iframe[title="Sanelle app"]');
-  await expect(app.getByRole('heading', { name: 'Your health information, finally in one place.' })).toBeVisible();
-  await expect(app.locator('#splash')).toHaveCount(0);
+test('the production build opens Welcome and reaches sign-in', async ({ page }, info) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Your health information, finally in one place.' })).toBeVisible();
+  await expect(page.locator('#splash')).toHaveCount(0);
   await mkdir('docs/validation/startup-recovery-2026-10-10', { recursive: true });
-  await page.screenshot({ path: `docs/validation/startup-recovery-2026-10-10/${info.project.name}-phone-welcome.png` });
-  await app.getByRole('link', { name: 'I already have an account' }).click();
-  await expect(app.getByLabel('Email', { exact: true })).toBeVisible();
+  await page.screenshot({ path: `docs/validation/startup-recovery-2026-10-10/${info.project.name}-welcome.png` });
+  await page.getByRole('link', { name: 'I already have an account' }).click();
+  await expect(page.getByLabel('Email', { exact: true })).toBeVisible();
 });
 
-test('a stalled saved-session refresh cannot trap the phone on its splash', async ({ page }) => {
+test('a stalled saved-session refresh cannot trap the app on its splash', async ({ page }) => {
   const refresh = fixtureToken(3600);
   await page.addInitScript(
     ({ access, refresh }) => {
@@ -112,15 +109,14 @@ test('a stalled saved-session refresh cannot trap the phone on its splash', asyn
   await page.route('**/auth/refresh', () => {
     requested = true;
   });
-  await page.goto('/phone');
+  await page.goto('/');
   await expect.poll(() => requested).toBe(true);
-  const app = page.frameLocator('iframe[title="Sanelle app"]');
-  await expect(app.getByRole('link', { name: 'I already have an account' })).toBeVisible({ timeout: 25_000 });
-  await expect(app.locator('#splash')).toHaveCount(0);
-  await app.getByRole('link', { name: 'I already have an account' }).click();
-  await expect(app.getByLabel('Email', { exact: true })).toBeVisible({ timeout: 3000 });
-  const frame = page.frames().find((frame) => frame.url().endsWith('/login'))!;
-  const saved = await frame.evaluate(() => ({
+  await expect(page.getByRole('link', { name: 'I already have an account' })).toBeVisible({ timeout: 25_000 });
+  await expect(page.locator('#splash')).toHaveCount(0);
+  await page.getByRole('link', { name: 'I already have an account' }).click();
+  await expect(page.getByLabel('Email', { exact: true })).toBeVisible({ timeout: 3000 });
+  await expect(page).toHaveURL(/\/login$/);
+  const saved = await page.evaluate(() => ({
     refresh: localStorage.getItem('CapacitorStorage.refresh_token'),
     record: localStorage.getItem('startup-fixture-record'),
   }));
@@ -130,16 +126,15 @@ test('a stalled saved-session refresh cannot trap the phone on its splash', asyn
 test('a missing application script offers recovery and reload opens the app', async ({ page }, info) => {
   const main = /\/main(?:-[^/]+)?\.js(?:\?.*)?$/;
   await page.route(main, (route) => route.abort());
-  await page.goto('/phone');
-  const app = page.frameLocator('iframe[title="Sanelle app"]');
-  await expect(app.getByRole('button', { name: 'Reload Sanelle' })).toBeVisible({ timeout: 25_000 });
-  await expect(app.locator('#startup-recovery')).toContainText('taking longer to open');
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Reload Sanelle' })).toBeVisible({ timeout: 25_000 });
+  await expect(page.locator('#startup-recovery')).toContainText('taking longer to open');
   await mkdir('docs/validation/startup-recovery-2026-10-10', { recursive: true });
   await page.screenshot({ path: `docs/validation/startup-recovery-2026-10-10/${info.project.name}-recovery.png` });
   await page.unroute(main);
-  await app.getByRole('button', { name: 'Reload Sanelle' }).click();
-  await expect(app.getByRole('link', { name: 'I already have an account' })).toBeVisible();
-  await expect(app.locator('#splash')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Reload Sanelle' }).click();
+  await expect(page.getByRole('link', { name: 'I already have an account' })).toBeVisible();
+  await expect(page.locator('#splash')).toHaveCount(0);
 });
 
 test('missing preview assets return 404 instead of app HTML', async ({ request }) => {
